@@ -9,7 +9,7 @@ namespace BB.UI.Web.MVC
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            //
+            
         }
     }
 }
