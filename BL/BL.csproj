@@ -43,13 +43,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DOM\Domain.csproj">
-      <Project>{540d40e9-9d5c-4c2d-ace0-bb28ddcff37d}</Project>
-      <Name>Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.csproj">
       <Project>{61c8fa1a-dec4-41e7-88a6-13d181872105}</Project>
       <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{bbc45856-b2d8-461b-9af9-9268d7f1032d}</Project>
+      <Name>Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
