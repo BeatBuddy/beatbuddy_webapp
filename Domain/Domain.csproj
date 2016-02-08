@@ -51,7 +51,7 @@
     <Compile Include="Playlists\Track.cs" />
     <Compile Include="Playlists\TrackSource.cs" />
     <Compile Include="Users\User.cs" />
-    <Compile Include="Users\Vote.cs" />
+    <Compile Include="Playlists\Vote.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
