@@ -40,18 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Playlist\Comment.cs" />
-    <Compile Include="Organisation\DashboardBlock.cs" />
-    <Compile Include="Organisation\Organisation.cs" />
-    <Compile Include="Playlist\Playlist.cs" />
-    <Compile Include="Playlist\PlaylistTrack.cs" />
+    <Compile Include="Playlists\Comment.cs" />
+    <Compile Include="Organisations\DashboardBlock.cs" />
+    <Compile Include="Organisations\Organisation.cs" />
+    <Compile Include="Playlists\Playlist.cs" />
+    <Compile Include="Playlists\PlaylistTrack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User\Role.cs" />
-    <Compile Include="Playlist\SourceType.cs" />
-    <Compile Include="Playlist\Track.cs" />
-    <Compile Include="Playlist\TrackSource.cs" />
-    <Compile Include="User\User.cs" />
-    <Compile Include="User\Vote.cs" />
+    <Compile Include="Users\Role.cs" />
+    <Compile Include="Playlists\SourceType.cs" />
+    <Compile Include="Playlists\Track.cs" />
+    <Compile Include="Playlists\TrackSource.cs" />
+    <Compile Include="Users\User.cs" />
+    <Compile Include="Users\Vote.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BB.BL.Domain.Playlists;
 
-namespace BB.BL.Domain
+namespace BB.BL.Domain.Users
 {
     public class Vote
     {

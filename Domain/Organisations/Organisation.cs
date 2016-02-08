@@ -4,8 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BB.BL.Domain.Organisations;
+using BB.BL.Domain.Playlists;
+using BB.BL.Domain.Users;
 
-namespace BB.BL.Domain
+namespace BB.BL.Domain.Organisations
 {
     public class Organisation
     {
