@@ -8,8 +8,8 @@
 </head>
 <body>
     <header>
-        <ul class="nav container">
-            <li>@Html.ActionLink("BeatBuddy", "Index", "Home")</li>
+        <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a> 
+        <ul class="nav">
             <li>@Html.Partial("_LoginPartial")</li>
         </ul>
     </header>
