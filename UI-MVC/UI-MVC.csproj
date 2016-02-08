@@ -225,6 +225,8 @@
     <Content Include="Content\bootstrap-grid.min.css">
       <DependentUpon>bootstrap-grid.css</DependentUpon>
     </Content>
+    <Content Include="Content\img\logo_header.png" />
+    <Content Include="Content\img\logo_small.png" />
     <Content Include="Content\Site.css">
       <DependentUpon>Site.scss</DependentUpon>
     </Content>

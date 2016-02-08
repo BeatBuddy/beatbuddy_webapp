@@ -1,41 +1,80 @@
-﻿body {
+﻿$sidemargin: 5em;
+$sidemargin-mobile: 1em;
+$mobile-breakpoint: 600px;
+
+body {
     margin: 0;
     padding: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 header {
     display: block;
-    background: #444;
-    color: white;
-    padding: 1em 2em;
+    padding: 1em $sidemargin;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+        padding: 1em $sidemargin-mobile;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    img {
+        display: inline-block;
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            margin-bottom: .5em;
+        }
+    }
 
     ul.nav {
         margin: 0;
         padding: 0;
         font-family: sans-serif;
+        display: inline-block;
+        float: right;
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            display: block;
+            float: none;
+            width: 100%;
+        }
 
         li {
             display: inline-block;
-            margin-right: 1em;
+            margin-left: 1em;
+            float: right;
+            line-height: 31px;
+
+            @media screen and (max-width: $mobile-breakpoint) {
+                display: block;
+                float: none;
+                width: 100%;
+                margin-left: 0;
+            }
 
             a {
                 text-decoration: none;
-                color: white;
+                text-transform: lowercase;
+                color: black;
             }
         }
     }
 }
 
 .body-content {
-    padding: 0 2em;
+    padding: 0 $sidemargin;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+        padding: 0 $sidemargin-mobile;
+    }
 
     .center {
-        width: 300px;
+        width: 682px;
         height: 200px;
         position: absolute;
         left: 50%;
         top: 50%;
-        margin: -100px 0 0 -150px;
+        margin: -100px 0 0 -341px;
         text-align: center;
 
         h1 {
@@ -47,12 +86,15 @@ header {
 }
 
 footer {
-    color: white;
-    background: #444;
     width: 100%;
     display: block;
     position: absolute;
     bottom: 0;
     font-family: sans-serif;
-    padding: .2em 2em;
+    padding: .2em $sidemargin;
+    text-align: center;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+        padding: .2em $sidemargin-mobile;
+    }
 }
