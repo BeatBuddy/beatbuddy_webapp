@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BB.BL.Domain
 {
-    public class Class1
+    public enum SourceType
     {
+        YouTube
     }
 }
