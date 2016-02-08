@@ -15,6 +15,6 @@ namespace BB.BL.Domain.Playlists
         public string Url { get; set; }
         public TrackSource TrackSource { get; set; }
         public string CoverArtUrl { get; set; }
-        public Collection<PlaylistTrack> PlaylistTracks { get; set; }
+        
     }
 }
