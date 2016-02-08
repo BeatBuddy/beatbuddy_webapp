@@ -9,9 +9,8 @@ namespace BB.BL.Domain.Users
 {
     public class Vote
     {
-        public int VoteId { get; set; }
+        public int Id { get; set; }
         public int Score { get; set; }
         public User User { get; set; }
-        public PlaylistTrack PlaylistTrack { get; set; }
     }
 }
