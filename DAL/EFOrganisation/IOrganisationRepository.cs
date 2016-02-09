@@ -1,24 +1,23 @@
 ﻿using BB.BL.Domain.Organisations;
-using BB.BL.Domain.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BB.BL
+namespace BB.DAL.EFOrganisation
 {
-    public interface IOrganisationManager
+    public interface IOrganisationRepository
     {
         //Organisation
-        Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, string key, User organisator);
+        Organisation CreateOrganisation(Organisation organisation);
         Organisation UpdateOrganisation(Organisation organisation);
         List<Organisation> ReadOrganisations();
         Organisation ReadOrganisation(long organisationId);
         void DeleteOrganisation(long organisationId);
 
         //DashboardBlock
-        DashboardBlock CreateDashboardBlock(string blockName, int sequence);
+        DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock);
         DashboardBlock UpdateDashboardBlock(DashboardBlock block);
         List<DashboardBlock> ReadDashboardBlocks(Organisation organisation);
         void DeleteDashboardBlock(long blockId);
