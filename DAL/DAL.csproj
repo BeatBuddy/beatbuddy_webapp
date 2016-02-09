@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EFOrganisation\IOrganisationRepository.cs" />
+    <Compile Include="EFOrganisation\OrganisationRepository.cs" />
+    <Compile Include="EFPlaylist\IPlaylistRepository.cs" />
+    <Compile Include="EFPlaylist\PlaylistRepository.cs" />
+    <Compile Include="EFUser\IUserRepository.cs" />
+    <Compile Include="EFUser\UserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
