@@ -10,10 +10,9 @@ namespace BB.BL.Domain.Playlists
 {
     public class PlaylistTrack
     {
-        public long PlaylistTrackId { get; set; }
+        public long Id { get; set; }
         public bool AlreadyPlayed { get; set; }
-        public Track Track { get; set; }
-        public Playlist Playlist { get; set; }
         public Collection<Vote> Votes { get; set; }
+        public Track Track { get; set; }
     }
 }

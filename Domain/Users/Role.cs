@@ -9,7 +9,8 @@ namespace BB.BL.Domain.Users
     public enum Role
     {
         Organiser,
-        CoOrganiser,
+        // ReSharper disable once InconsistentNaming
+        Co_Organiser,
         PlaylistMaster,
         RegisteredUser,
         Guest

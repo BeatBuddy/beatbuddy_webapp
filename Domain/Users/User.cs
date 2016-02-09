@@ -11,17 +11,15 @@ namespace BB.BL.Domain.Users
 {
     public class User
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
-        public string NickName { get; set; }
-        public string AvatarUrl { get; set; }
+        public string Nickname { get; set; }
+        public string ImageUrl { get; set; }
         public Dictionary<Organisation, Role> Roles { get; set; }
-        public Collection<Vote> Votes { get; set; }
-        public Collection<Organisation> Organisations { get; set; }
-        public Collection<Comment> Comments { get; set; } 
+       
     }
 
 }
