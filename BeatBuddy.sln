@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI-MVC", "UI-MVC\UI-MVC.csproj", "{6F43CFE1-78E6-4E86-83AA-9A121A92188A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61C8FA1A-DEC4-41E7-88A6-13D181872105} = {61C8FA1A-DEC4-41E7-88A6-13D181872105}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI-MVC.Tests", "UI-MVC.Tests\UI-MVC.Tests.csproj", "{ADBE2C95-342F-41CE-ADE3-DE9E17B9610D}"
 EndProject
