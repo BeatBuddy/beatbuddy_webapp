@@ -24,7 +24,9 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation CreateOrganisation(Organisation organisation)
         {
-            return ctx.Organisations.Add(organisation);
+            organisation = ctx.Organisations.Add(organisation);
+            ctx.SaveChanges();
+            return organisation;
         }
 
         public void DeleteDashboardBlock(long blockId)

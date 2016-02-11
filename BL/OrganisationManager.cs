@@ -36,11 +36,11 @@ namespace BB.BL
                 Name = name,
                 BannerUrl = bannerUrl,
                 ColorScheme = colorScheme,
-                Key = key,
-                DashboardBlocks = new Collection<DashboardBlock>(),
-                Playlists = new Collection<Playlist>(),
-                Users = new Dictionary<User, Role>()
+                Key = key
             };
+            organisation.DashboardBlocks = new Collection<DashboardBlock>();
+            organisation.Playlists = new Collection<Playlist>();
+            organisation.Users = new Dictionary<User, Role>();
             organisation.Users.Add(organisator, Role.Organiser);
             return repo.CreateOrganisation(organisation);
         }
