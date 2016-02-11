@@ -2,7 +2,7 @@
 {
     public class DashboardBlock
     {
-        public long BlockId { get; set; }
+        public long Id { get; set; }
         public string BlockName { get; set; }
         public int Sequence { get; set; }
     }

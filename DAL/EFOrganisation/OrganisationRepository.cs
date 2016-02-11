@@ -9,6 +9,13 @@ namespace BB.DAL.EFOrganisation
 {
     public class OrganisationRepository : IOrganisationRepository
     {
+        private EFDbContext ctx;
+
+        public OrganisationRepository()
+        {
+            ctx = new EFDbContext();
+        }
+
         public DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock)
         {
             throw new NotImplementedException();

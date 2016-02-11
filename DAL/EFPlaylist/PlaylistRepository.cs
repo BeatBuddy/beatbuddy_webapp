@@ -11,6 +11,13 @@ namespace BB.DAL.EFPlaylist
 {
     public class PlaylistRepository : IPlaylistRepository
     {
+        private EFDbContext ctx;
+        
+        public PlaylistRepository()
+        {
+            ctx = new EFDbContext();
+        }
+
         public Comment CreateComment(Comment comment)
         {
             throw new NotImplementedException();

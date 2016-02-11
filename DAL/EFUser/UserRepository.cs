@@ -9,6 +9,13 @@ namespace BB.DAL.EFUser
 {
     public class UserRepository : IUserRepository
     {
+        private EFDbContext ctx;
+        
+        public UserRepository()
+        {
+            ctx = new EFDbContext();
+        }
+
         public User CreateUser(User user)
         {
             throw new NotImplementedException();
