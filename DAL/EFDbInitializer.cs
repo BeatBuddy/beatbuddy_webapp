@@ -11,7 +11,6 @@ namespace BB.DAL
     {
         protected override void Seed(EFDbContext context)
         {
-
             context.SaveChanges();
         }
     }

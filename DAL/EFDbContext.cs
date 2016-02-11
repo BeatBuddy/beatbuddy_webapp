@@ -13,12 +13,13 @@ namespace BB.DAL
 {
     public class EFDbContext : DbContext
     {
-        public EFDbContext(): base("BeatBuddy")
+        public EFDbContext(): base("teamd_db")
         {
             Database.SetInitializer<EFDbContext>(new EFDbInitializer());
         }
+
         public DbSet<DashboardBlock> DashboardBlocks { get; set; }
-        public virtual DbSet<Organisation> Organisations { get; set; }
+        public DbSet<Organisation> Organisations { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
