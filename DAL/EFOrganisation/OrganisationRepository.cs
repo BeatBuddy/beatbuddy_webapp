@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ namespace BB.DAL.EFOrganisation
     {
         private EFDbContext ctx;
 
-        public OrganisationRepository()
+        public OrganisationRepository(EFDbContext context)
         {
-            ctx = new EFDbContext();
+            ctx = context;
         }
 
         public DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock)
@@ -23,7 +24,7 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation CreateOrganisation(Organisation organisation)
         {
-            throw new NotImplementedException();
+            return ctx.Organisations.Add(organisation);
         }
 
         public void DeleteDashboardBlock(long blockId)

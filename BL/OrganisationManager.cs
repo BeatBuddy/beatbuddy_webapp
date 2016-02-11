@@ -7,6 +7,7 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
 using BB.BL.Domain.Playlists;
+using BB.DAL;
 using BB.DAL.EFOrganisation;
 
 namespace BB.BL
@@ -14,9 +15,9 @@ namespace BB.BL
     public class OrganisationManager : IOrganisationManager
     {
         private IOrganisationRepository repo;
-        public OrganisationManager()
+        public OrganisationManager(EFDbContext efDbContext)
         {
-            repo = new OrganisationRepository();
+            repo = new OrganisationRepository(efDbContext);
         }
         public DashboardBlock CreateDashboardBlock(string blockName, int sequence)
         {

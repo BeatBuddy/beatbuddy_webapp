@@ -11,14 +11,14 @@ using BB.BL.Domain.Users;
 
 namespace BB.DAL
 {
-    class EFDbContext : DbContext
+    public class EFDbContext : DbContext
     {
         public EFDbContext(): base("BeatBuddy")
         {
             Database.SetInitializer<EFDbContext>(new EFDbInitializer());
         }
         public DbSet<DashboardBlock> DashboardBlocks { get; set; }
-        public DbSet<Organisation> Organisations { get; set; }
+        public virtual DbSet<Organisation> Organisations { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
