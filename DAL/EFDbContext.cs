@@ -13,7 +13,7 @@ namespace BB.DAL
 {
     public class EFDbContext : DbContext
     {
-        public EFDbContext(): base("teamd_db")
+        public EFDbContext(): base("BeatBuddy")
         {
             Database.SetInitializer<EFDbContext>(new EFDbInitializer());
         }
@@ -29,5 +29,10 @@ namespace BB.DAL
         public DbSet<Vote> Votes { get; set; }
         //public DbSet<Role> roles { get; set; }
         public DbSet<User> User { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Organisation>().Property(p => p.Name).IsRequired();
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace BB.DAL.EFOrganisation
         //Organisation
         Organisation CreateOrganisation(Organisation organisation);
         Organisation UpdateOrganisation(Organisation organisation);
-        List<Organisation> ReadOrganisations();
+        IEnumerable<Organisation> ReadOrganisations();
         Organisation ReadOrganisation(long organisationId);
         void DeleteOrganisation(long organisationId);
 
