@@ -17,6 +17,11 @@ namespace BB.DAL.EFOrganisation
             ctx = context;
         }
 
+        public OrganisationRepository()
+        {
+            ctx= new EFDbContext();
+        }
+
         public DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock)
         {
             throw new NotImplementedException();
