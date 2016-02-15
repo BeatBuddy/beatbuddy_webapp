@@ -34,19 +34,37 @@ namespace BB.UI.Web.MVC.Controllers
         {
             List<Organisation> organisations = organisationManager.ReadOrganisations();
             //organisations = organisations.FindAll(m => m.Users.ContainsKey(user));
-            
-            return View(organisations);
+            List<OrganisationViewModel> organisationViewModels = new List<OrganisationViewModel>();
+            foreach (var organisation in organisations)
+            {
+                organisationViewModels.Add(new OrganisationViewModel()
+                {
+                    Name = organisation.Name,
+                    BannerUrl = organisation.BannerUrl,
+                    ColorScheme = organisation.ColorScheme,
+                    ImageUrl = organisation.ImageUrl
+                });
+            }
+            return View(organisationViewModels);
         }
         
         // GET: Organisations/Details/5
         public ActionResult Details(long id)
         {
             Organisation organisation = organisationManager.ReadOrganisation(id);
-            if (organisation == null)
+            if (organisation != null)
             {
+                OrganisationViewModel organisationView = new OrganisationViewModel()
+                {
+                    BannerUrl = organisation.BannerUrl,
+                    ColorScheme = organisation.ColorScheme,
+                    Name = organisation.Name,
+                    ImageUrl = organisation.ImageUrl
+                };
+                return View("Details", organisationView);
+
+            }else
                 return View("Error");
-            }
-            return View("Details", organisation);
         }
 
         // GET: Organisations/Create
@@ -63,11 +81,11 @@ namespace BB.UI.Web.MVC.Controllers
 
         // POST: Organisations/Create
         [HttpPost]
-        public ActionResult Create(Organisation organisation)
+        public ActionResult Create(OrganisationViewModel organisation)
         {
             try
             {
-                organisationManager.CreateOrganisation(organisation.Name, organisation.BannerUrl, organisation.ColorScheme, user);
+                organisationManager.CreateOrganisation(organisation.Name, organisation.BannerUrl, organisation.ImageUrl,organisation.ColorScheme, user);
                 return RedirectToAction("Index");
             }
             catch
