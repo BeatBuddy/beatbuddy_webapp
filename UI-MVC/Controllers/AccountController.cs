@@ -9,6 +9,8 @@ using BB.UI.Web.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using BB.BL.Domain.Users;
+using BB.BL;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -17,6 +19,7 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private UserManager userMgr = new UserManager();
 
         public AccountController()
         {
@@ -149,20 +152,21 @@ namespace BB.UI.Web.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            string[] foto = null;
+            if(model.ImageUrl != null)
+            {
+                foto = model.ImageUrl.Split(new string[] { "base64," }, StringSplitOptions.None);
+            }
             if (ModelState.IsValid)
             {
+                userMgr.CreateUser(model.Email, model.LastName, model.FirstName, model.NickName, foto == null ? null : foto[1]);
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
+        
+                    UserManager.AddToRole(user.Id, "User");
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);

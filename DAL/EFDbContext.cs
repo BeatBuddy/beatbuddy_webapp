@@ -28,7 +28,7 @@ namespace BB.DAL
         public DbSet<TrackSource> TrackSources { get; set; }
         public DbSet<Vote> Votes { get; set; }
         //public DbSet<Role> roles { get; set; }
-        public DbSet<User> User { get; set; }
+        public virtual DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
