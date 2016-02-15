@@ -23,12 +23,11 @@ namespace BB.BL
         {
             repo = new UserRepository();
         }
-        public User CreateUser(string email, string passwordHash, string lastname, string firstname, string nickname, string imageUrl)
+        public User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl)
         {
             User user = new User()
             {
                 Email = email,
-                PasswordHash = passwordHash,
                 LastName = lastname,
                 FirstName = firstname,
                 Nickname = nickname,

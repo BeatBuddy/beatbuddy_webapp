@@ -10,7 +10,7 @@ namespace BB.BL
     public interface IUserManager
     {
         //User
-        User CreateUser(string email, string passwordHash, string lastname, string firstname, string nickname, string imageUrl);
+        User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl);
         User UpdateUser(User user);
         User ReadUser(long userId);
         User ReadUser(string email);

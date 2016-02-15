@@ -50,7 +50,7 @@ namespace BB.DAL.EFUser
 
         public List<User> ReadUsers()
         {
-            throw new NotImplementedException();
+            return ctx.User.ToList();
         }
 
         public User UpdateUser(User user)

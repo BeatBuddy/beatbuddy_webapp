@@ -46,7 +46,7 @@ namespace BB.BL.Tests
         public void TestAddNewUser()
         {
             _userManager = new UserManager(_userMockContext.Object);
-            _userManager.CreateUser("lennart.boeckx@gmail.com", "password1", "boeckx", "lennart", "lb", null);
+            _userManager.CreateUser("lennart.boeckx@gmail.com", "boeckx", "lennart", "lb", null);
 
             _userMockSet.Verify(m => m.Add(It.IsAny<User>()), Times.Once);
             _userMockContext.Verify(m => m.SaveChanges(), Times.Once);
@@ -59,8 +59,13 @@ namespace BB.BL.Tests
             Assert.IsNotNull(user.Id);
         }
         [TestMethod]
-        public void TestMethod1()
+        public void TestReadUsers()
         {
+            _userManager = new UserManager(_userMockContext.Object);
+            var users = _userManager.ReadUsers();
+            Assert.IsTrue(users.Count() == 2);
+            Assert.AreEqual("jonah.jordan@gmail.com", users[0].Email);
+            Assert.AreEqual("maarten.vangiel@gmail.com", users[1].Email);
         }
     }
 }

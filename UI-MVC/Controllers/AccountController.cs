@@ -159,16 +159,14 @@ namespace BB.UI.Web.MVC.Controllers
             }
             if (ModelState.IsValid)
             {
-                
+                userMgr.CreateUser(model.Email, model.LastName, model.FirstName, model.NickName, foto == null ? null : foto[1]);
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-
-
-                    userMgr.CreateUser(model.Email, model.Password, model.LastName, model.FirstName, model.NickName, foto == null ? null : foto[1]);
+        
                     UserManager.AddToRole(user.Id, "User");
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
