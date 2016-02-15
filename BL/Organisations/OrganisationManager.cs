@@ -33,12 +33,13 @@ namespace BB.BL
             return repo.CreateDashboardBlock(block);
         }
 
-        public Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator)
+        public Organisation CreateOrganisation(string name, string bannerUrl,string ImageUrl ,string colorScheme, User organisator)
         {
             Organisation organisation = new Organisation
             {
                 Name = name,
                 BannerUrl = bannerUrl,
+                ImageUrl = ImageUrl,
                 ColorScheme = colorScheme,
                 DashboardBlocks = new Collection<DashboardBlock>(),
                 Playlists = new Collection<Playlist>(),

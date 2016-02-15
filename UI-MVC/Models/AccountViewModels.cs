@@ -65,6 +65,7 @@ namespace BB.UI.Web.MVC.Models
     public class RegisterViewModel
     {
         [Required]
+        [Key]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -75,10 +76,23 @@ namespace BB.UI.Web.MVC.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Voornaam")]
+        public string FirstName { get; set; }
+        [Required]
+        [Display(Name = "Achternaam")]
+        public string LastName { get; set; }
+        [Required]
+        [Display(Name = "Nicknaam")]
+        public string NickName { get; set; }
+        [Display(Name = "Foto")]
+        public string ImageUrl { get; set; }
     }
 
     public class ResetPasswordViewModel

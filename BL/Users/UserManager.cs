@@ -6,22 +6,28 @@ using System.Threading.Tasks;
 using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
 using BB.DAL.EFUser;
+using BB.DAL;
 
 namespace BB.BL
 {
     public class UserManager : IUserManager
     {
         private IUserRepository repo;
+
+        public UserManager(EFDbContext context)
+        {
+            repo = new UserRepository(context);
+        }
+
         public UserManager()
         {
             repo = new UserRepository();
         }
-        public User CreateUser(string email, string passwordHash, string lastname, string firstname, string nickname, string imageUrl)
+        public User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl)
         {
             User user = new User()
             {
                 Email = email,
-                PasswordHash = passwordHash,
                 LastName = lastname,
                 FirstName = firstname,
                 Nickname = nickname,

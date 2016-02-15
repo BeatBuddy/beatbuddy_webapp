@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
+using BB.UI.Web.MVC.Controllers.Utils;
 using BB.UI.Web.MVC.Models;
 
 namespace BB.UI.Web.MVC.Controllers
@@ -34,19 +38,37 @@ namespace BB.UI.Web.MVC.Controllers
         {
             List<Organisation> organisations = organisationManager.ReadOrganisations();
             //organisations = organisations.FindAll(m => m.Users.ContainsKey(user));
-            
-            return View(organisations);
+            List<OrganisationViewModel> organisationViewModels = new List<OrganisationViewModel>();
+            foreach (var organisation in organisations)
+            {
+                organisationViewModels.Add(new OrganisationViewModel()
+                {
+                    Name = organisation.Name,
+                    BannerUrl = organisation.BannerUrl,
+                    ColorScheme = organisation.ColorScheme,
+                    ImageUrl = organisation.ImageUrl
+                });
+            }
+            return View(organisationViewModels);
         }
         
         // GET: Organisations/Details/5
         public ActionResult Details(long id)
         {
             Organisation organisation = organisationManager.ReadOrganisation(id);
-            if (organisation == null)
+            if (organisation != null)
             {
+                OrganisationViewModel organisationView = new OrganisationViewModel()
+                {
+                    BannerUrl = organisation.BannerUrl,
+                    ColorScheme = organisation.ColorScheme,
+                    Name = organisation.Name,
+                    ImageUrl = organisation.ImageUrl
+                };
+                return View("Details", organisationView);
+
+            }else
                 return View("Error");
-            }
-            return View("Details", organisation);
         }
 
         // GET: Organisations/Create
@@ -63,11 +85,27 @@ namespace BB.UI.Web.MVC.Controllers
 
         // POST: Organisations/Create
         [HttpPost]
-        public ActionResult Create(Organisation organisation)
+        public ActionResult Create(OrganisationViewModel organisation, HttpPostedFileBase bannerImage, HttpPostedFileBase avatarImage)
         {
             try
             {
-                organisationManager.CreateOrganisation(organisation.Name, organisation.BannerUrl, organisation.ColorScheme, user);
+                string bannerPath = null;
+                string avatarPath = null;
+                if(bannerImage != null && bannerImage.ContentLength > 0)
+                {
+                    var bannerFileName = Path.GetFileName(bannerImage.FileName);
+                    bannerPath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["OrganisationsImgPath"]), bannerFileName));
+                    bannerImage.SaveAs(bannerPath);
+                    bannerPath = Path.GetFileName(bannerPath);
+                }
+                if(avatarImage != null && avatarImage.ContentLength > 0)
+                {
+                    var avatarFileName = Path.GetFileName(avatarImage.FileName);
+                    avatarPath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["OrganisationsImgPath"]), avatarFileName));
+                    avatarImage.SaveAs(avatarPath);
+                    avatarPath = Path.GetFileName(avatarPath);
+                }
+                organisationManager.CreateOrganisation(organisation.Name, bannerPath, avatarPath, organisation.ColorScheme, user);
                 return RedirectToAction("Index");
             }
             catch
