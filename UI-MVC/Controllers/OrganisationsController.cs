@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
+using BB.UI.Web.MVC.Controllers.Utils;
 using BB.UI.Web.MVC.Models;
 
 namespace BB.UI.Web.MVC.Controllers
@@ -81,11 +85,27 @@ namespace BB.UI.Web.MVC.Controllers
 
         // POST: Organisations/Create
         [HttpPost]
-        public ActionResult Create(OrganisationViewModel organisation)
+        public ActionResult Create(OrganisationViewModel organisation, HttpPostedFileBase bannerImage, HttpPostedFileBase avatarImage)
         {
             try
             {
-                organisationManager.CreateOrganisation(organisation.Name, organisation.BannerUrl, organisation.ImageUrl,organisation.ColorScheme, user);
+                string bannerPath = null;
+                string avatarPath = null;
+                if(bannerImage != null && bannerImage.ContentLength > 0)
+                {
+                    var bannerFileName = Path.GetFileName(bannerImage.FileName);
+                    bannerPath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["OrganisationsImgPath"]), bannerFileName));
+                    bannerImage.SaveAs(bannerPath);
+                    bannerPath = Path.GetFileName(bannerPath);
+                }
+                if(avatarImage != null && avatarImage.ContentLength > 0)
+                {
+                    var avatarFileName = Path.GetFileName(avatarImage.FileName);
+                    avatarPath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["OrganisationsImgPath"]), avatarFileName));
+                    avatarImage.SaveAs(avatarPath);
+                    avatarPath = Path.GetFileName(avatarPath);
+                }
+                organisationManager.CreateOrganisation(organisation.Name, bannerPath, avatarPath, organisation.ColorScheme, user);
                 return RedirectToAction("Index");
             }
             catch
