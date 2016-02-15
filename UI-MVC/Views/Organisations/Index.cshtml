@@ -21,9 +21,7 @@
         <th>
             @Html.DisplayNameFor(model => model.ColorScheme)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Key)
-        </th>
+        
         <th></th>
     </tr>
 
@@ -38,9 +36,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.ColorScheme)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Key)
-        </td>
+        
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |

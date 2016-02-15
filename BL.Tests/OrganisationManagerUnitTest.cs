@@ -53,7 +53,7 @@ namespace BB.BL.Tests
                 LastName = "Jordan"
             };   
             _organisationManager = new OrganisationManager(_organisatorMockContext.Object);
-            _organisationManager.CreateOrganisation("Jonah's Songs","www.google.be", "black", "sleutel", organiser);
+            _organisationManager.CreateOrganisation("Jonah's Songs","www.google.be", "black", organiser);
             
             _organisationMockSet.Verify(m => m.Add(It.IsAny<Organisation>()), Times.Once);
             _organisatorMockContext.Verify(m => m.SaveChanges(), Times.Once);
