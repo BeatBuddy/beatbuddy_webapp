@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
 using BB.DAL.EFUser;
+using BB.DAL;
 
 namespace BB.BL
 {
     public class UserManager : IUserManager
     {
         private IUserRepository repo;
+
+        public UserManager(EFDbContext context)
+        {
+            repo = new UserRepository(context);
+        }
+
         public UserManager()
         {
             repo = new UserRepository();

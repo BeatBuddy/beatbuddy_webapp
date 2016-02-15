@@ -17,7 +17,8 @@ namespace BB.UI.Web.MVC.Migrations
 
         protected override void Seed(BB.UI.Web.MVC.Models.ApplicationDbContext context)
         {
-            AddRoles(context);
+            AddUserAndRole(context);
+            
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
@@ -30,17 +31,37 @@ namespace BB.UI.Web.MVC.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+            
         }
 
-        bool AddRoles(ApplicationDbContext context)
+        bool AddUserAndRole(ApplicationDbContext context)
         {
-            
-            
-            var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            rm.Create(new IdentityRole("Admin"));
-            rm.Create(new IdentityRole("User"));
 
-            return true;
+            IdentityResult ir;
+            IdentityResult ir1;
+            var rm = new RoleManager<IdentityRole>
+                (new RoleStore<IdentityRole>(context));
+            ir = rm.Create(new IdentityRole("Admin"));
+            ir1 = rm.Create(new IdentityRole("User"));
+            var um = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(context));
+            var user = new ApplicationUser()
+            {
+                UserName = "admin@admin.com",
+            };
+            var user1 = new ApplicationUser()
+            {
+                UserName = "user@user.com"
+            };
+            ir = um.Create(user, "password");
+            ir1 = um.Create(user1, "password");
+            if (ir.Succeeded == false)
+                return ir.Succeeded;
+            ir = um.AddToRole(user.Id, "Admin");
+            if (ir1.Succeeded == false)
+                return ir1.Succeeded;
+            ir1 = um.AddToRole(user1.Id, "User");
+            return ir.Succeeded;
         }
     }
 }

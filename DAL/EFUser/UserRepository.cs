@@ -11,6 +11,11 @@ namespace BB.DAL.EFUser
     {
         private EFDbContext ctx;
         
+        public UserRepository(EFDbContext context)
+        {
+            ctx = context;
+        }
+
         public UserRepository()
         {
             ctx = new EFDbContext();
@@ -18,7 +23,9 @@ namespace BB.DAL.EFUser
 
         public User CreateUser(User user)
         {
-            throw new NotImplementedException();
+            user = ctx.User.Add(user);
+            ctx.SaveChanges();
+            return user;
         }
 
         public void DeleteUser(long userId)
