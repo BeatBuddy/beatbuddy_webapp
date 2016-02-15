@@ -1,16 +1,22 @@
 ﻿$sidemargin: 5em;
 $sidemargin-mobile: 1em;
 $mobile-breakpoint: 600px;
+$maxpagewidth: 1500px;
 
 body {
-    margin: 0;
+    margin: auto;
+    max-width: $maxpagewidth;
     padding: 0;
+}
+
+* {
     font-family: 'Roboto', sans-serif;
 }
 
 header {
     display: block;
     padding: 1em $sidemargin;
+    margin-bottom: 1em;
 
     @media screen and (max-width: $mobile-breakpoint) {
         padding: 1em $sidemargin-mobile;
@@ -53,9 +59,17 @@ header {
             }
 
             a {
+                transition: border .2s;
+                -webkit-transition: border .2s;
+                border-bottom: 2px solid white;
+                padding-bottom: .2em;
                 text-decoration: none;
                 text-transform: lowercase;
                 color: black;
+
+                &:hover {
+                    border-bottom: 2px solid black;
+                }
             }
         }
     }
@@ -63,33 +77,72 @@ header {
 
 .body-content {
     padding: 0 $sidemargin;
+    max-width: $maxpagewidth;
+    margin: auto;
 
     @media screen and (max-width: $mobile-breakpoint) {
         padding: 0 $sidemargin-mobile;
     }
 
-    .center {
-        width: 682px;
-        height: 200px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        margin: -100px 0 0 -341px;
-        text-align: center;
+    .title {
+        font-weight: 300;
+        font-size: 1.4em;
 
         h1 {
-            font-size: 4em;
-            font-family: 'Roboto Light', 'Segoe UI Light', 'Verdana', sans-serif;
+            display: inline-block;
+            font-family: Roboto;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1em;
+            margin-top: 0;
             margin-bottom: 0;
+
+            &:after {
+                content: ' |';
+                font-weight: 200;
+            }
         }
+    }
+
+    .form-group {
+        max-width: 500px;
+
+        input {
+            padding: .5em;
+            margin-bottom: .7em;
+        }
+
+        label {
+            padding-top: .25em;
+        }
+    }
+
+    .round {
+        border-radius: 50%;
+    }
+}
+
+.btn {
+    display: inline-block;
+    padding: .4em 1em .5em 1em;
+    color: white;
+    background: black;
+    text-decoration: none;
+    text-transform: lowercase;
+    border: 2px solid black;
+    border-radius: 4px;
+
+    &:hover {
+        background: #222;
     }
 }
 
 footer {
-    width: 100%;
     display: block;
     position: absolute;
     bottom: 0;
+    width: 100%;
+    max-width: $maxpagewidth;
     font-family: sans-serif;
     padding: .2em $sidemargin;
     text-align: center;
