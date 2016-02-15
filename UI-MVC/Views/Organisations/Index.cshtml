@@ -5,10 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="title">
+    <h1>Organisations</h1> Overview
+</div>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a href="@Url.Action("Create")" class="btn">
+        <i class="material-icons">add</i>
+        Create new
+    </a>
 </p>
 <table class="table">
     <tr>
