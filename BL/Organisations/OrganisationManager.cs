@@ -19,6 +19,10 @@ namespace BB.BL
         {
             repo = new OrganisationRepository(efDbContext);
         }
+        public OrganisationManager()
+        {
+            repo = new OrganisationRepository();
+        }
         public DashboardBlock CreateDashboardBlock(string blockName, int sequence)
         {
             DashboardBlock block = new DashboardBlock()
@@ -31,17 +35,16 @@ namespace BB.BL
 
         public Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, string key, User organisator)
         {
-            Organisation organisation = new Organisation()
+            Organisation organisation = new Organisation
             {
                 Name = name,
                 BannerUrl = bannerUrl,
                 ColorScheme = colorScheme,
-                Key = key
+                Key = key,
+                DashboardBlocks = new Collection<DashboardBlock>(),
+                Playlists = new Collection<Playlist>(),
+                Users = new Dictionary<User, Role> {{organisator, Role.Organiser}}
             };
-            organisation.DashboardBlocks = new Collection<DashboardBlock>();
-            organisation.Playlists = new Collection<Playlist>();
-            organisation.Users = new Dictionary<User, Role>();
-            organisation.Users.Add(organisator, Role.Organiser);
             return repo.CreateOrganisation(organisation);
         }
 
@@ -67,7 +70,7 @@ namespace BB.BL
 
         public List<Organisation> ReadOrganisations()
         {
-            return repo.ReadOrganisations();
+            return repo.ReadOrganisations().ToList();
         }
 
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)

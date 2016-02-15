@@ -22,7 +22,17 @@ namespace BB.BL.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var organisations = new List<Organisation>();
+            var organisations = new List<Organisation>()
+            {
+                new Organisation()
+                {
+                    Name = "Maarten's Songs"
+                },
+                new Organisation()
+                {
+                    Name = "Lennart's Songs"
+                }
+            };
             var sourceList = organisations.AsQueryable();
             _organisatorMockContext = new Mock<EFDbContext>();
             _organisationMockSet = new Mock<DbSet<Organisation>>();
@@ -48,8 +58,8 @@ namespace BB.BL.Tests
             _organisationMockSet.Verify(m => m.Add(It.IsAny<Organisation>()), Times.Once);
             _organisatorMockContext.Verify(m => m.SaveChanges(), Times.Once);
 
-            Organisation organisation = _organisationMockSet.Object.ElementAt(0);
-            Assert.AreEqual(_organisationMockSet.Object.Count(), 1);
+            var organisation = _organisationMockSet.Object.ElementAt(2);
+            Assert.AreEqual(_organisationMockSet.Object.Count(), 3);
             Assert.AreEqual(organisation.Name, "Jonah's Songs");
             Assert.AreNotEqual(organisation.Name, "Test name");
             Assert.IsTrue(organisation.Users.ContainsKey(organiser));
@@ -58,9 +68,13 @@ namespace BB.BL.Tests
         }
 
         [TestMethod]
-        public void TestReadOrganisation()
+        public void TestReadOrganisations()
         {
-            
+            _organisationManager = new OrganisationManager(_organisatorMockContext.Object);
+            var organisations = _organisationManager.ReadOrganisations();
+            Assert.IsTrue(organisations.Count() == 2);
+            Assert.AreEqual("Maarten's Songs", organisations[0].Name);
+            Assert.AreEqual("Lennart's Songs", organisations[1].Name);
         }
     }
 }

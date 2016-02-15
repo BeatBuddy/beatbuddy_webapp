@@ -1,0 +1,51 @@
+﻿@model BB.BL.Domain.Organisations.Organisation
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Organisation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BannerUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BannerUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ColorScheme)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ColorScheme)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Key)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Key)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

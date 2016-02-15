@@ -54,9 +54,9 @@ namespace BB.DAL.EFOrganisation
             throw new NotImplementedException();
         }
 
-        public List<Organisation> ReadOrganisations()
+        public IEnumerable<Organisation> ReadOrganisations()
         {
-            throw new NotImplementedException();
+            return ctx.Organisations;
         }
 
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
