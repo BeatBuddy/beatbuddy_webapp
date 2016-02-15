@@ -68,7 +68,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             {
                 Name = "Jonah's Songs"
             };
-            RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation);
+            RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation, null, null);
             
             Assert.AreEqual("Index", viewResult.RouteValues["action"]);
             //Assert.IsTrue(viewResult.ViewData.Model == null);
