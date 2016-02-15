@@ -87,6 +87,7 @@ header {
     .title {
         font-weight: 300;
         font-size: 1.4em;
+        margin-bottom: .3em;
 
         h1 {
             display: inline-block;
@@ -104,12 +105,29 @@ header {
         }
     }
 
-    .form-group {
+    .extramargin{
+        margin-bottom: 1em;
+    }
+
+    form {
         max-width: 500px;
 
         input {
             padding: .5em;
             margin-bottom: .7em;
+            display: block;
+            width: 100%;
+        }
+
+        input[type=checkbox]{
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+        }
+
+        input[type=submit]{
+            display: inline-block;
+            width: initial;
         }
 
         label {
@@ -124,7 +142,8 @@ header {
 
 .btn {
     display: inline-block;
-    padding: .4em 1em .5em 1em;
+    padding: .4em 1em .5em 1em !important;
+    cursor: pointer;
     color: white;
     background: black;
     text-decoration: none;

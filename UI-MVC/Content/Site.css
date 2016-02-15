@@ -62,7 +62,8 @@ header {
       padding: 0 1em; } }
   .body-content .title {
     font-weight: 300;
-    font-size: 1.4em; }
+    font-size: 1.4em;
+    margin-bottom: .3em; }
     .body-content .title h1 {
       display: inline-block;
       font-family: Roboto;
@@ -74,19 +75,31 @@ header {
       .body-content .title h1:after {
         content: ' |';
         font-weight: 200; }
-  .body-content .form-group {
+  .body-content .extramargin {
+    margin-bottom: 1em; }
+  .body-content form {
     max-width: 500px; }
-    .body-content .form-group input {
+    .body-content form input {
       padding: .5em;
-      margin-bottom: .7em; }
-    .body-content .form-group label {
+      margin-bottom: .7em;
+      display: block;
+      width: 100%; }
+    .body-content form input[type=checkbox] {
+      display: inline-block;
+      width: 1em;
+      height: 1em; }
+    .body-content form input[type=submit] {
+      display: inline-block;
+      width: initial; }
+    .body-content form label {
       padding-top: .25em; }
   .body-content .round {
     border-radius: 50%; }
 
 .btn {
   display: inline-block;
-  padding: .4em 1em .5em 1em;
+  padding: .4em 1em .5em 1em !important;
+  cursor: pointer;
   color: white;
   background: black;
   text-decoration: none;
