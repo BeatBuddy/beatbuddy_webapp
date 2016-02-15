@@ -6,9 +6,6 @@ namespace BB.BL.Tests
     [TestClass]
     public class PlaylistManagerUnitTest
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-        }
+        
     }
 }

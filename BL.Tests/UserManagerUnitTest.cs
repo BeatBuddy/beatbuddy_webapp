@@ -58,5 +58,9 @@ namespace BB.BL.Tests
             Assert.IsTrue(user.Roles != null);
             Assert.IsNotNull(user.Id);
         }
+        [TestMethod]
+        public void TestMethod1()
+        {
+        }
     }
 }

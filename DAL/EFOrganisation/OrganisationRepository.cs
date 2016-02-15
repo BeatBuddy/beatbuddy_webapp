@@ -51,7 +51,7 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation ReadOrganisation(long organisationId)
         {
-            throw new NotImplementedException();
+            return ctx.Organisations.Find(organisationId);
         }
 
         public IEnumerable<Organisation> ReadOrganisations()

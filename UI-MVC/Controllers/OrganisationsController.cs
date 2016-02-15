@@ -12,25 +12,59 @@ namespace BB.UI.Web.MVC.Controllers
 {
     public class OrganisationsController : Controller
     {
+        private readonly IOrganisationManager organisationManager;
 
         User user = new User()
         {
             FirstName = "Jonah"
         };
-        private readonly IOrganisationManager organisationManager = new OrganisationManager();
+
+        public OrganisationsController(IOrganisationManager ioOrganisationManager)
+        {
+            organisationManager = ioOrganisationManager;
+        }
+
+        public OrganisationsController()
+        {
+            organisationManager = new OrganisationManager();
+        }
+
         // GET: Organisations
         public ActionResult Index()
         {
             List<Organisation> organisations = organisationManager.ReadOrganisations();
             //organisations = organisations.FindAll(m => m.Users.ContainsKey(user));
-            
-            return View(organisations);
+            List<OrganisationViewModel> organisationViewModels = new List<OrganisationViewModel>();
+            foreach (var organisation in organisations)
+            {
+                organisationViewModels.Add(new OrganisationViewModel()
+                {
+                    Name = organisation.Name,
+                    BannerUrl = organisation.BannerUrl,
+                    ColorScheme = organisation.ColorScheme,
+                    ImageUrl = organisation.ImageUrl
+                });
+            }
+            return View(organisationViewModels);
         }
         
         // GET: Organisations/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(long id)
         {
-            return View();
+            Organisation organisation = organisationManager.ReadOrganisation(id);
+            if (organisation != null)
+            {
+                OrganisationViewModel organisationView = new OrganisationViewModel()
+                {
+                    BannerUrl = organisation.BannerUrl,
+                    ColorScheme = organisation.ColorScheme,
+                    Name = organisation.Name,
+                    ImageUrl = organisation.ImageUrl
+                };
+                return View("Details", organisationView);
+
+            }else
+                return View("Error");
         }
 
         // GET: Organisations/Create
@@ -39,18 +73,24 @@ namespace BB.UI.Web.MVC.Controllers
             return View();
         }
 
+        public ActionResult IsNameAvailable(string name)
+        {
+            return Json(organisationManager.ReadOrganisations().All(org => org.Name != name),
+                JsonRequestBehavior.AllowGet);
+        }
+
         // POST: Organisations/Create
         [HttpPost]
-        public ActionResult Create(Organisation organisation)
+        public ActionResult Create(OrganisationViewModel organisation)
         {
             try
             {
-                organisationManager.CreateOrganisation(organisation.Name, organisation.BannerUrl, organisation.ColorScheme, organisation.Key, user);
+                organisationManager.CreateOrganisation(organisation.Name, organisation.BannerUrl, organisation.ImageUrl,organisation.ColorScheme, user);
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View("Create");
             }
         }
 

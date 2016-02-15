@@ -119,6 +119,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BL\BL.csproj">
+      <Project>{e02e9689-c627-4cf4-916d-df676423ac79}</Project>
+      <Name>BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{BBC45856-B2D8-461B-9AF9-9268D7F1032D}</Project>
+      <Name>Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UI-MVC\UI-MVC.csproj">
       <Project>{6F43CFE1-78E6-4E86-83AA-9A121A92188A}</Project>
       <Name>UI-MVC</Name>
