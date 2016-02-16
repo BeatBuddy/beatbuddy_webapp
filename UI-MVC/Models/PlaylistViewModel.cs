@@ -18,7 +18,7 @@ namespace BB.UI.Web.MVC.Models
         [Required]
         [Display(Name = "Maximum votes per user")]
         public int MaximumVotesPerUser { get; set; }
-
+          
         [Display(Name = "Image Url")]
         public string ImageUrl { get; set; }
 
