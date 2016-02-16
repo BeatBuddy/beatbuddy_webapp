@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="title">
@@ -10,7 +9,7 @@
     a new organisation
 </div>
 
-@using (Html.BeginForm("Create","Organisations", null, FormMethod.Post, new {enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Create","Organisations", null, FormMethod.Post, new {enctype = "multipart/form-data", @id="form" }))
 {
     @Html.AntiForgeryToken()
     
@@ -43,9 +42,9 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ColorScheme, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ColorScheme, htmlAttributes: new { @class = "control-label col-md-2",  })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ColorScheme, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ColorScheme, new { htmlAttributes = new { @class = "form-control"} })
                 @Html.ValidationMessageFor(model => model.ColorScheme, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -62,6 +61,4 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+

@@ -17,8 +17,6 @@ namespace BB.UI.Web.MVC
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-grid.min.css",
                       "~/Content/Site.min.css"));
-
-            bundles.Add(new StyleBundle("~/bundles/modal").Include("~/Scripts/bootstrap-modal.js", "~/Scripts/bootstrap-modalmanager.js"));
         }
     }
 }
