@@ -13,7 +13,7 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-.material-icons{
+.material-icons {
     position: relative;
     top: .25em;
     line-height: .3em;
@@ -112,12 +112,16 @@ header {
         }
     }
 
-    .extramargin{
+    .extramargin {
         margin-bottom: 1em;
     }
 
-    form {
+    .form-group {
         max-width: 500px;
+
+        label {
+            padding-top: .25em;
+        }
 
         input {
             padding: .5em;
@@ -126,24 +130,48 @@ header {
             width: 100%;
         }
 
-        input[type=checkbox]{
+        input[type=checkbox] {
             display: inline-block;
             width: 1em;
             height: 1em;
         }
 
-        input[type=submit]{
+        input[type=submit] {
             display: inline-block;
             width: initial;
         }
-
-        label {
-            padding-top: .25em;
-        }
     }
+}
 
-    .round {
-        border-radius: 50%;
+.round {
+    border-radius: 50%;
+}
+
+#results {
+    padding: 0;
+
+    li.track {
+        margin: 1em;
+        display: block;
+        min-height: 128px;
+        clear: both;
+
+        img {
+            height: 128px;
+            display: inline-block;
+            float: left;
+            margin-right: .7em;
+        }
+
+        .artist {
+            padding-top: .4em;
+            display: block;
+            font-weight: 700;
+        }
+
+        .tracktitle {
+            display: block;
+        }
     }
 }
 

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
@@ -13,7 +10,7 @@ namespace BB.BL
 {
     public class PlaylistManager : IPlaylistManager
     {
-        private IPlaylistRepository repo;
+        private readonly IPlaylistRepository repo;
         public PlaylistManager()
         {
             repo = new PlaylistRepository();
@@ -56,19 +53,6 @@ namespace BB.BL
             return repo.CreatePlaylistTrack(playlistTrack);
         }
 
-        public Track CreateTrack(string artist, string title, string url, TrackSource trackSource, string coverArtUrl)
-        {
-            Track track = new Track()
-            {
-                Artist = artist,
-                Title = title,
-                Url = url,
-                TrackSource = trackSource,
-                CoverArtUrl = coverArtUrl
-            };
-            return repo.CreateTrack(track);
-        }
-
         public TrackSource CreateTrackSource(SourceType sourceType, string url)
         {
             TrackSource trackSource = new TrackSource()
@@ -102,6 +86,18 @@ namespace BB.BL
         public void DeletePlaylistTrack(long playlistTrackId)
         {
             repo.DeletePlaylistTrack(playlistTrackId);
+        }
+
+        public Track AddTrackToPlaylist(long playlistId, string artist, string title, TrackSource trackSource, string coverArtUrl)
+        {
+            var track = new Track()
+            {
+                Artist = artist,
+                Title = title,
+                TrackSource = trackSource,
+                CoverArtUrl = coverArtUrl
+            };
+            return repo.CreateTrack(playlistId, track);
         }
 
         public void DeleteTrack(long trackId)

@@ -1,11 +1,6 @@
 ﻿using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
-using BB.BL.Domain.Users;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BB.DAL.EFPlaylist
 {
@@ -35,7 +30,7 @@ namespace BB.DAL.EFPlaylist
         void DeletePlaylistTrack(long playlistTrackId);
 
         //Track
-        Track CreateTrack(Track track);
+        Track CreateTrack(long playlistId, Track track);
         Track UpdateTrack(Track track);
         Track ReadTrack(long trackId);
         List<Track> ReadTracks();

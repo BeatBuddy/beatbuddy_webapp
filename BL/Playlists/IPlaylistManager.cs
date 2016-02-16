@@ -1,11 +1,7 @@
 ﻿using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BB.BL
 {
@@ -35,7 +31,7 @@ namespace BB.BL
         void DeletePlaylistTrack(long playlistTrackId);
 
         //Track
-        Track CreateTrack(string artist, string title, string url, TrackSource trackSource, string coverArtUrl);
+        Track AddTrackToPlaylist(long playlistId, string artist, string title, TrackSource trackSource, string coverArtUrl);
         Track UpdateTrack(Track track);
         Track ReadTrack(long trackId);
         List<Track> ReadTracks();

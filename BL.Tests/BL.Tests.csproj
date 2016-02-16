@@ -69,6 +69,7 @@
     <Compile Include="PlaylistManagerUnitTest.cs" />
     <Compile Include="OrganisationManagerUnitTest.cs" />
     <Compile Include="UserManagerUnitTest.cs" />
+    <Compile Include="YouTubeTrackProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BL\BL.csproj">
