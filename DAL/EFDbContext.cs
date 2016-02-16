@@ -29,7 +29,7 @@ namespace BB.DAL
         public DbSet<DashboardBlock> DashboardBlocks { get; set; }
         public virtual DbSet<Organisation> Organisations { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Playlist> Playlists { get; set; }
+        public virtual DbSet<Playlist> Playlists { get; set; }
         public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
         //public DbSet<SourceType> SourceTypes { get; set; }
         public DbSet<Track> Tracks { get; set; }
@@ -41,6 +41,7 @@ namespace BB.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Organisation>().Property(p => p.Name).IsRequired();
+                
         }
     }
 }

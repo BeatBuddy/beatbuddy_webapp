@@ -32,7 +32,7 @@ namespace BB.DAL.EFUser
 
         public User ReadUser(string email)
         {
-            throw new NotImplementedException();
+            return ctx.User.Single(u => u.Email.Equals(email));
         }
 
         public User ReadUser(long userId)
@@ -52,7 +52,9 @@ namespace BB.DAL.EFUser
 
         public User UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            ctx.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            ctx.SaveChanges();
+            return user;
         }
     }
 }
