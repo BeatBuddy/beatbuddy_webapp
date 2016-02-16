@@ -25,7 +25,9 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist CreatePlaylist(Playlist playlist)
         {
-            throw new NotImplementedException();
+            playlist = ctx.Playlists.Add(playlist);
+            ctx.SaveChanges();
+            return playlist;
         }
 
         public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
@@ -100,7 +102,7 @@ namespace BB.DAL.EFPlaylist
 
         public List<Playlist> ReadPlaylists()
         {
-            throw new NotImplementedException();
+            return ctx.Playlists.ToList();
         }
 
         public List<Playlist> ReadPlaylists(Organisation organisation)

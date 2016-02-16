@@ -7,6 +7,7 @@ using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
 using BB.DAL.EFUser;
 using BB.DAL;
+using BB.BL.Domain.Playlists;
 
 namespace BB.BL
 {
