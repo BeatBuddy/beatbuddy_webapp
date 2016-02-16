@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
+using BB.BL.Domain;
 using BB.DAL.EFUser;
 using BB.DAL;
+using BB.BL.Domain.Playlists;
 
 namespace BB.BL
 {
@@ -14,15 +16,11 @@ namespace BB.BL
     {
         private IUserRepository repo;
 
-        public UserManager(EFDbContext context)
+        public UserManager(ContextEnum contextEnum)
         {
-            repo = new UserRepository(context);
+            repo = new UserRepository(contextEnum);
         }
 
-        public UserManager()
-        {
-            repo = new UserRepository();
-        }
         public User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl)
         {
             User user = new User()

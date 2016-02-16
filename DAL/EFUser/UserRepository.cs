@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BB.BL.Domain;
 using BB.BL.Domain.Users;
 
 namespace BB.DAL.EFUser
@@ -11,14 +12,10 @@ namespace BB.DAL.EFUser
     {
         private EFDbContext ctx;
         
-        public UserRepository(EFDbContext context)
-        {
-            ctx = context;
-        }
 
-        public UserRepository()
+        public UserRepository(ContextEnum contextEnum)
         {
-            ctx = new EFDbContext();
+            ctx = new EFDbContext(contextEnum);
         }
 
         public User CreateUser(User user)
@@ -35,7 +32,7 @@ namespace BB.DAL.EFUser
 
         public User ReadUser(string email)
         {
-            throw new NotImplementedException();
+            return ctx.User.Single(u => u.Email.Equals(email));
         }
 
         public User ReadUser(long userId)
@@ -55,7 +52,9 @@ namespace BB.DAL.EFUser
 
         public User UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            ctx.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            ctx.SaveChanges();
+            return user;
         }
     }
 }

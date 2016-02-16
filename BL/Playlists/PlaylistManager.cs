@@ -4,6 +4,7 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
+using BB.BL.Domain;
 using BB.DAL.EFPlaylist;
 
 namespace BB.BL
@@ -13,7 +14,7 @@ namespace BB.BL
         private readonly IPlaylistRepository repo;
         public PlaylistManager()
         {
-            repo = new PlaylistRepository();
+            repo = new PlaylistRepository(contextEnum);
         }
         public Comment CreateComment(string text, User user)
         {
@@ -26,7 +27,7 @@ namespace BB.BL
             return repo.CreateComment(comment);
         }
 
-        public Playlist CreatePlaylist(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster)
+        public Playlist CreatePlaylistForUser(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy)
         {
             Playlist playlist = new Playlist()
             {
@@ -34,7 +35,8 @@ namespace BB.BL
                 MaximumVotesPerUser = maxVotesPerUser,
                 Active = active,
                 ImageUrl = imageUrl,
-                PlaylistMaster = playlistMaster,
+                PlaylistMasterId = playlistMaster.Id,
+                CreatedById = createdBy.Id,
                 ChatComments = new Collection<Comment>(),
                 Comments = new Collection<Comment>(),
                 PlaylistTracks = new Collection<PlaylistTrack>()

@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="EFDbContext.cs" />
     <Compile Include="EFDbInitializer.cs" />
+    <Compile Include="EFDbTestInitializer.cs" />
     <Compile Include="EFOrganisation\IOrganisationRepository.cs" />
     <Compile Include="EFOrganisation\OrganisationRepository.cs" />
     <Compile Include="EFPlaylist\IPlaylistRepository.cs" />

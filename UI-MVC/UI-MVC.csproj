@@ -232,6 +232,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrganisationViewModel.cs" />
+    <Compile Include="Models\PlaylistViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -246,6 +247,8 @@
     <Content Include="Content\img\logo_header.png" />
     <Content Include="Content\img\logo_small.png" />
     <Content Include="Content\img\round_shape_loader.gif" />
+    <Content Include="Content\jquery.modal.css" />
+    <Content Include="Content\modal.css" />
     <Content Include="Content\Site.css">
       <DependentUpon>Site.scss</DependentUpon>
     </Content>
@@ -266,11 +269,13 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.modal.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -309,11 +314,14 @@
     <Content Include="Views\Organisations\Index.cshtml" />
     <Content Include="Views\Organisations\Create.cshtml" />
     <Content Include="Views\Organisations\Details.cshtml" />
+    <Content Include="Views\Playlists\Create.cshtml" />
+    <Content Include="Views\Playlists\Index.cshtml" />
     <Content Include="Views\Playlist\AddTrack.cshtml" />
     <Content Include="Views\Playlist\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
+    <Folder Include="App_Data\Img\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

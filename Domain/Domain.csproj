@@ -82,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContextEnum.cs" />
     <Compile Include="Playlists\Comment.cs" />
     <Compile Include="Organisations\DashboardBlock.cs" />
     <Compile Include="Organisations\Organisation.cs" />

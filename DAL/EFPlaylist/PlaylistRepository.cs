@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
@@ -13,9 +14,9 @@ namespace BB.DAL.EFPlaylist
     {
         private EFDbContext ctx;
         
-        public PlaylistRepository()
+        public PlaylistRepository(ContextEnum contextEnum)
         {
-            ctx = new EFDbContext();
+            ctx = new EFDbContext(contextEnum);
         }
 
         public Comment CreateComment(Comment comment)
@@ -25,7 +26,9 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist CreatePlaylist(Playlist playlist)
         {
-            throw new NotImplementedException();
+            playlist = ctx.Playlists.Add(playlist);
+            ctx.SaveChanges();
+            return playlist;
         }
 
         public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
@@ -112,7 +115,7 @@ namespace BB.DAL.EFPlaylist
 
         public List<Playlist> ReadPlaylists()
         {
-            throw new NotImplementedException();
+            return ctx.Playlists.ToList();
         }
 
         public List<Playlist> ReadPlaylists(Organisation organisation)

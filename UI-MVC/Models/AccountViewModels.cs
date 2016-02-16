@@ -7,6 +7,7 @@ namespace BB.UI.Web.MVC.Models
     {
         [Required]
         [Display(Name = "Email")]
+
         public string Email { get; set; }
     }
 
