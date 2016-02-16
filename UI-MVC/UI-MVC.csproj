@@ -314,8 +314,8 @@
     <Content Include="Views\Organisations\Index.cshtml" />
     <Content Include="Views\Organisations\Create.cshtml" />
     <Content Include="Views\Organisations\Details.cshtml" />
-    <Content Include="Views\Playlists\Create.cshtml" />
-    <Content Include="Views\Playlists\Index.cshtml" />
+    <Content Include="Views\Playlist\Create.cshtml" />
+    <Content Include="Views\Playlist\Index.cshtml" />
     <Content Include="Views\Playlist\AddTrack.cshtml" />
     <Content Include="Views\Playlist\View.cshtml" />
   </ItemGroup>

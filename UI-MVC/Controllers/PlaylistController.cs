@@ -1,5 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using BB.BL;
+using BB.BL.Domain;
+using BB.BL.Domain.Playlists;
+using BB.BL.Domain.Users;
+using BB.UI.Web.MVC.Models;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -7,19 +12,28 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private readonly IPlaylistManager playlistManager;
         private readonly ITrackProvider trackProvider;
+        private readonly IUserManager userManager;
 
-        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider)
+        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
         {
             this.playlistManager = playlistManager;
             this.trackProvider = trackProvider;
+            this.userManager = userManager;
         }
 
         public PlaylistController()
         {
-            playlistManager = new PlaylistManager();
+            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
+            userManager = new UserManager(ContextEnum.BeatBuddy);
             trackProvider = new YouTubeTrackProvider();
         }
 
+        public PlaylistController(ContextEnum contextEnum)
+        {
+            playlistManager = new PlaylistManager(contextEnum);
+            userManager = new UserManager(contextEnum);
+            trackProvider = new YouTubeTrackProvider();
+        }
         public ActionResult View(long id)
         {
             return View();
@@ -58,6 +72,44 @@ namespace BB.UI.Web.MVC.Controllers
             var searchResult = youtubeProvider.Search(q);
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult IsNameAvailable(string email)
+        {
+            return Json(userManager.ReadUsers().All(org => org.Email.Equals(email)),
+                JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: Playlists
+        public ActionResult Index()
+        {
+            return View(playlistManager.ReadPlaylists());
+        }
+
+        // GET: Playlists/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        // GET: Playlists/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Playlists/Create
+        [HttpPost]
+        public ActionResult Create(PlaylistViewModel collection)
+        {
+            string username = User.Identity.Name;
+            // TODO: Add insert logic here
+            User user = userManager.ReadUser(username);
+            User playlistMaster = userManager.ReadUser(collection.PlaylistMaster);
+            Playlist playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, collection.ImageUrl, playlistMaster, user);
+
+            return RedirectToAction("Index");
+
         }
     }
 }
