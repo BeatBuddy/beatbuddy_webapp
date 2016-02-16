@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
@@ -13,9 +14,16 @@ namespace BB.DAL
 {
     public class EFDbContext : DbContext
     {
-        public EFDbContext(): base("BeatBuddy")
+        public EFDbContext(ContextEnum test) : base(test.ToString())
         {
-            Database.SetInitializer<EFDbContext>(new EFDbInitializer());
+            if (test.Equals(ContextEnum.BeatBuddyTest))
+            {
+                Database.SetInitializer<EFDbContext>(new EFDbTestInitializer());
+            }
+            else
+            {
+                Database.SetInitializer<EFDbContext>(new EFDbInitializer());
+            }
         }
 
         public DbSet<DashboardBlock> DashboardBlocks { get; set; }

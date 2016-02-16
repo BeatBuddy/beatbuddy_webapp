@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 
 namespace BB.DAL.EFOrganisation
@@ -12,14 +14,9 @@ namespace BB.DAL.EFOrganisation
     {
         private EFDbContext ctx;
 
-        public OrganisationRepository(EFDbContext context)
+        public OrganisationRepository(ContextEnum contextEnum)
         {
-            ctx = context;
-        }
-
-        public OrganisationRepository()
-        {
-            ctx= new EFDbContext();
+            ctx = new EFDbContext(contextEnum);
         }
 
         public DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock)

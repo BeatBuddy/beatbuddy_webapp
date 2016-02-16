@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
+using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.DAL;
 using BB.DAL.EFOrganisation;
@@ -15,14 +16,11 @@ namespace BB.BL
     public class OrganisationManager : IOrganisationManager
     {
         private IOrganisationRepository repo;
-        public OrganisationManager(EFDbContext efDbContext)
+        public OrganisationManager(ContextEnum contextEnum)
         {
-            repo = new OrganisationRepository(efDbContext);
+            repo = new OrganisationRepository(contextEnum);
         }
-        public OrganisationManager()
-        {
-            repo = new OrganisationRepository();
-        }
+        
         public DashboardBlock CreateDashboardBlock(string blockName, int sequence)
         {
             DashboardBlock block = new DashboardBlock()
@@ -33,13 +31,13 @@ namespace BB.BL
             return repo.CreateDashboardBlock(block);
         }
 
-        public Organisation CreateOrganisation(string name, string bannerUrl,string ImageUrl ,string colorScheme, User organisator)
+        public Organisation CreateOrganisation(string name, string bannerUrl,string imageUrl ,string colorScheme, User organisator)
         {
             Organisation organisation = new Organisation
             {
                 Name = name,
                 BannerUrl = bannerUrl,
-                ImageUrl = ImageUrl,
+                ImageUrl = imageUrl,
                 ColorScheme = colorScheme,
                 DashboardBlocks = new Collection<DashboardBlock>(),
                 Playlists = new Collection<Playlist>(),

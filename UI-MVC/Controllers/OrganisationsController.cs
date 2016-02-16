@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using BB.BL;
+using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Controllers.Utils;
@@ -23,21 +24,20 @@ namespace BB.UI.Web.MVC.Controllers
             FirstName = "Jonah"
         };
 
-        public OrganisationsController(IOrganisationManager ioOrganisationManager)
-        {
-            organisationManager = ioOrganisationManager;
-        }
-
         public OrganisationsController()
         {
-            organisationManager = new OrganisationManager();
+            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
+        }
+
+        public OrganisationsController(ContextEnum contextEnum)
+        {
+            organisationManager = new OrganisationManager(contextEnum);
         }
 
         // GET: Organisations
         public ActionResult Index()
         {
             List<Organisation> organisations = organisationManager.ReadOrganisations();
-            //organisations = organisations.FindAll(m => m.Users.ContainsKey(user));
             List<OrganisationViewModel> organisationViewModels = new List<OrganisationViewModel>();
             foreach (var organisation in organisations)
             {

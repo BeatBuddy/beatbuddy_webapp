@@ -7,6 +7,7 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 using System.Collections.ObjectModel;
+using BB.BL.Domain;
 using BB.DAL.EFPlaylist;
 
 namespace BB.BL
@@ -14,9 +15,9 @@ namespace BB.BL
     public class PlaylistManager : IPlaylistManager
     {
         private IPlaylistRepository repo;
-        public PlaylistManager()
+        public PlaylistManager(ContextEnum contextEnum)
         {
-            repo = new PlaylistRepository();
+            repo = new PlaylistRepository(contextEnum);
         }
         public Comment CreateComment(string text, User user)
         {

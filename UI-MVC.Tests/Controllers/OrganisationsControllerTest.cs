@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
+using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Controllers;
@@ -16,21 +17,12 @@ namespace BB.UI.Web.MVC.Tests.Controllers
     public class OrganisationsControllerTest
     {
         private OrganisationsController _organisationsController;
-        private Mock<IOrganisationManager> _organisationManagerMock;
+        
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _organisationManagerMock = new Mock<IOrganisationManager>();
-            _organisationsController = new OrganisationsController(_organisationManagerMock.Object);
-            var organisation = new Organisation()
-            {
-                Id = 1,
-                Name = "Jonah's Songs"
-            };
-            var organisations = new List<Organisation>() {organisation};
-            _organisationManagerMock.Setup(mgr => mgr.ReadOrganisation(1)).Returns(organisation);
-            _organisationManagerMock.Setup(mgr => mgr.ReadOrganisations()).Returns(organisations);
+            _organisationsController = new OrganisationsController(ContextEnum.BeatBuddyTest);
         }
 
         [TestMethod]
@@ -39,8 +31,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             ViewResult result = _organisationsController.Index() as ViewResult;
             Assert.IsNotNull(result);
             var organisations = result.Model as List<OrganisationViewModel>;
-            Assert.AreEqual(organisations.Count, 1);
-            //Assert.AreEqual(organisations.First().Id, 1);
+            Assert.AreEqual(1, organisations.Count);
         }
 
         [TestMethod]
@@ -49,7 +40,6 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             ViewResult viewResult = _organisationsController.Details(1) as ViewResult;
             var organisation = (OrganisationViewModel) viewResult.ViewData.Model; 
             Assert.AreEqual("Jonah's Songs", organisation.Name);
-            
             Assert.AreEqual("Details", viewResult.ViewName);
         }
 
@@ -66,12 +56,10 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         {
             OrganisationViewModel organisation = new OrganisationViewModel()
             {
-                Name = "Jonah's Songs"
+                Name = "Maarten's Songs"
             };
             RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation, null, null);
-            
             Assert.AreEqual("Index", viewResult.RouteValues["action"]);
-            //Assert.IsTrue(viewResult.ViewData.Model == null);
         }
 
     }

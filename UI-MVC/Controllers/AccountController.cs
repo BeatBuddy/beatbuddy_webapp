@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BB.BL.Domain.Users;
 using BB.BL;
+using BB.BL.Domain;
 using BB.UI.Web.MVC.Controllers.Utils;
 
 namespace BB.UI.Web.MVC.Controllers
@@ -22,11 +23,18 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private UserManager userMgr = new UserManager();
+        private UserManager userMgr;
+
+        public AccountController(ContextEnum contextEnum)
+        {
+            userMgr = new UserManager(contextEnum);
+        }
 
         public AccountController()
         {
+            userMgr = new UserManager(ContextEnum.BeatBuddy);
         }
+
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
