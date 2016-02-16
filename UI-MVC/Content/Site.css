@@ -6,6 +6,12 @@
 * {
   font-family: 'Roboto', sans-serif; }
 
+.material-icons {
+  position: relative;
+  top: .25em;
+  line-height: .3em;
+  margin-left: -.1em; }
+
 header {
   display: block;
   padding: 1em 5em;
