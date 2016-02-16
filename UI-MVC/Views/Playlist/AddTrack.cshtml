@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+<div class="title">
+    <h1>Add</h1> a track
+</div>
+
+<div class="form-group row">
+    @Html.Label("Search", new { @class = "col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBox("query")
+    </div>
+</div>
+
+<img id="loading" src="~/Content/img/round_shape_loader.gif" alt="loading" hidden />
+
+<ul id="results" class="row"></ul>
+
+@section scripts{
+
+    <script>
+        var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
+            '<img class="thumbnail" src="${CoverArtUrl}"/>' +
+            '<span class="artist">${Artist}</span>' +
+            '<span class="tracktitle">${Title}</span>' +
+            '</li>';
+        $.template("trackTemplate", markup);
+
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("#loading").show();
+            },
+            complete: function () {
+                $("#loading").hide();
+            }
+        });
+        $("#loading").hide();
+
+        function fetchQueryResults() {
+            $.ajax('@Url.Action("SearchTrack")/?q=' + $('#query').val())
+                .done(function (result) {
+                    $("#results").empty();
+                    $.tmpl("trackTemplate", result).appendTo("#results");
+                    $("#results li").on("click", function () {
+                        addTrack($(this).attr('data-id'));
+                    });
+                })
+                .fail(function () {
+                    alert("error");
+                });
+        }
+
+        function addTrack(id) {
+            $.ajax({
+                url: '@Url.Action("AddTrack")',
+                method: 'POST',
+                data: { playlistId: @ViewBag.PlaylistId, id: id }
+            }).done(function () {
+                window.location.href = '@Url.Action("View", new { id = @ViewBag.PlaylistId })';
+            })
+            .fail(function () {
+                alert('Failed!');
+            });
+        }
+
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
+        var debouncedFetch = debounce(function () {
+            fetchQueryResults();
+        }, 500);
+
+        $("#query").on('keydown', function () {
+            debouncedFetch();
+        });
+    </script>
+}

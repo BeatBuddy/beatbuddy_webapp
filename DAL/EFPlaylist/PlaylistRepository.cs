@@ -66,6 +66,18 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
+        public Track CreateTrack(long playlistId, Track track)
+        {
+            var playlist = ctx.Playlists.Find(playlistId);
+            if (playlist == null) return null;
+
+            var playlistTrack = new PlaylistTrack {Track = track};
+            playlist.PlaylistTracks.Add(playlistTrack);
+
+            ctx.SaveChanges();
+            return playlistTrack.Track;
+        }
+
         public void DeleteTrack(long trackId)
         {
             throw new NotImplementedException();

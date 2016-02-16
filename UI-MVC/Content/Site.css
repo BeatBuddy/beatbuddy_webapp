@@ -83,24 +83,44 @@ header {
         font-weight: 200; }
   .body-content .extramargin {
     margin-bottom: 1em; }
-  .body-content form {
+  .body-content .form-group {
     max-width: 500px; }
-    .body-content form input {
+    .body-content .form-group label {
+      padding-top: .25em; }
+    .body-content .form-group input {
       padding: .5em;
       margin-bottom: .7em;
       display: block;
       width: 100%; }
-    .body-content form input[type=checkbox] {
+    .body-content .form-group input[type=checkbox] {
       display: inline-block;
       width: 1em;
       height: 1em; }
-    .body-content form input[type=submit] {
+    .body-content .form-group input[type=submit] {
       display: inline-block;
       width: initial; }
-    .body-content form label {
-      padding-top: .25em; }
-  .body-content .round {
-    border-radius: 50%; }
+
+.round {
+  border-radius: 50%; }
+
+#results {
+  padding: 0; }
+  #results li.track {
+    margin: 1em;
+    display: block;
+    min-height: 128px;
+    clear: both; }
+    #results li.track img {
+      height: 128px;
+      display: inline-block;
+      float: left;
+      margin-right: .7em; }
+    #results li.track .artist {
+      padding-top: .4em;
+      display: block;
+      font-weight: 700; }
+    #results li.track .tracktitle {
+      display: block; }
 
 .btn {
   display: inline-block;
