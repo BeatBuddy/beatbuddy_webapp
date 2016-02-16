@@ -20,6 +20,7 @@ namespace BB.BL.Domain.Organisations
     {
         [Key]
         public long Id { get; set; }
+        [Index(IsUnique = true), MaxLength(100)]
         public string Name { get; set; }
         public string BannerUrl { get; set; }
         public string ImageUrl { get; set; }

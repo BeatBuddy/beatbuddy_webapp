@@ -46,7 +46,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestOrganisationsDetailsView_Wrong_Id()
         {
-            ViewResult viewResult = _organisationsController.Details(100) as ViewResult;
+            ViewResult viewResult = _organisationsController.Details(-1) as ViewResult;
             Assert.AreEqual("Error", viewResult.ViewName);
             Assert.IsTrue(viewResult.ViewData.Model == null);
         }
