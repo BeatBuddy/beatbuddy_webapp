@@ -7,13 +7,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BB.BL.Domain;
 
 namespace BB.UI.Web.MVC.Controllers
 {
     public class PlaylistsController : Controller
     {
-        private IPlaylistManager playlistMgr = new PlaylistManager();
-        private IUserManager userMgr = new UserManager();
+        private IPlaylistManager playlistMgr;
+        private IUserManager userMgr;
+
+        public PlaylistsController()
+        {
+            playlistMgr = new PlaylistManager(ContextEnum.BeatBuddy);
+            userMgr = new UserManager(ContextEnum.BeatBuddy);
+        }
+
+        public PlaylistsController(ContextEnum contextEnum)
+        {
+            playlistMgr = new PlaylistManager(contextEnum);
+            userMgr = new UserManager(contextEnum);
+        }
         // GET: Playlists
         public ActionResult Index()
         {

@@ -15,7 +15,7 @@ namespace BB.BL
     public class PlaylistManager : IPlaylistManager
     {
         private IPlaylistRepository repo;
-        public PlaylistManager()
+        public PlaylistManager(ContextEnum contextEnum)
         {
             repo = new PlaylistRepository(contextEnum);
         }
