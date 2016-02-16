@@ -110,7 +110,7 @@ namespace BB.UI.Web.MVC.Controllers
             }
             catch
             {
-                return View("Create");
+                return View(organisation);
             }
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BB.BL.Domain.Users;
 using BB.BL;
+using BB.UI.Web.MVC.Controllers.Utils;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -150,16 +153,19 @@ namespace BB.UI.Web.MVC.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, HttpPostedFileBase profileImage)
         {
-            string[] foto = null;
-            if(model.ImageUrl != null)
+            string imagePath = null;
+            if(profileImage != null && profileImage.ContentLength > 0)
             {
-                foto = model.ImageUrl.Split(new string[] { "base64," }, StringSplitOptions.None);
+                var imageFileName = Path.GetFileName(profileImage.FileName);
+                imagePath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["UsersImgPath"]), imageFileName));
+                profileImage.SaveAs(imagePath);
+                imagePath = Path.GetFileName(imagePath);
             }
             if (ModelState.IsValid)
             {
-                userMgr.CreateUser(model.Email, model.LastName, model.FirstName, model.NickName, foto == null ? null : foto[1]);
+                userMgr.CreateUser(model.Email, model.LastName, model.FirstName, model.NickName, imagePath);
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
