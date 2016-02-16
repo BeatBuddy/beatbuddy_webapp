@@ -62,8 +62,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.AreEqual("Index", viewResult.RouteValues["action"]);
         }
 
-        [ClassCleanup]
-        public void AfterTestCleaning()
+        [AssemblyCleanup]
+        public static void AfterTestCleaning()
         {
             //database nog leegmaken
         }
