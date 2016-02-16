@@ -8,7 +8,7 @@ using BB.BL.Domain.Organisations;
 
 namespace BB.DAL
 {
-    class EFDbTestInitializer : DropCreateDatabaseAlways<EFDbContext>
+    class EFDbTestInitializer : DropCreateDatabaseIfModelChanges<EFDbContext>
     {
         protected override void Seed(EFDbContext context)
         {
