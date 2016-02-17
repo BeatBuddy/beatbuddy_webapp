@@ -8,7 +8,7 @@ namespace BB.UI.Web.MVC.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<BB.UI.Web.MVC.Models.ApplicationDbContext>
+    public sealed class Configuration : DbMigrationsConfiguration<BB.UI.Web.MVC.Models.ApplicationDbContext>
     {
         public Configuration()
         {

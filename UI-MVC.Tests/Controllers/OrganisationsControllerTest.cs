@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
+
 using BB.UI.Web.MVC.Controllers;
 using BB.UI.Web.MVC.Models;
+using BB.UI.Web.MVC.Migrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -23,6 +27,10 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         public void TestInitialize()
         {
             _organisationsController = new OrganisationsController(ContextEnum.BeatBuddyTest);
+            var migratorConfig = new Migrations.Configuration();
+            migratorConfig.TargetDatabase = new DbConnectionInfo(ContextEnum.BeatBuddyTest.ToString());
+            var dbMigrator = new DbMigrator(migratorConfig);
+            dbMigrator.Update();
         }
 
         [TestMethod]
@@ -62,11 +70,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.AreEqual("Index", viewResult.RouteValues["action"]);
         }
 
-        [AssemblyCleanup]
-        public static void AfterTestCleaning()
-        {
-            //database nog leegmaken
-        }
+        
 
     }
 }
