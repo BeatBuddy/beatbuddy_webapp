@@ -4,8 +4,11 @@
     ViewBag.Title = "Log in";
 }
 
+<div class="center-block">
+    <img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" />
+</div>
 <div class="title">
-    <h1>Log in</h1> sign in to your account
+    <h3>Sign in to your account</h3>
 </div>
 
 <div class="center-block">
@@ -25,12 +28,12 @@
             </div>
 
             <div class="center-block">
-                <input type="submit" value="Login" style="width: 75%" class="btn btn-default"/>
+                <input type="submit" value="Login" style="width: 75%; height: 3em; margin-top: 1em" class="btn btn-default"/>
             </div>
             <p></p>
-            <div class="center-block">
-                @Html.ActionLink("Register", "Register", "", new {@class = "btn btn-default", style="width: 90%; margin-top: 1em"})
-            </div>
+        <div class="center-block">
+            <input type="button" value="Register" onclick="window.location='/Account/Register'" style="width: 75%; height: 3em" class="btn btn-default"/>
+        </div>
 
        
         @* Enable this once you have account confirmation enabled for password reset functionality

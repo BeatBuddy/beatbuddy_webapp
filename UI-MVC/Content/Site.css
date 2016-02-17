@@ -135,6 +135,7 @@ header {
   border: 1px solid #000;
   outline: none; }
 
+
 .round {
   border-radius: 50%; }
 
@@ -173,6 +174,9 @@ header {
   border-radius: 4px; }
   .btn:hover {
     background: #222; }
+
+.btn-default {
+  color: white; }
 
 footer {
   display: block;
