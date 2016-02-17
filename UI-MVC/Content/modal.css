@@ -50,7 +50,10 @@
     to {top:0; opacity:1}
 }
 
-.modal-body {padding: 50px 16px;}
+.modal-body {
+    padding: 50px 16px;
+             
+}
 
 
 .close {
@@ -60,8 +63,8 @@
 	position: absolute;
 	right: -12px;
 	text-align: center;
-	top: -10px;
-	width: 24px;
+	top: -15px;
+	width: 26px;
 	text-decoration: none;
 	font-weight: bold;
 	-webkit-border-radius: 12px;

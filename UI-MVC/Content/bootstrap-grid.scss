@@ -1,4 +1,5 @@
-﻿@-ms-viewport {
+﻿
+@-ms-viewport {
     width: device-width;
 }
 
@@ -1127,10 +1128,11 @@
 
 .center-block {
     display: block;
+    max-width:400px;
     margin-left: auto;
     margin-right: auto;
+    text-align:center;
 }
-
 .pull-right {
     float: right !important;
 }
