@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
-using BB.BL.Domain.Users;
 
 namespace BB.DAL.EFPlaylist
 {
@@ -72,6 +72,7 @@ namespace BB.DAL.EFPlaylist
             if (playlist == null) return null;
 
             var playlistTrack = new PlaylistTrack {Track = track};
+            if(playlist.PlaylistTracks == null) playlist.PlaylistTracks = new Collection<PlaylistTrack>();
             playlist.PlaylistTracks.Add(playlistTrack);
 
             ctx.SaveChanges();
@@ -110,7 +111,10 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist ReadPlaylist(long playlistId)
         {
-            throw new NotImplementedException();
+            return ctx.Playlists
+                .Include(p => p.PlaylistTracks)
+                .Include("PlaylistTracks.Track")
+                .First(p => p.Id == playlistId);
         }
 
         public List<Playlist> ReadPlaylists()

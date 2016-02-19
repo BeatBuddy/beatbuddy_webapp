@@ -101,6 +101,51 @@ header {
     .body-content .form-group input[type=submit] {
       display: inline-block;
       width: initial; }
+  .body-content table {
+    border-collapse: collapse;
+    border: none; }
+    .body-content table th {
+      padding: 1em 0;
+      text-transform: uppercase;
+      text-align: left;
+      font-weight: 700;
+      font-size: .8em; }
+    .body-content table td {
+      padding: .5em; }
+    .body-content table th {
+      padding: .62em; }
+
+#playlist-tracks {
+  padding: 0;
+  width: 100%; }
+  #playlist-tracks .track {
+    min-height: 128px;
+    clear: both; }
+    #playlist-tracks .track .albumart {
+      height: 48px;
+      display: inline-block;
+      float: left;
+      margin-right: .7em; }
+    #playlist-tracks .track .artist {
+      min-width: 150px; }
+    #playlist-tracks .track .tracktitle {
+      min-width: 150px; }
+
+#player {
+  margin-top: 2em;
+  display: inline-block;
+  height: 64px;
+  border-top: 1px solid black;
+  width: 100%;
+  padding-top: .5em; }
+  #player h1 {
+    display: inline-block;
+    font-family: Roboto;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 0; }
 
 .centerimage {
   text-align: center; }
@@ -194,6 +239,9 @@ header {
 
 .btn-default {
   color: white; }
+
+.btn-right {
+  float: right; }
 
 footer {
   display: block;
