@@ -5,7 +5,6 @@ $maxpagewidth: 1500px;
 
 body {
     margin: auto;
-    max-width: $maxpagewidth;
     padding: 0;
 }
 
@@ -23,7 +22,8 @@ body {
 header {
     display: block;
     padding: 1em $sidemargin;
-    margin-bottom: 1em;
+    margin: 0 auto;
+    max-width: $maxpagewidth;
 
     @media screen and (max-width: $mobile-breakpoint) {
         padding: 1em $sidemargin-mobile;
@@ -82,8 +82,51 @@ header {
     }
 }
 
+#banner{
+    background-image: url("img/banner.jpg");
+    background-size: cover;
+    width: 100%;
+    min-height: 500px;
+    z-index: 0;
+
+    .content{
+        padding: 4em $sidemargin 4em $sidemargin;
+        margin: 0 auto;
+        max-width: $maxpagewidth;
+        color: white;
+
+        h1 {
+            font-weight: 100;
+            color: white;
+            font-size: 5em;
+            margin-bottom: 0;
+            text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+        }
+        h2{
+            margin-top: 0;
+            font-weight: 200;
+            font-size: 2em;
+            text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+        }
+
+        .button{
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-size: 2.2em;
+            padding: .2em 1em;
+            text-transform: lowercase;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 100;
+            margin-right: .3em;
+        }
+    }
+}
+
 .body-content {
-    padding: 0 $sidemargin;
+    padding: 1em $sidemargin;
     max-width: $maxpagewidth;
     margin: auto;
 
