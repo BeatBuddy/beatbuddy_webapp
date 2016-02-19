@@ -79,13 +79,14 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult IsNameAvailable(string email)
         {
-            return Json(userManager.ReadUsers().All(org => org.Email.Equals(email)),
+            return Json(userManager.ReadUsers().All(org => org.Email!=email),
                 JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult IsOrganisationAvailable(string organisation)
         {
-            return Json(organisationManager.ReadOrganisations().All(org => org.Name.Equals(organisation)),
+            User user = userManager.ReadUser(User.Identity.Name);
+            return Json(organisationManager.ReadOrganisations(user).All(org => org.Name.Equals(organisation)),
                 JsonRequestBehavior.AllowGet);
         }
 

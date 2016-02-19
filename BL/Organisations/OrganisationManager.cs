@@ -71,6 +71,20 @@ namespace BB.BL
             return repo.ReadOrganisations().ToList();
         }
 
+        public List<Organisation> ReadOrganisations(User user)
+        {
+            List<Organisation> organisations = new List<Organisation>();
+            foreach (KeyValuePair<Organisation, Role> entry in user.Roles)
+            {
+                if(entry.Value == Role.Organiser || entry.Value == Role.Co_Organiser)
+                {
+                    organisations.Add(entry.Key);
+                }
+            }
+
+            return organisations;
+        }
+
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
         {
             return repo.UpdateDashboardBlock(block);

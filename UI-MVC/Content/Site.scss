@@ -128,14 +128,13 @@ header {
             margin-bottom: .7em;
             display: block;
             width: 100%;
-            border-radius:10px;
+            border-radius: 10px;
         }
 
         input[type=checkbox] {
             display: inline-block;
             width: 1em;
             height: 1em;
-
         }
 
         input[type=submit] {
@@ -143,9 +142,74 @@ header {
             width: initial;
         }
     }
+
+    table {
+        border-collapse: collapse;
+        border: none;
+
+        th {
+            padding: 1em 0;
+            text-transform: uppercase;
+            text-align: left;
+            font-weight: 700;
+            font-size: .8em;
+        }
+
+        td{
+            padding: .5em;
+        }
+        th{
+            padding: .62em;
+        }
+    }
 }
 
-.custom-input{
+#playlist-tracks {
+    padding: 0;
+    width: 100%;
+
+    .track {
+        min-height: 128px;
+        clear: both;
+
+        .albumart {
+            height: 48px;
+            display: inline-block;
+            float: left;
+            margin-right: .7em;
+        }
+
+        .artist {
+            min-width: 150px;
+        }
+
+        .tracktitle {
+            min-width: 150px;
+        }
+    }
+}
+
+#player {
+    margin-top: 2em;
+    display: inline-block;
+    height: 64px;
+    border-top: 1px solid black;
+    width: 100%;
+    padding-top: .5em;
+
+
+    h1 {
+        display: inline-block;
+        font-family: Roboto;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 1.3em;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.custom-input {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     -ms-border-radius: 3px;
@@ -170,7 +234,7 @@ header {
     width: 270px; 
 }
 
-.custom-input:focus{
+.custom-input:focus {
     -webkit-box-shadow: 0 0 2px #000 inset;
     -moz-box-shadow: 0 0 2px #000 inset;
     -ms-box-shadow: 0 0 2px #000 inset;
@@ -180,6 +244,7 @@ header {
     border: 1px solid #000;
     outline: none;
 }
+
 .round {
     border-radius: 50%;
 }
@@ -211,10 +276,12 @@ header {
         }
     }
 }
+
 .input-validation-error {
     border: 1px solid #ff0000;
     background-color: #ffeeee;
 }
+
 .btn {
     display: inline-block;
     padding: .4em 1em .5em 1em !important;
@@ -230,8 +297,13 @@ header {
         background: #222;
     }
 }
-.btn-default{
-    color:white;
+
+.btn-default {
+    color: white;
+}
+
+.btn-right{
+    float: right;
 }
 
 footer {
