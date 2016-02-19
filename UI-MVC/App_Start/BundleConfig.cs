@@ -18,6 +18,9 @@ namespace BB.UI.Web.MVC
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-grid.min.css",
                       "~/Content/Site.min.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/autocompleter")
+                .Include("~/Scripts/jquery.easy-autocomplete.js"));
         }
     }
 }

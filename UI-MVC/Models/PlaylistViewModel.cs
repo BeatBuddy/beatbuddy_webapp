@@ -23,7 +23,12 @@ namespace BB.UI.Web.MVC.Models
         public string ImageUrl { get; set; }
 
         [Display(Name = "Playlist master email")]
-        [Remote("IsNameAvailable", "Playlists", ErrorMessage = "Email found")]
+        [Remote("IsNameAvailable", "Playlists", ErrorMessage = "Email not found")]
         public string PlaylistMaster { get; set; }
+
+        [Display(Name = "Organisation Name")]
+        [Remote("IsOrganisationAvailable", "Playlists", ErrorMessage = "Organisation not found")]
+        public string Organisation { get; set; }
+        
     }
 }

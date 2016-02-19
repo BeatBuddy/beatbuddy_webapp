@@ -135,7 +135,6 @@ header {
   border: 1px solid #000;
   outline: none; }
 
-
 .round {
   border-radius: 50%; }
 
@@ -190,4 +189,7 @@ footer {
   @media screen and (max-width: 600px) {
     footer {
       padding: 0.2em 1em; } }
+
+.hidden {
+  display: none; }
 

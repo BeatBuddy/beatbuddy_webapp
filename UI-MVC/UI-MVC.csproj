@@ -244,6 +244,8 @@
     <Content Include="Content\bootstrap-grid.min.css">
       <DependentUpon>bootstrap-grid.css</DependentUpon>
     </Content>
+    <Content Include="Content\easy-autocomplete.css" />
+    <Content Include="Content\easy-autocomplete.themes.css" />
     <Content Include="Content\img\logo_header.png" />
     <Content Include="Content\img\logo_small.png" />
     <Content Include="Content\img\round_shape_loader.gif" />
@@ -268,6 +270,7 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.easy-autocomplete.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

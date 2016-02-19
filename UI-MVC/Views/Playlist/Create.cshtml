@@ -4,11 +4,35 @@
     ViewBag.Title = "CreatePlaylist";
     
 }
-
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>jQuery UI Autocomplete - Default functionality</title>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.easy-autocomplete.js"></script>
+    <link rel="stylesheet" href="~/Content/easy-autocomplete.css">
+    <link rel="stylesheet" href="~/Content/easy-autocomplete.themes.css">
+    <script>
+        var options = { data: ["blue", "green", "pink"] };
+        $("#playlistmaster").easyAutocomplete(options);
+    </script>
+    <script>
+        function Organisatie() {
+            if (document.getElementById("organisatie").checked == true) {
+                document.getElementById("OrganisationName").style.display = 'block';
+                document.getElementById("OrganisationLabel").style.display = 'block';
+            } else if (document.getElementById("organisatie").checked == false) {
+                document.getElementById("OrganisationName").style.display = 'none';
+                document.getElementById("OrganisationLabel").style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
 <h2>CreatePlaylist</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "Playlist", null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
 {
     @Html.AntiForgeryToken()
     
@@ -43,11 +67,21 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PlaylistMaster, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PlaylistMaster, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.PlaylistMaster, new { htmlAttributes = new { @class = "form-control", @id = "playlistmaster"} })
                 @Html.ValidationMessageFor(model => model.PlaylistMaster, "", new { @class = "text-danger" })
             </div>
         </div>
 
+        <div class="form-group">
+            <div class="col-md-10">
+                <p>Wilt u een playlist aanmaken voor een organisatie?</p> <input type="checkbox" id="organisatie" onchange="Organisatie()" />
+                @Html.LabelFor(model => model.Organisation, htmlAttributes: new { @class = "control-label col-md-2", @id= "OrganisationLabel", @style = "display:none" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Organisation, new { id = "OrganisationName", style="display:none" })
+                    @Html.ValidationMessageFor(model => model.Organisation, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -60,7 +94,8 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
+</body>
+</html>
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/autocompleter")
 }
