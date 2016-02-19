@@ -36,7 +36,8 @@ namespace BB.UI.Web.MVC.Controllers
         }
         public ActionResult View(long id)
         {
-            return View();
+            var playlist = playlistManager.ReadPlaylist(id);
+            return View(playlist);
         }
 
         public ActionResult AddTrack(long id)
