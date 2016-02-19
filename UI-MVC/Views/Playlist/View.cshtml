@@ -1,14 +1,15 @@
-﻿@model BB.BL.Domain.Playlists.Playlist
+﻿@using BB.BL.Domain.Playlists
+@model BB.BL.Domain.Playlists.Playlist
 
 @{
     ViewBag.Title = "View";
 }
 
-<h2>View</h2>
+<div class="title">
+    <h1>Playlist</h1> @Html.DisplayFor(model => model.Name)
+</div>
 
 <div>
-    <h4>Playlist</h4>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -41,10 +42,63 @@
         <dd>
             @Html.DisplayFor(model => model.ImageUrl)
         </dd>
-
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+<div class="title">
+    <h1>Queue</h1>
+    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
+    {
+        <text>@Model.PlaylistTracks.Count tracks in queue</text>
+    }
+    else
+    {
+        <text>1 track in queue</text>
+    }
+</div>
+
+<table id="playlist-tracks">
+    <tr>
+        <th></th>
+        <th></th>
+        <th>Title</th>
+        <th></th>
+        <th></th>
+        <th>Artist</th>
+        <th>Album</th>
+    </tr>
+    @foreach (PlaylistTrack track in Model.PlaylistTracks)
+    {
+        <tr class="track">
+            <td>
+                @track.Id
+            </td>
+            <td>
+                <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
+            </td>
+            <td class="tracktitle">
+                @track.Track.Title
+            </td>
+            <td>
+                thumbs
+            </td>
+            <td>
+                3:30
+            </td>
+            <td class="artist">
+                @track.Track.Artist
+            </td>
+            <td>
+                album
+            </td>
+        </tr>
+    }
+</table>
+
+<a href="#" class="btn btn-right" style="margin-top: 1em;">
+    <i class="material-icons">playlist_add</i> add track
+</a>
+
+<div id="player">
+    <h1>Now playing ▶</h1>
+</div>
