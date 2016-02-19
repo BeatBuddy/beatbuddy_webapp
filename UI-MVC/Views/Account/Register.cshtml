@@ -3,63 +3,114 @@
     ViewBag.Title = "Register";
 }
 
-<h2>@ViewBag.Title.</h2>
+<div class="title">
+    <h1>Register</h1>
+    as a new user.
+</div>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype= "multipart/form-data" }))
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new {role = "form", enctype= "multipart/form-data"  }))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
+    
     <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+    //@Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="col-md-9">
+        <input type="file" id="profileImage" name="profileImage" style="display: none"/>
+        <div style="width: 270px">
+            <div class="center-block" style="margin-top: 15px; text-align: center">
+                <img class="roundcolored" id="profile_click" style="width: 130px; height: 130px; cursor: pointer" src="~/Content/img/avatar.png"/>
+            </div>
+        </div>
+
+
+        <div>
+            <div style="margin-top: 7px">
+                @Html.LabelFor(m => m.Email, new {@class = "control-label"})
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Email, new {@class = "custom-input", @style = "padding: 10px"})
+                @Html.ValidationMessageFor(m => m.Email, "", new {@class = "custom-validation"})
+            </div>
+
+
+        </div>
+
+        <div>
+            <div style="margin-top: 7px">
+                @Html.LabelFor(m => m.FirstName, new {@class = "control-label"})
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.FirstName, new {@class = "custom-input", @style = "padding: 10px"})
+                @Html.ValidationMessageFor(m => m.FirstName, "", new {@class = "custom-validation"})
+            </div>
+        </div>
+        <div>
+            <div style="margin-top: 7px">
+                @Html.LabelFor(m => m.LastName, new {@class = "control-label"})
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.LastName, new {@class = "custom-input", @style = "padding: 10px"})
+                @Html.ValidationMessageFor(m => m.LastName, "", new {@class = "custom-validation"})
+
+
+            </div>
+        </div>
+        <div>
+            <div style="margin-top: 7px">
+                @Html.LabelFor(m => m.NickName, new {@class = "control-label"})
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.NickName, new {@class = "custom-input", @style = "padding: 10px"})
+                @Html.ValidationMessageFor(m => m.LastName, "", new {@class = "custom-validation"})
+            </div>
+        </div>
+
+        <div>
+            <div style="margin-top: 20px">
+                @Html.LabelFor(m => m.Password, new {@class = "control-label"})
+            </div>
+            <div>
+                @Html.PasswordFor(m => m.Password, new {@class = "custom-input", @style = "padding: 10px"})
+                @Html.ValidationMessageFor(m => m.Password, "", new {@class = "custom-validation"})
+            </div>
+        </div>
+        <div>
+            <div >
+                @Html.LabelFor(m => m.ConfirmPassword, new {@class = "control-label"})
+            </div>
+            <div>
+                @Html.PasswordFor(m => m.ConfirmPassword, new {@class = "custom-input", @style = "padding: 10px"})
+                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new {@class = "custom-validation"})
+            </div>
+        </div>
+        <div>
+            <div style="margin-top: 20px">
+                <input type="submit" class="btn btn-default" value="Register as a new user"/>
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
+    <div style="float: right; height: max-content" class="verticalLine">
+
+        some other content
+
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.NickName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.NickName, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ImageUrl, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            <input type="file" id="profileImage" name="profileImage"/>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
-        </div>
-    </div>
+
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script>
+    document.getElementById('profile_click').onclick = function () {
+        document.getElementById('profileImage').click();
+    };
+    document.getElementById("profileImage").onchange = function () {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            document.getElementById("profile_click").src = e.target.result;
+        };
+
+        reader.readAsDataURL(this.files[0]);
+    };
+</script>

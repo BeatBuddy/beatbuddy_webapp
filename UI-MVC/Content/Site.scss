@@ -164,6 +164,7 @@ header {
 
         label {
             padding-top: .25em;
+            padding-bottom: .10em;
         }
 
         input {
@@ -252,7 +253,7 @@ header {
     }
 }
 
-.custom-input {
+.custom-input{
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     -ms-border-radius: 3px;
@@ -274,7 +275,7 @@ header {
     font: 13px Helvetica, Arial, sans-serif;
     margin: 0 0 10px;
     padding: 15px 10px 15px 40px;
-    width: 270px;
+    width: 270px; 
 }
 
 .custom-input:focus {
@@ -291,7 +292,17 @@ header {
 .round {
     border-radius: 50%;
 }
-
+.roundcolored {
+    border-radius: 50%;
+    border-color:black;
+    border: 1.5px solid;
+}
+.roundcolored:hover{
+    border-color: #0000FF;
+}
+.text-danger{
+    color:red;
+}
 #results {
     padding: 0;
 
