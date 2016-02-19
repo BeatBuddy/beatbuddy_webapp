@@ -23,7 +23,7 @@ else
     </ul>
     <div id="loginModal" class="modal" >
         <div class="modal-content">
-            <a href="#" title="Close" class="close">X</a>
+            <a href="#" title="Close" style="color: #FFFFFF; border-bottom: none;" class="close">X</a>
             <div class="modal-body">
                 <div class="center-block">
                     @Html.Partial("../Account/Login", new LoginViewModel())
@@ -32,4 +32,7 @@ else
         </div>
     </div>
 
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }

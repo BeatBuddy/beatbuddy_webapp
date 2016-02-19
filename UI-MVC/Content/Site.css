@@ -1,6 +1,5 @@
 ﻿body {
   margin: auto;
-  max-width: 1500px;
   padding: 0; }
 
 * {
@@ -15,7 +14,8 @@
 header {
   display: block;
   padding: 1em 5em;
-  margin-bottom: 1em; }
+  margin: 0 auto;
+  max-width: 1500px; }
   @media screen and (max-width: 600px) {
     header {
       padding: 1em 1em;
@@ -59,8 +59,43 @@ header {
         header ul.nav li a:hover {
           border-bottom: 2px solid black; }
 
+#banner {
+  background-image: url("img/banner.jpg");
+  background-size: cover;
+  width: 100%;
+  min-height: 500px;
+  z-index: 0; }
+  #banner .content {
+    padding: 4em 5em 4em 5em;
+    margin: 0 auto;
+    max-width: 1500px;
+    color: white; }
+    #banner .content h1 {
+      font-weight: 100;
+      color: white;
+      font-size: 5em;
+      margin-bottom: 0;
+      text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4); }
+    #banner .content h2 {
+      margin-top: 0;
+      font-weight: 200;
+      font-size: 2em;
+      text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5); }
+    #banner .content .button {
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      font-size: 2.2em;
+      padding: .2em 1em;
+      text-transform: lowercase;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 100;
+      margin-right: .3em; }
+
 .body-content {
-  padding: 0 5em;
+  padding: 1em 5em;
   max-width: 1500px;
   margin: auto; }
   @media screen and (max-width: 600px) {
@@ -86,7 +121,8 @@ header {
   .body-content .form-group {
     max-width: 500px; }
     .body-content .form-group label {
-      padding-top: .25em; }
+      padding-top: .25em;
+      padding-bottom: .10em; }
     .body-content .form-group input {
       padding: .5em;
       margin-bottom: .7em;
@@ -146,12 +182,18 @@ header {
     margin-top: 0;
     margin-bottom: 0; }
 
+.centerimage {
+  text-align: center; }
+
+.verticalLine {
+  border-left: thick solid #ff0000; }
+
 .custom-input {
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
   -webkit-box-shadow: 0 1px 0 #F1F1F1, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
   -moz-box-shadow: 0 1px 0 #F1F1F1, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
   -ms-box-shadow: 0 1px 0 #F1F1F1, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
@@ -182,6 +224,17 @@ header {
 
 .round {
   border-radius: 50%; }
+
+.roundcolored {
+  border-radius: 50%;
+  border-color: black;
+  border: 1.5px solid; }
+
+.roundcolored:hover {
+  border-color: #0000FF; }
+
+.text-danger {
+  color: red; }
 
 #results {
   padding: 0; }

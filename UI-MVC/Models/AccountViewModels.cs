@@ -84,15 +84,15 @@ namespace BB.UI.Web.MVC.Models
         public string ConfirmPassword { get; set; }
 
         [Required]
-        [Display(Name = "Voornaam")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
-        [Display(Name = "Achternaam")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
-        [Display(Name = "Nicknaam")]
+        [Display(Name = "Nickname")]
         public string NickName { get; set; }
-        [Display(Name = "Foto")]
+        [Display(Name = "Profile picture")]
         public string ImageUrl { get; set; }
     }
 
