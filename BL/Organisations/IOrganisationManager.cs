@@ -14,6 +14,7 @@ namespace BB.BL
         Organisation CreateOrganisation(string name, string bannerUrl, string imageUrl ,string colorScheme, User organisator);
         Organisation UpdateOrganisation(Organisation organisation);
         List<Organisation> ReadOrganisations();
+        List<Organisation> ReadOrganisations(User user);
         Organisation ReadOrganisation(long organisationId);
         void DeleteOrganisation(long organisationId);
 

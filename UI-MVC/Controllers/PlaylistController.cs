@@ -13,6 +13,7 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IPlaylistManager playlistManager;
         private readonly ITrackProvider trackProvider;
         private readonly IUserManager userManager;
+        private readonly IOrganisationManager organisationManager;
 
         public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
         {
@@ -25,6 +26,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
             userManager = new UserManager(ContextEnum.BeatBuddy);
+            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
             trackProvider = new YouTubeTrackProvider();
         }
 
@@ -32,12 +34,12 @@ namespace BB.UI.Web.MVC.Controllers
         {
             playlistManager = new PlaylistManager(contextEnum);
             userManager = new UserManager(contextEnum);
+            organisationManager = new OrganisationManager(contextEnum);
             trackProvider = new YouTubeTrackProvider();
         }
         public ActionResult View(long id)
         {
-            var playlist = playlistManager.ReadPlaylist(id);
-            return View(playlist);
+            return View();
         }
 
         public ActionResult AddTrack(long id)
@@ -77,7 +79,14 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult IsNameAvailable(string email)
         {
-            return Json(userManager.ReadUsers().All(org => org.Email.Equals(email)),
+            return Json(userManager.ReadUsers().All(org => org.Email!=email),
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult IsOrganisationAvailable(string organisation)
+        {
+            User user = userManager.ReadUser(User.Identity.Name);
+            return Json(organisationManager.ReadOrganisations(user).All(org => org.Name.Equals(organisation)),
                 JsonRequestBehavior.AllowGet);
         }
 
