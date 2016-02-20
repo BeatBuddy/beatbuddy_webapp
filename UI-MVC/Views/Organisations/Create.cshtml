@@ -13,52 +13,90 @@
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>OrganisationViewModel</h4>
+    <div class="col-md-10">
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
+
+
+        <div style="margin-top: 25px">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label"})
+            <br/>
+            @Html.ValidationMessageFor(model => model.Name, "", new {@class = "custom-validation"})
+        </div>
+        <div>
+            @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "custom-input", @style = "width: 350px; padding: 10px"}}) 
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.BannerUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="file" id="bannerImage" name="bannerImage" />
-                @Html.ValidationMessageFor(model => model.BannerUrl, "", new { @class = "text-danger" })
-            </div>
+        <div style="margin-top: 8px">
+            <label>Organisation logo: </label>
+            <br />
+            @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "custom-validation" })
+        </div>
+        <div style="width: 350px">
+            <input type="file" id="avatarImage" name="avatarImage" style="display: none"/>
+            <div class="custom-input" style="width: 350px; height: 40px; padding: 10px; overflow: hidden">
+                <text id="avatarLabel" style="width: 90%; vertical-align: central; word-wrap: break-word; float: left">Click right to select logo image</text>
+                <i class="material-icons" style="cursor: pointer; float: right; vertical-align: central" id="avatar_click">image</i>
+            </div> 
+        </div> 
+
+        <div style="margin-top: 14px">
+            @Html.LabelFor(model => model.BannerUrl, htmlAttributes: new {@class = "control-label"})
+            <br/>
+            @Html.ValidationMessageFor(model => model.BannerUrl, "", new {@class = "custom-validation"})
+        </div>
+         <div>
+             <input type="file" id="bannerImage" name="bannerImage" style="display: none"/>
+             <div class="custom-input"  style="width: 350px; height: 40px; padding: 10px; overflow: hidden">
+                 <text id="bannerLabel" style="width: 90%; vertical-align: central; word-wrap: break-word; float: left">Click right to select banner image</text>
+                 <i class="material-icons" style="cursor: pointer; float: right; vertical-align: central" id="banner_click" >image</i>
+             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="file" id="avatarImage" name="avatarImage" />
-                @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
+       
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ColorScheme, htmlAttributes: new { @class = "control-label col-md-2",  })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ColorScheme, new { htmlAttributes = new { @class = "form-control"} })
-                @Html.ValidationMessageFor(model => model.ColorScheme, "", new { @class = "text-danger" })
+        
+            <div style="margin-top: 14px">
+                @Html.LabelFor(model => model.ColorScheme, htmlAttributes: new {@class = "control-label"})
+                <br />
+                @Html.ValidationMessageFor(model => model.ColorScheme, "", new {@class = "custom-validation"})
             </div>
-        </div>
+            <div>
+                @Html.EditorFor(model => model.ColorScheme, new {htmlAttributes = new {@class = "custom-input", @style = "width: 350px; padding: 10px"} })
+            </div>
+            
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+        
+            <div>
+                <input type="submit" value="Create my organisation" style="margin-top: 25px" class="btn btn-default" />
             </div>
-        </div>
+       
     </div>
 }
+<script>
+    document.getElementById('avatar_click').onclick = function () {
+        document.getElementById('avatarImage').click();
+    };
+    document.getElementById('banner_click').onclick = function () {
+        document.getElementById('bannerImage').click();
+    };
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+    document.getElementById("bannerImage").onchange = function () {
+        var filename = document.getElementById("bannerImage").value;
+        var lastIndex = filename.lastIndexOf("\\");
+        if (lastIndex >= 0) {
+            filename = filename.substring(lastIndex + 1);
+        }
+        document.getElementById("bannerLabel").innerText = filename;
+    };
+    document.getElementById("avatarImage").onchange = function () {
+        var filename = document.getElementById("avatarImage").value;
+        var lastIndex = filename.lastIndexOf("\\");
+        if (lastIndex >= 0) {
+            filename = filename.substring(lastIndex + 1);
+        }
+        document.getElementById("avatarLabel").innerText = filename;
+    };
+</script>
+
 
 

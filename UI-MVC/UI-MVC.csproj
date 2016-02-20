@@ -254,6 +254,7 @@
     <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\logo_header.png" />
     <Content Include="Content\img\logo_small.png" />
+    <Content Include="Content\img\party-dj.png" />
     <Content Include="Content\img\round_shape_loader.gif" />
     <Content Include="Content\modal.css" />
     <Content Include="Content\Site.css">

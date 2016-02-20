@@ -147,18 +147,12 @@ header {
     margin-top: 0;
     margin-bottom: 0; }
 
-.centerimage {
-  text-align: center; }
-
-.verticalLine {
-  border-left: thick solid #ff0000; }
-
 .custom-input {
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
   -webkit-box-shadow: 0 1px 0 #F1F1F1, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
   -moz-box-shadow: 0 1px 0 #F1F1F1, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
   -ms-box-shadow: 0 1px 0 #F1F1F1, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
@@ -190,13 +184,17 @@ header {
 .round {
   border-radius: 50%; }
 
-.roundcolored {
+.borderround {
   border-radius: 50%;
   border-color: black;
   border: 1.5px solid; }
 
-.roundcolored:hover {
+.borderround:hover {
   border-color: #0000FF; }
+
+.custom-validation {
+  color: red;
+  font-size: 11px; }
 
 .text-danger {
   color: red; }

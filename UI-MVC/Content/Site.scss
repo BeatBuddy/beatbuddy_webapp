@@ -249,13 +249,17 @@ header {
 .round {
     border-radius: 50%;
 }
-.roundcolored {
+.borderround {
     border-radius: 50%;
     border-color:black;
     border: 1.5px solid;
 }
-.roundcolored:hover{
+.borderround:hover{
     border-color: #0000FF;
+}
+.custom-validation{
+    color:red;
+    font-size: 11px;
 }
 .text-danger{
     color:red;

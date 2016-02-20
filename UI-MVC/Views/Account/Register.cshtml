@@ -14,85 +14,89 @@
     
     <hr />
     //@Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="col-md-9">
-        <input type="file" id="profileImage" name="profileImage" style="display: none"/>
-        <div style="width: 270px">
-            <div class="center-block" style="margin-top: 15px; text-align: center">
-                <img class="roundcolored" id="profile_click" style="width: 130px; height: 130px; cursor: pointer" src="~/Content/img/avatar.png"/>
+    <div class="col-md-7" style="border-right: 1px solid #d3d3d3; display: block;">
+        <div class="col-md-10" style=" margin-right: 50px;float: right">
+            <input type="file" id="profileImage" name="profileImage" style="display: none" />
+            <div>
+                <div class="center-block" style="margin-top: 22px; margin-bottom: 22px; text-align: center">
+                    <img class="borderround" id="profile_click" style="width: 150px; height: 150px; cursor: pointer" src="~/Content/img/avatar.png" />
+                </div>
             </div>
-        </div>
+
+            <div class="col-md-6" style="overflow: hidden">
+                <div>
+                    <div style="margin-top: 7px">
+                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                        <br/>
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "custom-validation" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "custom-input", @style = "padding: 10px" })
+                       
+                    </div>
+                </div>
+
+                <div>
+                    <div style="margin-top: 7px">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                        <br/>
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "custom-validation" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "custom-input", @style = "padding: 10px" })
+                        
+                    </div>
+                </div>
+                <div>
+                    <div style="margin-top: 7px">
+                        @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                        <br/>
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "custom-validation" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "custom-input", @style = "padding: 10px" })
 
 
-        <div>
-            <div style="margin-top: 7px">
-                @Html.LabelFor(m => m.Email, new {@class = "control-label"})
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" style="float: right; overflow: hidden">
+                <div>
+                    <div style="margin-top: 7px">
+                        @Html.LabelFor(m => m.NickName, new { @class = "control-label" })
+                        <br/>
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "custom-validation" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(m => m.NickName, new { @class = "custom-input", @style = "padding: 10px" })
+                    </div>
+                </div>
+
+                <div>
+                    <div style="margin-top: 7px">
+                        @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                        <br/>
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "custom-validation" })
+                    </div>
+                    <div>
+                        @Html.PasswordFor(m => m.Password, new { @class = "custom-input", @style = "padding: 10px" })
+                    </div>
+                </div>
+                <div>
+                    <div style="margin-top: 7px">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
+                        <br/>
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "custom-validation" })
+                    </div>
+                    <div>
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "custom-input", @style = "padding: 10px" })
+                    </div>
+                </div>
             </div>
             <div>
-                @Html.TextBoxFor(m => m.Email, new {@class = "custom-input", @style = "padding: 10px"})
-                @Html.ValidationMessageFor(m => m.Email, "", new {@class = "custom-validation"})
-            </div>
-
-
-        </div>
-
-        <div>
-            <div style="margin-top: 7px">
-                @Html.LabelFor(m => m.FirstName, new {@class = "control-label"})
-            </div>
-            <div>
-                @Html.TextBoxFor(m => m.FirstName, new {@class = "custom-input", @style = "padding: 10px"})
-                @Html.ValidationMessageFor(m => m.FirstName, "", new {@class = "custom-validation"})
+                <input type="submit" class="btn btn-default pull-right" style="margin-top: 20px; margin-right: 13px" value="Register as a new user" />
             </div>
         </div>
-        <div>
-            <div style="margin-top: 7px">
-                @Html.LabelFor(m => m.LastName, new {@class = "control-label"})
-            </div>
-            <div>
-                @Html.TextBoxFor(m => m.LastName, new {@class = "custom-input", @style = "padding: 10px"})
-                @Html.ValidationMessageFor(m => m.LastName, "", new {@class = "custom-validation"})
-
-
-            </div>
-        </div>
-        <div>
-            <div style="margin-top: 7px">
-                @Html.LabelFor(m => m.NickName, new {@class = "control-label"})
-            </div>
-            <div>
-                @Html.TextBoxFor(m => m.NickName, new {@class = "custom-input", @style = "padding: 10px"})
-                @Html.ValidationMessageFor(m => m.LastName, "", new {@class = "custom-validation"})
-            </div>
-        </div>
-
-        <div>
-            <div style="margin-top: 20px">
-                @Html.LabelFor(m => m.Password, new {@class = "control-label"})
-            </div>
-            <div>
-                @Html.PasswordFor(m => m.Password, new {@class = "custom-input", @style = "padding: 10px"})
-                @Html.ValidationMessageFor(m => m.Password, "", new {@class = "custom-validation"})
-            </div>
-        </div>
-        <div>
-            <div >
-                @Html.LabelFor(m => m.ConfirmPassword, new {@class = "control-label"})
-            </div>
-            <div>
-                @Html.PasswordFor(m => m.ConfirmPassword, new {@class = "custom-input", @style = "padding: 10px"})
-                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new {@class = "custom-validation"})
-            </div>
-        </div>
-        <div>
-            <div style="margin-top: 20px">
-                <input type="submit" class="btn btn-default" value="Register as a new user"/>
-            </div>
-        </div>
-    </div>
-    <div style="float: right; height: max-content" class="verticalLine">
-
-        some other content
-
     </div>
 
 }

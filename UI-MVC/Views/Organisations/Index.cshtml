@@ -17,10 +17,10 @@
 
 <h2>Index</h2>
 <a class="btn" href="#myModal">create new organisation</a>
-    <div id="myModal" class="modal" >
-        <div class="modal-content">
+    <div id="myModal" class="modal" style="margin-top: -90px" >
+        <div class="modal-content" style="width: 620px; height: 530px">
             <a href="#close" title="Close" class="close">X</a>
-            <div class="modal-body">
+            <div class="modal-body" style="margin-left: 60px; width: 100%">
                 @Html.Partial("Create", new OrganisationViewModel())
             </div>
         </div>
