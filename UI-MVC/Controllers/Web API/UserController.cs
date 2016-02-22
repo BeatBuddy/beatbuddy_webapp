@@ -10,13 +10,18 @@ using System.Web;
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
     [RoutePrefix("api/users")]
-    public class UsersController : ApiController
+    public class UserController : ApiController
     {
-        private UserManager userMgr = new UserManager(ContextEnum.BeatBuddy);
+        private UserManager userMgr;
 
   
-        public UsersController()
-        {            
+        public UserController()
+        {
+            userMgr = new UserManager(ContextEnum.BeatBuddy);
+        }
+
+        public UserController(ContextEnum contextEnum) {
+            this.userMgr = new UserManager(contextEnum);
         }
     
 
