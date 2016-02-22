@@ -5,6 +5,11 @@ using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Models;
+using BB.BL.Domain.Organisations;
+using System.Web;
+using System.IO;
+using BB.UI.Web.MVC.Controllers.Utils;
+using System.Configuration;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -37,9 +42,11 @@ namespace BB.UI.Web.MVC.Controllers
             organisationManager = new OrganisationManager(contextEnum);
             trackProvider = new YouTubeTrackProvider();
         }
+
         public ActionResult View(long id)
         {
-            return View();
+            var playlist = playlistManager.ReadPlaylist(id);
+            return View(playlist);
         }
 
         public ActionResult AddTrack(long id)
@@ -110,15 +117,48 @@ namespace BB.UI.Web.MVC.Controllers
 
         // POST: Playlists/Create
         [HttpPost]
-        public ActionResult Create(PlaylistViewModel collection)
+        public ActionResult Create(PlaylistViewModel collection, HttpPostedFileBase image)
         {
+            User playlistMaster = null;
+            Organisation org = null;
+            Playlist playlist = null;
+            string path = null;
             string username = User.Identity.Name;
             // TODO: Add insert logic here
             User user = userManager.ReadUser(username);
-            User playlistMaster = userManager.ReadUser(collection.PlaylistMaster);
-            Playlist playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, collection.ImageUrl, playlistMaster, user);
-
-            return RedirectToAction("Index");
+            try
+            {
+                playlistMaster = userManager.ReadUser(collection.PlaylistMaster);
+            }
+            catch
+            {
+                return View("Create");
+            }
+            if (collection.Organisation != null)
+            {
+                try
+                {
+                    org = organisationManager.ReadOrganisation(collection.Organisation);
+                }
+                catch
+                {
+                    return View("Create");
+                }
+            }
+            if (image != null && image.ContentLength > 0)
+            {
+                var bannerFileName = Path.GetFileName(image.FileName);
+                path = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), bannerFileName));
+                image.SaveAs(path);
+                path = Path.GetFileName(path);
+            }
+            playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
+            if (org != null)
+            {
+                org.Playlists.Add(playlist);
+            }
+            
+            return RedirectToAction("Details/" + playlist.Id);
 
         }
     }
