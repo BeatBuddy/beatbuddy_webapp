@@ -13,40 +13,40 @@
 {
     @Html.AntiForgeryToken()
     
-    <div class="col-md-10">
+    <div class="col-md-10" id="custom-inputform-organisations">
         <hr />
 
 
-        <div style="margin-top: 25px">
+        <div class="first-form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label"})
             <br/>
             @Html.ValidationMessageFor(model => model.Name, "", new {@class = "custom-validation"})
         </div>
         <div>
-            @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "custom-input", @style = "width: 350px; padding: 10px"}}) 
+            @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "custom-input-organisations"}}) 
         </div>
 
-        <div style="margin-top: 8px">
+        <div class="other-form-groups">
             <label>Organisation logo: </label>
             <br />
             @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "custom-validation" })
         </div>
-        <div style="width: 350px">
+        <div>
             <input type="file" id="avatarImage" name="avatarImage" style="display: none"/>
-            <div class="custom-input" style="width: 350px; height: 40px; padding: 10px; overflow: hidden">
+            <div class="custom-input-organisations" style="padding:10px; overflow: hidden">
                 <text id="avatarLabel" style="width: 90%; vertical-align: central; word-wrap: break-word; float: left">Click right to select logo image</text>
                 <i class="material-icons" style="cursor: pointer; float: right; vertical-align: central" id="avatar_click">image</i>
             </div> 
         </div> 
 
-        <div style="margin-top: 14px">
+        <div class="other-form-groups">
             @Html.LabelFor(model => model.BannerUrl, htmlAttributes: new {@class = "control-label"})
             <br/>
             @Html.ValidationMessageFor(model => model.BannerUrl, "", new {@class = "custom-validation"})
         </div>
          <div>
              <input type="file" id="bannerImage" name="bannerImage" style="display: none"/>
-             <div class="custom-input"  style="width: 350px; height: 40px; padding: 10px; overflow: hidden">
+             <div class="custom-input-organisations"  style="padding:10px; overflow: hidden">
                  <text id="bannerLabel" style="width: 90%; vertical-align: central; word-wrap: break-word; float: left">Click right to select banner image</text>
                  <i class="material-icons" style="cursor: pointer; float: right; vertical-align: central" id="banner_click" >image</i>
              </div>
@@ -61,13 +61,13 @@
                 @Html.ValidationMessageFor(model => model.ColorScheme, "", new {@class = "custom-validation"})
             </div>
             <div>
-                @Html.EditorFor(model => model.ColorScheme, new {htmlAttributes = new {@class = "custom-input", @style = "width: 350px; padding: 10px"} })
+                @Html.EditorFor(model => model.ColorScheme, new {htmlAttributes = new {@class = "custom-input-organisations"}})
             </div>
             
 
         
             <div>
-                <input type="submit" value="Create my organisation" style="margin-top: 25px" class="btn btn-default" />
+                <input type="submit" value="Create my organisation" class="btn btn-default create" />
             </div>
        
     </div>

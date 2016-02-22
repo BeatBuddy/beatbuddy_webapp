@@ -253,6 +253,15 @@ header {
     }
 }
 
+#custom-inputform-organisations, #custom-inputform-playlists{
+    .first-form-group, .create{
+        margin-top: 25px;
+    }
+    .other-form-groups{
+        margin-top: 14px;
+    }
+}
+
 .custom-input{
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -276,6 +285,11 @@ header {
     margin: 0 0 10px;
     padding: 15px 10px 15px 40px;
     width: 270px;
+    height: 40px;
+}
+.custom-input-organisations, .custom-input-playlists{
+    @extend .custom-input;
+    width:350px;
 }
 
 .custom-input:focus {
@@ -381,3 +395,4 @@ footer {
 .hidden {
     display: none;
 }
+

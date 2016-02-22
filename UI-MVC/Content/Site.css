@@ -182,7 +182,13 @@ header {
     margin-top: 0;
     margin-bottom: 0; }
 
-.custom-input {
+#custom-inputform-organisations .first-form-group, #custom-inputform-organisations .create, #custom-inputform-playlists .first-form-group, #custom-inputform-playlists .create {
+  margin-top: 25px; }
+
+#custom-inputform-organisations .other-form-groups, #custom-inputform-playlists .other-form-groups {
+  margin-top: 14px; }
+
+.custom-input, .custom-input-organisations, .custom-input-playlists {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -204,9 +210,13 @@ header {
   font: 13px Helvetica, Arial, sans-serif;
   margin: 0 0 10px;
   padding: 15px 10px 15px 40px;
-  width: 270px; }
+  width: 270px;
+  height: 40px; }
 
-.custom-input:focus {
+.custom-input-organisations, .custom-input-playlists {
+  width: 350px; }
+
+.custom-input:focus, .custom-input-organisations:focus, .custom-input-playlists:focus {
   -webkit-box-shadow: 0 0 2px #000 inset;
   -moz-box-shadow: 0 0 2px #000 inset;
   -ms-box-shadow: 0 0 2px #000 inset;
