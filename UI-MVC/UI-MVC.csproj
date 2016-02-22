@@ -331,6 +331,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
+    <Folder Include="App_Data\Img\Playlists\" />
     <Folder Include="App_Data\Img\Users\" />
   </ItemGroup>
   <ItemGroup>

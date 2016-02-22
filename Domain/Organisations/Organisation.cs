@@ -25,8 +25,8 @@ namespace BB.BL.Domain.Organisations
         public string BannerUrl { get; set; }
         public string ImageUrl { get; set; }
         public string ColorScheme { get; set; }
-        public Collection<DashboardBlock> DashboardBlocks { get; set; }
-        public Collection<Playlist> Playlists { get; set; }
+        public virtual ICollection<DashboardBlock> DashboardBlocks { get; set; }
+        public virtual ICollection<Playlist> Playlists { get; set; }
         public Dictionary<User, Role> Users { get; set; }
     }
 }

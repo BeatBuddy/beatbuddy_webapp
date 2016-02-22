@@ -39,8 +39,8 @@ namespace BB.BL
                 BannerUrl = bannerUrl,
                 ImageUrl = imageUrl,
                 ColorScheme = colorScheme,
-                DashboardBlocks = new Collection<DashboardBlock>(),
-                Playlists = new Collection<Playlist>(),
+                DashboardBlocks = new List<DashboardBlock>(),
+                Playlists = new List<Playlist>(),
                 Users = new Dictionary<User, Role> {{organisator, Role.Organiser}}
             };
             return repo.CreateOrganisation(organisation);
@@ -59,6 +59,11 @@ namespace BB.BL
         public List<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
         {
             return repo.ReadDashboardBlocks(organisation);
+        }
+
+        public Organisation ReadOrganisation(string organisationName)
+        {
+            return repo.ReadOrganisation(organisationName);
         }
 
         public Organisation ReadOrganisation(long organisationId)
