@@ -42,9 +42,11 @@ namespace BB.UI.Web.MVC.Controllers
             organisationManager = new OrganisationManager(contextEnum);
             trackProvider = new YouTubeTrackProvider();
         }
+
         public ActionResult View(long id)
         {
-            return View();
+            var playlist = playlistManager.ReadPlaylist(id);
+            return View(playlist);
         }
 
         public ActionResult AddTrack(long id)
