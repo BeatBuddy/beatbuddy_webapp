@@ -23,9 +23,7 @@ namespace BB.UI.Web.MVC.Models
         [Display(Name = "Image Url")]
         public string ImageUrl { get; set; }
 
-        [Required, MaxLength(100)]
-        [Index(IsUnique = true)]
-        //[Display(Name = "Playlist master email")]
+        [Display(Name = "Playlist master email")]
         [Remote("IsNameAvailable", "Playlist", ErrorMessage = "Email not found")]
         public string PlaylistMaster { get; set; }
 

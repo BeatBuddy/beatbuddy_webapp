@@ -16,6 +16,7 @@ namespace BB.BL
         List<Organisation> ReadOrganisations();
         List<Organisation> ReadOrganisations(User user);
         Organisation ReadOrganisation(long organisationId);
+        Organisation ReadOrganisation(string organisationName);
         void DeleteOrganisation(long organisationId);
 
         //DashboardBlock

@@ -14,6 +14,7 @@ using BB.UI.Web.MVC.Models;
 using BB.UI.Web.MVC.Migrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using BB.UI.Web.MVC.Tests.Helpers;
 
 namespace BB.UI.Web.MVC.Tests.Controllers
 {
@@ -27,10 +28,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         public void TestInitialize()
         {
             _organisationsController = new OrganisationsController(ContextEnum.BeatBuddyTest);
-            var migratorConfig = new Migrations.Configuration();
-            migratorConfig.TargetDatabase = new DbConnectionInfo(ContextEnum.BeatBuddyTest.ToString());
-            var dbMigrator = new DbMigrator(migratorConfig);
-            dbMigrator.Update();
+            DbInitializer.Initialize();
         }
 
         [TestMethod]

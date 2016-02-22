@@ -14,6 +14,7 @@ namespace BB.DAL.EFOrganisation
         Organisation UpdateOrganisation(Organisation organisation);
         IEnumerable<Organisation> ReadOrganisations();
         Organisation ReadOrganisation(long organisationId);
+        Organisation ReadOrganisation(string organisationName);
         void DeleteOrganisation(long organisationId);
 
         //DashboardBlock

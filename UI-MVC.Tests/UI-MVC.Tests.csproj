@@ -119,6 +119,8 @@
   <ItemGroup>
     <Compile Include="Controllers\PlaylistControllerTest.cs" />
     <Compile Include="Controllers\OrganisationsControllerTest.cs" />
+    <Compile Include="Controllers\WebApi\UserControllerTest.cs" />
+    <Compile Include="Helpers\DbInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>
