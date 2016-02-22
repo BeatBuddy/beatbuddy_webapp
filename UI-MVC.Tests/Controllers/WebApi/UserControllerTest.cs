@@ -6,6 +6,7 @@ using BB.UI.Web.MVC.Controllers.Web_API;
 using BB.BL.Domain;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
+using BB.UI.Web.MVC.Tests.Helpers;
 
 namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 {
@@ -17,12 +18,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         [TestInitialize]
         public void TestInitialize() {
             controller = new UserController(ContextEnum.BeatBuddyTest);
-            var migratorConfig = new Migrations.Configuration
-            {
-                TargetDatabase = new DbConnectionInfo(ContextEnum.BeatBuddyTest.ToString())
-            };
-            var dbMigrator = new DbMigrator(migratorConfig);
-            dbMigrator.Update();
+            DbInitializer.Initialize();
         }
 
         private TestContext testContextInstance;

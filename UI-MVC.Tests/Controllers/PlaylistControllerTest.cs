@@ -7,6 +7,7 @@ using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using BB.UI.Web.MVC.Tests.Helpers;
 
 namespace BB.UI.Web.MVC.Tests.Controllers
 {
@@ -19,12 +20,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         public void TestInitialize()
         {
             controller = new PlaylistController(ContextEnum.BeatBuddyTest);
-            var migratorConfig = new Migrations.Configuration
-            {
-                TargetDatabase = new DbConnectionInfo(ContextEnum.BeatBuddyTest.ToString())
-            };
-            var dbMigrator = new DbMigrator(migratorConfig);
-            dbMigrator.Update();
+            DbInitializer.Initialize();
         }
 
         [TestMethod]
