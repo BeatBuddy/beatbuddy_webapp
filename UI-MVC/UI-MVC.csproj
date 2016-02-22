@@ -224,7 +224,7 @@
     <Compile Include="Controllers\OrganisationsController.cs" />
     <Compile Include="Controllers\PlaylistController.cs" />
     <Compile Include="Controllers\Utils\FileHelper.cs" />
-    <Compile Include="Controllers\Web API\AccountController.cs" />
+    <Compile Include="Controllers\Web API\UsersController.cs" />
     <Compile Include="Controllers\Web API\OrganisationsController.cs" />
     <Compile Include="Controllers\Web API\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Global.asax.cs">

@@ -18,8 +18,12 @@ namespace BB.UI.Web.MVC
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/",
-                defaults: new { id = RouteParameter.Optional }
+                routeTemplate: "api/"            );
+
+            config.Routes.MapHttpRoute(
+            name: "ApiByAction",
+            routeTemplate: "api/{controller}/{id}",
+             defaults: new { id = RouteParameter.Optional}
             );
 
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
