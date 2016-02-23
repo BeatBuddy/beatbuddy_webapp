@@ -9,6 +9,7 @@ using BB.BL.Domain;
 using BB.DAL.EFUser;
 using BB.DAL;
 using BB.BL.Domain.Playlists;
+using BB.BL.Domain.Organisations;
 
 namespace BB.BL
 {
@@ -29,8 +30,7 @@ namespace BB.BL
                 LastName = lastname,
                 FirstName = firstname,
                 Nickname = nickname,
-                ImageUrl = imageUrl,
-                Roles = new Dictionary<Domain.Organisations.Organisation, Role>()
+                ImageUrl = imageUrl
             };
             return repo.CreateUser(user);
         }
@@ -38,6 +38,11 @@ namespace BB.BL
         public void DeleteUser(long userId)
         {
             repo.DeleteUser(userId);
+        }
+
+        public List<UserRole> ReadOrganisationsForUser(User user)
+        {
+            return repo.ReadOrganisationsForUser(user);
         }
 
         public User ReadUser(string email)
@@ -53,6 +58,11 @@ namespace BB.BL
         public User ReadUser(string lastname, string firstname)
         {
             return repo.ReadUser(lastname, firstname);
+        }
+
+        public List<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
+        {
+            return repo.ReadUserRolesForOrganisation(organisation);
         }
 
         public List<User> ReadUsers()

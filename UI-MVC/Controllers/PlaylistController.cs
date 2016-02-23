@@ -10,6 +10,8 @@ using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
+using System.Collections.Generic;
+using System;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -123,6 +125,7 @@ namespace BB.UI.Web.MVC.Controllers
             Organisation org = null;
             Playlist playlist = null;
             string path = null;
+            bool organiserFromOrganisation = false;
             string username = User.Identity.Name;
             // TODO: Add insert logic here
             User user = userManager.ReadUser(username);
@@ -132,16 +135,29 @@ namespace BB.UI.Web.MVC.Controllers
             }
             catch
             {
+                ModelState.AddModelError("user niet gevonden", new Exception("user niet gevonden"));
                 return View("Create");
             }
+
             if (collection.Organisation != null)
             {
                 try
                 {
+                    /*List<Organisation> organisations = organisationManager.ReadOrganisations(user);
+                    foreach (Organisation organ in organisations)
+                    {
+                        if (organ.Name.Equals(collection.Organisation))
+                        {
+                            organiserFromOrganisation = true;
+                        }
+                    }
+                    if (organiserFromOrganisation == false)
+                        throw new Exception("You're not allowed to add playlist to this organisation");*/
                     org = organisationManager.ReadOrganisation(collection.Organisation);
                 }
                 catch
                 {
+                    ModelState.AddModelError("Organisation not found", new Exception("Organisation not found"));
                     return View("Create");
                 }
             }
@@ -152,13 +168,14 @@ namespace BB.UI.Web.MVC.Controllers
                 image.SaveAs(path);
                 path = Path.GetFileName(path);
             }
-            playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
             if (org != null)
             {
                 org.Playlists.Add(playlist);
             }
-            
-            return RedirectToAction("Details/" + playlist.Id);
+            playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
+
+            organisationManager.UpdateOrganisation(org);
+            return RedirectToAction("View/" + playlist.Id);
 
         }
     }

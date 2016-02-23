@@ -1,4 +1,5 @@
 ﻿using BB.BL.Domain.Organisations;
+using BB.BL.Domain.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace BB.DAL.EFOrganisation
     public interface IOrganisationRepository
     {
         //Organisation
-        Organisation CreateOrganisation(Organisation organisation);
+        Organisation CreateOrganisation(Organisation organisation, User user);
         Organisation UpdateOrganisation(Organisation organisation);
         IEnumerable<Organisation> ReadOrganisations();
         Organisation ReadOrganisation(long organisationId);

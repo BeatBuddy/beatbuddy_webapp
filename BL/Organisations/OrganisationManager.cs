@@ -41,9 +41,8 @@ namespace BB.BL
                 ColorScheme = colorScheme,
                 DashboardBlocks = new List<DashboardBlock>(),
                 Playlists = new List<Playlist>(),
-                Users = new Dictionary<User, Role> {{organisator, Role.Organiser}}
             };
-            return repo.CreateOrganisation(organisation);
+            return repo.CreateOrganisation(organisation, organisator);
         }
 
         public void DeleteDashboardBlock(long blockId)
@@ -78,16 +77,7 @@ namespace BB.BL
 
         public List<Organisation> ReadOrganisations(User user)
         {
-            List<Organisation> organisations = new List<Organisation>();
-            foreach (KeyValuePair<Organisation, Role> entry in user.Roles)
-            {
-                if(entry.Value == Role.Organiser || entry.Value == Role.Co_Organiser)
-                {
-                    organisations.Add(entry.Key);
-                }
-            }
-
-            return organisations;
+            return null;
         }
 
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
