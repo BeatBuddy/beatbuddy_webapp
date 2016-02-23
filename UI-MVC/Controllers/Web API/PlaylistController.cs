@@ -1,13 +1,18 @@
-﻿using System.Linq;
+﻿using System.Configuration;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Security.Claims;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
+using BB.UI.Web.MVC.Controllers.Utils;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -44,7 +49,26 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var user = userManager.ReadUser(email);
             if (user == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
 
-            var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, null, null, user);
+            string imagePath = "";
+            if (formData["image"] != null && formData["image"].Length > 0)
+            {
+                var bitmap = ImageDecoder.DecodeBase64String(formData["image"]);
+
+                string extension = string.Empty;
+                if (bitmap.RawFormat.Equals(ImageFormat.Jpeg)) extension = ".jpg";
+                if (bitmap.RawFormat.Equals(ImageFormat.Png)) extension = ".png";
+                if (bitmap.RawFormat.Equals(ImageFormat.Bmp)) extension = ".bmp";
+                if (bitmap.RawFormat.Equals(ImageFormat.Gif)) extension = ".gif";
+
+                if(string.IsNullOrEmpty(extension)) return Request.CreateResponse(HttpStatusCode.BadRequest, "The supplied image is not a valid image");
+
+                imagePath = FileHelper.NextAvailableFilename(Path.Combine(HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), "playlist" + extension));
+                bitmap.Save(imagePath);
+
+                imagePath = Path.GetFileName(imagePath);
+            }
+
+            var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, null, user);
             if (playlist != null)
                 return Request.CreateResponse(HttpStatusCode.OK, playlist);
             
