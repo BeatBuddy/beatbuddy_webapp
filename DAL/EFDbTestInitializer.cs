@@ -3,6 +3,7 @@ using System.Data.Entity;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
+using System.Collections.Generic;
 
 namespace BB.DAL
 {
@@ -11,15 +12,29 @@ namespace BB.DAL
 
         protected override void Seed(EFDbContext context)
         {
+            var organisation = new Organisation()
+            {
+                Name = "Jonah's Songs",
+                Playlists = new List<Playlist>()
+            };
+            context.Organisations.Add(organisation);
             var user = new User()
             {
                 Email = "jonah@gmail.com"
             };
-            var organisation = new Organisation()
+            context.User.Add(user);
+
+            context.SaveChanges();
+
+            var user1 = context.User.Find(user.Id);
+            var organisation1 = context.Organisations.Find(organisation.Id);
+            var userRole = new UserRole()
             {
-                Name = "Jonah's Songs"
+                Organisation = organisation1,
+                User = user1,
+                Role = Role.Organiser
             };
-            context.Organisations.Add(organisation);
+            context.UserRole.Add(userRole);
 
             var playlist = new Playlist
             {
