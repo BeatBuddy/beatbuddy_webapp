@@ -7,11 +7,11 @@
 <div class="center-block">
     <img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" />
 </div>
-<div class="title">
+<div class="title horizontal-center">
     <h3>Sign in to your account</h3>
 </div>
 
-<div class="center-block" style="margin-top: -15px">
+<div class="center-block min-margin-top">
     @using (Html.BeginForm("Login", "Account", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, new {enctype="multipart/form-data", role = "form"}))
     {
         @Html.AntiForgeryToken()
@@ -29,11 +29,11 @@
             </div>
 
             <div class="center-block">
-                <input type="submit" value="Login" style="width: 75%; height: 3em; margin-top: 1em" class="btn btn-default"/>
+                <input type="submit" value="Login" class="btn btn-default btn-login"/>
             </div>
             <p></p>
         <div class="center-block">
-            <input type="button" value="Register" onclick="window.location='/Account/Register'" style="width: 75%; height: 3em" class="btn btn-default"/>
+            <input type="button" value="Register" onclick="window.location='/Account/Register'" class="btn btn-default btn-login"/>
         </div>
 
        

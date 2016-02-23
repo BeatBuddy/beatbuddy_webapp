@@ -14,18 +14,18 @@
     
     <hr />
     //@Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="col-md-7" style="border-right: 1px solid #d3d3d3; display: block;">
-        <div class="col-md-10" style="margin-right: 50px;float: right">
+    <div class="col-md-7" id="custom-inputform-registration">
+        <div class="col-md-10 container-form">
             <input type="file" id="profileImage" name="profileImage" style="display: none" />
             <div>
-                <div class="center-block" style="margin-top: 22px; margin-bottom: 22px; text-align: center">
-                    <img class="borderround" id="profile_click" style="width: 150px; height: 150px; cursor: pointer" src="~/Content/img/avatar.png" />
+                <div class="center-block div-image-form" style="">
+                    <img class="borderround image-form" id="profile_click" src="~/Content/img/avatar.png" />
                 </div>
             </div>
 
-            <div class="col-md-6" style="overflow: hidden">
+            <div class="col-md-6 column-left-form">
                 <div>
-                    <div style="margin-top: 7px">
+                    <div class="form-groups">
                         @Html.LabelFor(m => m.Email, new { @class = "control-label" })
                         <br/>
                         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "custom-validation" })
@@ -37,7 +37,7 @@
                 </div>
 
                 <div>
-                    <div style="margin-top: 7px">
+                    <div class="form-groups">
                         @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
                         <br/>
                         @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "custom-validation" })
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div>
-                    <div style="margin-top: 7px">
+                    <div class="form-groups">
                         @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
                         <br/>
                         @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "custom-validation" })
@@ -60,9 +60,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6" style="float: right; overflow: hidden">
+            <div class="col-md-6 column-right-form">
                 <div>
-                    <div style="margin-top: 7px">
+                    <div class="form-groups">
                         @Html.LabelFor(m => m.NickName, new { @class = "control-label" })
                         <br/>
                         @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "custom-validation" })
@@ -73,7 +73,7 @@
                 </div>
 
                 <div>
-                    <div style="margin-top: 7px">
+                    <div class="form-groups">
                         @Html.LabelFor(m => m.Password, new { @class = "control-label" })
                         <br/>
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "custom-validation" })
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div>
-                    <div style="margin-top: 7px">
+                    <div class="form-groups">
                         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
                         <br/>
                         @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "custom-validation" })
@@ -94,7 +94,7 @@
                 </div>
             </div>
             <div>
-                <input type="submit" class="btn btn-default pull-right" style="margin-top: 20px; margin-right: 13px" value="Register as a new user" />
+                <input type="submit" class="btn btn-default pull-right create" value="Register as a new user" />
             </div>
         </div>
     </div>

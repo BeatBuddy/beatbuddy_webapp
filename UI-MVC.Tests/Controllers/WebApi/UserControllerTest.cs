@@ -22,9 +22,9 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         }
 
         [TestMethod]
-        public void TestMethod1()
+        public void GetUser()
         {
-            //controller
+            
         }
     }
 }

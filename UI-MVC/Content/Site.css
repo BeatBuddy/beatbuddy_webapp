@@ -188,6 +188,31 @@ header {
 #custom-inputform-organisations .other-form-groups, #custom-inputform-playlists .other-form-groups {
   margin-top: 14px; }
 
+#custom-inputform-registration {
+  border-right: 1px solid #d3d3d3;
+  display: block; }
+  #custom-inputform-registration .container-form {
+    margin-right: 50px;
+    float: right; }
+    #custom-inputform-registration .container-form .div-image-form {
+      margin-top: 22px;
+      margin-bottom: 22px;
+      text-align: center; }
+      #custom-inputform-registration .container-form .div-image-form .image-form {
+        width: 150px;
+        height: 150px;
+        cursor: pointer; }
+    #custom-inputform-registration .container-form .column-left-form {
+      overflow: hidden; }
+    #custom-inputform-registration .container-form .column-right-form {
+      float: right;
+      overflow: hidden; }
+    #custom-inputform-registration .container-form .form-groups {
+      margin-top: 7px; }
+    #custom-inputform-registration .container-form .create {
+      margin-top: 20px;
+      margin-right: 13px; }
+
 .custom-input, .custom-input-organisations, .custom-input-playlists {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -209,9 +234,10 @@ header {
   color: #808080;
   font: 13px Helvetica, Arial, sans-serif;
   margin: 0 0 10px;
-  padding: 15px 10px 15px 40px;
+  padding: 10px 10px 10px 40px;
   width: 270px;
-  height: 40px; }
+  height: 40px;
+  vertical-align: middle; }
 
 .custom-input-organisations, .custom-input-playlists {
   width: 350px; }
@@ -225,6 +251,17 @@ header {
   background-color: #FFF;
   border: 1px solid #000;
   outline: none; }
+
+.form-label {
+  width: 90%;
+  vertical-align: middle;
+  word-wrap: break-word;
+  float: left; }
+
+.form-img-icon {
+  cursor: pointer;
+  float: right;
+  vertical-align: middle; }
 
 .round {
   border-radius: 50%; }
@@ -285,6 +322,17 @@ header {
 
 .btn-right {
   float: right; }
+
+.btn-login {
+  width: 270px;
+  height: 3em;
+  margin-top: 1em; }
+
+.min-margin-top {
+  margin-top: -15px; }
+
+.horizontal-center {
+  text-align: center; }
 
 footer {
   display: block;
