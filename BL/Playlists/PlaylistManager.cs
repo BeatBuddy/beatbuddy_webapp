@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
-using System.Collections.ObjectModel;
 using BB.BL.Domain;
 using BB.DAL.EFPlaylist;
 
@@ -18,7 +17,7 @@ namespace BB.BL
         }
         public Comment CreateComment(string text, User user)
         {
-            Comment comment = new Comment()
+            var comment = new Comment
             {
                 Text = text,
                 User = user,
@@ -27,15 +26,17 @@ namespace BB.BL
             return repo.CreateComment(comment);
         }
 
-        public Playlist CreatePlaylistForUser(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy)
+        public Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy)
         {
-            Playlist playlist = new Playlist()
+            var playlist = new Playlist
             {
                 Name = name,
+                Description = description,
+                Key = key,
                 MaximumVotesPerUser = maxVotesPerUser,
                 Active = active,
                 ImageUrl = imageUrl,
-                PlaylistMasterId = playlistMaster.Id,
+                PlaylistMasterId = playlistMaster?.Id,
                 CreatedById = createdBy.Id,
                 ChatComments = new List<Comment>(),
                 Comments = new List<Comment>(),

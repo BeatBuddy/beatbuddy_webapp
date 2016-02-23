@@ -34,10 +34,26 @@
         <hr />
 
         <div class="first-form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+            @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-4"})
             <div class="col-md-8">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "custom-input-playlists" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "custom-validation" })
+                @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "custom-input-playlists"}})
+                @Html.ValidationMessageFor(model => model.Name, "", new {@class = "custom-validation"})
+            </div>
+        </div>
+
+        <div class="first-form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new {@class = "control-label col-md-4"})
+            <div class="col-md-8">
+                @Html.TextAreaFor(model => model.Description, new {@class = "custom-input-playlists"})
+                @Html.ValidationMessageFor(model => model.Description, "", new {@class = "custom-validation"})
+            </div>
+        </div>
+
+        <div class="first-form-group">
+            @Html.LabelFor(model => model.Key, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Key, new { htmlAttributes = new { @class = "custom-input-playlists" } })
+                @Html.ValidationMessageFor(model => model.Key, "", new { @class = "custom-validation" })
             </div>
         </div>
 
@@ -55,7 +71,7 @@
                 <div >
                     <input type="file" id="avatarImage" name="avatarImage" style="display: none" />
                     <div class="custom-input-playlists" style="overflow: hidden">
-                        <text id="avatarLabel" class="form-label">Click right to select logo image</text>
+                        <text id="avatarLabel" class="form-label">Select logo image...</text>
                         <i class="material-icons form-img-icon" id="avatar_click">image</i>
                     </div>
                 </div> 

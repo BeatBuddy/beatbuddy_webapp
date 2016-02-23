@@ -173,7 +173,7 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 org.Playlists.Add(playlist);
             }
-            playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
+            playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.Description, collection.Key, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
 
             //organisationManager.UpdateOrganisation(org);
             return RedirectToAction("View/" + playlist.Id);

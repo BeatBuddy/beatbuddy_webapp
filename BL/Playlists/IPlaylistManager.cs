@@ -15,7 +15,7 @@ namespace BB.BL
         void DeleteComment(long commentId);
         
         //Playlists
-        Playlist CreatePlaylistForUser(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User CreatedBy);
+        Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User CreatedBy);
         Playlist UpdatePlaylist(Playlist playlist);
         Playlist ReadPlaylist(long playlistId);
         Playlist ReadPlaylist(string name);
