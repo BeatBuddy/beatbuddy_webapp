@@ -143,7 +143,7 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 try
                 {
-                    List<Organisation> organisations = organisationManager.ReadOrganisations(user);
+                    /*List<Organisation> organisations = organisationManager.ReadOrganisations(user);
                     foreach (Organisation organ in organisations)
                     {
                         if (organ.Name.Equals(collection.Organisation))
@@ -152,7 +152,7 @@ namespace BB.UI.Web.MVC.Controllers
                         }
                     }
                     if (organiserFromOrganisation == false)
-                        throw new Exception("You're not allowed to add playlist to this organisation");
+                        throw new Exception("You're not allowed to add playlist to this organisation");*/
                     org = organisationManager.ReadOrganisation(collection.Organisation);
                 }
                 catch
