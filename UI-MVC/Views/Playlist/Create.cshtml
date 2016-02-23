@@ -29,73 +29,84 @@
     </script>
 </head>
 <body>
-<h2>CreatePlaylist</h2>
-
+    <div class="title">
+        <h1>Create</h1>
+        a new playlist
+    </div>
 
 @using (Html.BeginForm("Create", "Playlist", null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>PlaylistViewModel</h4>
+    <div class="row" id="custom-inputform-playlists">
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+        <div class="first-form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "custom-input-playlists" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "custom-validation" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.MaximumVotesPerUser, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MaximumVotesPerUser, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MaximumVotesPerUser, "", new { @class = "text-danger" })
+        <div class="other-form-groups">
+            @Html.LabelFor(model => model.MaximumVotesPerUser, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.MaximumVotesPerUser, new { htmlAttributes = new { @class = "custom-input-playlists" } })
+                @Html.ValidationMessageFor(model => model.MaximumVotesPerUser, "", new { @class = "custom-validation" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "text-danger" })
+        <div class="other-form-groups">
+            @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                <div >
+                    <input type="file" id="avatarImage" name="avatarImage" style="display: none" />
+                    <div class="custom-input-playlists" style="padding: 10px; overflow: hidden">
+                        <text id="avatarLabel" style="width: 90%; vertical-align: central; word-wrap: break-word; float: left">Click right to select logo image</text>
+                        <i class="material-icons" style="cursor: pointer; float: right; vertical-align: central" id="avatar_click">image</i>
+                    </div>
+                </div> 
+                @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "custom-validation" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.PlaylistMaster, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PlaylistMaster, new { htmlAttributes = new { @class = "form-control"} })
-                @Html.ValidationMessageFor(model => model.PlaylistMaster, "", new { @class = "text-danger" })
+        <div class="other-form-groups">
+            @Html.LabelFor(model => model.PlaylistMaster, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.PlaylistMaster, new { htmlAttributes = new { @class = "custom-input-playlists"} })
+                @Html.ValidationMessageFor(model => model.PlaylistMaster, "", new { @class = "custom-validation" })
             </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-10">
-                <p>Wilt u een playlist aanmaken voor een organisatie?</p> <input type="checkbox" id="organisatie" onchange="Organisatie()" />
-                @Html.LabelFor(model => model.Organisation, htmlAttributes: new { @class = "control-label col-md-2", @id= "OrganisationLabel", @style = "display:none" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Organisation, new { id = "OrganisationName", style="display:none" })
-                    @Html.ValidationMessageFor(model => model.Organisation, "", new { @class = "text-danger" })
+        <div class="other-form-groups">
+            <div class="col-md-12">Wilt u een playlist aanmaken voor een organisatie? <input type="checkbox" id="organisatie" onchange="Organisatie()" />   </div> 
+           @Html.LabelFor(model => model.Organisation, htmlAttributes: new { @class = "control-label col-md-4 other-form-groups", @id = "OrganisationLabel", @style = "display:none" })
+                <div class="col-md-8 other-form-groups">
+                    @Html.TextBoxFor(model => model.Organisation, new { id = "OrganisationName", style="display:none", @class= "custom-input-playlists"})
+                    @Html.ValidationMessageFor(model => model.Organisation, "", new { @class = "custom-validation" })
                 </div>
-            </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+        <div class="col-md-12">
+                <input type="submit" value="Create my playlist" class="btn btn-default create" />
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 </body>
 </html>
 @section Scripts {
     @Scripts.Render("~/bundles/autocompleter")
 }
+<script>
+    document.getElementById('avatar_click').onclick = function () {
+        document.getElementById('avatarImage').click();
+    };
+        document.getElementById("avatarImage").onchange = function () {
+        var filename = document.getElementById("avatarImage").value;
+        var lastIndex = filename.lastIndexOf("\\");
+        if (lastIndex >= 0) {
+            filename = filename.substring(lastIndex + 1);
+        }
+        document.getElementById("avatarLabel").innerText = filename;
+    };
+</script>

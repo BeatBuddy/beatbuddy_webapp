@@ -46,6 +46,11 @@ namespace BB.DAL.EFOrganisation
             throw new NotImplementedException();
         }
 
+        public Organisation ReadOrganisation(string organisationName)
+        {
+            return ctx.Organisations.Single(o => o.Name.Equals(organisationName));
+        }
+
         public Organisation ReadOrganisation(long organisationId)
         {
             return ctx.Organisations.Find(organisationId);

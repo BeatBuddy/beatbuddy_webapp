@@ -32,7 +32,7 @@ namespace BB.DAL.EFUser
 
         public User ReadUser(string email)
         {
-            return ctx.User.Single(u => u.Email.Equals(email));
+            return ctx.User.FirstOrDefault(u => u.Email.Equals(email));
         }
 
         public User ReadUser(long userId)

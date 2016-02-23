@@ -37,9 +37,9 @@ namespace BB.BL
                 ImageUrl = imageUrl,
                 PlaylistMasterId = playlistMaster.Id,
                 CreatedById = createdBy.Id,
-                ChatComments = new Collection<Comment>(),
-                Comments = new Collection<Comment>(),
-                PlaylistTracks = new Collection<PlaylistTrack>()
+                ChatComments = new List<Comment>(),
+                Comments = new List<Comment>(),
+                PlaylistTracks = new List<PlaylistTrack>()
             };
             return repo.CreatePlaylist(playlist);
         }
@@ -50,7 +50,7 @@ namespace BB.BL
             {
                 Track = track,
                 AlreadyPlayed = false,
-                Votes = new Collection<Vote>()
+                Votes = new List<Vote>()
             };
             return repo.CreatePlaylistTrack(playlistTrack);
         }
