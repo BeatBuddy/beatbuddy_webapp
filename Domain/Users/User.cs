@@ -22,7 +22,6 @@ namespace BB.BL.Domain.Users
         public string FirstName { get; set; }
         public string Nickname { get; set; }
         public string ImageUrl { get; set; }
-        public Dictionary<Organisation, Role> Roles { get; set; }
        
     }
 

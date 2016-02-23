@@ -37,6 +37,7 @@ namespace BB.DAL
         public DbSet<Vote> Votes { get; set; }
         //public DbSet<Role> roles { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

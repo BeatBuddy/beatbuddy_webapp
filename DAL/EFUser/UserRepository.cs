@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BB.BL.Domain;
+using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 
 namespace BB.DAL.EFUser
@@ -30,6 +31,11 @@ namespace BB.DAL.EFUser
             throw new NotImplementedException();
         }
 
+        public List<UserRole> ReadOrganisationsForUser(User user)
+        {
+            return ctx.UserRole.Where(o => o.User == user).ToList();
+        }
+
         public User ReadUser(string email)
         {
             return ctx.User.FirstOrDefault(u => u.Email.Equals(email));
@@ -43,6 +49,11 @@ namespace BB.DAL.EFUser
         public User ReadUser(string lastname, string firstname)
         {
             throw new NotImplementedException();
+        }
+
+        public List<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
+        {
+            return ctx.UserRole.Where(o => o.Organisation == organisation).ToList();
         }
 
         public List<User> ReadUsers()
