@@ -262,6 +262,47 @@ header {
     }
 }
 
+.form-label{width: 90%; 
+            vertical-align: middle; 
+            word-wrap: break-word; 
+            float: left;
+}
+.form-img-icon{
+    cursor: pointer; 
+    float: right; 
+    vertical-align: middle;
+}
+
+#custom-inputform-registration{
+    border-right: 1px solid #d3d3d3; 
+    display: block;
+    .container-form{
+        margin-right: 50px;float: right;
+        .div-image-form{
+            margin-top: 22px; 
+            margin-bottom: 22px; 
+            text-align: center;
+            .image-form{width: 150px; 
+                   height: 150px; 
+                   cursor: pointer;  
+            }
+        }
+        .column-left-form{
+            overflow: hidden;
+        }
+        .column-right-form{
+            float: right; 
+            overflow: hidden;
+        }
+        .form-groups{
+                margin-top: 7px;
+        }
+        .create{margin-top: 20px; 
+                margin-right: 13px;
+        }
+    }
+}
+
 .custom-input{
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -283,9 +324,10 @@ header {
     color: #808080;
     font: 13px Helvetica, Arial, sans-serif;
     margin: 0 0 10px;
-    padding: 15px 10px 15px 40px;
+    padding: 10px 10px 10px 40px;
     width: 270px;
     height: 40px;
+    vertical-align: middle;
 }
 .custom-input-organisations, .custom-input-playlists{
     @extend .custom-input;
