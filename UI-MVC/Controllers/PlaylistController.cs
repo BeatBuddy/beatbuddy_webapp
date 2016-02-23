@@ -188,8 +188,9 @@ namespace BB.UI.Web.MVC.Controllers
             }
             else
             {
-            playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
+                playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.Description, collection.Key, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
             }
+            
             
 
             return RedirectToAction("View/" + playlist.Id);
