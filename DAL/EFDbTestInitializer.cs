@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
+using BB.BL.Domain.Users;
 
 namespace BB.DAL
 {
@@ -10,6 +11,10 @@ namespace BB.DAL
 
         protected override void Seed(EFDbContext context)
         {
+            var user = new User()
+            {
+                Email = "jonah@gmail.com"
+            };
             var organisation = new Organisation()
             {
                 Name = "Jonah's Songs"

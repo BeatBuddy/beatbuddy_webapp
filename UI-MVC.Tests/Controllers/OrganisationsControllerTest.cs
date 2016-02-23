@@ -22,12 +22,14 @@ namespace BB.UI.Web.MVC.Tests.Controllers
     public class OrganisationsControllerTest
     {
         private OrganisationsController _organisationsController;
+        private IUserManager userManager;
         
 
         [TestInitialize]
         public void TestInitialize()
         {
             _organisationsController = new OrganisationsController(ContextEnum.BeatBuddyTest);
+            userManager = new UserManager(ContextEnum.BeatBuddyTest);
             DbInitializer.Initialize();
         }
 
@@ -64,6 +66,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             {
                 Name = "Maarten's Songs"
             };
+            
             RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation, null, null);
             Assert.AreEqual("Index", viewResult.RouteValues["action"]);
         }

@@ -19,9 +19,9 @@ namespace BB.UI.Web.MVC.Models
         [Index(IsUnique = true)]
         [Remote("IsNameAvailable", "Organisations", ErrorMessage = "Name is already in use")]
         public string Name { get; set; }
-        [Required, DisplayName("Banner Image: ")]
+        [DisplayName("Banner Image: ")]
         public string BannerUrl { get; set; }
-        [Required, DisplayName("Avatar Image: ")]
+        [DisplayName("Avatar Image: ")]
         public string ImageUrl { get; set; }
         [Required, DisplayName("Accent color: ")]
         public string ColorScheme { get; set; }
