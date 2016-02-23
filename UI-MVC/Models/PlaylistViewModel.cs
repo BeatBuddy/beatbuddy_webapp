@@ -1,10 +1,4 @@
-﻿using BB.BL.Domain.Users;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace BB.UI.Web.MVC.Models
@@ -15,6 +9,16 @@ namespace BB.UI.Web.MVC.Models
         [MaxLength(100)]
         [Display(Name = "Playlist Name")]
         public string Name { get; set; }
+
+        [Required]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Description")]
+        public string Description { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        [Display(Name = "Key")]
+        public string Key { get; set; }
 
         [Required]
         [Display(Name = "Maximum votes per user")]

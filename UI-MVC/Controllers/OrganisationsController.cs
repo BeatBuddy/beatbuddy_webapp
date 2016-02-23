@@ -94,7 +94,10 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 string bannerPath = null;
                 string avatarPath = null;
-                user = userManager.ReadUser(User.Identity.Name);
+                if (User != null)
+                {
+                    user = userManager.ReadUser(User.Identity.Name);
+                }
                 if(bannerImage != null && bannerImage.ContentLength > 0)
                 {
                     var bannerFileName = Path.GetFileName(bannerImage.FileName);

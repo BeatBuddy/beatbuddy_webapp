@@ -17,11 +17,7 @@ namespace BB.UI.Web.MVC
             WebApiConfig.Register(config);
             ConfigureOAuth(app);
             app.UseWebApi(config);
-            
-            
         }
-
-        
 
         public void ConfigureOAuth(IAppBuilder app)
         {

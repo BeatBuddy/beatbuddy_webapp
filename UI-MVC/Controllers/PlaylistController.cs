@@ -22,6 +22,9 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
 
+
+        string testName = "jonah@gmail.com";
+
         public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
         {
             this.playlistManager = playlistManager;
@@ -121,6 +124,7 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         // GET: Playlists/Create
+        [Authorize(Roles = "User, Admin")]
         public ActionResult Create()
         {
             return View();
@@ -128,17 +132,26 @@ namespace BB.UI.Web.MVC.Controllers
 
         // POST: Playlists/Create
         [HttpPost]
+        [Authorize(Roles = "User, Admin")]
         public ActionResult Create(PlaylistViewModel collection, HttpPostedFileBase image)
         {
             User playlistMaster = null;
             Organisation org = null;
             Playlist playlist = null;
+            User user = null;
             string path = null;
             bool organiserFromOrganisation = false;
-            string username = User.Identity.Name;
-            // TODO: Add insert logic here
-            User user = userManager.ReadUser(username);
-                playlistMaster = userManager.ReadUser(collection.PlaylistMaster);
+            if(User != null)
+            {
+                string username = User.Identity.Name;
+                user = userManager.ReadUser(username);
+            }
+            else
+            {
+                user = userManager.ReadUser(testName);
+            }
+
+            playlistMaster = userManager.ReadUser(collection.PlaylistMaster);
 
             if (playlistMaster == null)
             {
@@ -155,7 +168,7 @@ namespace BB.UI.Web.MVC.Controllers
                     List<UserRole> userRoles = userManager.ReadOrganisationsForUser(user);
                     foreach (UserRole userRole in userRoles)
                     {
-                        if (userRole.User.Id == (user.Id))
+                        if (org.Id == (userRole.Organisation.Id))
                         {
                             organiserFromOrganisation = true;
                         }
@@ -183,8 +196,9 @@ namespace BB.UI.Web.MVC.Controllers
             }
             else
             {
-            playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
+                playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.Description, collection.Key, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
             }
+            
             
 
             return RedirectToAction("View/" + playlist.Id);
