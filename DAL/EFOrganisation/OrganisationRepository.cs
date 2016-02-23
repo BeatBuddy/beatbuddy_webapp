@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
+using BB.BL.Domain.Users;
 
 namespace BB.DAL.EFOrganisation
 {
@@ -24,9 +25,16 @@ namespace BB.DAL.EFOrganisation
             throw new NotImplementedException();
         }
 
-        public Organisation CreateOrganisation(Organisation organisation)
+        public Organisation CreateOrganisation(Organisation organisation, User user)
         {
             organisation = ctx.Organisations.Add(organisation);
+            UserRole userRole = new UserRole()
+            {
+                Organisation = organisation,
+                User = user,
+                Role = Role.Organiser
+            };
+            ctx.UserRole.Add(userRole);
             ctx.SaveChanges();
             return organisation;
         }
@@ -68,7 +76,9 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation UpdateOrganisation(Organisation organisation)
         {
-            throw new NotImplementedException();
+            ctx.Entry(organisation).State = System.Data.Entity.EntityState.Modified;
+            ctx.SaveChanges();
+            return organisation;
         }
     }
 }
