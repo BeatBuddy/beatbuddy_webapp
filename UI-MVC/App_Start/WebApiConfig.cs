@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Serialization;
+﻿using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace BB.UI.Web.MVC
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-
+            config.SuppressHostPrincipal();
+            config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
             // Web API routes
             config.MapHttpAttributeRoutes();
 

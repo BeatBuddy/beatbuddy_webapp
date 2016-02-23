@@ -7,15 +7,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>jQuery UI Autocomplete - Default functionality</title>
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/jquery.easy-autocomplete.js"></script>
-    <link rel="stylesheet" href="~/Content/easy-autocomplete.css">
-    <link rel="stylesheet" href="~/Content/easy-autocomplete.themes.css">
-    <script>
-        var options = { data: ["blue", "green", "pink"] };
-        $("#playlistmaster").easyAutocomplete(options);
-    </script>
+    <title>Create playlist</title>
     <script>
         function Organisatie() {
             if (document.getElementById("organisatie").checked == true) {
@@ -62,9 +54,9 @@
             <div class="col-md-8">
                 <div >
                     <input type="file" id="avatarImage" name="avatarImage" style="display: none" />
-                    <div class="custom-input-playlists" style="padding: 10px; overflow: hidden">
-                        <text id="avatarLabel" style="width: 90%; vertical-align: central; word-wrap: break-word; float: left">Click right to select logo image</text>
-                        <i class="material-icons" style="cursor: pointer; float: right; vertical-align: central" id="avatar_click">image</i>
+                    <div class="custom-input-playlists" style="overflow: hidden">
+                        <text id="avatarLabel" class="form-label">Click right to select logo image</text>
+                        <i class="material-icons form-img-icon" id="avatar_click">image</i>
                     </div>
                 </div> 
                 @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "custom-validation" })
@@ -96,9 +88,6 @@
 
 </body>
 </html>
-@section Scripts {
-    @Scripts.Render("~/bundles/autocompleter")
-}
 <script>
     document.getElementById('avatar_click').onclick = function () {
         document.getElementById('avatarImage').click();

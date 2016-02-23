@@ -15,8 +15,9 @@ namespace BB.UI.Web.MVC
             ConfigureAuth(app);
             HttpConfiguration config = new HttpConfiguration();
             WebApiConfig.Register(config);
-            app.UseWebApi(config);
             ConfigureOAuth(app);
+            app.UseWebApi(config);
+            
             
         }
 
@@ -35,6 +36,7 @@ namespace BB.UI.Web.MVC
             // Token Generation
             app.UseOAuthAuthorizationServer(OAuthServerOptions);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+            //app.UseOAuthBearerTokens(OAuthServerOptions);
 
         }
     }

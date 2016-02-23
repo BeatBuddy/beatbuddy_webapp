@@ -84,6 +84,10 @@
       <Project>{bbc45856-b2d8-461b-9af9-9268d7f1032d}</Project>
       <Name>Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UI-MVC\UI-MVC.csproj">
+      <Project>{6f43cfe1-78e6-4e86-83aa-9a121a92188a}</Project>
+      <Name>UI-MVC</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

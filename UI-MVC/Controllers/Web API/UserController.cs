@@ -2,10 +2,6 @@
 using BB.BL.Domain;
 using BB.BL.Domain.Users;
 using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using System.Web;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -26,6 +22,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
     
 
         // GET: api/users/heylenmatthias@gmail.com
+        [Authorize]
         [HttpGet]
         [Route("{email}")]
         public IHttpActionResult GetUser(string email)
