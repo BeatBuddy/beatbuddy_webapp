@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -52,20 +53,27 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             string imagePath = "";
             if (formData["image"] != null && formData["image"].Length > 0)
             {
-                var bitmap = ImageDecoder.DecodeBase64String(formData["image"]);
+                try
+                {
+                    var bitmap = ImageDecoder.DecodeBase64String(formData["image"]);
 
-                string extension = string.Empty;
-                if (bitmap.RawFormat.Equals(ImageFormat.Jpeg)) extension = ".jpg";
-                if (bitmap.RawFormat.Equals(ImageFormat.Png)) extension = ".png";
-                if (bitmap.RawFormat.Equals(ImageFormat.Bmp)) extension = ".bmp";
-                if (bitmap.RawFormat.Equals(ImageFormat.Gif)) extension = ".gif";
+                    string extension = string.Empty;
+                    if (bitmap.RawFormat.Equals(ImageFormat.Jpeg)) extension = ".jpg";
+                    if (bitmap.RawFormat.Equals(ImageFormat.Png)) extension = ".png";
+                    if (bitmap.RawFormat.Equals(ImageFormat.Bmp)) extension = ".bmp";
+                    if (bitmap.RawFormat.Equals(ImageFormat.Gif)) extension = ".gif";
 
-                if(string.IsNullOrEmpty(extension)) return Request.CreateResponse(HttpStatusCode.BadRequest, "The supplied image is not a valid image");
+                    if (string.IsNullOrEmpty(extension)) return Request.CreateResponse(HttpStatusCode.BadRequest, "The supplied image is not a valid image");
 
-                imagePath = FileHelper.NextAvailableFilename(Path.Combine(HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), "playlist" + extension));
-                bitmap.Save(imagePath);
+                    imagePath = FileHelper.NextAvailableFilename(Path.Combine(HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), "playlist" + extension));
+                    bitmap.Save(imagePath);
 
-                imagePath = Path.GetFileName(imagePath);
+                    imagePath = Path.GetFileName(imagePath);
+                }
+                catch (Exception ex)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, ex);
+                }
             }
 
             var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, null, user);
