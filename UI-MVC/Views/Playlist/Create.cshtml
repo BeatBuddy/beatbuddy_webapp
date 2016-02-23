@@ -66,6 +66,7 @@
         <div class="other-form-groups">
             @Html.LabelFor(model => model.PlaylistMaster, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
+                @Html.ValidationMessage("UserFault")
                 @Html.EditorFor(model => model.PlaylistMaster, new { htmlAttributes = new { @class = "custom-input-playlists"} })
                 @Html.ValidationMessageFor(model => model.PlaylistMaster, "", new { @class = "custom-validation" })
             </div>
@@ -74,6 +75,7 @@
             <div class="col-md-12">Wilt u een playlist aanmaken voor een organisatie? <input type="checkbox" id="organisatie" onchange="Organisatie()" />   </div> 
            @Html.LabelFor(model => model.Organisation, htmlAttributes: new { @class = "control-label col-md-4 other-form-groups", @id = "OrganisationLabel", @style = "display:none" })
                 <div class="col-md-8 other-form-groups">
+                    @Html.ValidationMessage("OrganisationFault")
                     @Html.TextBoxFor(model => model.Organisation, new { id = "OrganisationName", style="display:none", @class= "custom-input-playlists"})
                     @Html.ValidationMessageFor(model => model.Organisation, "", new { @class = "custom-validation" })
                 </div>

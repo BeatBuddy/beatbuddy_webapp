@@ -30,6 +30,5 @@ namespace BB.UI.Web.MVC.Models
         [Display(Name = "Organisation Name")]
         [Remote("IsOrganisationAvailable", "Playlist", ErrorMessage = "Organisation not found")]
         public string Organisation { get; set; }
-        
     }
 }

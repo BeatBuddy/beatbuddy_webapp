@@ -1,4 +1,5 @@
 ﻿@using BB.BL.Domain.Playlists
+@using BB.UI.Web.MVC.Models
 @model BB.BL.Domain.Playlists.Playlist
 
 @{
@@ -64,11 +65,12 @@
         <th>Title</th>
         <th></th>
         <th></th>
+        <th></th>
         <th>Artist</th>
-        <th>Album</th>
     </tr>
     @foreach (PlaylistTrack track in Model.PlaylistTracks)
     {
+        var track_vote = 0;
         <tr class="track">
             <td>
                 @track.Id
@@ -80,7 +82,10 @@
                 @track.Track.Title
             </td>
             <td>
-                thumbs
+                <i class="material-icons" id="click_thumb_down" onclick="changeVoteThumbDown(@track_vote, @track.Id)" style="color: black">thumb_down</i>
+            </td>
+            <td>
+                <i class="material-icons" id="click_thumb_up" onclick="" style="color: black">thumb_up</i>
             </td>
             <td>
                 3:30
@@ -92,13 +97,127 @@
                 album
             </td>
         </tr>
+
     }
 </table>
 
-<a href="#" class="btn btn-right" style="margin-top: 1em;">
+<a href="#addTrackModal" class="btn btn-right" style="margin-top: 1em;">
     <i class="material-icons">playlist_add</i> add track
 </a>
+
+<div id="addTrackModal" class="modal" style="margin-top: -140px">
+    <div class="modal-content" style="width: 30%; height: 70%">
+        <a href="#close" title="Close" class="close">X</a>
+        <div class="modal-body" style="height: 100%; width: 100%">
+            @{
+                Html.RenderPartial("AddTrack");
+            }
+        </div>
+    </div>
+</div>
 
 <div id="player">
     <h1>Now playing ▶</h1>
 </div>
+
+@section Scripts{
+    <script>
+
+        var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
+            '<img class="thumbnail" src="${CoverArtUrl}"/>' +
+            '<span class="artist">${Artist}</span>' +
+            '<span class="tracktitle">${Title}</span>' +
+            '</li>';
+        $.template("trackTemplate", markup);
+
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("#loading").show();
+            },
+            complete: function () {
+                $("#loading").hide();
+            }
+        });
+        $("#loading").hide();
+
+        function fetchQueryResults() {
+            $.ajax('@Url.Action("SearchTrack")/?q=' + $('#query').val())
+                .done(function (result) {
+                    $("#results").empty();
+                    $.tmpl("trackTemplate", result).appendTo("#results");
+                    $("#results li").on("click", function () {
+                        addTrack($(this).attr('data-id'));
+                    });
+                })
+                .fail(function () {
+                    alert("error");
+                });
+        }
+
+        function addTrack(id) {
+            $.ajax({
+                url: '@Url.Action("AddTrack")',
+                method: 'POST',
+                data: { playlistId: @ViewBag.PlaylistId, id: id }
+            }).done(function () {
+                window.location.href = '@Url.Action("View", new { id = @ViewBag.PlaylistId })';
+            })
+            .fail(function () {
+                alert('Failed!');
+            });
+        }
+
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
+        var debouncedFetch = debounce(function () {
+            fetchQueryResults();
+        }, 500);
+
+        $("#query").on('keydown', function () {
+            debouncedFetch();
+        });
+
+        function addVote(track_vote, track_id) {
+            $.ajax({
+                url: '@Url.Action("AddVote")',
+                method: 'POST',
+                data: { vote: track_vote, id: id }
+            })
+       function changeVoteThumbDown(track_vote, id) {
+            if(document.getElementById('click_thumb_down').style.color == "black" && document.getElementById('click_thumb_up').style.color=="black"){
+                document.getElementById('click_thumb_down').style.color= "Green";
+                var track_vote_final = track_vote-1;
+                addVote(track_vote_final, id);
+            }
+            else{document.getElementById('click_thumb_down').style.color = "black";
+            var track_vote_final = track_vote+1;
+            addVote(track_vote_final, id);
+            }
+        };
+      function changeVoteThumbUp(track_vote, id) {
+            if(document.getElementById('click_thumb_up').style.color == "black" && document.getElementById('click_thumb_down').style.color=="black"){
+                document.getElementById('click_thumb_up').style.color= "Green";
+                var track_vote_final = track_vote + 1;
+                addVote(track_vote_final, id);
+            }
+            else{document.getElementById('click_thumb_up').style.color = "black";
+            var track_vote_final = track_vote - 1;
+            addVote(track_vote, id);    
+            }
+        };
+    </script>
+
+}
