@@ -262,17 +262,6 @@ header {
     }
 }
 
-.form-label{width: 90%; 
-            vertical-align: middle; 
-            word-wrap: break-word; 
-            float: left;
-}
-.form-img-icon{
-    cursor: pointer; 
-    float: right; 
-    vertical-align: middle;
-}
-
 #custom-inputform-registration{
     border-right: 1px solid #d3d3d3; 
     display: block;
@@ -343,6 +332,17 @@ header {
     background-color: #FFF;
     border: 1px solid #000;
     outline: none;
+}
+
+.form-label{width: 90%; 
+            vertical-align: middle; 
+            word-wrap: break-word; 
+            float: left;
+}
+.form-img-icon{
+    cursor: pointer; 
+    float: right; 
+    vertical-align: middle;
 }
 
 .round {
@@ -418,6 +418,18 @@ header {
 
 .btn-right{
     float: right;
+}
+.btn-login{
+width: 270px; 
+height: 3em; 
+margin-top: 1em;
+}
+
+.min-margin-top{
+    margin-top:-15px;
+}
+.horizontal-center{
+    text-align:center;
 }
 
 footer {
