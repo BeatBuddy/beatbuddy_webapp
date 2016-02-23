@@ -8,6 +8,8 @@ using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BB.UI.Web.MVC.Tests.Helpers;
+using BB.UI.Web.MVC.Models;
+using BB.BL;
 
 namespace BB.UI.Web.MVC.Tests.Controllers
 {
@@ -15,11 +17,13 @@ namespace BB.UI.Web.MVC.Tests.Controllers
     public class PlaylistControllerTest
     {
         private PlaylistController controller;
+        private IPlaylistManager playlistManager;
 
         [TestInitialize]
         public void TestInitialize()
         {
             controller = new PlaylistController(ContextEnum.BeatBuddyTest);
+            playlistManager = new PlaylistManager(ContextEnum.BeatBuddyTest);
             DbInitializer.Initialize();
         }
 
@@ -59,5 +63,22 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsNotNull(tracks);
             Assert.IsTrue(tracks.PlaylistTracks.Count > 0);
         }
+
+        /*[TestMethod]
+        public void CreatePlaylist()
+        {
+            PlaylistViewModel playlistViewModel = new PlaylistViewModel()
+            {
+                MaximumVotesPerUser = 4,
+                Name = "Awesome party",
+                Organisation = "Jonah's Songs",
+                PlaylistMaster = "jonah@gmail.com"
+            };
+
+            ViewResult viewResult = (ViewResult)controller.Create(playlistViewModel, null);
+            Playlist playlist = playlistManager.ReadPlaylist("Awesome party");
+            Assert.Equals(playlist.MaximumVotesPerUser, 4);
+            
+        }*/
     }
 }
