@@ -113,7 +113,7 @@ namespace BB.DAL.EFPlaylist
         {
             return ctx.Playlists
                 .Include(p => p.PlaylistTracks)
-                .Include("PlaylistTracks.Track")
+                .Include("PlaylistTracks.Track.TrackSource")
                 .First(p => p.Id == playlistId);
         }
 
