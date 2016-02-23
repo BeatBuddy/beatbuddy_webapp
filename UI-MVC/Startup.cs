@@ -13,15 +13,11 @@ namespace BB.UI.Web.MVC
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            /*HttpConfiguration config = new HttpConfiguration();
+            HttpConfiguration config = new HttpConfiguration();
             WebApiConfig.Register(config);
             ConfigureOAuth(app);
-            app.UseWebApi(config);*/
-            
-            
+            app.UseWebApi(config);
         }
-
-        
 
         public void ConfigureOAuth(IAppBuilder app)
         {
