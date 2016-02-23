@@ -16,6 +16,7 @@ namespace BB.BL
         
         //Playlists
         Playlist CreatePlaylistForUser(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User CreatedBy);
+        Playlist CreatePlaylistForOrganisation(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy, Organisation organisation);
         Playlist UpdatePlaylist(Playlist playlist);
         Playlist ReadPlaylist(long playlistId);
         Playlist ReadPlaylist(string name);

@@ -33,7 +33,7 @@ namespace BB.DAL.EFUser
 
         public List<UserRole> ReadOrganisationsForUser(User user)
         {
-            return ctx.UserRole.Where(o => o.User == user).ToList();
+            return ctx.UserRole.Where(o => o.User.Id == user.Id).ToList();
         }
 
         public User ReadUser(string email)
