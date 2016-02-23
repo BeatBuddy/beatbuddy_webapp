@@ -31,6 +31,16 @@ namespace BB.DAL.EFPlaylist
             return playlist;
         }
 
+        public Playlist CreatePlaylist(Playlist playlist, Organisation organisation)
+        {
+            var playlist1 = playlist;
+            var organisation1 = ctx.Organisations.Find(organisation.Id);
+            organisation1.Playlists.Add(playlist1);
+            ctx.Playlists.Add(playlist1);
+            ctx.SaveChanges();
+            return playlist;
+        }
+
         public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
         {
             throw new NotImplementedException();
@@ -196,5 +206,7 @@ namespace BB.DAL.EFPlaylist
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

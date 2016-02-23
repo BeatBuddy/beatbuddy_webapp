@@ -28,10 +28,13 @@ namespace BB.DAL.EFOrganisation
         public Organisation CreateOrganisation(Organisation organisation, User user)
         {
             organisation = ctx.Organisations.Add(organisation);
+            ctx.SaveChanges();
+            var user1 = ctx.User.Find(user.Id);
+            var organisation1 = ctx.Organisations.Find(organisation.Id);
             UserRole userRole = new UserRole()
             {
-                Organisation = organisation,
-                User = user,
+                Organisation = organisation1,
+                User = user1,
                 Role = Role.Organiser
             };
             ctx.UserRole.Add(userRole);

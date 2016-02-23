@@ -18,6 +18,7 @@ namespace BB.UI.Web.MVC.Controllers
     public class OrganisationsController : Controller
     {
         private readonly IOrganisationManager organisationManager;
+        private readonly IUserManager userManager;
 
         User user = new User()
         {
@@ -27,11 +28,13 @@ namespace BB.UI.Web.MVC.Controllers
         public OrganisationsController()
         {
             organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
+            userManager = new UserManager(ContextEnum.BeatBuddy);
         }
 
         public OrganisationsController(ContextEnum contextEnum)
         {
             organisationManager = new OrganisationManager(contextEnum);
+            userManager = new UserManager(contextEnum);
         }
 
         // GET: Organisations
@@ -91,6 +94,10 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 string bannerPath = null;
                 string avatarPath = null;
+                if (User != null)
+                {
+                    user = userManager.ReadUser(User.Identity.Name);
+                }
                 if(bannerImage != null && bannerImage.ContentLength > 0)
                 {
                     var bannerFileName = Path.GetFileName(bannerImage.FileName);
