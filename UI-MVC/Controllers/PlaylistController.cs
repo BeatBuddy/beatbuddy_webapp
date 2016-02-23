@@ -48,13 +48,14 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult View(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
+            ViewBag.PlaylistId = id;
             return View(playlist);
         }
 
         public ActionResult AddTrack(long id)
         {
             ViewBag.PlaylistId = id; // TODO: remove
-            return View("_AddTrack");
+            return View("AddTrack");
         }
 
         [HttpPost]
@@ -174,7 +175,7 @@ namespace BB.UI.Web.MVC.Controllers
             }
             playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
 
-            organisationManager.UpdateOrganisation(org);
+            //organisationManager.UpdateOrganisation(org);
             return RedirectToAction("View/" + playlist.Id);
 
         }

@@ -99,15 +99,25 @@
 <a href="#addTrackModal" class="btn btn-right" style="margin-top: 1em;">
     <i class="material-icons">playlist_add</i> add track
 </a>
-<div id="addTrackModal" data-toggle="modal" class="modal" style="margin-top: -90px">
+
+<div id="addTrackModal" class="modal" style="margin-top: -90px">
     <div class="modal-content" style="width: 620px; height: 530px">
         <a href="#close" title="Close" class="close">X</a>
         <div class="modal-body" style="margin-left: 60px; width: 100%">
             @{
-                Html.RenderPartial("_AddTrack", null);
+                Html.RenderPartial("AddTrack");
             }
-            @section scripts{
+        </div>
+    </div>
+</div>
+
+<div id="player">
+    <h1>Now playing ▶</h1>
+</div>
+
+@section Scripts{
     <script>
+        
         var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
             '<img class="thumbnail" src="${CoverArtUrl}"/>' +
             '<span class="artist">${Artist}</span>' +
@@ -175,12 +185,4 @@
             debouncedFetch();
         });
     </script>
-            }
-        </div>
-    </div>
-</div>
-
-<div id="player">
-    <h1>Now playing ▶</h1>
-</div>
-
+}
