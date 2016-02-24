@@ -118,7 +118,7 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist ReadPlaylist(string name)
         {
-            throw new NotImplementedException();
+            return ctx.Playlists.Single(p => p.Name.Equals(name));
         }
 
         public Playlist ReadPlaylist(long playlistId)

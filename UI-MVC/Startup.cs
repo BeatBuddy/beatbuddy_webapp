@@ -21,8 +21,6 @@ namespace BB.UI.Web.MVC
             
         }
 
-        
-
         public void ConfigureOAuth(IAppBuilder app)
         {
             OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
