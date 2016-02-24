@@ -70,7 +70,7 @@
     </tr>
     @foreach (PlaylistTrack track in Model.PlaylistTracks)
     {
-        <tr class="track">
+        <tr class="track" >
             <td>
                 @track.Id
             </td>
@@ -110,11 +110,22 @@
         </div>
     </div>
 </div>
-<input type="button" id="playBtn" class="btn" value="Start Playing"/>
-<input type="button" id="nextBtn" class="btn" click="playNextTrack" value="Next track" />
+@if (Model.PlaylistTracks.Count != 0)
+{
+    <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    <a class="btn disabled" id="nextBtn" ><i id="icon" class="material-icons">skip_next</i> </a>
 
-<div id="player">
-    <h1>Now playing ▶</h1>
+}
+<div id="nowPlayingRow" style="margin-top: 5em">
+    <div class="title">
+        <h1>Now Playing </h1> <span id="nowPlaying"></span>
+    </div>
+    <span id="time"></span>
+    <div id="myProgress" class="progress">
+        <div id="myBar" class="bar"></div>
+    </div>
+</div>
+<div id="player" style="display: none">
 </div>
 
 @section Scripts{
@@ -157,17 +168,17 @@
                 data: { playlistId: @ViewBag.PlaylistId, id: id }
             }).done(function () {
                 window.location.href = '@Url.Action("View", new { id = @ViewBag.PlaylistId })';
-            })
-            .fail(function () {
-                alert('Failed!');
-            });
+                })
+                .fail(function() {
+                    alert('Failed!');
+                });
         }
 
         function debounce(func, wait, immediate) {
             var timeout;
-            return function () {
+            return function() {
                 var context = this, args = arguments;
-                var later = function () {
+                var later = function() {
                     timeout = null;
                     if (!immediate) func.apply(context, args);
                 };
@@ -178,11 +189,11 @@
             };
         };
 
-        var debouncedFetch = debounce(function () {
+        var debouncedFetch = debounce(function() {
             fetchQueryResults();
         }, 500);
 
-        $("#query").on('keydown', function () {
+        $("#query").on('keydown', function() {
             debouncedFetch();
         });
 
@@ -190,45 +201,121 @@
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        
+
         var player;
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
-                videoId: '@Model.PlaylistTracks.First().Track.TrackSource.TrackId.ToString()',
+                videoId: 'sOEAD-gfJ_M',
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
                 }
-            });  
-        }
-
-        var playing = false;
-        function onPlayerReady(event) {
-            var playButton = document.getElementById("playBtn");
-            playButton.addEventListener("click", function() {
-                if (!playing) {
-                    playing = true;
-                    playButton.value = 'Pause';
-                    player.playVideo();    
-                } else {
-                    playing = false;
-                    playButton.value = 'Start Playing';
-                    player.pauseVideo();    
-                }
             });
+            player.setPlayBackQuality(small);
         }
 
-        function playNextTrack() {
-            alert("hello");
-        }
-        var done = false;
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING && !done) {
-                setTimeout(stopVideo, 6000);
-                done = true;
+        var firstPlay = true;
+
+        function onPlayerReady(event) {
+            if (firstPlay) {
+                var playButton = document.getElementById("playBtn");
+                playButton.addEventListener("click", getNextTrack);
+                
+                firstPlay = false;
             }
+            var nextButton = document.getElementById("nextBtn");
+            nextButton.addEventListener("click", function() {
+             moveTrackToHistory();
+
+            });
+            
+
+        }
+        function updateTime() {
+            var time = document.getElementById("time");
+            var currentTime = secondsToTime(player.getCurrentTime());
+            var duration = secondsToTime(player.getDuration());
+            time.innerHTML = currentTime +' | ' + duration;
+            var percentageTime = (player.getCurrentTime() / player.getDuration()) * 100;
+            var bar = document.getElementById("myBar");
+            bar.style.width = percentageTime + '%';
+        }
+        function secondsToTime(secs)
+        {
+            d = Number(secs);
+            var h = Math.floor(d / 3600);
+            var m = Math.floor(d % 3600 / 60);
+            var s = Math.floor(d % 3600 % 60);
+            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
+        }
+        function onPlayerStateChange(event) {
+            var playButton = document.getElementById("playBtn");
+            playButton.removeEventListener("click", getNextTrack);
+            var icon = document.getElementById("icon");
+            if (event.data == YT.PlayerState.PLAYING) {
+                playButton.addEventListener("click", function() {
+                    player.pauseVideo();
+                });
+                icon.innerHTML = 'pause';
+            }
+            if (event.data == YT.PlayerState.PAUSED) {
+                icon.innerHTML = 'play_arrow';
+                playButton.addEventListener("click", function() {
+                    player.playVideo();
+                });
+            }
+            if (event.data == YT.PlayerState.ENDED) {
+                moveTrackToHistory();
+            }
+            
+        }
+
+        function getNextTrack() {
+            $.ajax('/Playlist/GetNextTrack/', {
+                type: 'GET',
+                data: { id: @ViewBag.PlaylistId },
+                contentType : "application/json",
+                dataType : "json"
+            }).done(function(data) {
+                if (data!=null) {
+                    player.loadVideoById(data.trackId);
+                    document.getElementById("nowPlaying").innerHTML = data.trackName + ' - ' + data.artist;
+                    document.getElementById("playlist-tracks").deleteRow(1);
+                    $(function() {
+                        setInterval(updateTime, 50);
+                    });
+
+                    var nextButton = document.getElementById("nextBtn");
+                    
+                    if (data.nextTracks === 1) {
+                        nextButton.className = 'btn disabled';
+                    } else {
+                        nextButton.className = 'btn';     
+                    }
+                } 
+
+            });
+            
+        }
+        
+        function moveTrackToHistory() {
+
+            $.ajax('/Playlist/MoveTrackToHistory/', {
+                type: 'POST',
+                data: { id: @ViewBag.PlaylistId }
+            }).done(function() {
+                getNextTrack();
+            }).fail(function() {
+                var nextButton = document.getElementById("nextBtn");
+                nextButton.className = 'btn disabled';
+                var playButton = document.getElementById("playBtn");
+                playButton.className = 'btn disabled';
+                var icon = document.getElementById("icon");
+                icon.innerHTML = 'play_arrow';
+            });
         }
         function stopVideo() {
             player.stopVideo();

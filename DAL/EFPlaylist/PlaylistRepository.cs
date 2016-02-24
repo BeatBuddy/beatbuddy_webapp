@@ -73,7 +73,9 @@ namespace BB.DAL.EFPlaylist
 
         public void DeletePlaylistTrack(long playlistTrackId)
         {
-            throw new NotImplementedException();
+            PlaylistTrack track = ctx.PlaylistTracks.Single(f => f.Id == playlistTrackId);
+            ctx.PlaylistTracks.Remove(track);
+            ctx.SaveChanges();
         }
 
         public Track CreateTrack(long playlistId, Track track)

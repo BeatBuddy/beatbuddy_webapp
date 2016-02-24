@@ -12,6 +12,7 @@ using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
 using System.Collections.Generic;
 using System;
+using System.Web.Helpers;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -79,6 +80,7 @@ namespace BB.UI.Web.MVC.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+
         public JsonResult SearchTrack(string q)
         {
             var youtubeProvider = new YouTubeTrackProvider();
@@ -86,7 +88,35 @@ namespace BB.UI.Web.MVC.Controllers
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GetNextTrack(long id)
+        {
+            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
+            if (playlistTracks.Count != 0)
+            {
+                return Json(new
+                {
+                    trackId = playlistTracks.First().Track.TrackSource.TrackId,
+                    trackName = playlistTracks.First().Track.Title,
+                    artist = playlistTracks.First().Track.Artist,
+                    nextTracks = playlistTracks.Count()
+                }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(null, JsonRequestBehavior.DenyGet);
+        }
 
+        
+
+        [HttpPost]
+        public ActionResult MoveTrackToHistory(long id)
+        {
+            var tracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
+            if (tracks.Count != 0)
+            {
+                playlistManager.DeletePlaylistTrack(playlistManager.ReadPlaylist(id).PlaylistTracks.First().Id);
+                return new HttpStatusCodeResult(200);
+            }
+            else return new HttpStatusCodeResult(400);
+        }
         public ActionResult IsNameAvailable(string email)
         {
             return Json(userManager.ReadUsers().All(org => org.Email!=email),

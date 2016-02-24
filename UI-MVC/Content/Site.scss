@@ -18,7 +18,10 @@ body {
     line-height: .3em;
     margin-left: -.1em;
 }
-
+a.disabled {
+   pointer-events: none;
+   cursor: default;
+}
 header {
     display: block;
     padding: 1em $sidemargin;
@@ -333,7 +336,20 @@ header {
     border: 1px solid #000;
     outline: none;
 }
-
+.progress {
+    position: relative;
+    width: 100%;
+    height: 5px;
+    background-color: lightgray;
+}
+.bar {
+    position: absolute;
+    width: 0.1%;
+    height: 100%;
+    background-color: black;
+    border: solid 1px;
+    
+}
 .form-label{width: 90%; 
             vertical-align: middle; 
             word-wrap: break-word; 
@@ -411,7 +427,9 @@ header {
         background: #222;
     }
 }
-
+.btn:disabled{
+    cursor:not-allowed;
+}
 .btn-default {
     color: white;
 }
