@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using BB.BL.Domain.Users;
-using System.Collections.ObjectModel;
 using BB.BL.Domain;
 using BB.DAL.EFUser;
-using BB.DAL;
-using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Organisations;
 
 namespace BB.BL
@@ -24,7 +17,7 @@ namespace BB.BL
 
         public User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl)
         {
-            User user = new User()
+            User user = new User
             {
                 Email = email,
                 LastName = lastname,
@@ -40,9 +33,9 @@ namespace BB.BL
             repo.DeleteUser(userId);
         }
 
-        public List<UserRole> ReadOrganisationsForUser(User user)
+        public IEnumerable<UserRole> ReadOrganisationsForUser(long userId)
         {
-            return repo.ReadOrganisationsForUser(user);
+            return repo.ReadOrganisationsForUser(userId);
         }
 
         public User ReadUser(string email)
@@ -60,12 +53,12 @@ namespace BB.BL
             return repo.ReadUser(lastname, firstname);
         }
 
-        public List<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
+        public IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
         {
             return repo.ReadUserRolesForOrganisation(organisation);
         }
 
-        public List<User> ReadUsers()
+        public IEnumerable<User> ReadUsers()
         {
             return repo.ReadUsers();
         }

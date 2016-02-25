@@ -1,6 +1,5 @@
 ﻿using BB.BL;
 using BB.BL.Domain;
-using BB.BL.Domain.Users;
 using System.Web.Http;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
@@ -8,16 +7,19 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
-        private UserManager userMgr;
+        private readonly IUserManager userManager;
+        private readonly IOrganisationManager organisationManager;
 
   
         public UserController()
         {
-            userMgr = new UserManager(ContextEnum.BeatBuddy);
+            userManager = new UserManager(ContextEnum.BeatBuddy);
+            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
         }
 
         public UserController(ContextEnum contextEnum) {
-            this.userMgr = new UserManager(contextEnum);
+            userManager = new UserManager(contextEnum);
+            organisationManager = new OrganisationManager(contextEnum);
         }
     
 
@@ -27,12 +29,29 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [Route("{email}")]
         public IHttpActionResult GetUser(string email)
         {
-            User user = userMgr.ReadUser(email);
+            var user = userManager.ReadUser(email);
             if (user == null)
             {
                 return NotFound();
             }
             return Ok(user);
+        }
+
+        // GET: api/users/1234/organisations
+        [Authorize]
+        [HttpGet]
+        [Route("{id}/organisations")]
+        public IHttpActionResult GetUserOrganisations(long id)
+        {
+            var user = userManager.ReadUser(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var organisations = organisationManager.ReadOrganisations(id);
+
+            return Ok(organisations);
         }
 
     }

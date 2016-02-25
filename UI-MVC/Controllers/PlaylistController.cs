@@ -129,7 +129,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult IsOrganisationAvailable(string organisation)
         {
             User user = userManager.ReadUser(User.Identity.Name);
-            return Json(organisationManager.ReadOrganisations(user).All(org => org.Name.Equals(organisation)),
+            return Json(organisationManager.ReadOrganisations(user.Id).All(org => org.Name.Equals(organisation)),
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -187,13 +187,10 @@ namespace BB.UI.Web.MVC.Controllers
                 try
                 {
                     org = organisationManager.ReadOrganisation(collection.Organisation);
-                    List<UserRole> userRoles = userManager.ReadOrganisationsForUser(user);
-                    foreach (UserRole userRole in userRoles)
+                    var userRoles = userManager.ReadOrganisationsForUser(user.Id);
+                    foreach (var userRole in userRoles.Where(userRole => org.Id == (userRole.Organisation.Id)))
                     {
-                        if (org.Id == (userRole.Organisation.Id))
-                        {
-                            organiserFromOrganisation = true;
-                        }
+                        organiserFromOrganisation = true;
                     }
                     if (organiserFromOrganisation == false)
                         throw new Exception();
