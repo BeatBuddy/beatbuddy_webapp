@@ -86,6 +86,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult GetNextTrack(long id)
         {
             var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
@@ -101,8 +102,6 @@ namespace BB.UI.Web.MVC.Controllers
             }
             return Json(null, JsonRequestBehavior.DenyGet);
         }
-
-        
 
         [HttpPost]
         public ActionResult MoveTrackToHistory(long id)

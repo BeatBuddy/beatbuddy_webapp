@@ -270,7 +270,6 @@
             if (event.data == YT.PlayerState.ENDED) {
                 moveTrackToHistory();
             }
-            
         }
 
         function getNextTrack() {
@@ -302,7 +301,6 @@
         }
         
         function moveTrackToHistory() {
-
             $.ajax('/Playlist/MoveTrackToHistory/', {
                 type: 'POST',
                 data: { id: @ViewBag.PlaylistId }
