@@ -46,6 +46,7 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 organisationViewModels.Add(new OrganisationViewModel()
                 {
+                    Id = organisation.Id,
                     Name = organisation.Name,
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
@@ -63,17 +64,41 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 OrganisationViewModel organisationView = new OrganisationViewModel()
                 {
+                    Id=id,
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
                     Name = organisation.Name,
                     ImageUrl = organisation.ImageUrl
                 };
+                User user = userManager.ReadOrganiserFromOrganisation(organisation);
+                ViewBag.emailOrganiser = user.Email;
                 return View("Details", organisationView);
 
             }else
                 return View("Error");
         }
 
+
+        public void AddCoOrganiser(long organisation, string mail)
+        {
+
+            User user = userManager.ReadUser(mail);
+            if(user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            userManager.CreateUserRole(user.Id, organisation, Role.Co_Organiser);
+            Organisation org = organisationManager.ReadOrganisation(organisation);
+            OrganisationViewModel model = new OrganisationViewModel()
+            {
+                Id = org.Id,
+                BannerUrl = org.BannerUrl,
+                ColorScheme = org.ColorScheme,
+                ImageUrl = org.ImageUrl,
+                Name = org.Name
+            };
+        }
         // GET: Organisations/Create
         public ActionResult Create()
         {

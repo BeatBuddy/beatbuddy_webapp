@@ -64,7 +64,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsTrue(tracks.PlaylistTracks.Count > 0);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void CreatePlaylist()
         {
             PlaylistViewModel playlistViewModel = new PlaylistViewModel()
@@ -75,10 +75,10 @@ namespace BB.UI.Web.MVC.Tests.Controllers
                 PlaylistMaster = "jonah@gmail.com"
             };
 
-            ViewResult viewResult = (ViewResult)controller.Create(playlistViewModel, null);
+            RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);
             Playlist playlist = playlistManager.ReadPlaylist("Awesome party");
-            Assert.Equals(playlist.MaximumVotesPerUser, 4);
+            Assert.AreEqual(playlist.Active, true);
             
-        }*/
+        }
     }
 }

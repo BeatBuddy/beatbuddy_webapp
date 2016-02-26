@@ -16,10 +16,13 @@ namespace BB.DAL.EFUser
         User ReadUser(long userId);
         User ReadUser(string email);
         User ReadUser(string lastname, string firstname);
+        User ReadOrganiserFromOrganisation(Organisation organisation);
         List<User> ReadUsers();
         void DeleteUser(long userId);
 
         //UserRole
+        UserRole CreateUserRole(long userId, long organisationId, Role role);
+        UserRole CreateUserRole(UserRole userRole);
         List<UserRole> ReadUserRolesForOrganisation(Organisation organisation);
         List<UserRole> ReadOrganisationsForUser(User user);
     }

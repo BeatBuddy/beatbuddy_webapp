@@ -15,6 +15,7 @@ namespace BB.UI.Web.MVC.Models
 {
     public class OrganisationViewModel
     {
+        public long Id { get; set; }
         [Required, MaxLength(100)]
         [Index(IsUnique = true)]
         [Remote("IsNameAvailable", "Organisations", ErrorMessage = "Name is already in use")]

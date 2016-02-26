@@ -26,6 +26,28 @@ namespace BB.DAL.EFUser
             return user;
         }
 
+        public UserRole CreateUserRole(UserRole userRole)
+        {
+            userRole = ctx.UserRole.Attach(userRole);
+            ctx.SaveChanges();
+            return userRole;
+        }
+
+        public UserRole CreateUserRole(long userId, long organisationId, Role role)
+        {
+            var org = ctx.Organisations.Find(organisationId);
+            var user = ctx.User.Find(userId);
+            UserRole userRole = new UserRole()
+            {
+                Organisation = org,
+                User = user,
+                Role = role
+            };
+            userRole = ctx.UserRole.Add(userRole);
+            ctx.SaveChanges();
+            return userRole;
+        }
+
         public void DeleteUser(long userId)
         {
             throw new NotImplementedException();
@@ -33,7 +55,13 @@ namespace BB.DAL.EFUser
 
         public List<UserRole> ReadOrganisationsForUser(User user)
         {
-            return ctx.UserRole.Where(o => o.User.Id == user.Id).ToList();
+            return ctx.UserRole.Include("Organisation").Include("User").Where(o => o.User.Id == user.Id).ToList();
+        }
+
+        public User ReadOrganiserFromOrganisation(Organisation organisation)
+        {
+            UserRole userRole = ctx.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).Single(a => a.Role == Role.Organiser);
+            return ctx.User.Single(o => o.Id == userRole.User.Id);
         }
 
         public User ReadUser(string email)
@@ -43,7 +71,7 @@ namespace BB.DAL.EFUser
 
         public User ReadUser(long userId)
         {
-            throw new NotImplementedException();
+            return ctx.User.Find(userId);
         }
 
         public User ReadUser(string lastname, string firstname)
@@ -53,7 +81,7 @@ namespace BB.DAL.EFUser
 
         public List<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
         {
-            return ctx.UserRole.Where(o => o.Organisation == organisation).ToList();
+            return ctx.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).ToList();
         }
 
         public List<User> ReadUsers()

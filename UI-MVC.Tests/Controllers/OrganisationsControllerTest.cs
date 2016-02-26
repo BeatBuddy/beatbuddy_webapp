@@ -71,6 +71,15 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.AreEqual("Index", viewResult.RouteValues["action"]);
         }
 
+        [TestMethod]
+        public void TestAddCoOrganiser()
+        {
+            _organisationsController.AddCoOrganiser(1, "jonah@gmail.com");
+            User user = userManager.ReadUser("jonah@gmail.com");
+            List<UserRole> userRoles = userManager.ReadOrganisationsForUser(user);
+            Assert.IsNotNull(userRoles);
+            Assert.AreEqual(userRoles.Count(),2);
+        }
         
 
     }

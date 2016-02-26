@@ -10,15 +10,19 @@ using BB.DAL.EFUser;
 using BB.DAL;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Organisations;
+using BB.DAL.EFOrganisation;
 
 namespace BB.BL
 {
     public class UserManager : IUserManager
     {
         private IUserRepository repo;
+        private IOrganisationManager mgrOrganisation;
+
 
         public UserManager(ContextEnum contextEnum)
         {
+            mgrOrganisation = new OrganisationManager(contextEnum);
             repo = new UserRepository(contextEnum);
         }
 
@@ -35,6 +39,22 @@ namespace BB.BL
             return repo.CreateUser(user);
         }
 
+        public UserRole CreateUserRole(long userId, long organisationId, Role role)
+        {
+            return repo.CreateUserRole(userId, organisationId, role);
+        }
+
+        public UserRole CreateUserRole(User user, Organisation organisation, Role role)
+        {
+            UserRole userRole = new UserRole()
+            {
+                User = user,
+                Organisation = organisation,
+                Role = role
+            };
+            return repo.CreateUserRole(userRole);
+        }
+
         public void DeleteUser(long userId)
         {
             repo.DeleteUser(userId);
@@ -43,6 +63,11 @@ namespace BB.BL
         public List<UserRole> ReadOrganisationsForUser(User user)
         {
             return repo.ReadOrganisationsForUser(user);
+        }
+
+        public User ReadOrganiserFromOrganisation(Organisation organisation)
+        {
+            return repo.ReadOrganiserFromOrganisation(organisation);
         }
 
         public User ReadUser(string email)

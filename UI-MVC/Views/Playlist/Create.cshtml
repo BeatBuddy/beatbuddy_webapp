@@ -4,23 +4,9 @@
     ViewBag.Title = "CreatePlaylist";
     
 }
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Create playlist</title>
-    <script>
-        function Organisatie() {
-            if (document.getElementById("organisatie").checked == true) {
-                document.getElementById("OrganisationName").style.display = 'block';
-                document.getElementById("OrganisationLabel").style.display = 'block';
-            } else if (document.getElementById("organisatie").checked == false) {
-                document.getElementById("OrganisationName").style.display = 'none';
-                document.getElementById("OrganisationLabel").style.display = 'none';
-            }
-        }
-    </script>
-</head>
-<body>
+
+
+
     <div class="title">
         <h1>Create</h1>
         a new playlist
@@ -102,8 +88,8 @@
     </div>
 }
 
-</body>
-</html>
+
+@section scripts{
 <script>
     document.getElementById('avatar_click').onclick = function () {
         document.getElementById('avatarImage').click();
@@ -117,3 +103,16 @@
         document.getElementById("avatarLabel").innerText = filename;
     };
 </script>
+<script>
+        function Organisatie() {
+            if (document.getElementById("organisatie").checked == true) {
+                document.getElementById("OrganisationName").style.display = 'block';
+                document.getElementById("OrganisationLabel").style.display = 'block';
+            } else if (document.getElementById("organisatie").checked == false) {
+                document.getElementById("OrganisationName").style.display = 'none';
+                document.getElementById("OrganisationLabel").style.display = 'none';
+            }
+        }
+</script>
+    }
+
