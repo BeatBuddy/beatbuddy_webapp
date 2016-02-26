@@ -20,8 +20,8 @@ body {
 }
 
 a.disabled {
-    pointer-events: none;
-    cursor: default;
+   pointer-events: none;
+   cursor: default;
 }
 
 header {
@@ -131,7 +131,7 @@ header {
             font-weight: 200;
             font-size: 2em;
             text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
-        }
+            }
 
         .button {
             display: inline-block;
@@ -187,7 +187,7 @@ header {
         margin-bottom: .6em;
         vertical-align: top;
     }
-}
+        }
 
 .about-user {
     display: inline-block;
@@ -206,8 +206,8 @@ header {
         @media screen and (max-width: $mobile-breakpoint) {
             max-width: 64px;
             max-height: 64px;
-        }
     }
+}
 
     @media screen and (max-width: $mobile-breakpoint) {
         display: block;
@@ -360,7 +360,7 @@ header {
 }
 
 #custom-inputform-registration {
-    border-right: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3; 
     display: block;
 
     .container-form {
@@ -368,14 +368,14 @@ header {
         float: right;
 
         .div-image-form {
-            margin-top: 22px;
-            margin-bottom: 22px;
+            margin-top: 22px; 
+            margin-bottom: 22px; 
             text-align: center;
 
             .image-form {
                 width: 150px;
-                height: 150px;
-                cursor: pointer;
+                   height: 150px; 
+                   cursor: pointer;  
             }
         }
 
@@ -384,17 +384,17 @@ header {
         }
 
         .column-right-form {
-            float: right;
+            float: right; 
             overflow: hidden;
         }
 
         .form-groups {
-            margin-top: 7px;
+                margin-top: 7px;
         }
 
         .create {
             margin-top: 20px;
-            margin-right: 13px;
+                margin-right: 13px;
         }
     }
 }
@@ -467,17 +467,17 @@ header {
     background-color: black;
     border: solid 1px;
 }
-
+    
 .form-label {
     width: 90%;
-    vertical-align: middle;
-    word-wrap: break-word;
-    float: left;
+            vertical-align: middle; 
+            word-wrap: break-word; 
+            float: left;
 }
 
 .form-img-icon {
-    cursor: pointer;
-    float: right;
+    cursor: pointer; 
+    float: right; 
     vertical-align: middle;
 }
 
@@ -487,8 +487,8 @@ header {
 
 .borderround {
     border-radius: 50%;
-    border-color: black;
-    border: 1.5px solid;
+    border-color: lightgray;
+    border: 2px solid;
 }
 
 .borderround:hover {
@@ -566,9 +566,9 @@ header {
 }
 
 .btn-login {
-    width: 270px;
-    height: 3em;
-    margin-top: 1em;
+width: 270px; 
+height: 3em; 
+margin-top: 1em;
 }
 
 .min-margin-top {

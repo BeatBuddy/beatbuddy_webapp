@@ -48,6 +48,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var playlist = playlistManager.ReadPlaylist(id);
             ViewBag.PlaylistId = id;
+
             return View(playlist);
         }
 
@@ -103,6 +104,14 @@ namespace BB.UI.Web.MVC.Controllers
             return Json(null, JsonRequestBehavior.DenyGet);
         }
 
+        public ActionResult GetPlaylist(long id)
+        {
+            return PartialView("PlaylistTable",playlistManager.ReadPlaylist(id));
+            
+        }
+
+
+
         [HttpPost]
         public ActionResult MoveTrackToHistory(long id)
         {
@@ -138,7 +147,7 @@ namespace BB.UI.Web.MVC.Controllers
         // POST: Playlists/Create
         [HttpPost]
         [Authorize(Roles = "User, Admin")]
-        public ActionResult Create(PlaylistViewModel viewModel, HttpPostedFileBase image)
+        public ActionResult Create(PlaylistViewModel collection, HttpPostedFileBase avatarImage)
         {
             Organisation org = null;
             Playlist playlist;
@@ -164,12 +173,11 @@ namespace BB.UI.Web.MVC.Controllers
                     return View("Create");
                 }
             }
-
-            if (image != null && image.ContentLength > 0)
+            if (avatarImage != null && avatarImage.ContentLength > 0)
             {
-                var bannerFileName = Path.GetFileName(image.FileName);
+                var bannerFileName = Path.GetFileName(avatarImage.FileName);
                 path = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), bannerFileName));
-                image.SaveAs(path);
+                avatarImage.SaveAs(path);
                 path = Path.GetFileName(path);
             }
 
@@ -181,6 +189,8 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user);
             }
+            
+            
 
             return RedirectToAction("View/" + playlist.Id);
 
