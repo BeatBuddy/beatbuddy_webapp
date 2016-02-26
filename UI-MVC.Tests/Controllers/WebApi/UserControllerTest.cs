@@ -6,7 +6,6 @@ using BB.BL.Domain;
 using BB.UI.Web.MVC.Tests.Helpers;
 using System.Net.Http;
 using System.Linq;
-using Microsoft.Owin.Hosting;
 using System.Web;
 using Moq;
 
