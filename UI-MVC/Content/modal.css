@@ -55,24 +55,21 @@
              
 }
 
-
 .close {
-	background: #606061;
+	background: #000;
 	color: #FFFFFF;
 	line-height: 25px;
 	position: absolute;
-	right: -12px;
+	right: -1px;
 	text-align: center;
-	top: -15px;
-	width: 26px;
+	top: -1px;
+	width: 32px;
 	text-decoration: none;
 	font-weight: bold;
-	-webkit-border-radius: 12px;
-	-moz-border-radius: 12px;
-	border-radius: 12px;
 	-moz-box-shadow: 1px 1px 3px #000;
 	-webkit-box-shadow: 1px 1px 3px #000;
 	box-shadow: 1px 1px 3px #000;
+    font-family: roboto;
 }
 
-.close:hover { background: #00d9ff; }
+.close:hover { background: #222; }

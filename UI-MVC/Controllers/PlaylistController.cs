@@ -3,16 +3,12 @@ using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
-using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Models;
 using BB.BL.Domain.Organisations;
 using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
-using System.Collections.Generic;
-using System;
-using System.Web.Helpers;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -23,8 +19,7 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
 
-
-        string testName = "jonah@gmail.com";
+        private const string testName = "jonah@gmail.com";
 
         public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
         {
@@ -53,6 +48,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var playlist = playlistManager.ReadPlaylist(id);
             ViewBag.PlaylistId = id;
+
             return View(playlist);
         }
 
@@ -91,6 +87,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult GetNextTrack(long id)
         {
             var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
@@ -107,7 +104,13 @@ namespace BB.UI.Web.MVC.Controllers
             return Json(null, JsonRequestBehavior.DenyGet);
         }
 
+        public ActionResult GetPlaylist(long id)
+        {
+            return PartialView("PlaylistTable",playlistManager.ReadPlaylist(id));
         
+        }
+
+
 
         [HttpPost]
         public ActionResult MoveTrackToHistory(long id)
@@ -126,96 +129,65 @@ namespace BB.UI.Web.MVC.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult IsOrganisationAvailable(string organisation)
-        {
-            User user = userManager.ReadUser(User.Identity.Name);
-            return Json(organisationManager.ReadOrganisations(user.Id).All(org => org.Name.Equals(organisation)),
-                JsonRequestBehavior.AllowGet);
-        }
-
         // GET: Playlists
         public ActionResult Index()
         {
             return View(playlistManager.ReadPlaylists());
         }
 
-        // GET: Playlists/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: Playlists/Create
         [Authorize(Roles = "User, Admin")]
         public ActionResult Create()
         {
+            var user = userManager.ReadUser(User.Identity.Name);
+            ViewBag.UserOrganisations = userManager.ReadOrganisationsForUser(user.Id);
             return View();
         }
 
         // POST: Playlists/Create
         [HttpPost]
         [Authorize(Roles = "User, Admin")]
-        public ActionResult Create(PlaylistViewModel collection, HttpPostedFileBase image)
+        public ActionResult Create(PlaylistViewModel viewModel, HttpPostedFileBase avatarImage)
         {
-            User playlistMaster = null;
             Organisation org = null;
-            Playlist playlist = null;
-            User user = null;
+            Playlist playlist;
             string path = null;
-            bool organiserFromOrganisation = false;
-            if(User != null)
-            {
-                string username = User.Identity.Name;
-                user = userManager.ReadUser(username);
-            }
-            else
-            {
-                user = userManager.ReadUser(testName);
-            }
 
-            playlistMaster = userManager.ReadUser(collection.PlaylistMaster);
+            var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
 
-            if (playlistMaster == null)
-            {
-                ModelState.AddModelError("UserFault", "Email of playlist master is not found");
-                return View("Create");
-            }
-
-
-            if (collection.Organisation != null)
+            if (viewModel.OrganisationId != 0)
             {
                 try
                 {
-                    org = organisationManager.ReadOrganisation(collection.Organisation);
+                    org = organisationManager.ReadOrganisation(viewModel.OrganisationId);
                     var userRoles = userManager.ReadOrganisationsForUser(user.Id);
-                    foreach (var userRole in userRoles.Where(userRole => org.Id == (userRole.Organisation.Id)))
+                    if (userRoles.All(userRole => org.Id != userRole.Organisation.Id))
                     {
-                        organiserFromOrganisation = true;
+                        ModelState.AddModelError("OrganisationFault", "The user does not belong the the organisation");
+                        return View("Create");
                     }
-                    if (organiserFromOrganisation == false)
-                        throw new Exception();
-                    
                 }
                 catch
                 {
-                    ModelState.AddModelError("OrganisationFault", "The organisation could not be found or you have no rights");
+                    ModelState.AddModelError("OrganisationFault", "The organisation could not be found or you have insufficient rights");
                     return View("Create");
                 }
             }
-            if (image != null && image.ContentLength > 0)
+            if (avatarImage != null && avatarImage.ContentLength > 0)
             {
-                var bannerFileName = Path.GetFileName(image.FileName);
+                var bannerFileName = Path.GetFileName(avatarImage.FileName);
                 path = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), bannerFileName));
-                image.SaveAs(path);
+                avatarImage.SaveAs(path);
                 path = Path.GetFileName(path);
             }
+
             if (org != null)
             {
-                playlist = playlistManager.CreatePlaylistForOrganisation(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user, org);
+                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user, org);
             }
             else
             {
-                playlist = playlistManager.CreatePlaylistForUser(collection.Name, collection.Description, collection.Key, collection.MaximumVotesPerUser, true, path, playlistMaster, user);
+                playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user);
             }
             
             

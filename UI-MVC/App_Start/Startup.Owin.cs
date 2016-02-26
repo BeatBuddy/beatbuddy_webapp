@@ -24,7 +24,7 @@ namespace BB.UI.Web.MVC
             OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
             {
                 AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/api/token"),
+                TokenEndpointPath = new PathString("/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(29),
                 Provider = new SimpleAuthorizationServerProvider()
             };

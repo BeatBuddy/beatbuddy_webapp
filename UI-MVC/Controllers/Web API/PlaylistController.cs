@@ -21,8 +21,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
     [RoutePrefix("api/Playlist")]
     public class PlaylistController : ApiController
     {
-        private readonly PlaylistManager playlistManager;
-        private readonly UserManager userManager;
+        private readonly IPlaylistManager playlistManager;
+        private readonly IUserManager userManager;
 
         public PlaylistController()
         {
@@ -34,6 +34,18 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         {
             playlistManager = new PlaylistManager(contextEnum);
             userManager = new UserManager(contextEnum);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("{id}")]
+        [ResponseType(typeof(Playlist))]
+        public HttpResponseMessage getPlaylist(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            if(playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            return Request.CreateResponse(HttpStatusCode.OK, playlist);
         }
 
         [HttpPost]

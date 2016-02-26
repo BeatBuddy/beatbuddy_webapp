@@ -1,57 +1,133 @@
-﻿@model BB.UI.Web.MVC.Models.OrganisationViewModel
+﻿@using BB.BL.Domain.Playlists
+@using BB.UI.Web.MVC.Models
+@model OrganisationViewWithPlaylist
 
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+    
+
+    <div class="title">
+        <h1>Organisation</h1> 
+    </div>
+
+    <div>
+        <h4>@Model.Name</h4>
+        <hr />
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BannerUrl)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BannerUrl)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ImageUrl)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ColorScheme)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ColorScheme)
+            </dd>
+
+        </dl>
+    </div>
+    @if (User.Identity.Name.Equals(ViewBag.emailOrganiser))
+    {
+        <div>
+            <button id="AddOrganiser" onclick="AddOrganisor()">Add a co-organiser</button>
+            <input type="text" id="email"/>
+        </div>
+    }
 <div class="title">
-    <h1>Organisations</h1> Details
+    <h1>Playlists</h1>
+    <table id="playlists">
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Name playlist</th>
+            <th>Active</th>
+            <th></th>
+            <th>Description</th>
+            <th>tracks</th>
+            <th></th>
+        </tr>
+        @foreach (Playlist playlist in Model.Playlists)
+        {
+            <tr class="track">
+                <td>
+                    
+                </td>
+                <td>
+                    <img class="playlistart" src="@playlist.ImageUrl" alt="playlist art" />
+                </td>
+                <td class="tracktitle">
+                    @playlist.Name
+                </td>
+                <td>
+                    @if (playlist.Active == true)
+                    {
+                        <p>Yes</p>
+                    }
+                    else
+                    {
+                        <p>No</p>
+                    }
+                </td>
+                <td>
+                    
+                </td>
+                <td class="artist">
+                    @playlist.Description
+                </td>
+                <td>
+                    @playlist.PlaylistTracks.Count()
+                </td>
+                <td>
+                    @Html.ActionLink("View Playlist", "View", "Playlist", new { id = playlist.Id},null)
+                </td>
+                
+            </tr>
+        }
+    </table>
 </div>
 
-<div>
-    <h4>OrganisationViewModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+    @section scripts{
+        <script>
+            function AddOrganisor() {
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+                var email = document.getElementById("email").value;
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BannerUrl)
-        </dt>
+                $.ajax({
+                    url: "/Organisations/AddCoOrganiser",
+                    type: "POST",
+                    data: {
+                        organisation: @Model.Id, mail: email
+                    },
+                    succes: function (e){
 
-        <dd>
-            @Html.DisplayFor(model => model.BannerUrl)
-        </dd>
+                    },
+                    error: function (e){
+                        alert("Email kon niet gevonden worden");
+                    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ColorScheme)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ColorScheme)
-        </dd>
-
-    </dl>
-</div>
-<div>
-    <input type="button" value="Add a co-organiser" />
-    @Html.TextBox("EmailCo");
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+                })
+                .done(function (){
+                    window.location.href = '@Url.Action("Details", new { id = Model.Id})';
+                });
+            }
+        </script>
+    }
