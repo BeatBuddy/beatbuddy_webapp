@@ -11,9 +11,16 @@ namespace BB.UI.Web.MVC
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureOwin(app);
+
             ConfigureAuth(app);
-            
+
+            app.Map("/api", inner =>
+        {
+            HttpConfiguration config = new HttpConfiguration();
+            WebApiConfig.Register(config);
+            ConfigureOAuth(inner);
+            inner.UseWebApi(config);
+        });
         }
     }
 }

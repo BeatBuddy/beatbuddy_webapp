@@ -5,53 +5,86 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="title">
-    <h1>Organisations</h1> Details
-</div>
 
-<div>
-    <h4>OrganisationViewModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+    
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+    <div class="title">
+        <h1>Organisations</h1> Details
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BannerUrl)
-        </dt>
+    <div>
+        <h4>OrganisationViewModel</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.BannerUrl)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.BannerUrl)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.BannerUrl)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ColorScheme)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ColorScheme)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ImageUrl)
+            </dd>
 
-    </dl>
-</div>
-<div>
-    <input type="button" value="Add a co-organiser" />
-    @Html.TextBox("EmailCo");
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+            <dt>
+                @Html.DisplayNameFor(model => model.ColorScheme)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ColorScheme)
+            </dd>
+
+        </dl>
+    </div>
+    @if (User.Identity.Name.Equals(ViewBag.emailOrganiser))
+    {
+        <div>
+            <button id="AddOrganiser" onclick="AddOrganisor()">Add a co-organiser</button>
+            <input type="text" id="email"/>
+        </div>
+    }
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+@section scripts{
+    <script>
+            function AddOrganisor() {
+
+                var email = document.getElementById("email").value;
+
+                $.ajax({
+                    url: "/Organisations/AddCoOrganiser",
+                    type: "POST",
+                    data: {
+                        organisation: @Model.Id, mail: email
+                    },
+                    succes: function (e){
+                        
+                    },
+                    error: function (e){
+                        alert("Email kon niet gevonden worden");
+                    }
+                    
+                })
+                .done(function (){
+                    window.location.href = '@Url.Action("Details", new { id = Model.Id})';
+                });
+            }
+</script>
+}

@@ -48,7 +48,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         {
             get
             {
-                return HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
+                _signInManager = HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
+                return _signInManager;
             }
             
         }

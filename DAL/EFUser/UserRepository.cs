@@ -23,6 +23,28 @@ namespace BB.DAL.EFUser
             return user;
         }
 
+        public UserRole CreateUserRole(UserRole userRole)
+        {
+            userRole = context.UserRole.Add(userRole);
+            context.SaveChanges();
+            return userRole;
+        }
+
+        public UserRole CreateUserRole(long userId, long organisationId, Role role)
+        {
+            var org = context.Organisations.Find(organisationId);
+            var user = context.User.Find(userId);
+            UserRole userRole = new UserRole()
+            {
+                Organisation = org,
+                User = user,
+                Role = role
+            };
+            userRole = context.UserRole.Add(userRole);
+            context.SaveChanges();
+            return userRole;
+        }
+
         public void DeleteUser(long userId)
         {
             throw new NotImplementedException();
@@ -30,7 +52,13 @@ namespace BB.DAL.EFUser
 
         public IEnumerable<UserRole> ReadOrganisationsForUser(long userId)
         {
-            return context.UserRole.Where(o => o.User.Id == userId);
+            return context.UserRole.Include("Organisation").Include("User").Where(o => o.User.Id == userId);
+        }
+
+        public User ReadOrganiserFromOrganisation(Organisation organisation)
+        {
+            UserRole userRole = context.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).Single(a => a.Role == Role.Organiser);
+            return context.User.Single(o => o.Id == userRole.User.Id);
         }
 
         public User ReadUser(string email)
