@@ -6,95 +6,26 @@
     ViewBag.Title = "View";
 }
 
-<div class="title">
+<div class="title" style="margin-bottom: 1em">
     <h1>Playlist</h1> @Html.DisplayFor(model => model.Name)
 </div>
 
 <div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MaximumVotesPerUser)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MaximumVotesPerUser)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Active)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-    </dl>
-</div>
-
-<div class="title">
-    <h1>Queue</h1>
-    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
+    @if (Model.ImageUrl != null)
     {
-        <text>@Model.PlaylistTracks.Count tracks in queue</text>
+        <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
     }
     else
     {
-        <text>1 track in queue</text>
+        <img class="borderround" src="~/Content/img/playlist.png" style="width: 170px; height: 170px" />
     }
+
 </div>
 
-<table id="playlist-tracks">
-    <tr>
-        <th></th>
-        <th></th>
-        <th>Title</th>
-        <th></th>
-        <th></th>
-        <th>Artist</th>
-        <th>Album</th>
-    </tr>
-    @foreach (PlaylistTrack track in Model.PlaylistTracks)
-    {
-        <tr class="track" >
-            <td>
-                @track.Id
-            </td>
-            <td>
-                <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
-            </td>
-            <td class="tracktitle">
-                @track.Track.Title
-            </td>
-            <td>
-                thumbs
-            </td>
-            <td>
-                3:30
-            </td>
-            <td class="artist">
-                @track.Track.Artist
-            </td>
-            <td>
-                album
-            </td>
-        </tr>
-    }
-</table>
+
+<div id="playlist-view" style="margin-top: 1em">
+    @Html.Partial("PlaylistTable", @Model)
+</div>
 
 <a href="#addTrackModal" class="btn btn-right" style="margin-top: 1em;">
     <i class="material-icons">playlist_add</i> add track
@@ -102,7 +33,7 @@
 
 <div id="addTrackModal" class="modal" style="margin-top: -140px">
     <div class="modal-content" style="width: 30%; height: 70%">
-        <a href="#close" title="Close" class="close">X</a>
+        <a href="#close" id="close-modal" title="Close" class="close">X</a>
         <div class="modal-body" style="height: 100%; width: 100%">
             @{
                 Html.RenderPartial("AddTrack");
@@ -110,14 +41,21 @@
         </div>
     </div>
 </div>
-@if (Model.PlaylistTracks.Count != 0)
-{
-    <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-    <a class="btn disabled" id="nextBtn" ><i id="icon" class="material-icons">skip_next</i> </a>
 
-}
+
+
 <div id="nowPlayingRow" style="margin-top: 5em">
-    <div class="title">
+    @if (Model.PlaylistTracks.Count != 0)
+    {
+        <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    else
+    {
+        <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+
+    <div class="title" style="margin-top: 0.5em">
         <h1>Now Playing </h1> <span id="nowPlaying"></span>
     </div>
     <span id="time"></span>
@@ -167,7 +105,10 @@
                 method: 'POST',
                 data: { playlistId: @ViewBag.PlaylistId, id: id }
             }).done(function () {
-                window.location.href = '@Url.Action("View", new { id = @ViewBag.PlaylistId })';
+                window.location.href = @ViewBag.PlaylistId + '#close';
+                updatePlaylist();
+                    var playBtn = document.getElementById('playBtn');
+                    playBtn.className = 'btn';
                 })
                 .fail(function() {
                     alert('Failed!');
@@ -208,13 +149,13 @@
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
-                videoId: 'sOEAD-gfJ_M',
+                videoId: 'cdwal5Kw3Fc',
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
                 }
             });
-            player.setPlayBackQuality(small);
+            player.setPlayBackQuality('small');
         }
 
         var firstPlay = true;
@@ -223,15 +164,14 @@
             if (firstPlay) {
                 var playButton = document.getElementById("playBtn");
                 playButton.addEventListener("click", getNextTrack);
-                
+
                 firstPlay = false;
             }
             var nextButton = document.getElementById("nextBtn");
             nextButton.addEventListener("click", function() {
-             moveTrackToHistory();
-
+                getNextTrack();
             });
-            
+
 
         }
         function updateTime() {
@@ -249,7 +189,7 @@
             var h = Math.floor(d / 3600);
             var m = Math.floor(d % 3600 / 60);
             var s = Math.floor(d % 3600 % 60);
-            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
+            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
         }
         function onPlayerStateChange(event) {
             var playButton = document.getElementById("playBtn");
@@ -268,9 +208,9 @@
                 });
             }
             if (event.data == YT.PlayerState.ENDED) {
-                moveTrackToHistory();
+                getNextTrack();
             }
-            
+
         }
 
         function getNextTrack() {
@@ -283,31 +223,30 @@
                 if (data!=null) {
                     player.loadVideoById(data.trackId);
                     document.getElementById("nowPlaying").innerHTML = data.trackName + ' - ' + data.artist;
-                    document.getElementById("playlist-tracks").deleteRow(1);
                     $(function() {
                         setInterval(updateTime, 50);
                     });
-
                     var nextButton = document.getElementById("nextBtn");
-                    
                     if (data.nextTracks === 1) {
                         nextButton.className = 'btn disabled';
                     } else {
-                        nextButton.className = 'btn';     
+                        nextButton.className = 'btn';
                     }
-                } 
-
+                    moveTrackToHistory();
+                }
+            }).fail(function() {
+                var playBtn = document.getElementById('playBtn');
+                playBtn.className = 'btn disabled';
+                document.getElementById("nowPlaying").innerHTML = '';
             });
-            
         }
-        
-        function moveTrackToHistory() {
 
+        function moveTrackToHistory() {
             $.ajax('/Playlist/MoveTrackToHistory/', {
                 type: 'POST',
                 data: { id: @ViewBag.PlaylistId }
             }).done(function() {
-                getNextTrack();
+                updatePlaylist();
             }).fail(function() {
                 var nextButton = document.getElementById("nextBtn");
                 nextButton.className = 'btn disabled';
@@ -319,6 +258,9 @@
         }
         function stopVideo() {
             player.stopVideo();
+        }
+        function updatePlaylist() {
+            $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
         }
 
     </script>

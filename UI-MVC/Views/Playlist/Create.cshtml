@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="other-form-groups">
-            <div class="col-md-12">Wilt u een playlist aanmaken voor een organisatie? <input type="checkbox" id="organisatie" onchange="Organisatie()" />   </div> 
+            <div class="col-md-12">Create a playlist for an organisation? <input type="checkbox" id="organisatie" onchange="Organisatie()" />   </div> 
            @Html.LabelFor(model => model.Organisation, htmlAttributes: new { @class = "control-label col-md-4 other-form-groups", @id = "OrganisationLabel", @style = "display:none" })
                 <div class="col-md-8 other-form-groups">
                     @Html.TextBoxFor(model => model.Organisation, new { id = "OrganisationName", style="display:none", @class= "custom-input-playlists"})

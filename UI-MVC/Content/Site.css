@@ -285,8 +285,8 @@ header {
 
 .borderround {
   border-radius: 50%;
-  border-color: black;
-  border: 1.5px solid; }
+  border-color: lightgray;
+  border: 2px solid; }
 
 .borderround:hover {
   border-color: #0000FF; }

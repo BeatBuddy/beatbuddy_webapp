@@ -258,6 +258,7 @@
     <Content Include="Content\img\logo_header.png" />
     <Content Include="Content\img\logo_small.png" />
     <Content Include="Content\img\party-dj.png" />
+    <Content Include="Content\img\playlist.png" />
     <Content Include="Content\img\round_shape_loader.gif" />
     <Content Include="Content\modal.css" />
     <Content Include="Content\Site.css">
@@ -330,6 +331,7 @@
     <Content Include="Views\Playlist\Index.cshtml" />
     <Content Include="Views\Playlist\AddTrack.cshtml" />
     <Content Include="Views\Playlist\View.cshtml" />
+    <Content Include="Views\Playlist\PlaylistTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
