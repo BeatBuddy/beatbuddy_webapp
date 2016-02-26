@@ -153,11 +153,13 @@ header {
     width: 100%;
     height: auto;
     max-width: 200px;
-    max-height: 200px; }
+    max-height: 200px;
+    margin-bottom: .5em; }
     @media screen and (max-width: 600px) {
       .about-user img {
         max-width: 64px;
-        max-height: 64px; } }
+        max-height: 64px;
+        margin-right: .5em; } }
   @media screen and (max-width: 600px) {
     .about-user {
       display: block;
