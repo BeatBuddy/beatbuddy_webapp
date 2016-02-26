@@ -9,6 +9,5 @@
         public int Duration { get; set; }
         public TrackSource TrackSource { get; set; }
         public string CoverArtUrl { get; set; }
-        public int Duration { get; set; }
     }
 }

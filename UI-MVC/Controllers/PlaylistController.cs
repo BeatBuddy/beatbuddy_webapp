@@ -147,7 +147,7 @@ namespace BB.UI.Web.MVC.Controllers
         // POST: Playlists/Create
         [HttpPost]
         [Authorize(Roles = "User, Admin")]
-        public ActionResult Create(PlaylistViewModel collection, HttpPostedFileBase avatarImage)
+        public ActionResult Create(PlaylistViewModel viewModel, HttpPostedFileBase avatarImage)
         {
             Organisation org = null;
             Playlist playlist;
