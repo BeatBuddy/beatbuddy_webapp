@@ -1,10 +1,6 @@
 ﻿using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BB.DAL.EFUser
 {
@@ -16,14 +12,14 @@ namespace BB.DAL.EFUser
         User ReadUser(long userId);
         User ReadUser(string email);
         User ReadUser(string lastname, string firstname);
+        IEnumerable<User> ReadUsers();
         User ReadOrganiserFromOrganisation(Organisation organisation);
-        List<User> ReadUsers();
         void DeleteUser(long userId);
 
         //UserRole
+        IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation);
+        IEnumerable<UserRole> ReadOrganisationsForUser(long userId);
         UserRole CreateUserRole(long userId, long organisationId, Role role);
         UserRole CreateUserRole(UserRole userRole);
-        List<UserRole> ReadUserRolesForOrganisation(Organisation organisation);
-        List<UserRole> ReadOrganisationsForUser(User user);
     }
 }

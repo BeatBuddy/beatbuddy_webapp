@@ -76,7 +76,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         {
             _organisationsController.AddCoOrganiser(1, "jonah@gmail.com");
             User user = userManager.ReadUser("jonah@gmail.com");
-            List<UserRole> userRoles = userManager.ReadOrganisationsForUser(user);
+            var userRoles = userManager.ReadOrganisationsForUser(user.Id);
             Assert.IsNotNull(userRoles);
             Assert.AreEqual(userRoles.Count(),2);
         }

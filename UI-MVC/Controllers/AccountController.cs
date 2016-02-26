@@ -94,7 +94,15 @@ namespace BB.UI.Web.MVC.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    bool authenticated = User.Identity.IsAuthenticated;
+                    //ActionResult actionResult = returnUrl == null ?  RedirectToLocal(returnUrl) : RedirectToAction("LoggedIn", "HomeController");
+                    if (returnUrl == null)
+                    {
+                        return RedirectToAction("LoggedIn", "Home");
+                    }
+                    else {
+                        return RedirectToLocal(returnUrl);
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

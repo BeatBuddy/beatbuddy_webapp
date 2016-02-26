@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
@@ -13,11 +9,11 @@ namespace BB.DAL.EFOrganisation
 {
     public class OrganisationRepository : IOrganisationRepository
     {
-        private EFDbContext ctx;
+        private readonly EFDbContext context;
 
         public OrganisationRepository(ContextEnum contextEnum)
         {
-            ctx = new EFDbContext(contextEnum);
+            context = new EFDbContext(contextEnum);
         }
 
         public DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock)
@@ -27,18 +23,18 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation CreateOrganisation(Organisation organisation, User user)
         {
-            organisation = ctx.Organisations.Add(organisation);
-            ctx.SaveChanges();
-            var user1 = ctx.User.Find(user.Id);
-            var organisation1 = ctx.Organisations.Find(organisation.Id);
-            UserRole userRole = new UserRole()
+            organisation = context.Organisations.Add(organisation);
+            context.SaveChanges();
+            var user1 = context.User.Find(user.Id);
+            var organisation1 = context.Organisations.Find(organisation.Id);
+            UserRole userRole = new UserRole
             {
                 Organisation = organisation1,
                 User = user1,
                 Role = Role.Organiser
             };
-            ctx.UserRole.Add(userRole);
-            ctx.SaveChanges();
+            context.UserRole.Add(userRole);
+            context.SaveChanges();
             return organisation;
         }
 
@@ -52,24 +48,24 @@ namespace BB.DAL.EFOrganisation
             throw new NotImplementedException();
         }
 
-        public List<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
+        public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
         {
             throw new NotImplementedException();
         }
 
         public Organisation ReadOrganisation(string organisationName)
         {
-            return ctx.Organisations.Single(o => o.Name.Equals(organisationName));
+            return context.Organisations.Single(o => o.Name.Equals(organisationName));
         }
 
         public Organisation ReadOrganisation(long organisationId)
         {
-            return ctx.Organisations.Find(organisationId);
+            return context.Organisations.Find(organisationId);
         }
 
         public IEnumerable<Organisation> ReadOrganisations()
         {
-            return ctx.Organisations;
+            return context.Organisations;
         }
 
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
@@ -79,8 +75,8 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation UpdateOrganisation(Organisation organisation)
         {
-            ctx.Entry(organisation).State = System.Data.Entity.EntityState.Modified;
-            ctx.SaveChanges();
+            context.Entry(organisation).State = System.Data.Entity.EntityState.Modified;
+            context.SaveChanges();
             return organisation;
         }
     }

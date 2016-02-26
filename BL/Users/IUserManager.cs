@@ -1,10 +1,6 @@
 ﻿using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BB.BL
 {
@@ -17,12 +13,12 @@ namespace BB.BL
         User ReadUser(string email);
         User ReadUser(string lastname, string firstname);
         User ReadOrganiserFromOrganisation(Organisation organisation);
-        List<User> ReadUsers();
+        IEnumerable<User> ReadUsers();
         void DeleteUser(long userId);
 
         //UserRole
         UserRole CreateUserRole(long userId, long organisationId, Role role);
-        List<UserRole> ReadUserRolesForOrganisation(Organisation organisation);
-        List<UserRole> ReadOrganisationsForUser(User user);
+        IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation);
+        IEnumerable<UserRole> ReadOrganisationsForUser(long userId);
     }
 }

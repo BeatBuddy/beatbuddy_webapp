@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
@@ -11,40 +9,39 @@ namespace BB.DAL.EFUser
 {
     public class UserRepository : IUserRepository
     {
-        private EFDbContext ctx;
+        private readonly EFDbContext context;
         
-
         public UserRepository(ContextEnum contextEnum)
         {
-            ctx = new EFDbContext(contextEnum);
+            context = new EFDbContext(contextEnum);
         }
 
         public User CreateUser(User user)
         {
-            user = ctx.User.Add(user);
-            ctx.SaveChanges();
+            user = context.User.Add(user);
+            context.SaveChanges();
             return user;
         }
 
         public UserRole CreateUserRole(UserRole userRole)
         {
-            userRole = ctx.UserRole.Attach(userRole);
-            ctx.SaveChanges();
+            userRole = context.UserRole.Add(userRole);
+            context.SaveChanges();
             return userRole;
         }
 
         public UserRole CreateUserRole(long userId, long organisationId, Role role)
         {
-            var org = ctx.Organisations.Find(organisationId);
-            var user = ctx.User.Find(userId);
+            var org = context.Organisations.Find(organisationId);
+            var user = context.User.Find(userId);
             UserRole userRole = new UserRole()
             {
                 Organisation = org,
                 User = user,
                 Role = role
             };
-            userRole = ctx.UserRole.Add(userRole);
-            ctx.SaveChanges();
+            userRole = context.UserRole.Add(userRole);
+            context.SaveChanges();
             return userRole;
         }
 
@@ -53,25 +50,25 @@ namespace BB.DAL.EFUser
             throw new NotImplementedException();
         }
 
-        public List<UserRole> ReadOrganisationsForUser(User user)
+        public IEnumerable<UserRole> ReadOrganisationsForUser(long userId)
         {
-            return ctx.UserRole.Include("Organisation").Include("User").Where(o => o.User.Id == user.Id).ToList();
+            return context.UserRole.Include("Organisation").Include("User").Where(o => o.User.Id == userId);
         }
 
         public User ReadOrganiserFromOrganisation(Organisation organisation)
         {
-            UserRole userRole = ctx.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).Single(a => a.Role == Role.Organiser);
-            return ctx.User.Single(o => o.Id == userRole.User.Id);
+            UserRole userRole = context.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).Single(a => a.Role == Role.Organiser);
+            return context.User.Single(o => o.Id == userRole.User.Id);
         }
 
         public User ReadUser(string email)
         {
-            return ctx.User.FirstOrDefault(u => u.Email.Equals(email));
+            return context.User.FirstOrDefault(u => u.Email.Equals(email));
         }
 
         public User ReadUser(long userId)
         {
-            return ctx.User.Find(userId);
+            return context.User.FirstOrDefault(u => u.Id == userId);
         }
 
         public User ReadUser(string lastname, string firstname)
@@ -79,20 +76,20 @@ namespace BB.DAL.EFUser
             throw new NotImplementedException();
         }
 
-        public List<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
+        public IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
         {
-            return ctx.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).ToList();
+            return context.UserRole.Where(o => o.Organisation == organisation);
         }
 
-        public List<User> ReadUsers()
+        public IEnumerable<User> ReadUsers()
         {
-            return ctx.User.ToList();
+            return context.User;
         }
 
         public User UpdateUser(User user)
         {
-            ctx.Entry(user).State = System.Data.Entity.EntityState.Modified;
-            ctx.SaveChanges();
+            context.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            context.SaveChanges();
             return user;
         }
     }

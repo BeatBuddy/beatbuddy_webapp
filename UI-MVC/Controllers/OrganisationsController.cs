@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
@@ -12,6 +10,7 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Controllers.Utils;
 using BB.UI.Web.MVC.Models;
+using System;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -40,7 +39,7 @@ namespace BB.UI.Web.MVC.Controllers
         // GET: Organisations
         public ActionResult Index()
         {
-            List<Organisation> organisations = organisationManager.ReadOrganisations();
+            IEnumerable<Organisation> organisations = organisationManager.ReadOrganisations();
             List<OrganisationViewModel> organisationViewModels = new List<OrganisationViewModel>();
             foreach (var organisation in organisations)
             {

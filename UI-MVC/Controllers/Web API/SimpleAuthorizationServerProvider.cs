@@ -22,7 +22,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         {
 
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
-
+            
             var result = await SignInManager.PasswordSignInAsync(context.UserName, context.Password, false, false);
             switch (result)
             {
@@ -42,13 +42,15 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         }
 
+        private ApplicationSignInManager _signInManager;
+
         public ApplicationSignInManager SignInManager
         {
             get
             {
                 return HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
             }
-
+            
         }
     }
 }

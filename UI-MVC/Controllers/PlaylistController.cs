@@ -12,6 +12,7 @@ using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
 using System.Collections.Generic;
 using System;
+using System.Web.Helpers;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -82,6 +83,7 @@ namespace BB.UI.Web.MVC.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+
         public JsonResult SearchTrack(string q)
         {
             var youtubeProvider = new YouTubeTrackProvider();
@@ -89,7 +91,35 @@ namespace BB.UI.Web.MVC.Controllers
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GetNextTrack(long id)
+        {
+            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
+            if (playlistTracks.Count != 0)
+            {
+                return Json(new
+                {
+                    trackId = playlistTracks.First().Track.TrackSource.TrackId,
+                    trackName = playlistTracks.First().Track.Title,
+                    artist = playlistTracks.First().Track.Artist,
+                    nextTracks = playlistTracks.Count()
+                }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(null, JsonRequestBehavior.DenyGet);
+        }
 
+        
+
+        [HttpPost]
+        public ActionResult MoveTrackToHistory(long id)
+        {
+            var tracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
+            if (tracks.Count != 0)
+            {
+                playlistManager.DeletePlaylistTrack(playlistManager.ReadPlaylist(id).PlaylistTracks.First().Id);
+                return new HttpStatusCodeResult(200);
+            }
+            else return new HttpStatusCodeResult(400);
+        }
         public ActionResult IsNameAvailable(string email)
         {
             return Json(userManager.ReadUsers().All(org => org.Email!=email),
@@ -99,7 +129,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult IsOrganisationAvailable(string organisation)
         {
             User user = userManager.ReadUser(User.Identity.Name);
-            return Json(organisationManager.ReadOrganisations(user).All(org => org.Name.Equals(organisation)),
+            return Json(organisationManager.ReadOrganisations(user.Id).All(org => org.Name.Equals(organisation)),
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -157,13 +187,10 @@ namespace BB.UI.Web.MVC.Controllers
                 try
                 {
                     org = organisationManager.ReadOrganisation(collection.Organisation);
-                    List<UserRole> userRoles = userManager.ReadOrganisationsForUser(user);
-                    foreach (UserRole userRole in userRoles)
+                    var userRoles = userManager.ReadOrganisationsForUser(user.Id);
+                    foreach (var userRole in userRoles.Where(userRole => org.Id == (userRole.Organisation.Id)))
                     {
-                        if (org.Id == (userRole.Organisation.Id))
-                        {
-                            organiserFromOrganisation = true;
-                        }
+                        organiserFromOrganisation = true;
                     }
                     if (organiserFromOrganisation == false)
                         throw new Exception();
