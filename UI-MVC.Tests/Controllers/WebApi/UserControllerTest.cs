@@ -6,7 +6,6 @@ using BB.BL.Domain;
 using BB.UI.Web.MVC.Tests.Helpers;
 using System.Net.Http;
 using System.Linq;
-using Microsoft.Owin.Hosting;
 using System.Web;
 using Moq;
 
@@ -31,7 +30,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         [AssemblyInitialize]
         public static void SetUp(TestContext context)
         {
-            _webApp = WebApp.Start<Startup>("http://*:6969/");
+            //_webApp = WebApp.Start<Startup>("http://*:6969/");
         }
 
         [AssemblyCleanup]
