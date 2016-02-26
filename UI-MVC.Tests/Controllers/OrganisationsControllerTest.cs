@@ -46,7 +46,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         public void TestOrganisationsDetailsView_Correct_id()
         {
             ViewResult viewResult = _organisationsController.Details(1) as ViewResult;
-            var organisation = (OrganisationViewModel) viewResult.ViewData.Model; 
+            var organisation = (OrganisationViewWithPlaylist) viewResult.ViewData.Model; 
             Assert.AreEqual("Jonah's Songs", organisation.Name);
             Assert.AreEqual("Details", viewResult.ViewName);
         }

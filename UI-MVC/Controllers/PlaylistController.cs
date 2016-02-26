@@ -211,7 +211,7 @@ namespace BB.UI.Web.MVC.Controllers
             }
             if (org != null)
             {
-                playlist = playlistManager.CreatePlaylistForOrganisation(collection.Name, collection.MaximumVotesPerUser, true, path, playlistMaster, user, org);
+                playlist = playlistManager.CreatePlaylistForOrganisation(collection.Name, collection.Description, collection.Key, collection.MaximumVotesPerUser, true, path, playlistMaster, user, org);
             }
             else
             {

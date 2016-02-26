@@ -61,13 +61,14 @@ namespace BB.UI.Web.MVC.Controllers
             Organisation organisation = organisationManager.ReadOrganisation(id);
             if (organisation != null)
             {
-                OrganisationViewModel organisationView = new OrganisationViewModel()
+                OrganisationViewWithPlaylist organisationView = new OrganisationViewWithPlaylist()
                 {
-                    Id=id,
+                    Id = id,
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
                     Name = organisation.Name,
-                    ImageUrl = organisation.ImageUrl
+                    ImageUrl = organisation.ImageUrl,
+                    Playlists = organisation.Playlists
                 };
                 User user = userManager.ReadOrganiserFromOrganisation(organisation);
                 ViewBag.emailOrganiser = user.Email;

@@ -1,4 +1,6 @@
-﻿@model BB.UI.Web.MVC.Models.OrganisationViewModel
+﻿@using BB.BL.Domain.Playlists
+@using BB.UI.Web.MVC.Models
+@model OrganisationViewWithPlaylist
 
 @{
     ViewBag.Title = "Details";
@@ -9,20 +11,13 @@
     
 
     <div class="title">
-        <h1>Organisations</h1> Details
+        <h1>Organisation</h1> 
     </div>
 
     <div>
-        <h4>OrganisationViewModel</h4>
+        <h4>@Model.Name</h4>
         <hr />
         <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
 
             <dt>
                 @Html.DisplayNameFor(model => model.BannerUrl)
@@ -57,13 +52,61 @@
             <input type="text" id="email"/>
         </div>
     }
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+<div class="title">
+    <h1>Playlists</h1>
+    <table id="playlists">
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Name playlist</th>
+            <th>Active</th>
+            <th></th>
+            <th>Description</th>
+            <th>tracks</th>
+            <th></th>
+        </tr>
+        @foreach (Playlist playlist in Model.Playlists)
+        {
+            <tr class="track">
+                <td>
+                    
+                </td>
+                <td>
+                    <img class="playlistart" src="@playlist.ImageUrl" alt="playlist art" />
+                </td>
+                <td class="tracktitle">
+                    @playlist.Name
+                </td>
+                <td>
+                    @if (playlist.Active == true)
+                    {
+                        <p>Yes</p>
+                    }
+                    else
+                    {
+                        <p>No</p>
+                    }
+                </td>
+                <td>
+                    
+                </td>
+                <td class="artist">
+                    @playlist.Description
+                </td>
+                <td>
+                    @playlist.PlaylistTracks.Count()
+                </td>
+                <td>
+                    @Html.ActionLink("View Playlist", "View", "Playlist", new { id = playlist.Id},null)
+                </td>
+                
+            </tr>
+        }
+    </table>
+</div>
 
-@section scripts{
-    <script>
+    @section scripts{
+        <script>
             function AddOrganisor() {
 
                 var email = document.getElementById("email").value;
@@ -75,16 +118,16 @@
                         organisation: @Model.Id, mail: email
                     },
                     succes: function (e){
-                        
+
                     },
                     error: function (e){
                         alert("Email kon niet gevonden worden");
                     }
-                    
+
                 })
                 .done(function (){
                     window.location.href = '@Url.Action("Details", new { id = Model.Id})';
                 });
             }
-</script>
-}
+        </script>
+    }
