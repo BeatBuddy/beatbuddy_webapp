@@ -62,7 +62,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
             public static string GetImagePath(string appSetting, string filename)
             {
-                return ConfigurationManager.AppSettings[appSetting] + filename;
+                return "/" + ConfigurationManager.AppSettings[appSetting].Replace("~", HostingEnvironment.ApplicationVirtualPath).TrimStart('/') + "/" + filename;
             }
         
     }

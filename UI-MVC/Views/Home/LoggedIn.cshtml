@@ -12,8 +12,8 @@
 }
 
 @section escape_padding {
-    <div id="banner" style="height: 300px; min-height: 300px;">
-        <div class="content">
+    <div class="loggedin-banner">
+        <div class="banner-content">
             <h2>Welcome, @ViewBag.Name</h2>
         </div>
     </div>
@@ -32,7 +32,7 @@
                     var organisationSource = "https://unsplash.com/photos/P8kVtyU32I0/download";
                     if (organisation.BannerUrl != null)
                     {
-                        //organisationSource = FileHelper.GetImage("OrganisationsImgPath", organisation.BannerUrl);
+                        organisationSource = FileHelper.GetImagePath("OrganisationsImgPath", organisation.BannerUrl);
                     }
                 }
 
@@ -42,7 +42,7 @@
 
                 <div>@organisation.Playlists.Count playlists</div>
             </div>
-                    }
+         }
     </div>
     <div class="clearfix">&nbsp;</div>
 </section>
@@ -58,16 +58,21 @@
         {
             <div class="col-md-4 organisation-wrapper">
                 @{
-                    var playlistSource = playlist.ImageUrl ?? "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                    var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                    if (playlist.ImageUrl != null)
+                    {
+                        playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
+                    }
                 }
 
-                <img src="@playlistSource" alt="playlist image" class="playlist-image"/>
+                <img src="@playlistSource" alt="playlist image" class="playlist-image" />
 
                 <h3>@playlist.Name</h3>
 
                 <div>@playlist.PlaylistTracks.Count tracks</div>
+                <div class="clear-playlist">&nbsp;</div>
             </div>
-         }
+        }
     </div>
     <div class="clearfix">&nbsp;</div>
 </section>
@@ -77,8 +82,27 @@
         <h1>Playlists</h1>
         you might like
     </div>
-    @foreach (Playlist playlist in ViewBag.RecommendedPlaylists)
-    {
-        <div>I am playlist @playlist.Name</div>
-    }
+
+    <div class="container">
+        @foreach (Playlist playlist in ViewBag.RecommendedPlaylists)
+        {
+            <div class="col-md-4 organisation-wrapper">
+                @{
+                    var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                    if (playlist.ImageUrl != null)
+                    {
+                        playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
+                    }
+                }
+
+                <img src="@playlistSource" alt="playlist image" class="playlist-image" />
+
+                <h3>@playlist.Name</h3>
+
+                <div>@playlist.PlaylistTracks.Count tracks</div>
+                <div class="clear-playlist">&nbsp;</div>
+            </div>
+        }
+    </div>
+    <div class="clearfix">&nbsp;</div>
 </section>
