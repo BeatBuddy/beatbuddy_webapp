@@ -1,51 +1,56 @@
-﻿@model BB.UI.Web.MVC.Models.PlaylistViewModel
-
+﻿@using BB.BL.Domain.Organisations
+@model BB.UI.Web.MVC.Models.PlaylistViewModel
 @{
     ViewBag.Title = "CreatePlaylist";
-    
 }
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Create playlist</title>
-    <script>
-        function Organisatie() {
-            if (document.getElementById("organisatie").checked == true) {
-                document.getElementById("OrganisationName").style.display = 'block';
-                document.getElementById("OrganisationLabel").style.display = 'block';
-            } else if (document.getElementById("organisatie").checked == false) {
-                document.getElementById("OrganisationName").style.display = 'none';
-                document.getElementById("OrganisationLabel").style.display = 'none';
-            }
-        }
-    </script>
-</head>
-<body>
-    <div class="title">
-        <h1>Create</h1>
-        a new playlist
-    </div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    var validationErrors = string.Join(",",
+                    ViewData.ModelState.Values.Where(E => E.Errors.Count > 0)
+                    .SelectMany(E => E.Errors)
+                    .Select(E => E.ErrorMessage)
+                    .ToArray());
+
+    <p class="field-validation-error">@validationErrors</p>
+}
 
 @using (Html.BeginForm("Create", "Playlist", null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
 {
     @Html.AntiForgeryToken()
-    
+
+    <div class="title">
+        <h1>Create</h1> playlist as
+
+        <select id="OrganisationId" name="OrganisationId" class="custom-dropdown">
+            <option value="0">Me</option>
+            @if (ViewBag.UserOrganisations != null)
+            {
+                foreach (Organisation organisation in ViewBag.UserOrganisations)
+                {
+                    <option value="@organisation.Id">@organisation.Name</option>
+                }
+            }
+        </select>
+
+    </div>
+
     <div class="row" id="custom-inputform-playlists">
         <hr />
 
         <div class="first-form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-4"})
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "custom-input-playlists"}})
-                @Html.ValidationMessageFor(model => model.Name, "", new {@class = "custom-validation"})
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "custom-input-playlists" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "custom-validation" })
             </div>
         </div>
 
         <div class="first-form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new {@class = "control-label col-md-4"})
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                @Html.TextAreaFor(model => model.Description, new {@class = "custom-input-playlists"})
-                @Html.ValidationMessageFor(model => model.Description, "", new {@class = "custom-validation"})
+                @Html.TextAreaFor(model => model.Description, new { @class = "custom-input-playlists" })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "custom-validation" })
             </div>
         </div>
 
@@ -68,47 +73,28 @@
         <div class="other-form-groups">
             @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                <div >
+                <div>
                     <input type="file" id="avatarImage" name="avatarImage" style="display: none" />
                     <div class="custom-input-playlists" style="overflow: hidden">
                         <text id="avatarLabel" class="form-label">Select logo image...</text>
                         <i class="material-icons form-img-icon" id="avatar_click">image</i>
                     </div>
-                </div> 
+                </div>
                 @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "custom-validation" })
             </div>
         </div>
 
-        <div class="other-form-groups">
-            @Html.LabelFor(model => model.PlaylistMaster, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-8"> 
-                @Html.EditorFor(model => model.PlaylistMaster, new { htmlAttributes = new { @class = "custom-input-playlists"} })
-                @Html.ValidationMessageFor(model => model.PlaylistMaster, "", new { @class = "custom-validation" })          
-                @Html.ValidationMessage("UserFault")
-            </div>
-        </div>
-        <div class="other-form-groups">
-            <div class="col-md-12">Wilt u een playlist aanmaken voor een organisatie? <input type="checkbox" id="organisatie" onchange="Organisatie()" />   </div> 
-           @Html.LabelFor(model => model.Organisation, htmlAttributes: new { @class = "control-label col-md-4 other-form-groups", @id = "OrganisationLabel", @style = "display:none" })
-                <div class="col-md-8 other-form-groups">
-                    @Html.TextBoxFor(model => model.Organisation, new { id = "OrganisationName", style="display:none", @class= "custom-input-playlists"})
-                    @Html.ValidationMessageFor(model => model.Organisation, "", new { @class = "custom-validation" })
-                    @Html.ValidationMessage("OrganisationFault")
-                </div>
-        </div>
         <div class="col-md-12">
-                <input type="submit" value="Create my playlist" class="btn btn-default create" />
+            <input type="submit" value="Create my playlist" class="btn btn-default create" />
         </div>
     </div>
 }
 
-</body>
-</html>
 <script>
     document.getElementById('avatar_click').onclick = function () {
         document.getElementById('avatarImage').click();
     };
-        document.getElementById("avatarImage").onchange = function () {
+    document.getElementById("avatarImage").onchange = function () {
         var filename = document.getElementById("avatarImage").value;
         var lastIndex = filename.lastIndexOf("\\");
         if (lastIndex >= 0) {

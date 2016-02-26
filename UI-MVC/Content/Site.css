@@ -243,6 +243,16 @@ header {
   height: 40px;
   vertical-align: middle; }
 
+.custom-dropdown {
+  height: 1.6em;
+  background: none;
+  border: none;
+  border-bottom: 1px solid black;
+  position: relative;
+  top: -.15em;
+  font-family: Roboto;
+  font-size: .65em; }
+
 .custom-input-organisations, .custom-input-playlists {
   width: 350px; }
 
