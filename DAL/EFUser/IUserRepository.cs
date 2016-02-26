@@ -13,10 +13,13 @@ namespace BB.DAL.EFUser
         User ReadUser(string email);
         User ReadUser(string lastname, string firstname);
         IEnumerable<User> ReadUsers();
+        User ReadOrganiserFromOrganisation(Organisation organisation);
         void DeleteUser(long userId);
 
         //UserRole
         IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation);
         IEnumerable<UserRole> ReadOrganisationsForUser(long userId);
+        UserRole CreateUserRole(long userId, long organisationId, Role role);
+        UserRole CreateUserRole(UserRole userRole);
     }
 }

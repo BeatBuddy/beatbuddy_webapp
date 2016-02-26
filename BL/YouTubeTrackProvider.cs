@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using BB.BL.Domain.Playlists;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
@@ -24,7 +25,7 @@ namespace BB.BL
         public List<Track> Search(string q)
         {
             var result = new List<Track>();
-            
+
             var searchListRequest = youtubeService.Search.List("snippet");
             searchListRequest.Q = q;
             searchListRequest.MaxResults = 3;
@@ -35,8 +36,8 @@ namespace BB.BL
             {
                 var track = new Track
                 {
-                    Title = video.Snippet.Title.Split(new[] {" - "}, StringSplitOptions.None)[1],
-                    Artist = video.Snippet.Title.Split(new[] {" - "}, StringSplitOptions.None)[0]
+                    Title = video.Snippet.Title.Split(new[] { " - " }, StringSplitOptions.None)[1],
+                    Artist = video.Snippet.Title.Split(new[] { " - " }, StringSplitOptions.None)[0],
                 };
 
                 Thumbnail[] thumbnails = { video.Snippet.Thumbnails.Maxres, video.Snippet.Thumbnails.High, video.Snippet.Thumbnails.Medium, video.Snippet.Thumbnails.Default__ };
@@ -56,16 +57,19 @@ namespace BB.BL
 
         public Track LookupTrack(string TrackId)
         {
-            var lookupRequest = youtubeService.Videos.List("snippet");
+            var lookupRequest = youtubeService.Videos.List("contentDetails,snippet");
             lookupRequest.Id = TrackId;
 
             var queryResult = lookupRequest.Execute();
             foreach (var video in queryResult.Items)
             {
+                var span = XmlConvert.ToTimeSpan(video.ContentDetails.Duration);
+
                 var track = new Track
                 {
-                    Title = video.Snippet.Title.Split(new[] {" - "}, StringSplitOptions.None)[1],
-                    Artist = video.Snippet.Title.Split(new[] {" - "}, StringSplitOptions.None)[0]
+                    Title = video.Snippet.Title.Split(new[] { " - " }, StringSplitOptions.None)[1],
+                    Artist = video.Snippet.Title.Split(new[] { " - " }, StringSplitOptions.None)[0],
+                    Duration = (int)span.TotalSeconds
                 };
 
                 Thumbnail[] thumbnails = { video.Snippet.Thumbnails.Maxres, video.Snippet.Thumbnails.High, video.Snippet.Thumbnails.Medium, video.Snippet.Thumbnails.Default__ };
