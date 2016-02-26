@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
@@ -11,18 +9,17 @@ namespace BB.DAL.EFUser
 {
     public class UserRepository : IUserRepository
     {
-        private EFDbContext ctx;
+        private readonly EFDbContext context;
         
-
         public UserRepository(ContextEnum contextEnum)
         {
-            ctx = new EFDbContext(contextEnum);
+            context = new EFDbContext(contextEnum);
         }
 
         public User CreateUser(User user)
         {
-            user = ctx.User.Add(user);
-            ctx.SaveChanges();
+            user = context.User.Add(user);
+            context.SaveChanges();
             return user;
         }
 
@@ -31,19 +28,19 @@ namespace BB.DAL.EFUser
             throw new NotImplementedException();
         }
 
-        public List<UserRole> ReadOrganisationsForUser(User user)
+        public IEnumerable<UserRole> ReadOrganisationsForUser(long userId)
         {
-            return ctx.UserRole.Where(o => o.User == user).ToList();
+            return context.UserRole.Where(o => o.User.Id == userId);
         }
 
         public User ReadUser(string email)
         {
-            return ctx.User.FirstOrDefault(u => u.Email.Equals(email));
+            return context.User.FirstOrDefault(u => u.Email.Equals(email));
         }
 
         public User ReadUser(long userId)
         {
-            throw new NotImplementedException();
+            return context.User.FirstOrDefault(u => u.Id == userId);
         }
 
         public User ReadUser(string lastname, string firstname)
@@ -51,20 +48,20 @@ namespace BB.DAL.EFUser
             throw new NotImplementedException();
         }
 
-        public List<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
+        public IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
         {
-            return ctx.UserRole.Where(o => o.Organisation == organisation).ToList();
+            return context.UserRole.Where(o => o.Organisation == organisation);
         }
 
-        public List<User> ReadUsers()
+        public IEnumerable<User> ReadUsers()
         {
-            return ctx.User.ToList();
+            return context.User;
         }
 
         public User UpdateUser(User user)
         {
-            ctx.Entry(user).State = System.Data.Entity.EntityState.Modified;
-            ctx.SaveChanges();
+            context.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            context.SaveChanges();
             return user;
         }
     }

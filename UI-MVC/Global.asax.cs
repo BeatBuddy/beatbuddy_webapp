@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Web;
-using System.Web.Helpers;
+﻿using System.Configuration;
+using System.IO;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -22,8 +18,15 @@ namespace BB.UI.Web.MVC
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            
+            var appData = Server.MapPath("~/App_Data");
+            if (!Directory.Exists(appData)) Directory.CreateDirectory(appData);
 
+            var folders = new[] {"OrganisationsImgPath", "PlaylistImgPath", "UsersImgPath"};
+            foreach (var folder in folders)
+            {
+                var mapped = Server.MapPath(ConfigurationManager.AppSettings[folder]);
+                if (!Directory.Exists(mapped)) Directory.CreateDirectory(mapped);
+            }
         }
 
     }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
@@ -18,6 +16,7 @@ namespace BB.UI.Web.MVC.Controllers
     public class OrganisationsController : Controller
     {
         private readonly IOrganisationManager organisationManager;
+        private readonly IUserManager userManager;
 
         User user = new User()
         {
@@ -27,17 +26,19 @@ namespace BB.UI.Web.MVC.Controllers
         public OrganisationsController()
         {
             organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
+            userManager = new UserManager(ContextEnum.BeatBuddy);
         }
 
         public OrganisationsController(ContextEnum contextEnum)
         {
             organisationManager = new OrganisationManager(contextEnum);
+            userManager = new UserManager(contextEnum);
         }
 
         // GET: Organisations
         public ActionResult Index()
         {
-            List<Organisation> organisations = organisationManager.ReadOrganisations();
+            IEnumerable<Organisation> organisations = organisationManager.ReadOrganisations();
             List<OrganisationViewModel> organisationViewModels = new List<OrganisationViewModel>();
             foreach (var organisation in organisations)
             {
@@ -91,6 +92,10 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 string bannerPath = null;
                 string avatarPath = null;
+                if (User != null)
+                {
+                    user = userManager.ReadUser(User.Identity.Name);
+                }
                 if(bannerImage != null && bannerImage.ContentLength > 0)
                 {
                     var bannerFileName = Path.GetFileName(bannerImage.FileName);

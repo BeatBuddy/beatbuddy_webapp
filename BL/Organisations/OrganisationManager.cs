@@ -1,34 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
-using System.Collections.ObjectModel;
 using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
-using BB.DAL;
 using BB.DAL.EFOrganisation;
+using BB.DAL.EFUser;
 
 namespace BB.BL
 {
     public class OrganisationManager : IOrganisationManager
     {
-        private IOrganisationRepository repo;
+        private readonly IOrganisationRepository organisationsRepository;
+        private readonly IUserRepository userRepository;
+
         public OrganisationManager(ContextEnum contextEnum)
         {
-            repo = new OrganisationRepository(contextEnum);
+            organisationsRepository = new OrganisationRepository(contextEnum);
+            userRepository = new UserRepository(contextEnum);
+        }
+
+        public OrganisationManager()
+        {
+            organisationsRepository = new OrganisationRepository(ContextEnum.BeatBuddy);
+            userRepository = new UserRepository(ContextEnum.BeatBuddy);
         }
         
         public DashboardBlock CreateDashboardBlock(string blockName, int sequence)
         {
-            DashboardBlock block = new DashboardBlock()
+            DashboardBlock block = new DashboardBlock
             {
                 BlockName = blockName,
                 Sequence = sequence
             };
-            return repo.CreateDashboardBlock(block);
+            return organisationsRepository.CreateDashboardBlock(block);
         }
 
         public Organisation CreateOrganisation(string name, string bannerUrl,string imageUrl ,string colorScheme, User organisator)
@@ -42,52 +47,52 @@ namespace BB.BL
                 DashboardBlocks = new List<DashboardBlock>(),
                 Playlists = new List<Playlist>(),
             };
-            return repo.CreateOrganisation(organisation, organisator);
+            return organisationsRepository.CreateOrganisation(organisation, organisator);
         }
 
         public void DeleteDashboardBlock(long blockId)
         {
-            repo.DeleteDashboardBlock(blockId);
+            organisationsRepository.DeleteDashboardBlock(blockId);
         }
 
         public void DeleteOrganisation(long organisationId)
         {
-            repo.DeleteOrganisation(organisationId);
+            organisationsRepository.DeleteOrganisation(organisationId);
         }
 
-        public List<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
+        public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
         {
-            return repo.ReadDashboardBlocks(organisation);
+            return organisationsRepository.ReadDashboardBlocks(organisation);
         }
 
         public Organisation ReadOrganisation(string organisationName)
         {
-            return repo.ReadOrganisation(organisationName);
+            return organisationsRepository.ReadOrganisation(organisationName);
         }
 
         public Organisation ReadOrganisation(long organisationId)
         {
-            return repo.ReadOrganisation(organisationId);
+            return organisationsRepository.ReadOrganisation(organisationId);
         }
 
-        public List<Organisation> ReadOrganisations()
+        public IEnumerable<Organisation> ReadOrganisations()
         {
-            return repo.ReadOrganisations().ToList();
+            return organisationsRepository.ReadOrganisations();
         }
 
-        public List<Organisation> ReadOrganisations(User user)
+        public IEnumerable<Organisation> ReadOrganisations(long userId)
         {
-            return null;
+            return userRepository.ReadOrganisationsForUser(userId).Select(r => r.Organisation);
         }
 
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
         {
-            return repo.UpdateDashboardBlock(block);
+            return organisationsRepository.UpdateDashboardBlock(block);
         }
 
         public Organisation UpdateOrganisation(Organisation organisation)
         {
-            return repo.UpdateOrganisation(organisation);
+            return organisationsRepository.UpdateOrganisation(organisation);
         }
     }
 }
