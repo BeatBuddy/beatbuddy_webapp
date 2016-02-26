@@ -7,7 +7,10 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     @Styles.Render("~/Content/css")
-
+    @if (IsSectionDefined("LoggedInPageStyle"))
+    {
+        @RenderSection("LoggedInPageStyle", required: false)
+    }
 </head>
 <body>
     <header>
