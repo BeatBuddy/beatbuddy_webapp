@@ -202,10 +202,12 @@ header {
         height: auto;
         max-width: 200px;
         max-height: 200px;
+        margin-bottom: .5em;
 
         @media screen and (max-width: $mobile-breakpoint) {
             max-width: 64px;
             max-height: 64px;
+            margin-right: .5em;
     }
 }
 

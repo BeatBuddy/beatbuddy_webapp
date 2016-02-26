@@ -258,7 +258,6 @@
       <DependentUpon>bootstrap-grid.css</DependentUpon>
     </Content>
     <Content Include="Content\img\avatar.png" />
-    <Content Include="Content\img\Beadbuddy_header.mp4" />
     <Content Include="Content\img\ignace.jpg" />
     <Content Include="Content\img\jonah.jpg" />
     <Content Include="Content\img\kelly.jpg" />
