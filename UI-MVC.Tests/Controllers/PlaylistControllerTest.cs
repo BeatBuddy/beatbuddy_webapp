@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL.Domain;
@@ -70,9 +68,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             PlaylistViewModel playlistViewModel = new PlaylistViewModel()
             {
                 MaximumVotesPerUser = 4,
-                Name = "Awesome party",
-                Organisation = "Jonah's Songs",
-                PlaylistMaster = "jonah@gmail.com"
+                Name = "Awesome party"
             };
 
             RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);

@@ -257,11 +257,18 @@
     <Content Include="Content\bootstrap-grid.min.css">
       <DependentUpon>bootstrap-grid.css</DependentUpon>
     </Content>
-    <Content Include="Content\img\banner.jpg" />
     <Content Include="Content\img\avatar.png" />
+    <Content Include="Content\img\Beadbuddy_header.mp4" />
+    <Content Include="Content\img\ignace.jpg" />
+    <Content Include="Content\img\jonah.jpg" />
+    <Content Include="Content\img\kelly.jpg" />
+    <Content Include="Content\img\lennart.jpg" />
     <Content Include="Content\img\logo_header.png" />
     <Content Include="Content\img\logo_small.png" />
+    <Content Include="Content\img\maarten.jpg" />
+    <Content Include="Content\img\matthias.jpg" />
     <Content Include="Content\img\party-dj.png" />
+    <Content Include="Content\img\playlist.png" />
     <Content Include="Content\img\round_shape_loader.gif" />
     <Content Include="Content\modal.css" />
     <Content Include="Content\Site.css">
@@ -334,6 +341,7 @@
     <Content Include="Views\Playlist\Index.cshtml" />
     <Content Include="Views\Playlist\AddTrack.cshtml" />
     <Content Include="Views\Playlist\View.cshtml" />
+    <Content Include="Views\Playlist\PlaylistTable.cshtml" />
     <Content Include="Views\Home\LoggedIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
