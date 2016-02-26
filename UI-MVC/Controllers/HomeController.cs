@@ -8,5 +8,10 @@ namespace BB.UI.Web.MVC.Controllers
         {
             return View();
         }
+
+        public ActionResult LoggedIn() {
+            string UserId = HttpContext.User.Identity.Name;
+            return View();
+        }
     }
 }

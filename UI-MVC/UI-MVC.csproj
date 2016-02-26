@@ -240,6 +240,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrganisationViewModel.cs" />
     <Compile Include="Models\PlaylistViewModel.cs" />
+    <Compile Include="App_Start\Startup.Owin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -328,6 +329,7 @@
     <Content Include="Views\Playlist\Index.cshtml" />
     <Content Include="Views\Playlist\AddTrack.cshtml" />
     <Content Include="Views\Playlist\View.cshtml" />
+    <Content Include="Views\Home\LoggedIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />

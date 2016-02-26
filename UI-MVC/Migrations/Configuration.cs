@@ -1,5 +1,7 @@
 namespace BB.UI.Web.MVC.Migrations
 {
+    using BL;
+    using BL.Domain;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Models;
@@ -61,6 +63,8 @@ namespace BB.UI.Web.MVC.Migrations
             if (ir1.Succeeded == false)
                 return ir1.Succeeded;
             ir1 = um.AddToRole(user1.Id, "User");
+            var userManager = new UserManager(ContextEnum.BeatBuddyTest);
+            userManager.CreateUser("admin@admin.com", "Heylen", "Matthias", "acidshards", "/");
             return ir.Succeeded;
         }
     }
