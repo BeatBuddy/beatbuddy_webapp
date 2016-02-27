@@ -104,7 +104,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult GetPlaylist(long id)
         {
             return PartialView("PlaylistTable",playlistManager.ReadPlaylist(id));
-            
+        
         }
 
 
@@ -180,7 +180,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             if (org != null)
             {
-                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.MaximumVotesPerUser, true, path, null, user, org);
+                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user, org);
             }
             else
             {

@@ -269,6 +269,12 @@
     <Content Include="Content\img\party-dj.png" />
     <Content Include="Content\img\playlist.png" />
     <Content Include="Content\img\round_shape_loader.gif" />
+    <Content Include="Content\LoggedIn.css">
+      <DependentUpon>LoggedIn.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\LoggedIn.min.css">
+      <DependentUpon>LoggedIn.css</DependentUpon>
+    </Content>
     <Content Include="Content\modal.css" />
     <Content Include="Content\Site.css">
       <DependentUpon>Site.scss</DependentUpon>
@@ -286,6 +292,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="Content\LoggedIn.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

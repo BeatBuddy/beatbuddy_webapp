@@ -46,11 +46,13 @@ namespace BB.BL
             return repo.CreatePlaylist(playlist);
         }
 
-        public Playlist CreatePlaylistForOrganisation(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy, Organisation organisation)
+        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy, Organisation organisation)
         {
             Playlist playlist = new Playlist()
             {
                 Name = name,
+                Description = description,
+                Key = key,
                 MaximumVotesPerUser = maxVotesPerUser,
                 Active = active,
                 ImageUrl = imageUrl,
