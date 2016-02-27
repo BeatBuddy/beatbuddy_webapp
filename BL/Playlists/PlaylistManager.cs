@@ -109,15 +109,8 @@ namespace BB.BL
             repo.DeletePlaylistTrack(playlistTrackId);
         }
 
-        public Track AddTrackToPlaylist(long playlistId, string artist, string title, TrackSource trackSource, string coverArtUrl)
+        public Track AddTrackToPlaylist(long playlistId, Track track)
         {
-            var track = new Track()
-            {
-                Artist = artist,
-                Title = title,
-                TrackSource = trackSource,
-                CoverArtUrl = coverArtUrl
-            };
             return repo.CreateTrack(playlistId, track);
         }
 

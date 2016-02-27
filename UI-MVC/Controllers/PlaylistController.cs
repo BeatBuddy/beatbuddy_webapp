@@ -68,10 +68,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             track = playlistManager.AddTrackToPlaylist(
                 playlistId,
-                track.Artist,
-                track.Title,
-                track.TrackSource,
-                track.CoverArtUrl
+                track
             );
 
             if(track == null) return new HttpStatusCodeResult(400);
