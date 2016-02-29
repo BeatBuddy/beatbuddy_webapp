@@ -1,10 +1,6 @@
 ﻿using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BB.DAL.EFOrganisation
 {
@@ -21,7 +17,7 @@ namespace BB.DAL.EFOrganisation
         //DashboardBlock
         DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock);
         DashboardBlock UpdateDashboardBlock(DashboardBlock block);
-        List<DashboardBlock> ReadDashboardBlocks(Organisation organisation);
+        IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation);
         void DeleteDashboardBlock(long blockId);
     }
 }

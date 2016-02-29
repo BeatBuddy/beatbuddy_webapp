@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL.Domain;
@@ -64,21 +62,19 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsTrue(tracks.PlaylistTracks.Count > 0);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void CreatePlaylist()
         {
             PlaylistViewModel playlistViewModel = new PlaylistViewModel()
             {
                 MaximumVotesPerUser = 4,
-                Name = "Awesome party",
-                Organisation = "Jonah's Songs",
-                PlaylistMaster = "jonah@gmail.com"
+                Name = "Awesome party"
             };
 
-            ViewResult viewResult = (ViewResult)controller.Create(playlistViewModel, null);
+            RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);
             Playlist playlist = playlistManager.ReadPlaylist("Awesome party");
-            Assert.Equals(playlist.MaximumVotesPerUser, 4);
+            Assert.AreEqual(playlist.Active, true);
             
-        }*/
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -13,11 +12,11 @@ namespace BB.DAL.EFPlaylist
 {
     public class PlaylistRepository : IPlaylistRepository
     {
-        private EFDbContext ctx;
+        private readonly EFDbContext context;
         
         public PlaylistRepository(ContextEnum contextEnum)
         {
-            ctx = new EFDbContext(contextEnum);
+            context = new EFDbContext(contextEnum);
         }
 
         public Comment CreateComment(Comment comment)
@@ -27,18 +26,18 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist CreatePlaylist(Playlist playlist)
         {
-            playlist = ctx.Playlists.Add(playlist);
-            ctx.SaveChanges();
+            playlist = context.Playlists.Add(playlist);
+            context.SaveChanges();
             return playlist;
         }
 
         public Playlist CreatePlaylist(Playlist playlist, Organisation organisation)
         {
             var playlist1 = playlist;
-            var organisation1 = ctx.Organisations.Find(organisation.Id);
+            var organisation1 = context.Organisations.Find(organisation.Id);
             organisation1.Playlists.Add(playlist1);
-            ctx.Playlists.Add(playlist1);
-            ctx.SaveChanges();
+            context.Playlists.Add(playlist1);
+            context.SaveChanges();
             return playlist;
         }
 
@@ -74,19 +73,21 @@ namespace BB.DAL.EFPlaylist
 
         public void DeletePlaylistTrack(long playlistTrackId)
         {
-            throw new NotImplementedException();
+            PlaylistTrack track = context.PlaylistTracks.Single(f => f.Id == playlistTrackId);
+            context.PlaylistTracks.Remove(track);
+            context.SaveChanges();
         }
 
         public Track CreateTrack(long playlistId, Track track)
         {
-            var playlist = ctx.Playlists.Find(playlistId);
+            var playlist = context.Playlists.Find(playlistId);
             if (playlist == null) return null;
 
             var playlistTrack = new PlaylistTrack {Track = track};
             if(playlist.PlaylistTracks == null) playlist.PlaylistTracks = new Collection<PlaylistTrack>();
             playlist.PlaylistTracks.Add(playlistTrack);
 
-            ctx.SaveChanges();
+            context.SaveChanges();
             return playlistTrack.Track;
         }
 
@@ -105,35 +106,35 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public List<Comment> ReadChatComments(Playlist playlist)
+        public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {
             throw new NotImplementedException();
         }
 
-        public List<Comment> ReadComments(Playlist playlist)
+        public IEnumerable<Comment> ReadComments(Playlist playlist)
         {
             throw new NotImplementedException();
         }
 
         public Playlist ReadPlaylist(string name)
         {
-            return ctx.Playlists.Single(p => p.Name.Equals(name));
+            return context.Playlists.Single(p => p.Name.Equals(name));
         }
 
         public Playlist ReadPlaylist(long playlistId)
         {
-            return ctx.Playlists
+            return context.Playlists
                 .Include(p => p.PlaylistTracks)
-                .Include("PlaylistTracks.Track")
+                .Include("PlaylistTracks.Track.TrackSource")
                 .First(p => p.Id == playlistId);
         }
 
-        public List<Playlist> ReadPlaylists()
+        public IEnumerable<Playlist> ReadPlaylists()
         {
-            return ctx.Playlists.ToList();
+            return context.Playlists;
         }
 
-        public List<Playlist> ReadPlaylists(Organisation organisation)
+        public IEnumerable<Playlist> ReadPlaylists(Organisation organisation)
         {
             throw new NotImplementedException();
         }
@@ -143,7 +144,7 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public List<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
+        public IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
         {
             throw new NotImplementedException();
         }
@@ -153,7 +154,7 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public List<Track> ReadTracks()
+        public IEnumerable<Track> ReadTracks()
         {
             throw new NotImplementedException();
         }
@@ -163,7 +164,7 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public List<TrackSource> ReadTrackSources()
+        public IEnumerable<TrackSource> ReadTrackSources()
         {
             throw new NotImplementedException();
         }
@@ -173,7 +174,7 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public List<Vote> ReadVotesForPlaylist(Playlist playlist)
+        public IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist)
         {
             throw new NotImplementedException();
         }

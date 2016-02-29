@@ -15,6 +15,7 @@ namespace BB.UI.Web.MVC.Models
 {
     public class OrganisationViewModel
     {
+        public long Id { get; set; }
         [Required, MaxLength(100)]
         [Index(IsUnique = true)]
         [Remote("IsNameAvailable", "Organisations", ErrorMessage = "Name is already in use")]
@@ -25,5 +26,21 @@ namespace BB.UI.Web.MVC.Models
         public string ImageUrl { get; set; }
         [Required, DisplayName("Accent color: ")]
         public string ColorScheme { get; set; }
+    }
+
+    public class OrganisationViewWithPlaylist
+    {
+        public long Id { get; set; }
+        [Required, MaxLength(100)]
+        [Index(IsUnique = true)]
+        [Remote("IsNameAvailable", "Organisations", ErrorMessage = "Name is already in use")]
+        public string Name { get; set; }
+        [DisplayName("Banner Image: ")]
+        public string BannerUrl { get; set; }
+        [DisplayName("Avatar Image: ")]
+        public string ImageUrl { get; set; }
+        [Required, DisplayName("Accent color: ")]
+        public string ColorScheme { get; set; }
+        public IEnumerable<Playlist> Playlists { get; set; }
     }
 }

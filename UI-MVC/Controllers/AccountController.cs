@@ -1,9 +1,6 @@
-﻿using System;
-using System.Configuration;
-using System.Globalization;
+﻿using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -11,7 +8,6 @@ using BB.UI.Web.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using BB.BL.Domain.Users;
 using BB.BL;
 using BB.BL.Domain;
 using BB.UI.Web.MVC.Controllers.Utils;
@@ -94,7 +90,15 @@ namespace BB.UI.Web.MVC.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    bool authenticated = User.Identity.IsAuthenticated;
+                    //ActionResult actionResult = returnUrl == null ?  RedirectToLocal(returnUrl) : RedirectToAction("LoggedIn", "HomeController");
+                    if (returnUrl == null)
+                    {
+                        return RedirectToAction("LoggedIn", "Home");
+                    }
+                    else {
+                        return RedirectToLocal(returnUrl);
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

@@ -46,7 +46,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         public void TestOrganisationsDetailsView_Correct_id()
         {
             ViewResult viewResult = _organisationsController.Details(1) as ViewResult;
-            var organisation = (OrganisationViewModel) viewResult.ViewData.Model; 
+            var organisation = (OrganisationViewWithPlaylist) viewResult.ViewData.Model; 
             Assert.AreEqual("Jonah's Songs", organisation.Name);
             Assert.AreEqual("Details", viewResult.ViewName);
         }
@@ -71,6 +71,15 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.AreEqual("Index", viewResult.RouteValues["action"]);
         }
 
+        [TestMethod]
+        public void TestAddCoOrganiser()
+        {
+            _organisationsController.AddCoOrganiser(1, "jonah@gmail.com");
+            User user = userManager.ReadUser("jonah@gmail.com");
+            var userRoles = userManager.ReadOrganisationsForUser(user.Id);
+            Assert.IsNotNull(userRoles);
+            Assert.AreEqual(userRoles.Count(),2);
+        }
         
 
     }

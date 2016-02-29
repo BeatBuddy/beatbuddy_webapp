@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
 namespace BB.UI.Web.MVC.Models
 {
@@ -27,12 +26,7 @@ namespace BB.UI.Web.MVC.Models
         [Display(Name = "Image Url")]
         public string ImageUrl { get; set; }
 
-        [Display(Name = "Playlist master email")]
-        [Remote("IsNameAvailable", "Playlist", ErrorMessage = "Email not found")]
-        public string PlaylistMaster { get; set; }
-
         [Display(Name = "Organisation Name")]
-        [Remote("IsOrganisationAvailable", "Playlist", ErrorMessage = "Organisation not found")]
-        public string Organisation { get; set; }
+        public long OrganisationId { get; set; }
     }
 }

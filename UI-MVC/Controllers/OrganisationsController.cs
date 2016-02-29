@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
@@ -12,6 +10,7 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Controllers.Utils;
 using BB.UI.Web.MVC.Models;
+using System;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -40,12 +39,13 @@ namespace BB.UI.Web.MVC.Controllers
         // GET: Organisations
         public ActionResult Index()
         {
-            List<Organisation> organisations = organisationManager.ReadOrganisations();
+            IEnumerable<Organisation> organisations = organisationManager.ReadOrganisations();
             List<OrganisationViewModel> organisationViewModels = new List<OrganisationViewModel>();
             foreach (var organisation in organisations)
             {
                 organisationViewModels.Add(new OrganisationViewModel()
                 {
+                    Id = organisation.Id,
                     Name = organisation.Name,
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
@@ -61,19 +61,44 @@ namespace BB.UI.Web.MVC.Controllers
             Organisation organisation = organisationManager.ReadOrganisation(id);
             if (organisation != null)
             {
-                OrganisationViewModel organisationView = new OrganisationViewModel()
+                OrganisationViewWithPlaylist organisationView = new OrganisationViewWithPlaylist()
                 {
+                    Id = id,
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
                     Name = organisation.Name,
-                    ImageUrl = organisation.ImageUrl
+                    ImageUrl = organisation.ImageUrl,
+                    Playlists = organisation.Playlists
                 };
+                User user = userManager.ReadOrganiserFromOrganisation(organisation);
+                ViewBag.emailOrganiser = user.Email;
                 return View("Details", organisationView);
 
             }else
                 return View("Error");
         }
 
+
+        public void AddCoOrganiser(long organisation, string mail)
+        {
+
+            User user = userManager.ReadUser(mail);
+            if(user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            userManager.CreateUserRole(user.Id, organisation, Role.Co_Organiser);
+            Organisation org = organisationManager.ReadOrganisation(organisation);
+            OrganisationViewModel model = new OrganisationViewModel()
+            {
+                Id = org.Id,
+                BannerUrl = org.BannerUrl,
+                ColorScheme = org.ColorScheme,
+                ImageUrl = org.ImageUrl,
+                Name = org.Name
+            };
+        }
         // GET: Organisations/Create
         public ActionResult Create()
         {

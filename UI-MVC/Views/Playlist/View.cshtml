@@ -6,100 +6,26 @@
     ViewBag.Title = "View";
 }
 
-<div class="title">
+<div class="title" style="margin-bottom: 1em">
     <h1>Playlist</h1> @Html.DisplayFor(model => model.Name)
 </div>
 
 <div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MaximumVotesPerUser)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MaximumVotesPerUser)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Active)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-    </dl>
-</div>
-
-<div class="title">
-    <h1>Queue</h1>
-    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
+    @if (Model.ImageUrl != null)
     {
-        <text>@Model.PlaylistTracks.Count tracks in queue</text>
+        <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
     }
     else
     {
-        <text>1 track in queue</text>
+        <img class="borderround" src="~/Content/img/playlist.png" style="width: 170px; height: 170px" />
     }
+
 </div>
 
-<table id="playlist-tracks">
-    <tr>
-        <th></th>
-        <th></th>
-        <th>Title</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th>Artist</th>
-    </tr>
-    @foreach (PlaylistTrack track in Model.PlaylistTracks)
-    {
-        var track_vote = 0;
-        <tr class="track">
-            <td>
-                @track.Id
-            </td>
-            <td>
-                <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
-            </td>
-            <td class="tracktitle">
-                @track.Track.Title
-            </td>
-            <td>
-                <i class="material-icons" id="click_thumb_down" click="changeVoteThumbDown(@track_vote, @track.Id)" style="color: black">thumb_down</i>
-            </td>
-            <td>
-                <i class="material-icons" id="click_thumb_up" click="changeVoteThumbUp(@track_vote, @track.Id)" style="color: black">thumb_up</i>
-            </td>
-            <td>
-                3:30
-            </td>
-            <td class="artist">
-                @track.Track.Artist
-            </td>
-            <td>
-                album
-            </td>
-        </tr>
 
-    }
-</table>
+<div id="playlist-view" style="margin-top: 1em">
+    @Html.Partial("PlaylistTable", @Model)
+</div>
 
 <a href="#addTrackModal" class="btn btn-right" style="margin-top: 1em;">
     <i class="material-icons">playlist_add</i> add track
@@ -107,7 +33,7 @@
 
 <div id="addTrackModal" class="modal" style="margin-top: -140px">
     <div class="modal-content" style="width: 30%; height: 70%">
-        <a href="#close" title="Close" class="close">X</a>
+        <a href="#close" id="close-modal" title="Close" class="close">X</a>
         <div class="modal-body" style="height: 100%; width: 100%">
             @{
                 Html.RenderPartial("AddTrack");
@@ -116,13 +42,32 @@
     </div>
 </div>
 
-<div id="player">
-    <h1>Now playing ▶</h1>
+
+
+<div id="nowPlayingRow" style="margin-top: 5em">
+@if (Model.PlaylistTracks.Count != 0)
+{
+    <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    else
+    {
+        <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+
+    <div class="title" style="margin-top: 0.5em">
+        <h1>Now Playing </h1> <span id="nowPlaying"></span>
+    </div>
+    <span id="time"></span>
+    <div id="myProgress" class="progress">
+        <div id="myBar" class="bar"></div>
+    </div>
+</div>
+<div id="player" style="display: none">
 </div>
 
 @section Scripts{
     <script>
-
         var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
             '<img class="thumbnail" src="${CoverArtUrl}"/>' +
             '<span class="artist">${Artist}</span>' +
@@ -160,18 +105,21 @@
                 method: 'POST',
                 data: { playlistId: @ViewBag.PlaylistId, id: id }
             }).done(function () {
-                window.location.href = '@Url.Action("View", new { id = @ViewBag.PlaylistId })';
-            })
-            .fail(function () {
-                alert('Failed!');
-            });
+                window.location.href = @ViewBag.PlaylistId + '#close';
+                updatePlaylist();
+                    var playBtn = document.getElementById('playBtn');
+                    playBtn.className = 'btn';
+                })
+                .fail(function() {
+                    alert('Failed!');
+                });
         }
 
         function debounce(func, wait, immediate) {
             var timeout;
-            return function () {
+            return function() {
                 var context = this, args = arguments;
-                var later = function () {
+                var later = function() {
                     timeout = null;
                     if (!immediate) func.apply(context, args);
                 };
@@ -182,42 +130,137 @@
             };
         };
 
-        var debouncedFetch = debounce(function () {
+        var debouncedFetch = debounce(function() {
             fetchQueryResults();
         }, 500);
 
-        $("#query").on('keydown', function () {
+        $("#query").on('keydown', function() {
             debouncedFetch();
         });
 
-        function addVote(track_vote, track_id) {
-            $.ajax({
-                url: '@Url.Action("AddVote")',
-                method: 'POST',
-                data: { vote: track_vote, id: id }
-            })}
-       function changeVoteThumbDown(track_vote, id) {
-            if(document.getElementById('click_thumb_down').style.color == "black" && document.getElementById('click_thumb_up').style.color=="black"){
-                document.getElementById('click_thumb_down').style.color= "Green";
-                var track_vote_final = track_vote-1;
-                addVote(track_vote_final, id);
-            }
-            else{document.getElementById('click_thumb_down').style.color = "black";
-            var track_vote_final = track_vote+1;
-            addVote(track_vote_final, id);
-            }
-        };
-      function changeVoteThumbUp(track_vote, id) {
-            if(document.getElementById('click_thumb_up').style.color == "black" && document.getElementById('click_thumb_down').style.color=="black"){
-                document.getElementById('click_thumb_up').style.color= "Green";
-                var track_vote_final = track_vote + 1;
-                addVote(track_vote_final, id);
-            }
-            else{document.getElementById('click_thumb_up').style.color = "black";
-            var track_vote_final = track_vote - 1;
-            addVote(track_vote, id);    
-            }
-        };
-    </script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+        var player;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: 'cdwal5Kw3Fc',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+            player.setPlayBackQuality('small');
+        }
+
+        var firstPlay = true;
+
+        function onPlayerReady(event) {
+            if (firstPlay) {
+                var playButton = document.getElementById("playBtn");
+                playButton.addEventListener("click", getNextTrack);
+                
+                firstPlay = false;
+            }
+            var nextButton = document.getElementById("nextBtn");
+            nextButton.addEventListener("click", function() {
+                getNextTrack();
+            });
+            
+
+        }
+        function updateTime() {
+            var time = document.getElementById("time");
+            var currentTime = secondsToTime(player.getCurrentTime());
+            var duration = secondsToTime(player.getDuration());
+            time.innerHTML = currentTime +' | ' + duration;
+            var percentageTime = (player.getCurrentTime() / player.getDuration()) * 100;
+            var bar = document.getElementById("myBar");
+            bar.style.width = percentageTime + '%';
+        }
+        function secondsToTime(secs)
+        {
+            d = Number(secs);
+            var h = Math.floor(d / 3600);
+            var m = Math.floor(d % 3600 / 60);
+            var s = Math.floor(d % 3600 % 60);
+            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
+        }
+        function onPlayerStateChange(event) {
+            var playButton = document.getElementById("playBtn");
+            playButton.removeEventListener("click", getNextTrack);
+            var icon = document.getElementById("icon");
+            if (event.data == YT.PlayerState.PLAYING) {
+                playButton.addEventListener("click", function() {
+                    player.pauseVideo();
+                });
+                icon.innerHTML = 'pause';
+            }
+            if (event.data == YT.PlayerState.PAUSED) {
+                icon.innerHTML = 'play_arrow';
+                playButton.addEventListener("click", function() {
+                    player.playVideo();
+                });
+            }
+            if (event.data == YT.PlayerState.ENDED) {
+                getNextTrack();
+            }
+        }
+
+        function getNextTrack() {
+            $.ajax('/Playlist/GetNextTrack/', {
+                type: 'GET',
+                data: { id: @ViewBag.PlaylistId },
+                contentType : "application/json",
+                dataType : "json"
+            }).done(function(data) {
+                if (data!=null) {
+                    player.loadVideoById(data.trackId);
+                    document.getElementById("nowPlaying").innerHTML = data.trackName + ' - ' + data.artist;
+                    $(function() {
+                        setInterval(updateTime, 50);
+                    });
+                    var nextButton = document.getElementById("nextBtn");
+                    if (data.nextTracks === 1) {
+                        nextButton.className = 'btn disabled';
+                    } else {
+                        nextButton.className = 'btn';     
+                    }
+                    moveTrackToHistory();
+                } 
+            }).fail(function() {
+                var playBtn = document.getElementById('playBtn');
+                playBtn.className = 'btn disabled';
+                document.getElementById("nowPlaying").innerHTML = '';
+            });
+        }
+        
+        function moveTrackToHistory() {
+            $.ajax('/Playlist/MoveTrackToHistory/', {
+                type: 'POST',
+                data: { id: @ViewBag.PlaylistId }
+            }).done(function() {
+                updatePlaylist();
+            }).fail(function() {
+                var nextButton = document.getElementById("nextBtn");
+                nextButton.className = 'btn disabled';
+                var playButton = document.getElementById("playBtn");
+                playButton.className = 'btn disabled';
+                var icon = document.getElementById("icon");
+                icon.innerHTML = 'play_arrow';
+            });
+        }
+        function stopVideo() {
+            player.stopVideo();
+        }
+        function updatePlaylist() {
+            $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
+        }
+
+    </script>
 }

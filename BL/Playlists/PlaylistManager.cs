@@ -10,7 +10,8 @@ namespace BB.BL
 {
     public class PlaylistManager : IPlaylistManager
     {
-        private IPlaylistRepository repo;
+        private readonly IPlaylistRepository repo;
+
         public PlaylistManager(ContextEnum contextEnum)
         {
             repo = new PlaylistRepository(contextEnum);
@@ -45,11 +46,13 @@ namespace BB.BL
             return repo.CreatePlaylist(playlist);
         }
 
-        public Playlist CreatePlaylistForOrganisation(string name, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy, Organisation organisation)
+        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy, Organisation organisation)
         {
             Playlist playlist = new Playlist()
             {
                 Name = name,
+                Description = description,
+                Key = key,
                 MaximumVotesPerUser = maxVotesPerUser,
                 Active = active,
                 ImageUrl = imageUrl,
@@ -108,15 +111,8 @@ namespace BB.BL
             repo.DeletePlaylistTrack(playlistTrackId);
         }
 
-        public Track AddTrackToPlaylist(long playlistId, string artist, string title, TrackSource trackSource, string coverArtUrl)
+        public Track AddTrackToPlaylist(long playlistId, Track track)
         {
-            var track = new Track()
-            {
-                Artist = artist,
-                Title = title,
-                TrackSource = trackSource,
-                CoverArtUrl = coverArtUrl
-            };
             return repo.CreateTrack(playlistId, track);
         }
 
@@ -135,12 +131,12 @@ namespace BB.BL
             repo.DeleteVote(voteId);
         }
 
-        public List<Comment> ReadChatComments(Playlist playlist)
+        public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {
             return repo.ReadChatComments(playlist);
         }
 
-        public List<Comment> ReadComments(Playlist playlist)
+        public IEnumerable<Comment> ReadComments(Playlist playlist)
         {
             return repo.ReadComments(playlist);
         }
@@ -155,12 +151,12 @@ namespace BB.BL
             return repo.ReadPlaylist(playlistId);
         }
 
-        public List<Playlist> ReadPlaylists()
+        public IEnumerable<Playlist> ReadPlaylists()
         {
             return repo.ReadPlaylists();
         }
 
-        public List<Playlist> ReadPlaylists(Organisation organisation)
+        public IEnumerable<Playlist> ReadPlaylists(Organisation organisation)
         {
             return repo.ReadPlaylists(organisation);
         }
@@ -170,7 +166,7 @@ namespace BB.BL
             return repo.ReadPlaylistTrack(playlistTrackId);
         }
 
-        public List<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
+        public IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
         {
             return repo.ReadPlaylistTracks(playlist);
         }
@@ -180,7 +176,7 @@ namespace BB.BL
             return repo.ReadTrack(trackId);
         }
 
-        public List<Track> ReadTracks()
+        public IEnumerable<Track> ReadTracks()
         {
             return repo.ReadTracks();
         }
@@ -190,7 +186,7 @@ namespace BB.BL
             return repo.ReadTrackSource(trackSourceId);
         }
 
-        public List<TrackSource> ReadTrackSources()
+        public IEnumerable<TrackSource> ReadTrackSources()
         {
             return repo.ReadTrackSources();
         }
@@ -200,7 +196,7 @@ namespace BB.BL
             return repo.ReadVote(voteId);
         }
 
-        public List<Vote> ReadVotesForPlaylist(Playlist playlist)
+        public IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist)
         {
             return repo.ReadVotesForPlaylist(playlist);
         }

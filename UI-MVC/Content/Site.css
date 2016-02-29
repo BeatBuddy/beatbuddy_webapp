@@ -11,6 +11,10 @@
   line-height: .3em;
   margin-left: -.1em; }
 
+a.disabled {
+  pointer-events: none;
+  cursor: default; }
+
 header {
   display: block;
   padding: 1em 5em;
@@ -60,39 +64,109 @@ header {
           border-bottom: 2px solid black; }
 
 #banner {
-  background-image: url("img/banner.jpg");
-  background-size: cover;
   width: 100%;
   min-height: 500px;
-  z-index: 0; }
+  z-index: 0;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1em; }
+  #banner video {
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -o-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; }
   #banner .content {
-    padding: 4em 5em 4em 5em;
+    padding: 5.2% 5em 3em 5em;
     margin: 0 auto;
     max-width: 1500px;
     color: white; }
     #banner .content h1 {
       font-weight: 100;
       color: white;
-      font-size: 5em;
+      font-size: 4.3em;
       margin-bottom: 0;
       text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4); }
     #banner .content h2 {
       margin-top: 0;
+      margin-bottom: 1em;
       font-weight: 200;
       font-size: 2em;
       text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5); }
     #banner .content .button {
+      display: inline-block;
       border: 2px solid white;
       background: transparent;
       color: white;
       cursor: pointer;
-      font-size: 2.2em;
+      font-size: 1.8em;
       padding: .2em 1em;
       text-transform: lowercase;
       text-decoration: none;
       border-radius: 5px;
       font-weight: 100;
       margin-right: .3em; }
+      #banner .content .button:hover {
+        background: rgba(255, 255, 255, 0.2); }
+    @media screen and (max-width: 600px) {
+      #banner .content {
+        padding: 4% 1em 3em 1em; }
+        #banner .content h1 {
+          font-size: 2.5em; }
+        #banner .content h2 {
+          font-size: 1.6em; } }
+  @media screen and (max-width: 600px) {
+    #banner {
+      min-height: 270px; } }
+
+.intro-item i {
+  display: inline-block;
+  font-size: 4em;
+  margin-right: .1em;
+  vertical-align: top; }
+
+.intro-item h1 {
+  font-weight: 300;
+  display: inline-block;
+  font-size: 1.6em;
+  margin: 0;
+  margin-top: .3em;
+  margin-bottom: .6em;
+  vertical-align: top; }
+
+.about-user {
+  display: inline-block;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: 300;
+  margin: .5em; }
+  .about-user img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    max-height: 200px;
+    margin-bottom: .5em; }
+    @media screen and (max-width: 600px) {
+      .about-user img {
+        max-width: 64px;
+        max-height: 64px;
+        margin-right: .5em; } }
+  @media screen and (max-width: 600px) {
+    .about-user {
+      display: block;
+      text-align: left; }
+      .about-user img {
+        display: inline-block;
+        vertical-align: middle; } }
 
 .body-content {
   padding: 1em 5em;
@@ -239,6 +313,16 @@ header {
   height: 40px;
   vertical-align: middle; }
 
+.custom-dropdown {
+  height: 1.6em;
+  background: none;
+  border: none;
+  border-bottom: 1px solid black;
+  position: relative;
+  top: -.15em;
+  font-family: Roboto;
+  font-size: .65em; }
+
 .custom-input-organisations, .custom-input-playlists {
   width: 350px; }
 
@@ -251,6 +335,19 @@ header {
   background-color: #FFF;
   border: 1px solid #000;
   outline: none; }
+
+.progress {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  background-color: lightgray; }
+
+.bar {
+  position: absolute;
+  width: 0.1%;
+  height: 100%;
+  background-color: black;
+  border: solid 1px; }
 
 .form-label {
   width: 90%;
@@ -268,8 +365,8 @@ header {
 
 .borderround {
   border-radius: 50%;
-  border-color: black;
-  border: 1.5px solid; }
+  border-color: lightgray;
+  border: 2px solid; }
 
 .borderround:hover {
   border-color: #0000FF; }
@@ -317,6 +414,9 @@ header {
   .btn:hover {
     background: #222; }
 
+.btn:disabled {
+  cursor: not-allowed; }
+
 .btn-default {
   color: white; }
 
@@ -330,6 +430,12 @@ header {
 
 .min-margin-top {
   margin-top: -15px; }
+
+.more-margin-top {
+  margin-top: 2em; }
+
+.more-margin-bottom {
+  margin-bottom: 2.5em; }
 
 .horizontal-center {
   text-align: center; }
