@@ -111,15 +111,8 @@ namespace BB.BL
             repo.DeletePlaylistTrack(playlistTrackId);
         }
 
-        public Track AddTrackToPlaylist(long playlistId, string artist, string title, TrackSource trackSource, string coverArtUrl)
+        public Track AddTrackToPlaylist(long playlistId, Track track)
         {
-            var track = new Track()
-            {
-                Artist = artist,
-                Title = title,
-                TrackSource = trackSource,
-                CoverArtUrl = coverArtUrl
-            };
             return repo.CreateTrack(playlistId, track);
         }
 
@@ -206,6 +199,10 @@ namespace BB.BL
         public IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist)
         {
             return repo.ReadVotesForPlaylist(playlist);
+        }
+
+        public IEnumerable<Vote> ReadVotesForUser(User user) {
+            return repo.ReadVotesUser(user);
         }
 
         public Comment UpdateComment(Comment comment)

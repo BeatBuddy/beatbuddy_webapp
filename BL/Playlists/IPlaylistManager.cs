@@ -32,7 +32,7 @@ namespace BB.BL
         void DeletePlaylistTrack(long playlistTrackId);
 
         //Track
-        Track AddTrackToPlaylist(long playlistId, string artist, string title, TrackSource trackSource, string coverArtUrl);
+        Track AddTrackToPlaylist(long playlistId, Track track);
         Track UpdateTrack(Track track);
         Track ReadTrack(long trackId);
         IEnumerable<Track> ReadTracks();
@@ -50,6 +50,7 @@ namespace BB.BL
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
+        IEnumerable<Vote> ReadVotesForUser(User user);
         void DeleteVote(long voteId);
     }
 }

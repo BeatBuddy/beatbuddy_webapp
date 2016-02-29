@@ -354,6 +354,9 @@
     <Folder Include="App_Data\Img\Organisations\" />
     <Folder Include="App_Data\Img\Playlists\" />
     <Folder Include="App_Data\Img\Users\" />
+    <Folder Include="Content\img\Organisations\" />
+    <Folder Include="Content\img\Playlists\" />
+    <Folder Include="Content\img\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

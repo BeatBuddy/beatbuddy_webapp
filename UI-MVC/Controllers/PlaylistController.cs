@@ -5,6 +5,7 @@ using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Models;
 using BB.BL.Domain.Organisations;
+using BB.BL.Domain.Users;
 using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
@@ -19,7 +20,14 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
 
+        
         private const string testName = "jonah@gmail.com";
+
+        User user = new User()
+        {
+            FirstName = "Jonah"
+        };
+
 
         public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
         {
@@ -46,10 +54,23 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult View(long id)
         {
+            if (User != null)
+            {
+                user = userManager.ReadUser(User.Identity.Name);
+            }
+            var votesUser = playlistManager.ReadVotesForUser(user);
+            ViewBag.VotesUser = votesUser;
             var playlist = playlistManager.ReadPlaylist(id);
             ViewBag.PlaylistId = id;
-
             return View(playlist);
+        }
+
+        [HttpPost]
+        public ActionResult AddVote(int vote, long id)
+        {
+            Vote v = new Vote();
+            v.Score = vote;
+            return new HttpStatusCodeResult(200);
         }
 
         public ActionResult AddTrack(long id)
@@ -68,10 +89,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             track = playlistManager.AddTrackToPlaylist(
                 playlistId,
-                track.Artist,
-                track.Title,
-                track.TrackSource,
-                track.CoverArtUrl
+                track
             );
 
             if(track == null) return new HttpStatusCodeResult(400);
