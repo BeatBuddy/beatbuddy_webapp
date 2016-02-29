@@ -3,7 +3,6 @@ using BB.BL.Domain.Users;
 using BB.BL.Domain;
 using BB.DAL.EFUser;
 using BB.BL.Domain.Organisations;
-using BB.DAL.EFOrganisation;
 
 namespace BB.BL
 {
