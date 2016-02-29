@@ -20,7 +20,14 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
 
+        
         private const string testName = "jonah@gmail.com";
+
+        User user = new User()
+        {
+            FirstName = "Jonah"
+        };
+
 
         public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
         {
@@ -47,7 +54,10 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult View(long id)
         {
-            User user = userManager.ReadUser(User.Identity.Name);
+            if (User != null)
+            {
+                user = userManager.ReadUser(User.Identity.Name);
+            }
             var votesUser = playlistManager.ReadVotesForUser(user);
             ViewBag.VotesUser = votesUser;
             var playlist = playlistManager.ReadPlaylist(id);
