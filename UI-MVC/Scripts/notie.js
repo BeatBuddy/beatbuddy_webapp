@@ -20,8 +20,8 @@ var notie = function () {
 
     // General
     var shadow = true;
-    var font_size_small = '18px';
-    var font_size_big = '24px';
+    var font_size_small = '14px';
+    var font_size_big = '15px';
     var font_change_screen_width = 600;
     var animation_delay = 0.3;
     var background_click_dismiss = true;
@@ -184,7 +184,7 @@ var notie = function () {
 
     var alert_inner = document.createElement('div');
     alert_inner.id = alert_inner_id;
-    alert_inner.style.padding = '20px';
+    alert_inner.style.padding = '18px';
     alert_inner.style.display = 'table-cell';
     alert_inner.style.verticalAlign = 'middle';
     alert_outer.appendChild(alert_inner);
@@ -366,7 +366,7 @@ var notie = function () {
     confirm_inner.id = confirm_inner_id;
     confirm_inner.style.boxSizing = 'border-box';
     confirm_inner.style.width = '100%';
-    confirm_inner.style.padding = '20px';
+    confirm_inner.style.padding = '18px';
     confirm_inner.style.display = 'block';
     confirm_inner.style.cursor = 'default';
     confirm_inner.style.backgroundColor = confirm_and_input_color_background;

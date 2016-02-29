@@ -28,11 +28,11 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestSearchAndAddTrack()
         {
-            var result = controller.SearchTrack("Rick Astley - Never Gonna Give You Up");
+            var result = controller.SearchTrack("kshmr");
             var tracks = result.Data as List<Track>;
 
             Assert.IsNotNull(tracks);
-            Assert.IsTrue(tracks.Any(t => t.Title.ToString().ToLower().Contains("never gonna give you up")));
+            Assert.IsTrue(tracks.Any(t => t.Title.ToString().ToLower().Contains("strong")));
 
             var addTrackResult = controller.AddTrack(1, tracks.First().TrackSource.TrackId) as HttpStatusCodeResult;
 
@@ -50,6 +50,16 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         }
 
         [TestMethod]
+        public void TestSearchAndAddDuplicate()
+        {
+            var addTrackResult = controller.AddTrack(1, "dQw4w9WgXcQ") as HttpStatusCodeResult;
+
+            Assert.IsNotNull(addTrackResult);
+            Assert.AreEqual(400, addTrackResult.StatusCode);
+            Assert.AreEqual("You can not add a song that is already in the list", addTrackResult.StatusDescription);
+        }
+
+        [TestMethod]
         public void ViewPlaylist()
         {
             var result = controller.View(1) as ViewResult;
@@ -61,6 +71,27 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsNotNull(tracks);
             Assert.IsTrue(tracks.PlaylistTracks.Count > 0);
         }
+
+        [TestMethod]
+        public void TestMoveTrackToHistory()
+        {
+            var addTrackResult = controller.MoveTrackToHistory(1) as HttpStatusCodeResult;
+
+            Assert.IsNotNull(addTrackResult);
+            Assert.AreEqual(200, addTrackResult.StatusCode);
+
+            var playlistResult = controller.View(1) as ViewResult;
+
+            Assert.IsNotNull(playlistResult);
+
+            var playlist = playlistResult.Model as Playlist;
+
+            Assert.IsNotNull(playlist);
+            Assert.AreEqual(1, playlist.PlaylistTracks.Count);
+
+        }
+
+
 
         [TestMethod]
         public void CreatePlaylist()

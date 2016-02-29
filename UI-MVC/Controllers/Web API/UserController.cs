@@ -27,7 +27,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
         }
 
-        public UserController(ContextEnum contextEnum) {
+        public UserController(ContextEnum contextEnum)
+        {
             userManager = new UserManager(contextEnum);
             organisationManager = new OrganisationManager(contextEnum);
         }
@@ -46,14 +47,17 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             {
                 return Content(HttpStatusCode.InternalServerError, ex.GetBaseException().Message);
             }
+
             var applicationUser = new ApplicationUser { UserName = email, Email = email };
             var resultUser = await UserManager.CreateAsync(applicationUser, password);
-            if (resultUser.Succeeded)
-            {
+
+            if (resultUser.Succeeded){
                 UserManager.AddToRole(applicationUser.Id, "User");
-                return Ok();
+                return Ok(user);
+            } else {
+                userManager.DeleteUser(user.Id);
+                return Content(HttpStatusCode.InternalServerError, "ASP.NET Identity Usermanager could not create user");
             }
-            return NotFound ();
         }
 
 

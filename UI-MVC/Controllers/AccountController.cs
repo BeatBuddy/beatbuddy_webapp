@@ -91,10 +91,10 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 case SignInStatus.Success:
                     bool authenticated = User.Identity.IsAuthenticated;
-                    //ActionResult actionResult = returnUrl == null ?  RedirectToLocal(returnUrl) : RedirectToAction("LoggedIn", "HomeController");
+                    //ActionResult actionResult = returnUrl == null ?  RedirectToLocal(returnUrl) : RedirectToAction("Portal", "HomeController");
                     if (returnUrl == null)
                     {
-                        return RedirectToAction("LoggedIn", "Home");
+                        return RedirectToAction("Portal", "Home");
                     }
                     else {
                         return RedirectToLocal(returnUrl);

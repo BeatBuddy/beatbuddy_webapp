@@ -6,26 +6,29 @@
     ViewBag.Title = "View";
 }
 
-<div class="title" style="margin-bottom: 1em">
-    <h1>Playlist</h1> @Html.DisplayFor(model => model.Name)
-</div>
+
+@section escape_padding {
 <div id="playlistbanner">
     <div class="content">
-        <div>
-            @if (Model.ImageUrl != null)
-            {
-                <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px"/>
-            }
-            else
-            {
-                <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 170px; height: 170px"/>
-            }
 
-        </div>
-        <h1>Create and share playlists</h1>
-        <h2>With your friends, family and the world.</h2>
+
+
+        @if (Model.ImageUrl != null)
+        {
+           <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
+        }
+        else
+        {
+           <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 170px; height: 170px" />
+        }
+        <h1>@Model.Name</h1>
+        <h2>Share your play: @Model.Key</h2>
+        
+        
     </div>
-</div>
+</div>    
+}
+
 
 
 
@@ -50,7 +53,7 @@
 
 </div>
 
-<div id="addTrackModal" class="modal" style="margin-top: -150px">
+<div id="addTrackModal" class="modal" style="margin-top: -180px">
     <div class="modal-content" style="width: 30%; height: 70%">
         <a href="#close" id="close-modal" title="Close" class="close">X</a>
         <div class="modal-body" style="height: 100%; width: 100%">
@@ -168,8 +171,8 @@
                     var playBtn = document.getElementById('playBtn');
                     playBtn.className = 'btn';
                 })
-                .fail(function(data) {
-                    alert('nothing');
+                .fail(function() {
+                    notie.alert(3, 'You cannot add a song that is already in the list', 2.5);
                 });
         }
 
@@ -293,7 +296,7 @@
                     openFooter();
                     moveTrackToHistory();
                     $('#thumbnail').attr("src", data.thumbnail);
-                    notie.alert(1, 'succes', 1.5);
+                    
                 } 
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');

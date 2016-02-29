@@ -139,16 +139,23 @@ header {
   background-repeat: no-repeat;
   background-size: cover; }
   #playlistbanner .content {
-    padding: 5.2% 5em 3em 5em;
+    padding: 2.4% 5em 3em 5em;
     margin: 0 auto;
     max-width: 1500px;
-    color: white; }
+    color: white;
+    top: 0; }
     #playlistbanner .content h1 {
       font-weight: 100;
       color: white;
-      font-size: 4.3em;
+      font-size: 3.4em;
+      margin-top: 0.5em;
       margin-bottom: 0;
+      top: 0;
       text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4); }
+    #playlistbanner .content img {
+      float: left;
+      margin-right: 30px;
+      background-color: rgba(0, 0, 0, 0.6); }
     #playlistbanner .content h2 {
       margin-top: 0;
       margin-bottom: 1em;

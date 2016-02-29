@@ -3,6 +3,9 @@
   margin-bottom: 30px;
   width: 100%; }
 
+h1 {
+  margin-bottom: 0.5em; }
+
 h3 {
   margin: 0;
   margin-top: 0.5em;
@@ -19,7 +22,7 @@ h3 {
   background-size: cover;
   background-position: center center; }
   .loggedin-banner .banner-content {
-    padding: 5.2% 5em 3em 5em;
+    padding: 10% 5em 1em 5em;
     margin: 0 auto;
     max-width: 1500px;
     margin: 0 auto;
@@ -33,7 +36,21 @@ h3 {
       text-shadow: 0 3px 5px rgba(0, 0, 0, 0.5); }
 
 .organisation-wrapper {
-  padding: 0; }
+  text-decoration: none;
+  color: black;
+  margin-bottom: 1em; }
+  .organisation-wrapper h3 {
+    transition: border .2s;
+    -webkit-transition: border .2s;
+    border-bottom: 2px solid white;
+    padding-bottom: .2em;
+    text-decoration: none;
+    text-transform: lowercase;
+    color: black;
+    display: inline-block;
+    margin-bottom: 8px; }
+  .organisation-wrapper:hover h3 {
+    border-bottom: 2px solid black; }
 
 .organisation-banner {
   max-width: 100%;
