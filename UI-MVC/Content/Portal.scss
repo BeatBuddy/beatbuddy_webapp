@@ -5,6 +5,11 @@
     width: 100%;
 }
 
+h1
+{
+    margin-bottom: 0.5em;
+}
+
 h3
 {
     margin: 0;
@@ -26,7 +31,7 @@ h3
 
     .banner-content
     {
-        padding: 5.2% 5em 3em 5em;
+        padding: 10% 5em 1em 5em;
         margin: 0 auto;
         max-width: 1500px;
         margin: 0 auto;
@@ -43,9 +48,29 @@ h3
         }
     }
 }
+
 .organisation-wrapper
 {
-   padding: 0;
+    text-decoration: none;
+    color: black;
+    margin-bottom: 1em;
+
+    h3 
+    {
+        transition: border .2s;
+        -webkit-transition: border .2s;
+        border-bottom: 2px solid white;
+        padding-bottom: .2em;
+        text-decoration: none;
+        text-transform: lowercase;
+        color: black;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+
+    &:hover h3 {
+        border-bottom: 2px solid black;
+    }
 }
 
 .organisation-banner
