@@ -170,6 +170,59 @@ header {
     }
 }
 
+#playlistbanner {
+    width: 100%;
+    min-height: 250px;
+    z-index: 0;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1em;
+    height: 250px;
+    background-image: url('/Content/img/playlistheader.jpg'); 
+    background-repeat: no-repeat; 
+    background-size: cover;
+
+    .content {
+        padding: 5.2% $sidemargin 3em $sidemargin;
+        margin: 0 auto;
+        max-width: $maxpagewidth;
+        color: white;
+
+        h1 {
+            font-weight: 100;
+            color: white;
+            font-size: 4.3em;
+            margin-bottom: 0;
+            text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1em;
+            font-weight: 200;
+            font-size: 2em;
+            text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+            }
+        
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            padding: 4% $sidemargin-mobile 3em $sidemargin-mobile;
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+        }
+    }
+
+    @media screen and (max-width: $mobile-breakpoint) {
+        min-height: 270px;
+    }
+}
+
 .intro-item {
     i {
         display: inline-block;
@@ -467,7 +520,7 @@ header {
     width: 0.1%;
     height: 100%;
     background-color: black;
-    border: solid 1px;
+    border: 0.2px solid;
 }
     
 .form-label {
@@ -494,7 +547,8 @@ header {
 }
 
 .borderround:hover {
-    border-color: #0000FF;
+    border-color: black;
+    cursor: pointer;
 }
 
 .custom-validation {
@@ -607,3 +661,29 @@ footer {
 .hidden {
     display: none;
 }
+#footerSlideContainer {
+	position: fixed;
+	bottom:0;
+	width: 100%;
+    min-width: 100%;
+    left:0;
+    right:0;
+    background: black;
+    
+   
+}
+
+#footerSlideContent {
+	width: 70%;
+	height: 20px;
+	margin: auto;
+    margin-top: 0.2em;
+    vertical-align: middle;
+	color: white;
+	
+	border: none;
+	
+}
+
+
+

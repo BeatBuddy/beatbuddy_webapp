@@ -9,29 +9,48 @@
 <div class="title" style="margin-bottom: 1em">
     <h1>Playlist</h1> @Html.DisplayFor(model => model.Name)
 </div>
+<div id="playlistbanner">
+    <div class="content">
+        <div>
+            @if (Model.ImageUrl != null)
+            {
+                <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px"/>
+            }
+            else
+            {
+                <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 170px; height: 170px"/>
+            }
 
-<div>
-    @if (Model.ImageUrl != null)
-    {
-        <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
-    }
-    else
-    {
-        <img class="borderround" src="~/Content/img/playlist.png" style="width: 170px; height: 170px" />
-    }
-
+        </div>
+        <h1>Create and share playlists</h1>
+        <h2>With your friends, family and the world.</h2>
+    </div>
 </div>
+
 
 
 <div id="playlist-view" style="margin-top: 1em">
     @Html.Partial("PlaylistTable", @Model)
+    
+    
+</div>
+<div id="nowPlayingRow" style="margin-top: 5em">
+    @if (Model.PlaylistTracks.Count != 0)
+    {
+        <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    else
+    {
+        <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+    <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
+        <i class="material-icons">playlist_add</i> add track
+    </a>
+
 </div>
 
-<a href="#addTrackModal" class="btn btn-right" style="margin-top: 1em;">
-    <i class="material-icons">playlist_add</i> add track
-</a>
-
-<div id="addTrackModal" class="modal" style="margin-top: -140px">
+<div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 70%">
         <a href="#close" id="close-modal" title="Close" class="close">X</a>
         <div class="modal-body" style="height: 100%; width: 100%">
@@ -42,25 +61,28 @@
     </div>
 </div>
 
+<div id="footerSlideContainer">
 
-
-<div id="nowPlayingRow" style="margin-top: 5em">
-@if (Model.PlaylistTracks.Count != 0)
-{
-    <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-    }
-    else
-    {
-        <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-    }
-    <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
-
-    <div class="title" style="margin-top: 0.5em">
-        <h1>Now Playing </h1> <span id="nowPlaying"></span>
-    </div>
-    <span id="time"></span>
-    <div id="myProgress" class="progress">
-        <div id="myBar" class="bar"></div>
+    <div id="footerSlideContent" style="width: 80%">
+        <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter"><i id="footerIcon"class="material-icons">keyboard_arrow_up</i></div>
+        <table style="width: 100%; margin-top: -15px">
+            <tr>
+                <td style="width: 5%">
+                    <img src="~/Content/img/song-note.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em"/>
+                </td>
+                <td style="width: 95%">
+                    <div class="title" style="margin-top: 0.5em">
+                        <h1>Now Playing </h1> <span id="nowPlaying"></span>
+                    </div>
+                    <span id="time"></span>
+                    <div id="myProgress" class="progress" style="margin-top: 0.2em">
+                        <div id="myBar" class="bar"></div>
+                    </div>    
+                </td>
+            </tr>
+            
+        </table>
+        
     </div>
 </div>
 <div id="player" style="display: none">
@@ -68,6 +90,42 @@
 
 @section Scripts{
     <script>
+        var footerOpen = false;
+        jQuery(function($) {
+            
+            $('#footertop').click(function () {
+                if(footerOpen === false) {
+                    openFooter();
+                } else {
+                    closeFooter();
+                }
+            });		
+        });
+        function clickFooter() {
+            if (footerOpen) {
+                closeFooter();
+            }
+            else {
+                closeFooter();
+            }
+        }
+        function openFooter() {
+            $('#footerSlideContent').animate({ height: '125px' });
+            $(this).css('backgroundPosition', 'bottom left');
+            footerOpen = true;
+            var footerIcon = document.getElementById("footerIcon");
+
+            footerIcon.innerHTML = 'keyboard_arrow_down';
+        }
+        function closeFooter() {
+            $('#footerSlideContent').animate({ height: '20px' });
+            $(this).css('backgroundPosition', 'top left');
+            footerOpen = false;
+            var footerIcon = document.getElementById("footerIcon");
+            footerIcon.innerHTML = 'keyboard_arrow_up';
+        }
+        		
+        
         var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
             '<img class="thumbnail" src="${CoverArtUrl}"/>' +
             '<span class="artist">${Artist}</span>' +
@@ -110,8 +168,8 @@
                     var playBtn = document.getElementById('playBtn');
                     playBtn.className = 'btn';
                 })
-                .fail(function() {
-                    alert('Failed!');
+                .fail(function(data) {
+                    alert('nothing');
                 });
         }
 
@@ -164,8 +222,8 @@
             if (firstPlay) {
                 var playButton = document.getElementById("playBtn");
                 playButton.addEventListener("click", getNextTrack);
-                
                 firstPlay = false;
+                
             }
             var nextButton = document.getElementById("nextBtn");
             nextButton.addEventListener("click", function() {
@@ -203,6 +261,7 @@
             }
             if (event.data == YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
+                
                 playButton.addEventListener("click", function() {
                     player.playVideo();
                 });
@@ -231,12 +290,21 @@
                     } else {
                         nextButton.className = 'btn';     
                     }
+                    openFooter();
                     moveTrackToHistory();
+                    $('#thumbnail').attr("src", data.thumbnail);
+                    notie.alert(1, 'succes', 1.5);
                 } 
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn disabled';
+                var icon = document.getElementById("icon");
+                icon.innerHTML = 'play_arrow';
                 document.getElementById("nowPlaying").innerHTML = '';
+                closeFooter();
+                playBtn.addEventListener("click", getNextTrack);
+                var time = document.getElementById("time");
+                time.innerHTML = '';
             });
         }
         

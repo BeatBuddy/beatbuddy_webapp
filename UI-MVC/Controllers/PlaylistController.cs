@@ -9,6 +9,7 @@ using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
+using System.Net;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -71,7 +72,8 @@ namespace BB.UI.Web.MVC.Controllers
                 track
             );
 
-            if(track == null) return new HttpStatusCodeResult(400);
+            if(track == null) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list"); 
+            
 
             return new HttpStatusCodeResult(200);
         }
@@ -95,7 +97,8 @@ namespace BB.UI.Web.MVC.Controllers
                     trackId = playlistTracks.First().Track.TrackSource.TrackId,
                     trackName = playlistTracks.First().Track.Title,
                     artist = playlistTracks.First().Track.Artist,
-                    nextTracks = playlistTracks.Count()
+                    nextTracks = playlistTracks.Count(),
+                    thumbnail = playlistTracks.First().Track.CoverArtUrl
                 }, JsonRequestBehavior.AllowGet);
             }
             return Json(null, JsonRequestBehavior.DenyGet);

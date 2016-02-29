@@ -79,11 +79,15 @@ namespace BB.DAL.EFPlaylist
 
         public Track CreateTrack(long playlistId, Track track)
         {
-            var playlist = context.Playlists.Find(playlistId);
+            var playlist = ReadPlaylist(playlistId);
             if (playlist == null) return null;
 
             var playlistTrack = new PlaylistTrack {Track = track};
             if(playlist.PlaylistTracks == null) playlist.PlaylistTracks = new Collection<PlaylistTrack>();
+            else
+            {
+                if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
+            }
             playlist.PlaylistTracks.Add(playlistTrack);
 
             context.SaveChanges();

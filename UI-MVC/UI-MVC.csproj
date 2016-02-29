@@ -268,7 +268,10 @@
     <Content Include="Content\img\matthias.jpg" />
     <Content Include="Content\img\party-dj.png" />
     <Content Include="Content\img\playlist.png" />
+    <Content Include="Content\img\playlistavatar.png" />
+    <Content Include="Content\img\playlistheader.jpg" />
     <Content Include="Content\img\round_shape_loader.gif" />
+    <Content Include="Content\img\song-note.png" />
     <Content Include="Content\LoggedIn.css">
       <DependentUpon>LoggedIn.scss</DependentUpon>
     </Content>
@@ -276,6 +279,7 @@
       <DependentUpon>LoggedIn.css</DependentUpon>
     </Content>
     <Content Include="Content\modal.css" />
+    <Content Include="Content\playlistheader.jpg" />
     <Content Include="Content\Site.css">
       <DependentUpon>Site.scss</DependentUpon>
     </Content>
@@ -305,6 +309,7 @@
     <Content Include="Scripts\materialize.js" />
     <Content Include="Scripts\materialize.min.js" />
     <Content Include="Scripts\modal.js" />
+    <Content Include="Scripts\notie.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
