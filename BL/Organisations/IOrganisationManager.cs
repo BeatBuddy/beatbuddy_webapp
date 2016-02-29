@@ -7,7 +7,7 @@ namespace BB.BL
     public interface IOrganisationManager
     {
         //Organisation
-        Organisation CreateOrganisation(string name, string bannerUrl, string imageUrl ,string colorScheme, User organisator);
+        Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator);
         Organisation UpdateOrganisation(Organisation organisation);
         IEnumerable<Organisation> ReadOrganisations();
         IEnumerable<Organisation> ReadOrganisations(long userId);
