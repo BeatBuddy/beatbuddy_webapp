@@ -49,9 +49,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         }
 
         // POST: api/organisations
-        //TODO refactor
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [Route("organisations")]
         public IHttpActionResult Post([FromUri] string name, [FromUri] string description, [FromUri] string color, FormDataCollection formData)
         {
@@ -89,6 +88,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             var user = userManager.ReadUser(email);
             if (user == null) return InternalServerError();
+
+            if (organisationManager.ReadOrganisation(name) == null) { return Content(HttpStatusCode.InternalServerError,"Organisation name already exists"); }
 
             Organisation organisation = organisationManager.CreateOrganisation(name, imagePath, color, user);
 

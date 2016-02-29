@@ -13,6 +13,7 @@ namespace BB.BL
         User ReadUser(string email);
         User ReadUser(string lastname, string firstname);
         User ReadOrganiserFromOrganisation(Organisation organisation);
+        IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation);
         IEnumerable<User> ReadUsers();
         void DeleteUser(long userId);
 

@@ -214,6 +214,28 @@ header {
         display: inline-block;
         vertical-align: middle; } }
 
+.co-organiser {
+  display: inline-block;
+  text-align: center;
+  margin: .5em; }
+  .co-organiser img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-bottom: .5em; }
+    @media screen and (max-width: 600px) {
+      .co-organiser img {
+        max-width: 10px;
+        max-height: 10px;
+        margin-right: .5em; } }
+  @media screen and (max-width: 600px) {
+    .co-organiser {
+      display: block;
+      text-align: left; }
+      .co-organiser img {
+        display: inline-block;
+        vertical-align: middle; } }
+
 .body-content {
   padding: 1em 5em;
   max-width: 1500px;
@@ -469,6 +491,9 @@ header {
 
 .btn-right {
   float: right; }
+
+.btn-left {
+  float: left; }
 
 .btn-login {
   width: 270px;
