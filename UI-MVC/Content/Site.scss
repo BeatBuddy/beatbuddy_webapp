@@ -222,6 +222,28 @@ header {
     }
 }
 
+.co-organiser {
+    display: inline-block;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 300;
+    margin: .5em;
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-width: 100px;
+        max-height: 100px;
+        margin-bottom: .5em;
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            max-width: 64px;
+            max-height: 64px;
+            margin-right: .5em;
+    }
+}
+
 .body-content {
     padding: 1em $sidemargin;
     max-width: $maxpagewidth;
@@ -565,6 +587,10 @@ header {
 
 .btn-right {
     float: right;
+}
+
+.btn-left {
+    float: left;
 }
 
 .btn-login {

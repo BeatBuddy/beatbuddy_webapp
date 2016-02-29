@@ -1,54 +1,51 @@
 ﻿@using BB.BL.Domain.Playlists
 @using BB.UI.Web.MVC.Models
+@using BB.BL.Domain.Users
+@using BB.BL.Domain.Organisations
 @model OrganisationViewWithPlaylist
 
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
 }
 
 
-    
+    <div class="title" style="background-color: black; width: 100%;">
+        @if (Model.BannerUrl != null)
+        {
+            <img src="~/Content/img/Organisations/@Model.BannerUrl" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
+        }
+        else
+        {
+            <img src="~/Content/img/playlist.png" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
+        }
 
-    <div class="title">
-        <h1>Organisation</h1> 
     </div>
 
-    <div>
-        <h4>@Model.Name</h4>
+    <div> 
+        <h1>@Model.Name</h1>
         <hr />
-        <dl class="dl-horizontal">
+        <p>Organiser: @Model.Organiser.FirstName @Model.Organiser.LastName</p>
+        <p>Co-organisers: </p>
+        <div class="row more-margin-bottom">
+            @foreach (User user in Model.CoOrganiser)
+            {
+                <div class="co-organiser">
+                    <img class="round" src="~/Content/img/Users/@user.ImageUrl" title="@user.FirstName @user.LastName" />
+                </div>
+            }
 
-            <dt>
-                @Html.DisplayNameFor(model => model.BannerUrl)
-            </dt>
+        </div>    
 
-            <dd>
-                @Html.DisplayFor(model => model.BannerUrl)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ImageUrl)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.ColorScheme)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ColorScheme)
-            </dd>
-
-        </dl>
     </div>
-    @if (User.Identity.Name.Equals(ViewBag.emailOrganiser))
+    @if (User.Identity.Name.Equals(Model.Organiser.Email))
     {
         <div>
-            <button id="AddOrganiser" onclick="AddOrganisor()">Add a co-organiser</button>
+            <a href='javascript:AddOrganiser()' class="btn btn-left" style="margin-top: 1em;">
+                <i class="material-icons">playlist_add</i> Add co-organiser
+            </a>
+            <!--<button id="AddOrganiser" onclick="AddOrganisor()">Add a co-organiser</button>-->
             <input type="text" id="email"/>
         </div>
     }
@@ -72,7 +69,7 @@
                     
                 </td>
                 <td>
-                    <img class="playlistart" src="@playlist.ImageUrl" alt="playlist art" />
+                    <img class="playlistart" src="~/Content/img/Playlists/@Model.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
                 </td>
                 <td class="tracktitle">
                     @playlist.Name
@@ -104,8 +101,36 @@
         }
     </table>
 </div>
+@if (Model.Organiser.Email.Equals(User.Identity.Name))
+{
+    <div>
+        <a href='javascript:AddPlaylist()' class="btn btn-right" style="margin-top: 1em;">
+            <i class="material-icons">playlist_add</i> add playlist
+        </a>
+    </div>
+}
+else
+{
+    foreach (User user in Model.CoOrganiser)
+    {
+        if (user.Email.Equals(User.Identity.Name))
+        {
+            <div>
+                <a href='javascript:AddPlaylist()' class="btn btn-right" style="margin-top: 1em;">
+                    <i class="material-icons">playlist_add</i> add playlist
+                </a>
+            </div>
+            
+        }
+    }
+}
 
     @section scripts{
+        <script>
+            function AddPlaylist(){
+                window.location.href = '@Url.Action("Create", "Playlist")';
+            }
+        </script>
         <script>
             function AddOrganisor() {
 

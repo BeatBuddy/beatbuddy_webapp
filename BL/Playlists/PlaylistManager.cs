@@ -27,7 +27,7 @@ namespace BB.BL
             return repo.CreateComment(comment);
         }
 
-        public Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy)
+        public Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy)
         {
             var playlist = new Playlist
             {
@@ -37,7 +37,6 @@ namespace BB.BL
                 MaximumVotesPerUser = maxVotesPerUser,
                 Active = active,
                 ImageUrl = imageUrl,
-                PlaylistMasterId = playlistMaster?.Id,
                 CreatedById = createdBy.Id,
                 ChatComments = new List<Comment>(),
                 Comments = new List<Comment>(),
@@ -46,7 +45,7 @@ namespace BB.BL
             return repo.CreatePlaylist(playlist);
         }
 
-        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy, Organisation organisation)
+        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy, Organisation organisation)
         {
             Playlist playlist = new Playlist()
             {
@@ -56,7 +55,6 @@ namespace BB.BL
                 MaximumVotesPerUser = maxVotesPerUser,
                 Active = active,
                 ImageUrl = imageUrl,
-                PlaylistMasterId = playlistMaster.Id,
                 CreatedById = createdBy.Id,
                 ChatComments = new List<Comment>(),
                 Comments = new List<Comment>(),
