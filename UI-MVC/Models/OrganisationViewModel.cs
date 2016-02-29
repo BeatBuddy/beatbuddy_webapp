@@ -42,5 +42,7 @@ namespace BB.UI.Web.MVC.Models
         [Required, DisplayName("Accent color: ")]
         public string ColorScheme { get; set; }
         public IEnumerable<Playlist> Playlists { get; set; }
+        public User Organiser { get; set; }
+        public IEnumerable<User> CoOrganiser { get; set; }
     }
 }

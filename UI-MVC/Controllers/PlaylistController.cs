@@ -158,7 +158,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult Create()
         {
             var user = userManager.ReadUser(User.Identity.Name);
-            ViewBag.UserOrganisations = userManager.ReadOrganisationsForUser(user.Id);
+            ViewBag.UserOrganisations = organisationManager.ReadOrganisations(user.Id);
             return View();
         }
 
@@ -178,12 +178,6 @@ namespace BB.UI.Web.MVC.Controllers
                 try
                 {
                     org = organisationManager.ReadOrganisation(viewModel.OrganisationId);
-                    var userRoles = userManager.ReadOrganisationsForUser(user.Id);
-                    if (userRoles.All(userRole => org.Id != userRole.Organisation.Id))
-                    {
-                        ModelState.AddModelError("OrganisationFault", "The user does not belong the the organisation");
-                        return View("Create");
-                    }
                 }
                 catch
                 {
@@ -201,11 +195,11 @@ namespace BB.UI.Web.MVC.Controllers
 
             if (org != null)
             {
-                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user, org);
+                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, org);
             }
             else
             {
-                playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user);
+                playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
             }
             
             
