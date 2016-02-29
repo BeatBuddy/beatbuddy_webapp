@@ -7,6 +7,7 @@ using System.Linq;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
+using BB.BL.Domain.Users;
 
 namespace BB.DAL.EFPlaylist
 {
@@ -175,6 +176,11 @@ namespace BB.DAL.EFPlaylist
         public List<Vote> ReadVotesForPlaylist(Playlist playlist)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Vote> ReadVotesUser(User user)
+        {
+            return ctx.Votes.Where(v => v.User == user);
         }
 
         public Comment UpdateComment(Comment comment)

@@ -82,10 +82,10 @@
                 @track.Track.Title
             </td>
             <td>
-                <i class="material-icons" id="click_thumb_down" onclick="changeVoteThumbDown(@track_vote, @track.Id)" style="color: black">thumb_down</i>
+                <i class="material-icons" id="click_thumb_down" click="changeVoteThumbDown(@track_vote, @track.Id)" style="color: black">thumb_down</i>
             </td>
             <td>
-                <i class="material-icons" id="click_thumb_up" onclick="" style="color: black">thumb_up</i>
+                <i class="material-icons" id="click_thumb_up" click="changeVoteThumbUp(@track_vote, @track.Id)" style="color: black">thumb_up</i>
             </td>
             <td>
                 3:30
@@ -195,7 +195,7 @@
                 url: '@Url.Action("AddVote")',
                 method: 'POST',
                 data: { vote: track_vote, id: id }
-            })
+            })}
        function changeVoteThumbDown(track_vote, id) {
             if(document.getElementById('click_thumb_down').style.color == "black" && document.getElementById('click_thumb_up').style.color=="black"){
                 document.getElementById('click_thumb_down').style.color= "Green";

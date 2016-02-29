@@ -50,6 +50,7 @@ namespace BB.BL
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         List<Vote> ReadVotesForPlaylist(Playlist playlist);
+        IEnumerable<Vote> ReadVotesForUser(User user);
         void DeleteVote(long voteId);
     }
 }

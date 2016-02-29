@@ -1,5 +1,6 @@
 ﻿using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
+using BB.BL.Domain.Users;
 using System.Collections.Generic;
 
 namespace BB.DAL.EFPlaylist
@@ -49,6 +50,7 @@ namespace BB.DAL.EFPlaylist
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         List<Vote> ReadVotesForPlaylist(Playlist playlist);
+        IEnumerable<Vote> ReadVotesUser(User user);
         void DeleteVote(long voteId);
     }
 }

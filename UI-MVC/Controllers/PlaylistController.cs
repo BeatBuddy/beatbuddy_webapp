@@ -114,6 +114,9 @@ namespace BB.UI.Web.MVC.Controllers
         // GET: Playlists
         public ActionResult Index()
         {
+            User user = userManager.ReadUser(User.Identity.Name);
+            var votesUser = playlistManager.ReadVotesForUser(user);
+            ViewBag.VotesUser = votesUser; 
             return View(playlistManager.ReadPlaylists());
         }
 
