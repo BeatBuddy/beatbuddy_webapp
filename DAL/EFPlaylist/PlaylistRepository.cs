@@ -181,7 +181,7 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Vote> ReadVotesUser(User user)
         {
-            return ctx.Votes.Where(v => v.User == user);
+            return context.Votes.Where(v => v.User == user);
         }
 
         public Comment UpdateComment(Comment comment)

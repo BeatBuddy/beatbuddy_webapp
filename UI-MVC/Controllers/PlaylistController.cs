@@ -5,6 +5,7 @@ using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Models;
 using BB.BL.Domain.Organisations;
+using BB.BL.Domain.Users;
 using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
@@ -46,9 +47,11 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult View(long id)
         {
+            User user = userManager.ReadUser(User.Identity.Name);
+            var votesUser = playlistManager.ReadVotesForUser(user);
+            ViewBag.VotesUser = votesUser;
             var playlist = playlistManager.ReadPlaylist(id);
             ViewBag.PlaylistId = id;
-
             return View(playlist);
         }
 
@@ -137,9 +140,6 @@ namespace BB.UI.Web.MVC.Controllers
         // GET: Playlists
         public ActionResult Index()
         {
-            User user = userManager.ReadUser(User.Identity.Name);
-            var votesUser = playlistManager.ReadVotesForUser(user);
-            ViewBag.VotesUser = votesUser; 
             return View(playlistManager.ReadPlaylists());
         }
 
