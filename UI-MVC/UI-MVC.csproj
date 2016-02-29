@@ -232,6 +232,7 @@
     <Compile Include="Controllers\Web API\UserController.cs" />
     <Compile Include="Controllers\Web API\OrganisationsController.cs" />
     <Compile Include="Controllers\Web API\SimpleAuthorizationServerProvider.cs" />
+    <Compile Include="Controllers\Web API\Utils\Base64Helper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -269,13 +270,13 @@
     <Content Include="Content\img\party-dj.png" />
     <Content Include="Content\img\playlist.png" />
     <Content Include="Content\img\round_shape_loader.gif" />
-    <Content Include="Content\LoggedIn.css">
-      <DependentUpon>LoggedIn.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\LoggedIn.min.css">
-      <DependentUpon>LoggedIn.css</DependentUpon>
-    </Content>
     <Content Include="Content\modal.css" />
+    <Content Include="Content\Portal.css">
+      <DependentUpon>Portal.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Portal.min.css">
+      <DependentUpon>Portal.css</DependentUpon>
+    </Content>
     <Content Include="Content\Site.css">
       <DependentUpon>Site.scss</DependentUpon>
     </Content>
@@ -292,7 +293,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <Content Include="Content\LoggedIn.scss" />
+    <Content Include="Content\Portal.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -348,7 +349,7 @@
     <Content Include="Views\Playlist\AddTrack.cshtml" />
     <Content Include="Views\Playlist\View.cshtml" />
     <Content Include="Views\Playlist\PlaylistTable.cshtml" />
-    <Content Include="Views\Home\LoggedIn.cshtml" />
+    <Content Include="Views\Home\Portal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />

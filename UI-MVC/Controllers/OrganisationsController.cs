@@ -49,7 +49,6 @@ namespace BB.UI.Web.MVC.Controllers
                     Name = organisation.Name,
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
-                    ImageUrl = organisation.ImageUrl
                 });
             }
             return View(organisationViewModels);
@@ -71,7 +70,7 @@ namespace BB.UI.Web.MVC.Controllers
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
                     Name = organisation.Name,
-                    ImageUrl = organisation.ImageUrl,
+
                     Playlists = organisation.Playlists,
                     Organiser = organiser,
                     CoOrganiser = coOrganisers
@@ -133,7 +132,7 @@ namespace BB.UI.Web.MVC.Controllers
                     avatarImage.SaveAs(avatarPath);
                     avatarPath = Path.GetFileName(avatarPath);
                 }
-                organisationManager.CreateOrganisation(organisation.Name, bannerPath, avatarPath, organisation.ColorScheme, user);
+                organisationManager.CreateOrganisation(organisation.Name, bannerPath, organisation.ColorScheme, user);
                 return RedirectToAction("Index");
             }
             catch

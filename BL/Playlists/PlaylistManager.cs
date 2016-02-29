@@ -199,6 +199,10 @@ namespace BB.BL
             return repo.ReadVotesForPlaylist(playlist);
         }
 
+        public IEnumerable<Vote> ReadVotesForUser(User user) {
+            return repo.ReadVotesUser(user);
+        }
+
         public Comment UpdateComment(Comment comment)
         {
             return repo.UpdateComment(comment);

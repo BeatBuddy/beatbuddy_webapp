@@ -1,0 +1,112 @@
+﻿@using System.Configuration
+@using BB.BL.Domain.Organisations
+@using BB.BL.Domain.Playlists
+@using BB.UI.Web.MVC.Controllers.Utils
+
+@{
+    ViewBag.Title = "Portal";
+}
+
+@section PortalPageStyle{
+    <link href="@Url.Content("~/Content/Portal.min.css")" rel="stylesheet" type="text/css" />
+}
+
+@section escape_padding {
+    <div class="loggedin-banner">
+        <div class="banner-content">
+            <h2>Welcome, @ViewBag.Name</h2>
+        </div>
+    </div>
+}
+
+<section>
+    <div class="title">
+        <h1>My Organisations</h1>
+        @ViewBag.MyOrganisations.Count
+    </div>
+    <div class="container row">
+        @foreach (Organisation organisation in ViewBag.MyOrganisations)
+        {
+            <a href="@Url.Action("Details", "Organisations", new { id = organisation.Id })">
+            <div class="col-md-4 col-xs-12 organisation-wrapper">
+                @{
+                    var organisationSource = "https://unsplash.com/photos/P8kVtyU32I0/download";
+                    if (organisation.BannerUrl != null)
+                    {
+                        organisationSource = FileHelper.GetImagePath("OrganisationsImgPath", organisation.BannerUrl);
+                    }
+                }
+
+                <div style="background-image: url(@organisationSource)" class="organisation-banner">&nbsp;</div>
+
+                <h3>@organisation.Name</h3>
+
+                <div>@organisation.Playlists.Count playlists</div>
+            </div>
+            </a>
+         }
+    </div>
+    <div class="clearfix">&nbsp;</div>
+</section>
+
+<section>
+    <div class="title">
+        <h1>My playlists</h1>
+        @ViewBag.MyPlaylists.Count
+    </div>
+
+    <div class="container row">
+        @foreach (Playlist playlist in ViewBag.MyPlaylists)
+        {
+            <a href="@Url.Action("View", "Playlist", new { id = playlist.Id })">
+                <div class="col-md-4 col-xs-12 organisation-wrapper">
+                    @{
+                        var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                        if (playlist.ImageUrl != null)
+                        {
+                            playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
+                        }
+                    }
+                    <img src="@playlistSource" alt="playlist image" class="playlist-image" />
+
+                    <h3>@playlist.Name</h3>
+
+                    <div>@playlist.PlaylistTracks.Count tracks</div>
+                    <div class="clear-playlist">&nbsp;</div>
+                </div>
+            </a>
+         }
+    </div>
+    <div class="clearfix">&nbsp;</div>
+</section>
+
+<section>
+    <div class="title">
+        <h1>Playlists</h1>
+        you might like
+    </div>
+
+    <div class="container row">
+        @foreach (Playlist playlist in ViewBag.RecommendedPlaylists)
+        {
+            <a href="@Url.Action("View", "Playlist", new { id = playlist.Id })">
+                <div class="col-md-4 col-xs-12 organisation-wrapper">
+                    @{
+                        var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                        if (playlist.ImageUrl != null)
+                        {
+                            playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
+                        }
+                    }
+                    <img src="@playlistSource" alt="playlist image" class="playlist-image" />
+
+                    <h3>@playlist.Name</h3>
+
+                    <div>@playlist.PlaylistTracks.Count tracks</div>
+                    <div class="clear-playlist">&nbsp;</div>
+                </div>
+            </a>
+        }
+    </div>
+    <div class="clearfix">&nbsp;</div>
+</section>

@@ -18,7 +18,7 @@ using BB.UI.Web.MVC.Controllers.Utils;
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
     [Authorize]
-    [RoutePrefix("api/Playlist")]
+    [RoutePrefix("api/playlist")]
     public class PlaylistController : ApiController
     {
         private readonly IPlaylistManager playlistManager;

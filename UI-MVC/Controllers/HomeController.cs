@@ -30,7 +30,7 @@ namespace BB.UI.Web.MVC.Controllers
             return View();
         }
 
-        public ActionResult LoggedIn()
+        public ActionResult Portal()
         {
             var user = userManager.ReadUser(HttpContext.User.Identity.Name);
             if (user == null) return RedirectToAction("Index", "Home");

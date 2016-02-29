@@ -7,14 +7,14 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     @Styles.Render("~/Content/css")
-    @if (IsSectionDefined("LoggedInPageStyle"))
+    @if (IsSectionDefined("PortalPageStyle"))
     {
-        @RenderSection("LoggedInPageStyle", required: false)
+        @RenderSection("PortalPageStyle", required: false)
     }
 </head>
 <body>
     <header>
-        <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a>
+        <a href="@(Request.IsAuthenticated ? Url.Action("Portal", "Home") : Url.Action("Index", "Home"))"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a>
         <ul class="nav">
             <li>@Html.Partial("_LoginPartial")</li>
         </ul>

@@ -36,13 +36,12 @@ namespace BB.BL
             return organisationsRepository.CreateDashboardBlock(block);
         }
 
-        public Organisation CreateOrganisation(string name, string bannerUrl,string imageUrl ,string colorScheme, User organisator)
+        public Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator)
         {
             Organisation organisation = new Organisation
             {
                 Name = name,
                 BannerUrl = bannerUrl,
-                ImageUrl = imageUrl,
                 ColorScheme = colorScheme,
                 DashboardBlocks = new List<DashboardBlock>(),
                 Playlists = new List<Playlist>(),
