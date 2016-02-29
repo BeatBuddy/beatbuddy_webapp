@@ -225,25 +225,30 @@ header {
 .co-organiser {
     display: inline-block;
     text-align: center;
-    font-size: 1.2em;
-    font-weight: 300;
     margin: .5em;
 
-    img {
+   img {
         display: block;
-        width: 100%;
-        height: auto;
-        max-width: 100px;
-        max-height: 100px;
+        width: 50px;
+        height: 50px;
         margin-bottom: .5em;
 
         @media screen and (max-width: $mobile-breakpoint) {
-            max-width: 64px;
-            max-height: 64px;
+            max-width: 10px;
+            max-height: 10px;
             margin-right: .5em;
     }
 }
+        @media screen and (max-width: $mobile-breakpoint) {
+        display: block;
+        text-align: left;
 
+        img{
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+}
 .body-content {
     padding: 1em $sidemargin;
     max-width: $maxpagewidth;
@@ -508,6 +513,7 @@ header {
 .round {
     border-radius: 50%;
 }
+
 
 .borderround {
     border-radius: 50%;

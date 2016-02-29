@@ -31,22 +31,31 @@
         <div class="row more-margin-bottom">
             @foreach (User user in Model.CoOrganiser)
             {
-                <div class="co-organiser">
-                    <img class="round" src="~/Content/img/Users/@user.ImageUrl" title="@user.FirstName @user.LastName" />
+                <div class="co-organiser" style="float:left;">
+                    @if (user.ImageUrl != null)
+                    {
+                        <img class="round" src="~/Content/img/Users/@user.ImageUrl" title="@user.FirstName @user.LastName"  />
+                    }
+                    else
+                    {
+                        <img class="round" src="~/Content/img/avatar.png" title="@user.FirstName @user.LastName"  />
+                    }
+
                 </div>
             }
-
-        </div>    
+            </div>
+           
 
     </div>
     @if (User.Identity.Name.Equals(Model.Organiser.Email))
     {
         <div>
-            <a href='javascript:AddOrganiser()' class="btn btn-left" style="margin-top: 1em;">
-                <i class="material-icons">playlist_add</i> Add co-organiser
-            </a>
-            <!--<button id="AddOrganiser" onclick="AddOrganisor()">Add a co-organiser</button>-->
-            <input type="text" id="email"/>
+            <p>
+                <a href='javascript:AddOrganiser()' class="btn" style="margin-top: 1em;">
+                    <i class="material-icons">playlist_add</i> Add co-organiser
+                </a>
+                <input class="custom-input-playlists" type="text" id="email" style="top: .25em" />
+            </p>
         </div>
     }
 <div class="title">
@@ -69,7 +78,15 @@
                     
                 </td>
                 <td>
-                    <img class="playlistart" src="~/Content/img/Playlists/@Model.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
+                    @if (Model.ImageUrl != null)
+                    {
+                        <img class="playlistart" src="~/Content/img/Playlists/@Model.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
+                    }
+                    else
+                    {
+                        <img class="playlistart" src="~/Content/img/party-dj.png" alt="playlist art" style="width: 50px; height: 50px;" />
+                    }
+
                 </td>
                 <td class="tracktitle">
                     @playlist.Name
@@ -132,7 +149,7 @@ else
             }
         </script>
         <script>
-            function AddOrganisor() {
+            function AddOrganiser() {
 
                 var email = document.getElementById("email").value;
 
