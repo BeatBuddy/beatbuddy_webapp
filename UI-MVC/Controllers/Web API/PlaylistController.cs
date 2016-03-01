@@ -129,5 +129,27 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             return Request.CreateResponse(HttpStatusCode.OK, track);
         }
+
+        [HttpGet]
+        [Route("recommendations")]
+        [ResponseType(typeof (IEnumerable<Track>))]
+        public HttpResponseMessage GetRecommendations(int count)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, playlistManager.ReadPlaylists()
+                .Reverse()
+                .Take(3)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Key,
+                    p.MaximumVotesPerUser,
+                    p.Active,
+                    p.ImageUrl,
+                    p.PlaylistMasterId,
+                    p.CreatedById,
+                    p.Description
+                }));
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace BB.DAL.EFPlaylist
         Playlist ReadPlaylist(string name);
         IEnumerable<Playlist> ReadPlaylists();
         IEnumerable<Playlist> ReadPlaylists(Organisation organisation);
+        IEnumerable<Playlist> ReadPlaylists(long userId);
         void DeletePlaylist(long playlistId);
 
         //PlaylistTracks

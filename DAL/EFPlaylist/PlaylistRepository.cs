@@ -66,6 +66,11 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Playlist> ReadPlaylists(long userId)
+        {
+            return context.Playlists.Where(p => p.CreatedById == userId);
+        }
+
         public void DeletePlaylist(long playlistId)
         {
             throw new NotImplementedException();

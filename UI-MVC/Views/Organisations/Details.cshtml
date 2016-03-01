@@ -19,7 +19,6 @@
         {
             <img src="~/Content/img/playlist.png" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
         }
-
     </div>
 
     <div> 
@@ -58,65 +57,65 @@
         </div>
     }
 <div class="title">
-    <h1>Playlists</h1>
-    <table id="playlists">
-        <tr>
-            <th></th>
-            <th></th>
-            <th>Name playlist</th>
-            <th>Active</th>
-            <th></th>
-            <th>Description</th>
-            <th>tracks</th>
-            <th></th>
-        </tr>
-        @foreach (Playlist playlist in Model.Playlists)
-        {
-            <tr class="track">
-                <td>
-                    
-                </td>
-                <td>
-                    @if (Model.ImageUrl != null)
-                    {
-                        <img class="playlistart" src="~/Content/img/Playlists/@Model.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
-                    }
-                    else
-                    {
-                        <img class="playlistart" src="~/Content/img/party-dj.png" alt="playlist art" style="width: 50px; height: 50px;" />
-                    }
-
-                </td>
-                <td class="tracktitle">
-                    @playlist.Name
-                </td>
-                <td>
-                    @if (playlist.Active == true)
-                    {
-                        <p>Yes</p>
-                    }
-                    else
-                    {
-                        <p>No</p>
-                    }
-                </td>
-                <td>
-                    
-                </td>
-                <td class="artist">
-                    @playlist.Description
-                </td>
-                <td>
-                    @playlist.PlaylistTracks.Count()
-                </td>
-                <td>
-                    @Html.ActionLink("View Playlist", "View", "Playlist", new { id = playlist.Id},null)
-                </td>
-                
-            </tr>
-        }
-    </table>
+    <h1>Playlists</h1> in organisation
 </div>
+
+<table id="playlists">
+    <tr>
+        <th></th>
+        <th></th>
+        <th>Name playlist</th>
+        <th>Active</th>
+        <th></th>
+        <th>Description</th>
+        <th>tracks</th>
+        <th></th>
+    </tr>
+    @foreach (Playlist playlist in Model.Playlists)
+    {
+        <tr class="track">
+            <td></td>
+            <td>
+                @if (Model.ImageUrl != null)
+                {
+                    <img class="playlistart" src="~/Content/img/Playlists/@Model.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
+                }
+                else
+                {
+                    <img class="playlistart" src="~/Content/img/party-dj.png" alt="playlist art" style="width: 50px; height: 50px;" />
+                }
+
+            </td>
+            <td class="tracktitle">
+                @playlist.Name
+            </td>
+            <td>
+                @if (playlist.Active == true)
+                {
+                    <p>Yes</p>
+                }
+                else
+                {
+                    <p>No</p>
+                }
+            </td>
+            <td></td>
+            <td class="artist">
+                @playlist.Description
+            </td>
+            <td>
+                @playlist.PlaylistTracks.Count()
+            </td>
+            <td>
+                @Html.ActionLink("View Playlist", "View", "Playlist", new { id = playlist.Id }, null)
+            </td>
+
+        </tr>
+    }
+</table>
+
+
+
 @if (Model.Organiser.Email.Equals(User.Identity.Name))
 {
     <div>

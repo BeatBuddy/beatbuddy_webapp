@@ -1,7 +1,6 @@
 ﻿@using BB.BL.Domain.Organisations
 @using BB.BL.Domain.Playlists
 @using BB.UI.Web.MVC.Controllers.Utils
-
 @{
     ViewBag.Title = "Portal";
 }
@@ -39,11 +38,14 @@
                 <div style="background-image: url(@organisationSource)" class="organisation-banner">&nbsp;</div>
 
                 <h3>@organisation.Name</h3>
-
                 <div>@organisation.Playlists.Count playlists</div>
             </div>
             </a>
          }
+        @if (ViewBag.MyOrganisations.Count == 0)
+        {
+            <p style="padding-left: 15px">You are not a member of any organisation... <a href="@Url.Action("Create", "Organisations")">Create one</a>!</p>
+        }
     </div>
     <div class="clearfix">&nbsp;</div>
 </section>
@@ -75,6 +77,10 @@
                 </div>
             </a>
          }
+        @if (ViewBag.MyPlaylists.Count == 0)
+        {
+            <p style="padding-left: 15px">You do not have any playlists yet... <a href="@Url.Action("Create", "Playlist")">Create one</a>!</p>
+        }
     </div>
     <div class="clearfix">&nbsp;</div>
 </section>

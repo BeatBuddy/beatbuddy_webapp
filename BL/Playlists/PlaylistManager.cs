@@ -99,6 +99,11 @@ namespace BB.BL
             repo.DeleteComment(commentId);
         }
 
+        public IEnumerable<Playlist> ReadPlaylists(long userId)
+        {
+            return repo.ReadPlaylists(userId);
+        }
+
         public void DeletePlaylist(long playlistId)
         {
             repo.DeletePlaylist(playlistId);
