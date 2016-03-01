@@ -3,16 +3,22 @@
     ViewBag.Title = "Register";
 }
 
-<div class="title">
-    <h1>Register</h1>
-    as a new user.
-</div>
+@section escape_padding {
+    <div id="playlistbanner" style="background-image: url('/Content/img/registerbanner.jpg');">
+        <div class="content">
+            <h1>Your musical friendship starts here.</h1>
+            <h2>Register here, yes it's all free.</h2>
+            
+        </div>
+        
+    </div>
+}
+
 
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new {role = "form", enctype= "multipart/form-data"  }))
 {
     @Html.AntiForgeryToken()
-    
-    <hr />
+
     //@Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="col-md-7" id="custom-inputform-registration">
         <div class="col-md-10 container-form">

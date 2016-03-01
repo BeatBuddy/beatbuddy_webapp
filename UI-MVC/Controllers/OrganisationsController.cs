@@ -60,16 +60,21 @@ namespace BB.UI.Web.MVC.Controllers
             Organisation organisation = organisationManager.ReadOrganisation(id);
             if (organisation != null)
             {
+
+                User organiser = userManager.ReadOrganiserFromOrganisation(organisation);
+                IEnumerable<User> coOrganisers = userManager.ReadCoOrganiserFromOrganisation(organisation);
+                
                 OrganisationViewWithPlaylist organisationView = new OrganisationViewWithPlaylist()
                 {
                     Id = id,
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
                     Name = organisation.Name,
-                    Playlists = organisation.Playlists
+
+                    Playlists = organisation.Playlists,
+                    Organiser = organiser,
+                    CoOrganiser = coOrganisers
                 };
-                User user = userManager.ReadOrganiserFromOrganisation(organisation);
-                ViewBag.emailOrganiser = user.Email;
                 return View("Details", organisationView);
 
             }else
@@ -87,14 +92,7 @@ namespace BB.UI.Web.MVC.Controllers
             }
 
             userManager.CreateUserRole(user.Id, organisation, Role.Co_Organiser);
-            Organisation org = organisationManager.ReadOrganisation(organisation);
-            OrganisationViewModel model = new OrganisationViewModel()
-            {
-                Id = org.Id,
-                BannerUrl = org.BannerUrl,
-                ColorScheme = org.ColorScheme,
-                Name = org.Name
-            };
+            
         }
         // GET: Organisations/Create
         public ActionResult Create()

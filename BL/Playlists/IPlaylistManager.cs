@@ -15,8 +15,8 @@ namespace BB.BL
         void DeleteComment(long commentId);
         
         //Playlists
-        Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User createdBy, Organisation organisation);
-        Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User playlistMaster, User CreatedBy);
+        Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy, Organisation organisation);
+        Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User CreatedBy);
         Playlist UpdatePlaylist(Playlist playlist);
         Playlist ReadPlaylist(long playlistId);
         Playlist ReadPlaylist(string name);
@@ -30,6 +30,7 @@ namespace BB.BL
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
+        bool MarkTrackAsPlayed(long playlistTrackId);
 
         //Track
         Track AddTrackToPlaylist(long playlistId, Track track);
@@ -46,7 +47,7 @@ namespace BB.BL
         void DeleteTrackSource(long trackSourceId);
 
         //Vote
-        Vote CreateVote(int score, User user);
+        Vote CreateVote(int score, long id, long trackId);
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);

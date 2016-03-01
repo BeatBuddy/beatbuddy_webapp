@@ -10,6 +10,7 @@ using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
+using System.Net;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -56,14 +57,15 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var playlist = playlistManager.ReadPlaylist(id);
             ViewBag.PlaylistId = id;
+            playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
             return View(playlist);
         }
 
         [HttpPost]
         public ActionResult AddVote(int vote, long id)
         {
-            Vote v = new Vote();
-            v.Score = vote;
+            var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
+            playlistManager.CreateVote(vote, user.Id, id);
             return new HttpStatusCodeResult(200);
         }
 
@@ -86,7 +88,8 @@ namespace BB.UI.Web.MVC.Controllers
                 track
             );
 
-            if(track == null) return new HttpStatusCodeResult(400);
+            if(track == null) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list"); 
+
 
             return new HttpStatusCodeResult(200);
         }
@@ -103,41 +106,44 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult GetNextTrack(long id)
         {
             var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
-            if (playlistTracks.Count != 0)
-            {
+
+            if (playlistTracks.All(t => t.PlayedAt != null)) return Json(null, JsonRequestBehavior.DenyGet);
+
+            var track = playlistTracks.First(t => t.PlayedAt == null);
+
                 return Json(new
                 {
-                    trackId = playlistTracks.First().Track.TrackSource.TrackId,
-                    trackName = playlistTracks.First().Track.Title,
-                    artist = playlistTracks.First().Track.Artist,
-                    nextTracks = playlistTracks.Count()
+                trackId = track.Track.TrackSource.TrackId,
+                trackName = track.Track.Title,
+                artist = track.Track.Artist,
+                nextTracks = playlistTracks.Count(),
+                thumbnail = track.Track.CoverArtUrl
                 }, JsonRequestBehavior.AllowGet);
+
             }
-            return Json(null, JsonRequestBehavior.DenyGet);
-        }
 
         public ActionResult GetPlaylist(long id)
         {
-            return PartialView("PlaylistTable",playlistManager.ReadPlaylist(id));
+            return PartialView("PlaylistTable", playlistManager.ReadPlaylist(id));
         
         }
-
-
 
         [HttpPost]
         public ActionResult MoveTrackToHistory(long id)
         {
             var tracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
-            if (tracks.Count != 0)
-            {
-                playlistManager.DeletePlaylistTrack(playlistManager.ReadPlaylist(id).PlaylistTracks.First().Id);
+            if (tracks.Count == 0) return new HttpStatusCodeResult(400);
+
+            playlistManager.MarkTrackAsPlayed(
+                playlistManager.ReadPlaylist(id).PlaylistTracks
+                .OrderByDescending(t => t.PlayedAt)
+                .First(t => t.PlayedAt == null).Id);
+
                 return new HttpStatusCodeResult(200);
             }
-            else return new HttpStatusCodeResult(400);
-        }
         public ActionResult IsNameAvailable(string email)
         {
-            return Json(userManager.ReadUsers().All(org => org.Email!=email),
+            return Json(userManager.ReadUsers().All(org => org.Email != email),
                 JsonRequestBehavior.AllowGet);
         }
 
@@ -152,7 +158,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult Create()
         {
             var user = userManager.ReadUser(User.Identity.Name);
-            ViewBag.UserOrganisations = userManager.ReadOrganisationsForUser(user.Id);
+            ViewBag.UserOrganisations = organisationManager.ReadOrganisations(user.Id);
             return View();
         }
 
@@ -172,12 +178,6 @@ namespace BB.UI.Web.MVC.Controllers
                 try
                 {
                     org = organisationManager.ReadOrganisation(viewModel.OrganisationId);
-                    var userRoles = userManager.ReadOrganisationsForUser(user.Id);
-                    if (userRoles.All(userRole => org.Id != userRole.Organisation.Id))
-                    {
-                        ModelState.AddModelError("OrganisationFault", "The user does not belong the the organisation");
-                        return View("Create");
-                    }
                 }
                 catch
                 {
@@ -195,11 +195,11 @@ namespace BB.UI.Web.MVC.Controllers
 
             if (org != null)
             {
-                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user, org);
+                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, org);
             }
             else
             {
-                playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, null, user);
+                playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
             }
             
             
