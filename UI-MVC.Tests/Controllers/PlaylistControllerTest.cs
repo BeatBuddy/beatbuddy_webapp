@@ -72,24 +72,23 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsTrue(tracks.PlaylistTracks.Count > 0);
         }
 
-        //[TestMethod]
-        //public void TestMoveTrackToHistory()
-        //{
-        //    var addTrackResult = controller.MoveTrackToHistory(1) as HttpStatusCodeResult;
+        [TestMethod]
+        public void TestMoveTrackToHistory()
+        {
+            var addTrackResult = controller.MoveTrackToHistory(1) as HttpStatusCodeResult;
 
-        //    Assert.IsNotNull(addTrackResult);
-        //    Assert.AreEqual(200, addTrackResult.StatusCode);
+            Assert.IsNotNull(addTrackResult);
+            Assert.AreEqual(200, addTrackResult.StatusCode);
 
-        //    var playlistResult = controller.View(1) as ViewResult;
+            var playlistResult = controller.View(1) as ViewResult;
 
-        //    Assert.IsNotNull(playlistResult);
+            Assert.IsNotNull(playlistResult);
 
-        //    var playlist = playlistResult.Model as Playlist;
+            var playlist = playlistResult.Model as Playlist;
 
-        //    Assert.IsNotNull(playlist);
-        //    Assert.AreEqual(1, playlist.PlaylistTracks.Count);
-
-        //}
+            Assert.IsNotNull(playlist);
+            Assert.AreEqual(1, playlist.PlaylistTracks.Count); // after moving the one and only track to the history, the tracks in the playlist view should be empty
+        }
 
 
 

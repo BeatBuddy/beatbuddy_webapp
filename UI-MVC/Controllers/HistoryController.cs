@@ -7,7 +7,7 @@ namespace BB.UI.Web.MVC.Controllers
 {
     public class HistoryController : Controller
     {
-        IPlaylistManager playlistManager;
+        readonly IPlaylistManager playlistManager;
 
         public HistoryController(ContextEnum contextEnum)
         {
