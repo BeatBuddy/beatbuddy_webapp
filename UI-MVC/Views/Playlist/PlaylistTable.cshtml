@@ -17,7 +17,7 @@
         <th></th>
         <th></th>
         <th>Title</th>
-        <th></th>
+        <th colspan="2">Votes</th>
         <th>Duration</th>
         <th>Artist</th>
         <th>Album</th>
@@ -40,19 +40,19 @@
                 Vote vote = track.Votes.FirstOrDefault(v => v.User.Email == User.Identity.Name);
                 if(vote == null)
                 {
-                    <td><a onclick="addVote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a></td>
-                    <td><a onclick="addVote('@thumbDownId', '-1', '@track.Id')" style="cursor: pointer"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a></td>
+                    <td style="width:60px"><a onclick="addVote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a></td>
+                    <td style="width:60px"><a onclick="addVote('@thumbDownId', '-1', '@track.Id')" style="cursor: pointer"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a></td>
                 }
                 else
                 {
                     if (vote.Score == 1)
                     {
-                        <td class="material-icons">thumb_up</td>
-                        <td class="material-icons grey400">thumb_down</td>
+                        <td style="width:10px"><i class="material-icons">thumb_up</i></td>
+                        <td style="width:10px"><i class="material-icons grey400">thumb_down</i></td>
                     }
                     else {
-                        <td class="material-icons grey400">thumb_up</td>
-                        <td class="material-icons">thumb_down</td>
+                        <td style="width:10px"><i class="material-icons grey400">thumb_up</i></td>
+                        <td style="width:10px"><i class="material-icons">thumb_down</i></td>
                     }
                 }
             }
