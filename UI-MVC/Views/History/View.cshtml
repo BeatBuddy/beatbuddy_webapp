@@ -90,9 +90,8 @@
             nextButton.addEventListener("click", function() {
                 getNextTrack();
             });
-            
-
         }
+
         function updateTime() {
             var time = document.getElementById("time");
             var currentTime = secondsToTime(player.getCurrentTime());
@@ -102,6 +101,7 @@
             var bar = document.getElementById("myBar");
             bar.style.width = percentageTime + '%';
         }
+
         function secondsToTime(secs)
         {
             d = Number(secs);
@@ -110,6 +110,7 @@
             var s = Math.floor(d % 3600 % 60);
             return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
         }
+
         function onPlayerStateChange(event) {
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
@@ -140,7 +141,7 @@
         }
 
         function updatePlaylist() {
-            $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewContext.RouteData.Values["id"]});
+            $('#playlist-view').load('/api/Playlist/GetHistory/',{id: @ViewContext.RouteData.Values["id"]});
         }
 
     </script>
