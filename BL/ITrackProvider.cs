@@ -5,7 +5,7 @@ namespace BB.BL
 {
     public interface ITrackProvider
     {
-        List<Track> Search(string query);
+        List<Track> Search(string query, long maxResults = 5);
         Track LookupTrack(string TrackId);
     }
 }

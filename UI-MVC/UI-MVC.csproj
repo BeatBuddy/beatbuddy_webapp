@@ -287,6 +287,8 @@
     <Content Include="Content\Portal.css">
       <DependentUpon>Portal.scss</DependentUpon>
     </Content>
+    <Content Include="Content\img\song-note.png" />
+
     <Content Include="Content\Portal.min.css">
       <DependentUpon>Portal.css</DependentUpon>
     </Content>

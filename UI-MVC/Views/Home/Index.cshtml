@@ -7,8 +7,17 @@
         <div class="content">
             <h1>Create and share playlists</h1>
             <h2>With your friends, family and the world.</h2>
-            <a href="#" class="button">Explore</a>
-            <a href="@Url.Action("Register", "Account")" class="button">Join us</a>
+
+            @if (Request.IsAuthenticated)
+            {
+                <a href="@Url.Action("Portal", "Home")" class="button">My portal</a>
+                <a href="@Url.Action("Create", "Playlist")" class="button">Create a playlist</a>
+            }
+            else
+            {
+                <a href="#" id="explore" class="button">Explore</a>
+                <a href="@Url.Action("Register", "Account")" class="button">Join us</a>
+            }
         </div>
         <video autoplay="true" loop="true">
             <source src="http://maarten.vg/img/Beatbuddy_header.mp4" type="video/mp4"/>
@@ -16,7 +25,7 @@
     </div>
 }
 
-<p class="more-margin-bottom">Beatbuddy is a collaborative music platform, that will allow you to create playlists with your friends family and more!</p>
+<p id="intro" class="more-margin-bottom">Beatbuddy is a collaborative music platform, that will allow you to create playlists with your friends family and more!</p>
 
 <div class="row">
     <div class="col-md-4 intro-item">
@@ -46,23 +55,31 @@
         Ignace Maes
     </div>
     <div class="about-user">
-        <img class="round" src="~/Content/img/maarten.jpg" />
+        <img class="round" src="~/Content/img/maarten.jpg"/>
         Maarten Van Giel
     </div>
     <div class="about-user">
-        <img class="round" src="~/Content/img/matthias.jpg" />
+        <img class="round" src="~/Content/img/matthias.jpg"/>
         Matthias Heylen
     </div>
     <div class="about-user">
-        <img class="round" src="~/Content/img/jonah.jpg" />
+        <img class="round" src="~/Content/img/jonah.jpg"/>
         Jonah Jordan
     </div>
     <div class="about-user">
-        <img class="round" src="~/Content/img/kelly.jpg" />
+        <img class="round" src="~/Content/img/kelly.jpg"/>
         Kelly Metdepenningen
     </div>
     <div class="about-user">
-        <img class="round" src="~/Content/img/lennart.jpg" />
+        <img class="round" src="~/Content/img/lennart.jpg"/>
         Lennart Boeckx
     </div>
 </div>
+
+@section scripts{
+    <script>
+        $('#explore').click(function() {
+            $('html, body').animate({ scrollTop: $('#intro').offset().top - 50 }, 'slow');
+        });
+    </script>
+}
