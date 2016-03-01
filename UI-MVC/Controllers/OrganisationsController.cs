@@ -76,6 +76,19 @@ namespace BB.UI.Web.MVC.Controllers
                 };
                 var playlists = organisation.Playlists;
                 int pageSize = 3;
+                if (User != null)
+                    user = userManager.ReadUser(User.Identity.Name);
+
+                UserRole userRole = userManager.ReadUserRoleForUserAndOrganisation(user.Id, id);
+                if (userRole == null)
+                    ViewBag.Following = "None";
+                else if (userRole.Role == Role.Follower)
+                    ViewBag.Following = "Following";
+                else if (userRole.Role == Role.Co_Organiser)
+                    ViewBag.Following = "Co-Organiser";
+                else if (userRole.Role == Role.Organiser)
+                    ViewBag.Following = "Organiser";
+                
                 
                 int pageNumber = (page ?? 1);
                 organisationView.Playlists = playlists.ToPagedList(pageNumber, pageSize);
@@ -109,6 +122,31 @@ namespace BB.UI.Web.MVC.Controllers
             return new HttpStatusCodeResult(200);
             
         }
+
+        public ActionResult FollowOrganisation(long organisationId, string email)
+        {
+            User user = userManager.ReadUser(email);
+            userManager.CreateUserRole(user.Id, organisationId, Role.Follower);
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        public ActionResult UnFollowOrganisation(long organisationId, string email)
+        {
+            User user = userManager.ReadUser(email);
+            UserRole userRole = userManager.ReadUserRoleForUserAndOrganisation(user.Id, organisationId);
+            userManager.DeleteUserRole(userRole);
+            return new HttpStatusCodeResult(200);
+        }
+
+        public ActionResult LeaveOrganisation(long organisationId, string email)
+        {
+            User user = userManager.ReadUser(email);
+            UserRole userRole = userManager.ReadUserRoleForUserAndOrganisation(user.Id, organisationId);
+            userManager.DeleteUserRole(userRole);
+            return new HttpStatusCodeResult(200);
+        }
+
         // GET: Organisations/Create
         public ActionResult Create()
         {

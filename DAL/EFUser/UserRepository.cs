@@ -50,6 +50,12 @@ namespace BB.DAL.EFUser
             throw new NotImplementedException();
         }
 
+        public void DeleteUserRole(UserRole userRole)
+        {
+            context.UserRole.Remove(userRole);
+            context.SaveChanges();
+        }
+
         public IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation)
         {
             IEnumerable<UserRole> userRoles = context.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).Where(a => a.Role == Role.Co_Organiser);
@@ -86,6 +92,16 @@ namespace BB.DAL.EFUser
         public User ReadUser(string lastname, string firstname)
         {
             throw new NotImplementedException();
+        }
+
+        public UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId)
+        {
+            IEnumerable<UserRole> userRoles = context.UserRole.Include("Organisation").Include("User").Where(u => u.User.Id == userId);
+            if(userRoles != null)
+                return userRoles.SingleOrDefault(o => o.Organisation.Id == organisationId);
+
+            return null;
+            
         }
 
         public IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
