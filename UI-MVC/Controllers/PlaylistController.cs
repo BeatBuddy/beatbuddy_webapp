@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
@@ -59,12 +61,29 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 user = userManager.ReadUser(User.Identity.Name);
             }
-
+            var playlist = playlistManager.ReadPlaylist(id);
             var votesUser = playlistManager.ReadVotesForUser(user);
+            var organisation = organisationManager.ReadOrganisationForPlaylist(id);
+            List<User> playlistOwners = new List<User>();
+            if (organisation != null)
+            {
+                playlistOwners = userManager.ReadCoOrganiserFromOrganisation(organisation).ToList();
+                playlistOwners.Add(userManager.ReadOrganiserFromOrganisation(organisation));
+            }
+            else
+            {
+                if (playlist.CreatedById != null)
+                {
+                    playlistOwners.Add(userManager.ReadUser((long)playlist.CreatedById));
+                }
+            }
+            ViewBag.Organisers = playlistOwners;
+      
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
+            
 
-            var playlist = playlistManager.ReadPlaylist(id);
+            
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
 
             return View(playlist);

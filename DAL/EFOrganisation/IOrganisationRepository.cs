@@ -12,12 +12,14 @@ namespace BB.DAL.EFOrganisation
         IEnumerable<Organisation> ReadOrganisations();
         Organisation ReadOrganisation(long organisationId);
         Organisation ReadOrganisation(string organisationName);
+        IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
         void DeleteOrganisation(long organisationId);
-
+        Organisation ReadOrganisationForPlaylist(long playlistId);
         //DashboardBlock
         DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock);
         DashboardBlock UpdateDashboardBlock(DashboardBlock block);
         IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation);
         void DeleteDashboardBlock(long blockId);
+        
     }
 }

@@ -41,6 +41,11 @@ namespace BB.DAL.EFPlaylist
             return playlist;
         }
 
+        public IEnumerable<Playlist> ReadPlaylistsForUser(long userId)
+        {
+           return context.Playlists.ToList().FindAll(p => p.CreatedById == userId);
+        }
+
         public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
         {
             throw new NotImplementedException();
@@ -109,6 +114,8 @@ namespace BB.DAL.EFPlaylist
         {
             throw new NotImplementedException();
         }
+
+       
 
         public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {

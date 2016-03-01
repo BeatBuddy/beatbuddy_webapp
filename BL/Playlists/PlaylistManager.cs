@@ -63,6 +63,12 @@ namespace BB.BL
             return repo.CreatePlaylist(playlist, organisation);
         }
 
+
+        public IEnumerable<Playlist> ReadPlaylistsForUser(long userId)
+        {
+            return repo.ReadPlaylistsForUser(userId);
+        }
+
         public PlaylistTrack CreatePlaylistTrack(Track track)
         {
             PlaylistTrack playlistTrack = new PlaylistTrack()
