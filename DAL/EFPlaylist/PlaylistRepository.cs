@@ -126,6 +126,7 @@ namespace BB.DAL.EFPlaylist
             return context.Playlists
                 .Include(p => p.PlaylistTracks)
                 .Include("PlaylistTracks.Track.TrackSource")
+                .Include("PlaylistTracks.Votes.User")
                 .First(p => p.Id == playlistId);
         }
 

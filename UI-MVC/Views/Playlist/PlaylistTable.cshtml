@@ -34,9 +34,28 @@
             <td class="tracktitle">
                 @track.Track.Title
             </td>
-            <td>
-                thumbs
-            </td>
+            @{ 
+                var thumbUpId = track.Id + " thumbUp";
+                var thumbDownId = track.Id + " thumbDown";
+                Vote vote = track.Votes.FirstOrDefault(v => v.User.Email == User.Identity.Name);
+                if(vote == null)
+                {
+                    <td><a onclick="changeColor('6 thumbUp')" style="cursor: pointer"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a></td>
+                    <td><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></td>
+                }
+                else
+                {
+                    if (vote.Score == 1)
+                    {
+                        <td class="material-icons">thumb_up</td>
+                        <td class="material-icons grey400">thumb_down</td>
+                    }
+                    else {
+                        <td class="material-icons grey400">thumb_up</td>
+                        <td class="material-icons">thumb_down</td>
+                    }
+                }
+            }
             <td>
                 3:30
             </td>
@@ -49,4 +68,19 @@
         </tr>
     }
 </table>
+<script>
+    function changeColor(element){
+        //alert('Hallo!');
+       document.getElementById(element).style.color = black;
+    }
+
+
+    function addVote(element, vote, trackId) {
+        $.ajax({
+            url: '@Url.Action("AddVote")',
+            method: 'POST',
+            data: { vote: vote, trackId: id }
+        })
+        changeColor(element, vote)}
+</script>
 

@@ -54,12 +54,6 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult View(long id)
         {
-            if (User != null)
-            {
-                user = userManager.ReadUser(User.Identity.Name);
-            }
-            var votesUser = playlistManager.ReadVotesForUser(user);
-            ViewBag.VotesUser = votesUser;
             var playlist = playlistManager.ReadPlaylist(id);
             ViewBag.PlaylistId = id;
             return View(playlist);
