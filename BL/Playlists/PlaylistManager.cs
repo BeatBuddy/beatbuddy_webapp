@@ -68,7 +68,7 @@ namespace BB.BL
             PlaylistTrack playlistTrack = new PlaylistTrack()
             {
                 Track = track,
-                AlreadyPlayed = false,
+                PlayedAt = null,
                 Votes = new List<Vote>()
             };
             return repo.CreatePlaylistTrack(playlistTrack);
@@ -107,6 +107,18 @@ namespace BB.BL
         public void DeletePlaylistTrack(long playlistTrackId)
         {
             repo.DeletePlaylistTrack(playlistTrackId);
+        }
+
+        public bool MarkTrackAsPlayed(long playlistTrackId)
+        {
+            var track = repo.ReadPlaylistTrack(playlistTrackId);
+
+            if (track == null) return false;
+
+            track.PlayedAt = DateTime.Now;
+            repo.UpdatePlayListTrack(track);
+
+            return true;
         }
 
         public Track AddTrackToPlaylist(long playlistId, Track track)

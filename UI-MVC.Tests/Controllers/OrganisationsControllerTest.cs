@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
-using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
-
 using BB.UI.Web.MVC.Controllers;
 using BB.UI.Web.MVC.Models;
-using BB.UI.Web.MVC.Migrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using BB.UI.Web.MVC.Tests.Helpers;
 
 namespace BB.UI.Web.MVC.Tests.Controllers
@@ -79,8 +72,9 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             var userRoles = userManager.ReadOrganisationsForUser(user.Id);
             Assert.IsNotNull(userRoles);
             Assert.AreEqual(userRoles.Count(),2);
+
         }
-        
+
 
     }
 }
