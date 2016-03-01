@@ -126,7 +126,7 @@ namespace BB.DAL.EFPlaylist
             return context.Playlists
                 .Include(p => p.PlaylistTracks)
                 .Include("PlaylistTracks.Track.TrackSource")
-                .First(p => p.Id == playlistId);
+                .FirstOrDefault(p => p.Id == playlistId);
         }
 
         public IEnumerable<Playlist> ReadPlaylists()
@@ -141,7 +141,7 @@ namespace BB.DAL.EFPlaylist
 
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
         {
-            throw new NotImplementedException();
+            return context.PlaylistTracks.Find(playlistTrackId);
         }
 
         public IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
@@ -196,7 +196,13 @@ namespace BB.DAL.EFPlaylist
 
         public PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack)
         {
-            throw new NotImplementedException();
+            if (context.PlaylistTracks.Find(playlistTrack.Id) == null) return null;
+
+            context.PlaylistTracks.Attach(playlistTrack);
+            context.Entry(playlistTrack).State = EntityState.Modified;
+            context.SaveChanges();
+
+            return playlistTrack;
         }
 
         public Track UpdateTrack(Track track)

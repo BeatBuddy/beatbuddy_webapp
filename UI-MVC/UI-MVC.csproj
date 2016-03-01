@@ -222,6 +222,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrganisationsController.cs" />
@@ -350,6 +351,8 @@
     <Content Include="Views\Playlist\View.cshtml" />
     <Content Include="Views\Playlist\PlaylistTable.cshtml" />
     <Content Include="Views\Home\Portal.cshtml" />
+    <Content Include="Views\History\PlaylistTable.cshtml" />
+    <Content Include="Views\History\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />

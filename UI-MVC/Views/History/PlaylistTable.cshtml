@@ -1,14 +1,14 @@
 ﻿@using BB.BL.Domain.Playlists
-@model BB.BL.Domain.Playlists.Playlist
+@model Playlist
 <div class="title">
-    <h1>Queue</h1>
+    <h1>History</h1>
     @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
     {
-        <text>@Model.PlaylistTracks.Count tracks in queue</text>
+        <text>@Model.PlaylistTracks.Count tracks played</text>
     }
     else
     {
-        <text>1 track in queue</text>
+        <text>1 track played</text>
     }
 </div>
 

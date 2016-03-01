@@ -1,0 +1,147 @@
+﻿@using System.Web.Http
+@model BB.BL.Domain.Playlists.Playlist
+
+@{
+    ViewBag.Title = "History";
+}
+
+<div class="title" style="margin-bottom: 1em">
+    <h1>Playlist</h1> @Html.DisplayFor(model => model.Name)
+</div>
+
+<div>
+    @if (Model.ImageUrl != null)
+    {
+        <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
+    }
+    else
+    {
+        <img class="borderround" src="~/Content/img/playlist.png" style="width: 170px; height: 170px" />
+    }
+
+</div>
+
+
+<div id="playlist-view" style="margin-top: 1em">
+    @Html.Partial("PlaylistTable", Model)
+</div>
+
+<div id="nowPlayingRow" style="margin-top: 5em">
+@if (Model.PlaylistTracks.Count != 0)
+{
+    <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    else
+    {
+        <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+    }
+    <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+
+    <div class="title" style="margin-top: 0.5em">
+        <h1>Now Playing </h1> <span id="nowPlaying"></span>
+    </div>
+    <span id="time"></span>
+    <div id="myProgress" class="progress">
+        <div id="myBar" class="bar"></div>
+    </div>
+</div>
+<div id="player" style="display: none">
+</div>
+
+@section Scripts{
+    <script>
+        var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
+            '<img class="thumbnail" src="${CoverArtUrl}"/>' +
+            '<span class="artist">${Artist}</span>' +
+            '<span class="tracktitle">${Title}</span>' +
+            '</li>';
+        $.template("trackTemplate", markup);
+
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: 'cdwal5Kw3Fc',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+            player.setPlayBackQuality('small');
+        }
+
+        var firstPlay = true;
+
+        function onPlayerReady(event) {
+            if (firstPlay) {
+                var playButton = document.getElementById("playBtn");
+                playButton.addEventListener("click", getNextTrack);
+                
+                firstPlay = false;
+            }
+            var nextButton = document.getElementById("nextBtn");
+            nextButton.addEventListener("click", function() {
+                getNextTrack();
+            });
+            
+
+        }
+        function updateTime() {
+            var time = document.getElementById("time");
+            var currentTime = secondsToTime(player.getCurrentTime());
+            var duration = secondsToTime(player.getDuration());
+            time.innerHTML = currentTime +' | ' + duration;
+            var percentageTime = (player.getCurrentTime() / player.getDuration()) * 100;
+            var bar = document.getElementById("myBar");
+            bar.style.width = percentageTime + '%';
+        }
+        function secondsToTime(secs)
+        {
+            d = Number(secs);
+            var h = Math.floor(d / 3600);
+            var m = Math.floor(d % 3600 / 60);
+            var s = Math.floor(d % 3600 % 60);
+            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
+        }
+        function onPlayerStateChange(event) {
+            var playButton = document.getElementById("playBtn");
+            playButton.removeEventListener("click", getNextTrack);
+            var icon = document.getElementById("icon");
+            if (event.data == YT.PlayerState.PLAYING) {
+                playButton.addEventListener("click", function() {
+                    player.pauseVideo();
+                });
+                icon.innerHTML = 'pause';
+            }
+            if (event.data == YT.PlayerState.PAUSED) {
+                icon.innerHTML = 'play_arrow';
+                playButton.addEventListener("click", function() {
+                    player.playVideo();
+                });
+            }
+            if (event.data == YT.PlayerState.ENDED) {
+                getNextTrack();
+            }
+        }
+
+        function getNextTrack() {
+            
+        }
+        
+        function stopVideo() {
+            player.stopVideo();
+        }
+
+        function updatePlaylist() {
+            $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewContext.RouteData.Values["id"]});
+        }
+
+    </script>
+}
