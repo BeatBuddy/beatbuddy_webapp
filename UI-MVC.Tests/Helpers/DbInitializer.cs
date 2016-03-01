@@ -15,7 +15,7 @@ namespace BB.UI.Web.MVC.Tests.Helpers
             var migratorConfig = new Migrations.Configuration();
             migratorConfig.TargetDatabase = new DbConnectionInfo(ContextEnum.BeatBuddyTest.ToString());
             var dbMigrator = new DbMigrator(migratorConfig);
-            dbMigrator.Update();
+            //dbMigrator.Update();
         }
     }
 }
