@@ -103,11 +103,11 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpGet]
         [Route("searchTrack")]
         [ResponseType(typeof(List<Track>))]
-        public HttpResponseMessage searchTrack(string q)
+        public HttpResponseMessage searchTrack(string query)
         {
-            if (q == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if (query == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
             var youtubeProvider = new YouTubeTrackProvider();
-            var searchResult = youtubeProvider.Search(q);
+            var searchResult = youtubeProvider.Search(query);
 
             return Request.CreateResponse(HttpStatusCode.OK, searchResult);
         }
