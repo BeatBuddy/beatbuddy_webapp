@@ -46,7 +46,7 @@ namespace BB.DAL.EFPlaylist
         void DeleteTrackSource(long trackSourceId);
 
         //Vote
-        Vote CreateVote(Vote vote);
+        Vote CreateVote(Vote vote, long userId, long trackId);
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);

@@ -11,6 +11,9 @@
   line-height: .3em;
   margin-left: -.1em; }
 
+.material-icons.grey400 {
+  color: #BDBDBD; }
+
 a.disabled {
   pointer-events: none;
   cursor: default; }
