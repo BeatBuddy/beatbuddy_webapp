@@ -44,6 +44,11 @@ namespace BB.UI.Web.MVC.Tests.IT
             var helloMessage = chromeDriver.FindElement(By.XPath("//a[@href='/Manage']"));
             Assert.AreEqual("hello admin@admin.com!", helloMessage.Text);
         }
+
+        [TestCleanup]
+        public void TestCleanup() {
+            if (chromeDriver != null) chromeDriver.Quit();
+        }
         /*
         [TestMethod]
         public void RegisterTest() {
