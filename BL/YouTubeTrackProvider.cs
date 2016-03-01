@@ -22,18 +22,20 @@ namespace BB.BL
             });
         }
 
-        public List<Track> Search(string q)
+        public List<Track> Search(string q, long maxResults = 5)
         {
             var result = new List<Track>();
 
             var searchListRequest = youtubeService.Search.List("snippet");
             searchListRequest.Q = q;
-            searchListRequest.MaxResults = 3;
+            searchListRequest.MaxResults = 20;
 
             var queryResult = searchListRequest.Execute();
 
             foreach (var video in queryResult.Items.Where(v => v.Id.Kind == "youtube#video" && v.Snippet.Title.Contains(" - ")))
             {
+                if (result.Count >= maxResults) continue;
+
                 var track = new Track
                 {
                     Title = video.Snippet.Title.Split(new[] { " - " }, StringSplitOptions.None)[1],
