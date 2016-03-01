@@ -73,8 +73,8 @@ namespace BB.UI.Web.MVC.Controllers
         [HttpPost]
         public ActionResult AddVote(int vote, long id)
         {
-            Vote v = new Vote();
-            v.Score = vote;
+            var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
+            playlistManager.CreateVote(vote, user.Id, id);
             return new HttpStatusCodeResult(200);
         }
 
@@ -97,12 +97,11 @@ namespace BB.UI.Web.MVC.Controllers
                 track
             );
 
-            if(track == null) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list"); 
+            if (track == null) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list");
             
 
             return new HttpStatusCodeResult(200);
         }
-
 
         public JsonResult SearchTrack(string q)
         {
@@ -114,9 +113,10 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult GetNextTrack(long id)
         {
-            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
+            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks
+                .Where(t => t.PlayedAt == null);
 
-            if (playlistTracks.All(t => t.PlayedAt != null)) return Json(null, JsonRequestBehavior.DenyGet);
+            if (!playlistTracks.Any()) return Json(null, JsonRequestBehavior.DenyGet);
 
             var track = playlistTracks.First(t => t.PlayedAt == null);
 
@@ -133,8 +133,10 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult GetPlaylist(long id)
         {
-            return PartialView("PlaylistTable", playlistManager.ReadPlaylist(id));
+            var playlist = playlistManager.ReadPlaylist(id);
+            playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
         
+            return PartialView("PlaylistTable", playlist);
         }
 
         [HttpPost]
@@ -145,11 +147,12 @@ namespace BB.UI.Web.MVC.Controllers
 
             playlistManager.MarkTrackAsPlayed(
                 playlistManager.ReadPlaylist(id).PlaylistTracks
-                .OrderByDescending(t => t.PlayedAt)
+                //.OrderByDescending(t => t.Score)
                 .First(t => t.PlayedAt == null).Id);
 
                 return new HttpStatusCodeResult(200);
             }
+
         public ActionResult IsNameAvailable(string email)
         {
             return Json(userManager.ReadUsers().All(org => org.Email != email),

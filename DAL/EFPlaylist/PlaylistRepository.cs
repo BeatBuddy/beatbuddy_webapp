@@ -56,9 +56,15 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public Vote CreateVote(Vote vote)
+        public Vote CreateVote(Vote vote, long userId, long trackId)
         {
-            throw new NotImplementedException();
+            var user = context.User.Find(userId);
+            vote.User = user;
+            vote = context.Votes.Add(vote);
+            var playlistTrack = context.PlaylistTracks.Find(trackId);
+            playlistTrack.Votes.Add(vote);
+            context.SaveChanges();
+            return vote;
         }
 
         public void DeleteComment(long commentId)
@@ -130,6 +136,7 @@ namespace BB.DAL.EFPlaylist
             return context.Playlists
                 .Include(p => p.PlaylistTracks)
                 .Include("PlaylistTracks.Track.TrackSource")
+                .Include("PlaylistTracks.Votes.User")
                 .FirstOrDefault(p => p.Id == playlistId);
         }
 

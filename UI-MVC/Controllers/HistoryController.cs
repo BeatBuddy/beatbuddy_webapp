@@ -7,7 +7,7 @@ namespace BB.UI.Web.MVC.Controllers
 {
     public class HistoryController : Controller
     {
-        IPlaylistManager playlistManager;
+        readonly IPlaylistManager playlistManager;
 
         public HistoryController(ContextEnum contextEnum)
         {
@@ -23,7 +23,10 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult View(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
-            playlist.PlaylistTracks = playlist.PlaylistTracks.Where(pt => pt.PlayedAt == null).ToList();
+            playlist.PlaylistTracks = playlist.PlaylistTracks
+                .Where(pt => pt.PlayedAt != null)
+                .OrderBy(pt => pt.PlayedAt)
+                .ToList();
             
             return View(playlist);
         }

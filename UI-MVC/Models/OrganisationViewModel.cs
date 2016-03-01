@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
+using PagedList;
 
 namespace BB.UI.Web.MVC.Models
 {
@@ -41,7 +42,7 @@ namespace BB.UI.Web.MVC.Models
         public string ImageUrl { get; set; }
         [Required, DisplayName("Accent color: ")]
         public string ColorScheme { get; set; }
-        public IEnumerable<Playlist> Playlists { get; set; }
+        public IPagedList<Playlist> Playlists { get; set; }
         public User Organiser { get; set; }
         public IEnumerable<User> CoOrganiser { get; set; }
     }

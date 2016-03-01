@@ -2,6 +2,8 @@
 @using BB.UI.Web.MVC.Models
 @using BB.BL.Domain.Users
 @using BB.BL.Domain.Organisations
+@using PagedList.Mvc
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @model OrganisationViewWithPlaylist
 
 @{
@@ -10,7 +12,6 @@
     
 }
 
-
     <div class="title" style="background-color: black; width: 100%;">
         @if (Model.BannerUrl != null)
         {
@@ -18,7 +19,7 @@
         }
         else
         {
-            <img src="~/Content/img/playlist.png" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
+            <img src="~/Content/img/playlistheader.jpg" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
         }
 
     </div>
@@ -58,9 +59,13 @@
             </p>
         </div>
     }
+    @using (Html.BeginForm())
+    {
+
+    
 <div class="title">
     <h1>Playlists</h1>
-    <table id="playlists">
+    <table id="playlist-overview">
         <tr>
             <th></th>
             <th></th>
@@ -117,11 +122,16 @@
             </tr>
         }
     </table>
+    <br />
+    Page @(Model.Playlists.PageCount < Model.Playlists.PageNumber ? 0 : Model.Playlists.PageNumber) of @Model.Playlists.PageCount
+
+    @Html.PagedListPager(Model.Playlists, page => Url.Action("Details", new { Model.Id, page}))
 </div>
+    }
 @if (Model.Organiser.Email.Equals(User.Identity.Name))
 {
-    <div>
-        <a href='javascript:AddPlaylist()' class="btn btn-right" style="margin-top: 1em;">
+    <div class="add-playlist">
+        <a href='javascript:AddPlaylist()' class="btn btn-right" >
             <i class="material-icons">playlist_add</i> add playlist
         </a>
     </div>
@@ -132,8 +142,8 @@ else
     {
         if (user.Email.Equals(User.Identity.Name))
         {
-            <div>
-                <a href='javascript:AddPlaylist()' class="btn btn-right" style="margin-top: 1em;">
+            <div class="add-playlist">
+                <a href='javascript:AddPlaylist()' class="btn btn-right" >
                     <i class="material-icons">playlist_add</i> add playlist
                 </a>
             </div>
@@ -163,7 +173,7 @@ else
 
                     },
                     error: function (e){
-                        alert("Email kon niet gevonden worden");
+                        notie.alert(3, "email not found or already in organisation", 3);
                     }
 
                 })

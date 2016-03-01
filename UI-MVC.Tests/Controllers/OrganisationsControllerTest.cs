@@ -38,7 +38,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestOrganisationsDetailsView_Correct_id()
         {
-            ViewResult viewResult = _organisationsController.Details(1) as ViewResult;
+            ViewResult viewResult = _organisationsController.Details(1,1) as ViewResult;
             var organisation = (OrganisationViewWithPlaylist) viewResult.ViewData.Model; 
             Assert.AreEqual("Jonah's Songs", organisation.Name);
             Assert.AreEqual("Details", viewResult.ViewName);
@@ -47,7 +47,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestOrganisationsDetailsView_Wrong_Id()
         {
-            ViewResult viewResult = _organisationsController.Details(-1) as ViewResult;
+            ViewResult viewResult = _organisationsController.Details(-1,1) as ViewResult;
             Assert.AreEqual("Error", viewResult.ViewName);
             Assert.IsTrue(viewResult.ViewData.Model == null);
         }
@@ -60,8 +60,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers
                 Name = "Maarten's Songs"
             };
             
-            RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation, null, null);
-            Assert.AreEqual("Index", viewResult.RouteValues["action"]);
+            RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation, null);
+            Assert.AreEqual("Details/2", viewResult.RouteValues["action"]);
         }
 
         [TestMethod]
@@ -71,8 +71,15 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             User user = userManager.ReadUser("jonah@gmail.com");
             var userRoles = userManager.ReadOrganisationsForUser(user.Id);
             Assert.IsNotNull(userRoles);
-            Assert.AreEqual(userRoles.Count(),2);
+            Assert.AreEqual(userRoles.Count(),1);
 
+        }
+
+        [TestMethod]
+        public void TestAddCoOrganiser_Fail()
+        {
+            HttpStatusCodeResult result = _organisationsController.AddCoOrganiser(1, "jonah@gmail.com") as HttpStatusCodeResult;
+            Assert.AreEqual(result.StatusCode, 400);
         }
 
 

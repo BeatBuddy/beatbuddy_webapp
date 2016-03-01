@@ -1,18 +1,12 @@
-﻿@using BB.BL.Domain.Playlists
-@using BB.UI.Web.MVC.Models
-@model BB.BL.Domain.Playlists.Playlist
-
+﻿@model BB.BL.Domain.Playlists.Playlist
 @{
     ViewBag.Title = "View";
+    ViewBag.NoFooter = true;
 }
-
 
 @section escape_padding {
 <div id="playlistbanner">
     <div class="content">
-
-
-
         @if (Model.ImageUrl != null)
         {
            <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
@@ -22,22 +16,16 @@
            <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 170px; height: 170px" />
         }
         <h1>@Model.Name</h1>
-        <h2>Share your play: @Model.Key</h2>
-        
-        
+        <h2>Share your playlist: @Model.Key</h2>
     </div>
 </div>    
 }
 
-
-
-
 <div id="playlist-view" style="margin-top: 1em">
     @Html.Partial("PlaylistTable", @Model)
-    
-    
 </div>
-<div id="nowPlayingRow" style="margin-top: 5em">
+
+<div id="nowPlayingRow" style="margin-top: 5em; margin-bottom: 3em;">
     @if (Model.PlaylistTracks.Count != 0)
     {
         <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
@@ -50,7 +38,6 @@
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>
-
 </div>
 
 <div id="addTrackModal" class="modal" style="margin-top: -180px">
@@ -65,7 +52,6 @@
 </div>
 
 <div id="footerSlideContainer">
-
     <div id="footerSlideContent" style="width: 80%">
         <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter"><i id="footerIcon"class="material-icons">keyboard_arrow_up</i></div>
         <table style="width: 100%; margin-top: -15px">
@@ -115,6 +101,7 @@
         function openFooter() {
             $('#footerSlideContent').animate({ height: '125px' });
             $(this).css('backgroundPosition', 'bottom left');
+            $('#nowPlayingRow').animate({ marginBottom: '9em' }, 500, null);
             footerOpen = true;
             var footerIcon = document.getElementById("footerIcon");
 
@@ -123,6 +110,7 @@
         function closeFooter() {
             $('#footerSlideContent').animate({ height: '20px' });
             $(this).css('backgroundPosition', 'top left');
+            $('#nowPlayingRow').animate({ marginBottom: '3em' }, 500, null);
             footerOpen = false;
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';

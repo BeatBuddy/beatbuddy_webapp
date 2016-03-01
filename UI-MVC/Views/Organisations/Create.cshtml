@@ -27,19 +27,6 @@
         </div>
 
         <div class="other-form-groups">
-            <label>Organisation logo: </label>
-            <br />
-            @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "custom-validation" })
-        </div>
-        <div>
-            <input type="file" id="avatarImage" name="avatarImage" style="display: none"/>
-            <div class="custom-input-organisations" style="overflow: hidden">
-                <text id="avatarLabel" class="form-label">Click right to select logo image</text>
-                <i class="material-icons form-img-icon"id="avatar_click">image</i>
-            </div> 
-        </div> 
-
-        <div class="other-form-groups">
             @Html.LabelFor(model => model.BannerUrl, htmlAttributes: new {@class = "control-label"})
             <br/>
             @Html.ValidationMessageFor(model => model.BannerUrl, "", new {@class = "custom-validation"})
@@ -51,8 +38,6 @@
                  <i class="material-icons form-img-icon"  id="banner_click" >image</i>
              </div>
         </div>
-
-       
 
         
             <div style="margin-top: 14px">
@@ -73,9 +58,6 @@
     </div>
 }
 <script>
-    document.getElementById('avatar_click').onclick = function () {
-        document.getElementById('avatarImage').click();
-    };
     document.getElementById('banner_click').onclick = function () {
         document.getElementById('bannerImage').click();
     };
@@ -87,14 +69,6 @@
             filename = filename.substring(lastIndex + 1);
         }
         document.getElementById("bannerLabel").innerText = filename;
-    };
-    document.getElementById("avatarImage").onchange = function () {
-        var filename = document.getElementById("avatarImage").value;
-        var lastIndex = filename.lastIndexOf("\\");
-        if (lastIndex >= 0) {
-            filename = filename.substring(lastIndex + 1);
-        }
-        document.getElementById("avatarLabel").innerText = filename;
     };
 </script>
 

@@ -19,6 +19,8 @@ body {
     margin-left: -.1em;
 }
 
+.material-icons.grey400 {color:#BDBDBD;}
+
 a.disabled {
    pointer-events: none;
    cursor: default;
@@ -187,7 +189,6 @@ header {
         margin: 0 auto;
         max-width: $maxpagewidth;
         color: white;
-        
         top: 0;
         
 
@@ -200,6 +201,7 @@ header {
             top: 0;
             text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
         }
+
         img {
             float: left;
             margin-right: 30px;
@@ -278,7 +280,7 @@ header {
         display: block;
         text-align: left;
 
-        img{
+        img {
             display: inline-block;
             vertical-align: middle;
         }
@@ -288,13 +290,12 @@ header {
 .co-organiser {
     display: inline-block;
     text-align: center;
-    margin: .5em;
 
    img {
         display: block;
         width: 50px;
         height: 50px;
-        margin-bottom: .5em;
+        padding-left: .5em;
 
         @media screen and (max-width: $mobile-breakpoint) {
             max-width: 10px;
@@ -302,16 +303,22 @@ header {
             margin-right: .5em;
     }
 }
+
         @media screen and (max-width: $mobile-breakpoint) {
         display: block;
         text-align: left;
 
-        img{
+        img {
             display: inline-block;
             vertical-align: middle;
         }
     }
 }
+.add-playlist {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
 .body-content {
     padding: 1em $sidemargin;
     max-width: $maxpagewidth;
@@ -419,6 +426,11 @@ header {
             min-width: 150px;
         }
     }
+}
+
+#playlist-overview {
+    padding: 0;
+    width: 100%;
 }
 
 #player {
@@ -686,33 +698,27 @@ margin-top: 1em;
 }
 
 footer {
-    display: block;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    padding: 1em $sidemargin;
     max-width: $maxpagewidth;
-    font-family: sans-serif;
-    padding: .2em $sidemargin;
-    text-align: center;
+    margin: auto;
 
     @media screen and (max-width: $mobile-breakpoint) {
-        padding: .2em $sidemargin-mobile;
+        padding: 0 $sidemargin-mobile;
     }
 }
 
 .hidden {
     display: none;
 }
+
 #footerSlideContainer {
 	position: fixed;
-	bottom:0;
+    bottom: 0;
 	width: 100%;
     min-width: 100%;
-    left:0;
-    right:0;
+    left: 0;
+    right: 0;
     background: black;
-    
-   
 }
 
 #footerSlideContent {
@@ -722,10 +728,5 @@ footer {
     margin-top: 0.2em;
     vertical-align: middle;
 	color: white;
-	
 	border: none;
-	
 }
-
-
-
