@@ -86,16 +86,27 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
 
-        public void AddCoOrganiser(long organisation, string mail)
+        public ActionResult AddCoOrganiser(long organisation, string mail)
         {
 
             User user = userManager.ReadUser(mail);
             if(user == null)
             {
-                throw new Exception("User not found");
+                return new HttpStatusCodeResult(400);
+            }
+
+            Organisation org = organisationManager.ReadOrganisation(organisation);
+
+            IEnumerable<User> coOrganisers = userManager.ReadCoOrganiserFromOrganisation(org);
+
+            if (coOrganisers.Contains(user) || user.Id == userManager.ReadOrganiserFromOrganisation(org).Id)
+            {
+                return new HttpStatusCodeResult(400);
             }
 
             userManager.CreateUserRole(user.Id, organisation, Role.Co_Organiser);
+
+            return new HttpStatusCodeResult(200);
             
         }
         // GET: Organisations/Create
@@ -112,12 +123,11 @@ namespace BB.UI.Web.MVC.Controllers
 
         // POST: Organisations/Create
         [HttpPost]
-        public ActionResult Create(OrganisationViewModel organisation, HttpPostedFileBase bannerImage, HttpPostedFileBase avatarImage)
+        public ActionResult Create(OrganisationViewModel organisation, HttpPostedFileBase bannerImage)
         {
             try
             {
                 string bannerPath = null;
-                string avatarPath = null;
                 if (User != null)
                 {
                     user = userManager.ReadUser(User.Identity.Name);
@@ -129,19 +139,12 @@ namespace BB.UI.Web.MVC.Controllers
                     bannerImage.SaveAs(bannerPath);
                     bannerPath = Path.GetFileName(bannerPath);
                 }
-                if(avatarImage != null && avatarImage.ContentLength > 0)
-                {
-                    var avatarFileName = Path.GetFileName(avatarImage.FileName);
-                    avatarPath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["OrganisationsImgPath"]), avatarFileName));
-                    avatarImage.SaveAs(avatarPath);
-                    avatarPath = Path.GetFileName(avatarPath);
-                }
-                organisationManager.CreateOrganisation(organisation.Name, bannerPath, organisation.ColorScheme, user);
-                return RedirectToAction("Index");
+                Organisation org = organisationManager.CreateOrganisation(organisation.Name, bannerPath, organisation.ColorScheme, user);
+                return RedirectToAction("Details/" + org.Id);
             }
             catch
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Create");
             }
         }
 
