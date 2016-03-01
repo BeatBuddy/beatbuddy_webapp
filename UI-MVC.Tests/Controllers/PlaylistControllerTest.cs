@@ -42,7 +42,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             var playlistResult = controller.View(1) as ViewResult;
 
             Assert.IsNotNull(playlistResult);
-            
+
             var playlist = playlistResult.Model as Playlist;
 
             Assert.IsNotNull(playlist);
@@ -72,24 +72,25 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsTrue(tracks.PlaylistTracks.Count > 0);
         }
 
-        //[TestMethod]
-        //public void TestMoveTrackToHistory()
-        //{
-        //    var addTrackResult = controller.MoveTrackToHistory(1) as HttpStatusCodeResult;
+        [TestMethod]
+        public void TestMoveTrackToHistory()
+        {
+            var playlistResult = controller.View(1) as ViewResult;
+            var playlist = playlistResult?.Model as Playlist;
+            var playlistTracks = playlist?.PlaylistTracks;
+            var aantalTracks = playlistTracks?.Count ?? 0; // get the amount of tracks in the playlist
+            
+            var moveTrackResult = controller.MoveTrackToHistory(1) as HttpStatusCodeResult;
+            Assert.IsNotNull(moveTrackResult);
+            Assert.AreEqual(200, moveTrackResult.StatusCode);
 
-        //    Assert.IsNotNull(addTrackResult);
-        //    Assert.AreEqual(200, addTrackResult.StatusCode);
+            playlistResult = controller.View(1) as ViewResult;
+            Assert.IsNotNull(playlistResult);
 
-        //    var playlistResult = controller.View(1) as ViewResult;
-
-        //    Assert.IsNotNull(playlistResult);
-
-        //    var playlist = playlistResult.Model as Playlist;
-
-        //    Assert.IsNotNull(playlist);
-        //    Assert.AreEqual(1, playlist.PlaylistTracks.Count);
-
-        //}
+            playlist = playlistResult.Model as Playlist;
+            Assert.IsNotNull(playlist);
+            Assert.AreEqual(aantalTracks - 1, playlist.PlaylistTracks.Count); // after moving the track to the history, make sure it is one less track compared to in the beginning
+        }
 
 
 
@@ -105,7 +106,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);
             Playlist playlist = playlistManager.ReadPlaylist("Awesome party");
             Assert.AreEqual(playlist.Active, true);
-            
+
         }
     }
 }

@@ -8,7 +8,7 @@ namespace BB.BL.Tests
     [TestClass]
     public class YouTubeTrackProviderTest
     {
-        //[TestMethod]
+        [TestMethod]
         public void TestYoutubeSearch()
         {
             ITrackProvider youtubeProvider = new YouTubeTrackProvider();
@@ -20,6 +20,14 @@ namespace BB.BL.Tests
             Assert.AreEqual(firstResult.TrackSource.SourceType, SourceType.YouTube);
             Assert.IsNotNull(firstResult.TrackSource.Url);
             Assert.IsNotNull(firstResult.CoverArtUrl);
+        }
+
+        [TestMethod]
+        public void TestYoutubeSearchNoResult()
+        {
+            ITrackProvider youtubeProvider = new YouTubeTrackProvider();
+            List<Track> tracks = youtubeProvider.Search("dfgjisdkfmsdkmldksmflksdmlfkmsdflksmdlfksmdlfksdmlfksdfmlksdfmlksdfmlksdfmlksdf");
+            Assert.AreEqual(0, tracks.Count);
         }
 
     }
