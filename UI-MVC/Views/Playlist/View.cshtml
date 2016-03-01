@@ -1,9 +1,8 @@
-﻿@using BB.BL.Domain.Playlists
-@using BB.UI.Web.MVC.Models
-@model BB.BL.Domain.Playlists.Playlist
+﻿@model BB.BL.Domain.Playlists.Playlist
 
 @{
     ViewBag.Title = "View";
+    ViewBag.NoFooter = true;
 }
 
 
@@ -28,9 +27,6 @@
     </div>
 </div>    
 }
-
-
-
 
 <div id="playlist-view" style="margin-top: 1em">
     @Html.Partial("PlaylistTable", @Model)

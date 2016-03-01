@@ -686,17 +686,12 @@ margin-top: 1em;
 }
 
 footer {
-    display: block;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    padding: 1em $sidemargin;
     max-width: $maxpagewidth;
-    font-family: sans-serif;
-    padding: .2em $sidemargin;
-    text-align: center;
+    margin: auto;
 
     @media screen and (max-width: $mobile-breakpoint) {
-        padding: .2em $sidemargin-mobile;
+        padding: 0 $sidemargin-mobile;
     }
 }
 
@@ -711,8 +706,6 @@ footer {
     left:0;
     right:0;
     background: black;
-    
-   
 }
 
 #footerSlideContent {

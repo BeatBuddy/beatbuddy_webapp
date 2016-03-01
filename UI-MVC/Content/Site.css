@@ -513,17 +513,12 @@ header {
   text-align: center; }
 
 footer {
-  display: block;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  padding: 1em 5em;
   max-width: 1500px;
-  font-family: sans-serif;
-  padding: 0.2em 5em;
-  text-align: center; }
+  margin: auto; }
   @media screen and (max-width: 600px) {
     footer {
-      padding: 0.2em 1em; } }
+      padding: 0 1em; } }
 
 .hidden {
   display: none; }
