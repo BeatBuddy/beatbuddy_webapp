@@ -2,6 +2,8 @@
 @using BB.UI.Web.MVC.Models
 @using BB.BL.Domain.Users
 @using BB.BL.Domain.Organisations
+@using PagedList.Mvc
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @model OrganisationViewWithPlaylist
 
 @{
@@ -58,6 +60,10 @@
             </p>
         </div>
     }
+    @using (Html.BeginForm())
+    {
+
+    
 <div class="title">
     <h1>Playlists</h1>
     <table id="playlists">
@@ -117,7 +123,12 @@
             </tr>
         }
     </table>
+    <br />
+    Page @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) of @ViewBag.PageCount
+
+    @Html.PagedListPager(ViewData.Model.Playlists, page => Url.Action("Index", new { Model.Id}))
 </div>
+    }
 @if (Model.Organiser.Email.Equals(User.Identity.Name))
 {
     <div>

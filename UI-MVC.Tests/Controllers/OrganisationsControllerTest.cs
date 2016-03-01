@@ -45,7 +45,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestOrganisationsDetailsView_Correct_id()
         {
-            ViewResult viewResult = _organisationsController.Details(1) as ViewResult;
+            ViewResult viewResult = _organisationsController.Details(1,1) as ViewResult;
             var organisation = (OrganisationViewWithPlaylist) viewResult.ViewData.Model; 
             Assert.AreEqual("Jonah's Songs", organisation.Name);
             Assert.AreEqual("Details", viewResult.ViewName);
@@ -54,7 +54,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestOrganisationsDetailsView_Wrong_Id()
         {
-            ViewResult viewResult = _organisationsController.Details(-1) as ViewResult;
+            ViewResult viewResult = _organisationsController.Details(-1,1) as ViewResult;
             Assert.AreEqual("Error", viewResult.ViewName);
             Assert.IsTrue(viewResult.ViewData.Model == null);
         }

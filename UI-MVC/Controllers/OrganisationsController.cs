@@ -11,6 +11,7 @@ using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Controllers.Utils;
 using BB.UI.Web.MVC.Models;
 using System;
+using PagedList;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -55,7 +56,7 @@ namespace BB.UI.Web.MVC.Controllers
         }
         
         // GET: Organisations/Details/5
-        public ActionResult Details(long id)
+        public ActionResult Details(long id, int? page)
         {
             Organisation organisation = organisationManager.ReadOrganisation(id);
             if (organisation != null)
@@ -70,11 +71,14 @@ namespace BB.UI.Web.MVC.Controllers
                     BannerUrl = organisation.BannerUrl,
                     ColorScheme = organisation.ColorScheme,
                     Name = organisation.Name,
-
-                    Playlists = organisation.Playlists,
                     Organiser = organiser,
                     CoOrganiser = coOrganisers
                 };
+                page = 1;
+                var playlists = organisation.Playlists;
+                int pageSize = 5;
+                int pageNumber = (page ?? 1);
+                organisationView.Playlists = playlists.ToPagedList(pageNumber, pageSize);
                 return View("Details", organisationView);
 
             }else
