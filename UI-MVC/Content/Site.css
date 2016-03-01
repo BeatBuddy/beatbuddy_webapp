@@ -512,22 +512,12 @@ header {
 .horizontal-center {
   text-align: center; }
 
-footer #footer-top {
-  background-color: #333;
+footer {
   padding: 1em 5em;
   max-width: 1500px;
   margin: auto; }
   @media screen and (max-width: 600px) {
-    footer #footer-top {
-      padding: 0 1em; } }
-
-footer #footer-bottom {
-  background-color: black;
-  padding: 1em 5em;
-  max-width: 1500px;
-  margin: auto; }
-  @media screen and (max-width: 600px) {
-    footer #footer-bottom {
+    footer {
       padding: 0 1em; } }
 
 .hidden {

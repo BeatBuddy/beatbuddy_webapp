@@ -688,26 +688,12 @@ header {
 }
 
 footer {
-    #footer-top {
-        background-color: #333;
-        padding: 1em $sidemargin;
-        max-width: $maxpagewidth;
-        margin: auto;
+    padding: 1em $sidemargin;
+    max-width: $maxpagewidth;
+    margin: auto;
 
-        @media screen and (max-width: $mobile-breakpoint) {
-            padding: 0 $sidemargin-mobile;
-        }
-    }
-
-    #footer-bottom {
-        background-color: black;
-        padding: 1em $sidemargin;
-        max-width: $maxpagewidth;
-        margin: auto;
-
-        @media screen and (max-width: $mobile-breakpoint) {
-            padding: 0 $sidemargin-mobile;
-        }
+    @media screen and (max-width: $mobile-breakpoint) {
+        padding: 0 $sidemargin-mobile;
     }
 }
 
