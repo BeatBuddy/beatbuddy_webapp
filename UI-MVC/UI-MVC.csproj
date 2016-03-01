@@ -222,6 +222,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrganisationsController.cs" />
@@ -269,14 +270,16 @@
     <Content Include="Content\img\matthias.jpg" />
     <Content Include="Content\img\party-dj.png" />
     <Content Include="Content\img\playlist.png" />
+    <Content Include="Content\img\playlistavatar.png" />
+    <Content Include="Content\img\playlistheader.jpg" />
+    <Content Include="Content\img\registerbanner.jpg" />
     <Content Include="Content\img\round_shape_loader.gif" />
-    <Content Include="Content\modal.css" />
-    <Content Include="Content\Portal.css">
-      <DependentUpon>Portal.scss</DependentUpon>
-    </Content>
+    <Content Include="Content\img\song-note.png" />
     <Content Include="Content\Portal.min.css">
       <DependentUpon>Portal.css</DependentUpon>
     </Content>
+    <Content Include="Content\modal.css" />
+    <Content Include="Content\playlistheader.jpg" />
     <Content Include="Content\Site.css">
       <DependentUpon>Site.scss</DependentUpon>
     </Content>
@@ -306,6 +309,7 @@
     <Content Include="Scripts\materialize.js" />
     <Content Include="Scripts\materialize.min.js" />
     <Content Include="Scripts\modal.js" />
+    <Content Include="Scripts\notie.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -350,6 +354,8 @@
     <Content Include="Views\Playlist\View.cshtml" />
     <Content Include="Views\Playlist\PlaylistTable.cshtml" />
     <Content Include="Views\Home\Portal.cshtml" />
+    <Content Include="Views\History\PlaylistTable.cshtml" />
+    <Content Include="Views\History\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />

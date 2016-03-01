@@ -92,5 +92,10 @@ namespace BB.BL
         {
             return repo.UpdateUser(user);
         }
+
+        public IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation)
+        {
+            return repo.ReadCoOrganiserFromOrganisation(organisation);
+        }
     }
 }

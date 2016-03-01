@@ -170,6 +170,69 @@ header {
     }
 }
 
+#playlistbanner {
+    width: 100%;
+    min-height: 250px;
+    z-index: 0;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1em;
+    height: 250px;
+    background-image: url('/Content/img/playlistheader.jpg'); 
+    background-repeat: no-repeat; 
+    background-size: cover;
+
+    .content {
+        padding: 2.4% $sidemargin 3em $sidemargin;
+        margin: 0 auto;
+        max-width: $maxpagewidth;
+        color: white;
+        
+        top: 0;
+        
+
+        h1 {
+            font-weight: 100;
+            color: white;
+            font-size: 3.4em;
+            margin-top: 0.5em;
+            margin-bottom: 0;
+            top: 0;
+            text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+        }
+        img {
+            float: left;
+            margin-right: 30px;
+            background-color: rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1em;
+            font-weight: 200;
+            font-size: 2em;
+            text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+            }
+        
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            padding: 4% $sidemargin-mobile 3em $sidemargin-mobile;
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+        }
+    }
+
+    @media screen and (max-width: $mobile-breakpoint) {
+        min-height: 270px;
+    }
+}
+
 .intro-item {
     i {
         display: inline-block;
@@ -222,6 +285,33 @@ header {
     }
 }
 
+.co-organiser {
+    display: inline-block;
+    text-align: center;
+    margin: .5em;
+
+   img {
+        display: block;
+        width: 50px;
+        height: 50px;
+        margin-bottom: .5em;
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            max-width: 10px;
+            max-height: 10px;
+            margin-right: .5em;
+    }
+}
+        @media screen and (max-width: $mobile-breakpoint) {
+        display: block;
+        text-align: left;
+
+        img{
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+}
 .body-content {
     padding: 1em $sidemargin;
     max-width: $maxpagewidth;
@@ -467,7 +557,7 @@ header {
     width: 0.1%;
     height: 100%;
     background-color: black;
-    border: solid 1px;
+    border: 0.2px solid;
 }
     
 .form-label {
@@ -487,6 +577,7 @@ header {
     border-radius: 50%;
 }
 
+
 .borderround {
     border-radius: 50%;
     border-color: lightgray;
@@ -494,7 +585,8 @@ header {
 }
 
 .borderround:hover {
-    border-color: #0000FF;
+    border-color: black;
+    cursor: pointer;
 }
 
 .custom-validation {
@@ -567,6 +659,10 @@ header {
     float: right;
 }
 
+.btn-left {
+    float: left;
+}
+
 .btn-login {
 width: 270px; 
 height: 3em; 
@@ -607,3 +703,29 @@ footer {
 .hidden {
     display: none;
 }
+#footerSlideContainer {
+	position: fixed;
+	bottom:0;
+	width: 100%;
+    min-width: 100%;
+    left:0;
+    right:0;
+    background: black;
+    
+   
+}
+
+#footerSlideContent {
+	width: 70%;
+	height: 20px;
+	margin: auto;
+    margin-top: 0.2em;
+    vertical-align: middle;
+	color: white;
+	
+	border: none;
+	
+}
+
+
+

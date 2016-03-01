@@ -127,6 +127,52 @@ header {
     #banner {
       min-height: 270px; } }
 
+#playlistbanner {
+  width: 100%;
+  min-height: 250px;
+  z-index: 0;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1em;
+  height: 250px;
+  background-image: url("/Content/img/playlistheader.jpg");
+  background-repeat: no-repeat;
+  background-size: cover; }
+  #playlistbanner .content {
+    padding: 2.4% 5em 3em 5em;
+    margin: 0 auto;
+    max-width: 1500px;
+    color: white;
+    top: 0; }
+    #playlistbanner .content h1 {
+      font-weight: 100;
+      color: white;
+      font-size: 3.4em;
+      margin-top: 0.5em;
+      margin-bottom: 0;
+      top: 0;
+      text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4); }
+    #playlistbanner .content img {
+      float: left;
+      margin-right: 30px;
+      background-color: rgba(0, 0, 0, 0.6); }
+    #playlistbanner .content h2 {
+      margin-top: 0;
+      margin-bottom: 1em;
+      font-weight: 200;
+      font-size: 2em;
+      text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5); }
+    @media screen and (max-width: 600px) {
+      #playlistbanner .content {
+        padding: 4% 1em 3em 1em; }
+        #playlistbanner .content h1 {
+          font-size: 2.5em; }
+        #playlistbanner .content h2 {
+          font-size: 1.6em; } }
+  @media screen and (max-width: 600px) {
+    #playlistbanner {
+      min-height: 270px; } }
+
 .intro-item i {
   display: inline-block;
   font-size: 4em;
@@ -165,6 +211,28 @@ header {
       display: block;
       text-align: left; }
       .about-user img {
+        display: inline-block;
+        vertical-align: middle; } }
+
+.co-organiser {
+  display: inline-block;
+  text-align: center;
+  margin: .5em; }
+  .co-organiser img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-bottom: .5em; }
+    @media screen and (max-width: 600px) {
+      .co-organiser img {
+        max-width: 10px;
+        max-height: 10px;
+        margin-right: .5em; } }
+  @media screen and (max-width: 600px) {
+    .co-organiser {
+      display: block;
+      text-align: left; }
+      .co-organiser img {
         display: inline-block;
         vertical-align: middle; } }
 
@@ -347,7 +415,7 @@ header {
   width: 0.1%;
   height: 100%;
   background-color: black;
-  border: solid 1px; }
+  border: 0.2px solid; }
 
 .form-label {
   width: 90%;
@@ -369,7 +437,8 @@ header {
   border: 2px solid; }
 
 .borderround:hover {
-  border-color: #0000FF; }
+  border-color: black;
+  cursor: pointer; }
 
 .custom-validation {
   color: red;
@@ -423,6 +492,9 @@ header {
 .btn-right {
   float: right; }
 
+.btn-left {
+  float: left; }
+
 .btn-login {
   width: 270px;
   height: 3em;
@@ -455,4 +527,22 @@ footer {
 
 .hidden {
   display: none; }
+
+#footerSlideContainer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  min-width: 100%;
+  left: 0;
+  right: 0;
+  background: black; }
+
+#footerSlideContent {
+  width: 70%;
+  height: 20px;
+  margin: auto;
+  margin-top: 0.2em;
+  vertical-align: middle;
+  color: white;
+  border: none; }
 

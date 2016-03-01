@@ -92,7 +92,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 }
             }
 
-            var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, null, user);
+            var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
             if (playlist != null)
                 return Request.CreateResponse(HttpStatusCode.OK, playlist);
             
