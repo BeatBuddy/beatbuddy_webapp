@@ -14,7 +14,7 @@
 </head>
 <body>
     <header>
-        <a href="@(Request.IsAuthenticated ? Url.Action("Portal", "Home") : Url.Action("Index", "Home"))"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a>
+        <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a>
         <ul class="nav">
             <li>@Html.Partial("_LoginPartial")</li>
         </ul>
@@ -30,7 +30,7 @@
     @if (ViewBag.NoFooter == null)
     {
         <footer>
-            Copyright &copy; @DateTime.Today.Year
+            Copyright &copy; @DateTime.Today.Year Team D
         </footer>
     }
 

@@ -20,8 +20,8 @@ body {
 }
 
 a.disabled {
-   pointer-events: none;
-   cursor: default;
+    pointer-events: none;
+    cursor: default;
 }
 
 header {
@@ -131,7 +131,7 @@ header {
             font-weight: 200;
             font-size: 2em;
             text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
-            }
+        }
 
         .button {
             display: inline-block;
@@ -178,8 +178,8 @@ header {
     overflow: hidden;
     margin-bottom: 1em;
     height: 250px;
-    background-image: url('/Content/img/playlistheader.jpg'); 
-    background-repeat: no-repeat; 
+    background-image: url('/Content/img/playlistheader.jpg');
+    background-repeat: no-repeat;
     background-size: cover;
 
     .content {
@@ -187,9 +187,8 @@ header {
         margin: 0 auto;
         max-width: $maxpagewidth;
         color: white;
-        
         top: 0;
-        
+
 
         h1 {
             font-weight: 100;
@@ -200,6 +199,7 @@ header {
             top: 0;
             text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
         }
+
         img {
             float: left;
             margin-right: 30px;
@@ -212,8 +212,8 @@ header {
             font-weight: 200;
             font-size: 2em;
             text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
-            }
-        
+        }
+
 
         @media screen and (max-width: $mobile-breakpoint) {
             padding: 4% $sidemargin-mobile 3em $sidemargin-mobile;
@@ -250,7 +250,7 @@ header {
         margin-bottom: .6em;
         vertical-align: top;
     }
-        }
+}
 
 .about-user {
     display: inline-block;
@@ -271,14 +271,14 @@ header {
             max-width: 64px;
             max-height: 64px;
             margin-right: .5em;
+        }
     }
-}
 
     @media screen and (max-width: $mobile-breakpoint) {
         display: block;
         text-align: left;
 
-        img{
+        img {
             display: inline-block;
             vertical-align: middle;
         }
@@ -290,7 +290,7 @@ header {
     text-align: center;
     margin: .5em;
 
-   img {
+    img {
         display: block;
         width: 50px;
         height: 50px;
@@ -300,18 +300,20 @@ header {
             max-width: 10px;
             max-height: 10px;
             margin-right: .5em;
+        }
     }
-}
-        @media screen and (max-width: $mobile-breakpoint) {
+
+    @media screen and (max-width: $mobile-breakpoint) {
         display: block;
         text-align: left;
 
-        img{
+        img {
             display: inline-block;
             vertical-align: middle;
         }
     }
 }
+
 .body-content {
     padding: 1em $sidemargin;
     max-width: $maxpagewidth;
@@ -452,7 +454,7 @@ header {
 }
 
 #custom-inputform-registration {
-    border-right: 1px solid #d3d3d3; 
+    border-right: 1px solid #d3d3d3;
     display: block;
 
     .container-form {
@@ -460,14 +462,14 @@ header {
         float: right;
 
         .div-image-form {
-            margin-top: 22px; 
-            margin-bottom: 22px; 
+            margin-top: 22px;
+            margin-bottom: 22px;
             text-align: center;
 
             .image-form {
                 width: 150px;
-                   height: 150px; 
-                   cursor: pointer;  
+                height: 150px;
+                cursor: pointer;
             }
         }
 
@@ -476,17 +478,17 @@ header {
         }
 
         .column-right-form {
-            float: right; 
+            float: right;
             overflow: hidden;
         }
 
         .form-groups {
-                margin-top: 7px;
+            margin-top: 7px;
         }
 
         .create {
             margin-top: 20px;
-                margin-right: 13px;
+            margin-right: 13px;
         }
     }
 }
@@ -559,17 +561,17 @@ header {
     background-color: black;
     border: 0.2px solid;
 }
-    
+
 .form-label {
     width: 90%;
-            vertical-align: middle; 
-            word-wrap: break-word; 
-            float: left;
+    vertical-align: middle;
+    word-wrap: break-word;
+    float: left;
 }
 
 .form-img-icon {
-    cursor: pointer; 
-    float: right; 
+    cursor: pointer;
+    float: right;
     vertical-align: middle;
 }
 
@@ -664,9 +666,9 @@ header {
 }
 
 .btn-login {
-width: 270px; 
-height: 3em; 
-margin-top: 1em;
+    width: 270px;
+    height: 3em;
+    margin-top: 1em;
 }
 
 .min-margin-top {
@@ -686,39 +688,49 @@ margin-top: 1em;
 }
 
 footer {
-    padding: 1em $sidemargin;
-    max-width: $maxpagewidth;
-    margin: auto;
+    #footer-top {
+        background-color: #333;
+        padding: 1em $sidemargin;
+        max-width: $maxpagewidth;
+        margin: auto;
 
-    @media screen and (max-width: $mobile-breakpoint) {
-        padding: 0 $sidemargin-mobile;
+        @media screen and (max-width: $mobile-breakpoint) {
+            padding: 0 $sidemargin-mobile;
+        }
+    }
+
+    #footer-bottom {
+        background-color: black;
+        padding: 1em $sidemargin;
+        max-width: $maxpagewidth;
+        margin: auto;
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            padding: 0 $sidemargin-mobile;
+        }
     }
 }
 
 .hidden {
     display: none;
 }
+
 #footerSlideContainer {
-	position: fixed;
-	bottom:0;
-	width: 100%;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     min-width: 100%;
-    left:0;
-    right:0;
+    left: 0;
+    right: 0;
     background: black;
 }
 
 #footerSlideContent {
-	width: 70%;
-	height: 20px;
-	margin: auto;
+    width: 70%;
+    height: 20px;
+    margin: auto;
     margin-top: 0.2em;
     vertical-align: middle;
-	color: white;
-	
-	border: none;
-	
+    color: white;
+    border: none;
 }
-
-
-
