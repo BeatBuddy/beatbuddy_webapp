@@ -288,13 +288,12 @@ header {
 .co-organiser {
     display: inline-block;
     text-align: center;
-    margin: .5em;
 
    img {
         display: block;
         width: 50px;
         height: 50px;
-        margin-bottom: .5em;
+        padding-left: .5em;
 
         @media screen and (max-width: $mobile-breakpoint) {
             max-width: 10px;
@@ -312,6 +311,11 @@ header {
         }
     }
 }
+.add-playlist {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
 .body-content {
     padding: 1em $sidemargin;
     max-width: $maxpagewidth;
@@ -419,6 +423,11 @@ header {
             min-width: 150px;
         }
     }
+}
+
+#playlist-overview {
+    padding: 0;
+    width: 100%;
 }
 
 #player {

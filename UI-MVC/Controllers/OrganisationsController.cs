@@ -74,9 +74,9 @@ namespace BB.UI.Web.MVC.Controllers
                     Organiser = organiser,
                     CoOrganiser = coOrganisers
                 };
-                page = 1;
                 var playlists = organisation.Playlists;
-                int pageSize = 5;
+                int pageSize = 3;
+                
                 int pageNumber = (page ?? 1);
                 organisationView.Playlists = playlists.ToPagedList(pageNumber, pageSize);
                 return View("Details", organisationView);
@@ -141,7 +141,7 @@ namespace BB.UI.Web.MVC.Controllers
             }
             catch
             {
-                return View(organisation);
+                return RedirectToAction("Index");
             }
         }
 
