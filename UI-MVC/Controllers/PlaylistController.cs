@@ -103,7 +103,6 @@ namespace BB.UI.Web.MVC.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-
         public JsonResult SearchTrack(string q)
         {
             var youtubeProvider = new YouTubeTrackProvider();

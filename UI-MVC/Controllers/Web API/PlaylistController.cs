@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing.Imaging;
 using System.IO;
@@ -23,17 +24,20 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
     {
         private readonly IPlaylistManager playlistManager;
         private readonly IUserManager userManager;
+        private readonly ITrackProvider trackProvider;
 
         public PlaylistController()
         {
             playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
             userManager = new UserManager(ContextEnum.BeatBuddy);
+            trackProvider = new YouTubeTrackProvider();
         }
 
         public PlaylistController(ContextEnum contextEnum)
         {
             playlistManager = new PlaylistManager(contextEnum);
             userManager = new UserManager(contextEnum);
+            trackProvider = new YouTubeTrackProvider();
         }
 
         [AllowAnonymous]
@@ -95,5 +99,35 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("searchTrack")]
+        [ResponseType(typeof(List<Track>))]
+        public HttpResponseMessage searchTrack(string q)
+        {
+            if (q == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            var youtubeProvider = new YouTubeTrackProvider();
+            var searchResult = youtubeProvider.Search(q);
+
+            return Request.CreateResponse(HttpStatusCode.OK, searchResult);
+        }
+        
+        [HttpPost]
+        [Route("{playlistId}/addTrack")]
+        [ResponseType(typeof(Track))]
+        public HttpResponseMessage AddTrack(long playlistId, string trackId)
+        {
+            var track = trackProvider.LookupTrack(trackId);
+            if (track == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            track = playlistManager.AddTrackToPlaylist(
+                playlistId,
+                track
+            );
+
+            if (track == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            return Request.CreateResponse(HttpStatusCode.OK, track);
+        }
     }
 }
