@@ -98,7 +98,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             {
                 return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
-            private set
+            set
             {
                 _userManager = value;
             }

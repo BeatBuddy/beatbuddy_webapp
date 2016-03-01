@@ -85,6 +85,14 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -274,6 +282,11 @@
     <Content Include="Content\img\playlistheader.jpg" />
     <Content Include="Content\img\registerbanner.jpg" />
     <Content Include="Content\img\round_shape_loader.gif" />
+    <Content Include="Content\modal.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\Portal.css">
+      <DependentUpon>Portal.scss</DependentUpon>
+    </Content>
     <Content Include="Content\img\song-note.png" />
     <Content Include="Content\Portal.css">
       <DependentUpon>Portal.scss</DependentUpon>

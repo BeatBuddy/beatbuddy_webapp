@@ -24,7 +24,7 @@
     </tr>
     @foreach (PlaylistTrack track in Model.PlaylistTracks)
     {
-        <tr class="track">
+        <tr class="track" data-id="@track.Track.TrackSource.TrackId" data-artist="@track.Track.Artist" data-title="@track.Track.Title" data-thumbnail="@track.Track.CoverArtUrl">
             <td>
                 @track.Id
             </td>

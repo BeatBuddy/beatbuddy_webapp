@@ -42,7 +42,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             var playlistResult = controller.View(1) as ViewResult;
 
             Assert.IsNotNull(playlistResult);
-            
+
             var playlist = playlistResult.Model as Playlist;
 
             Assert.IsNotNull(playlist);
@@ -75,19 +75,21 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestMoveTrackToHistory()
         {
-            var addTrackResult = controller.MoveTrackToHistory(1) as HttpStatusCodeResult;
-
-            Assert.IsNotNull(addTrackResult);
-            Assert.AreEqual(200, addTrackResult.StatusCode);
-
             var playlistResult = controller.View(1) as ViewResult;
+            var playlist = playlistResult?.Model as Playlist;
+            var playlistTracks = playlist?.PlaylistTracks;
+            var aantalTracks = playlistTracks?.Count ?? 0; // get the amount of tracks in the playlist
+            
+            var moveTrackResult = controller.MoveTrackToHistory(1) as HttpStatusCodeResult;
+            Assert.IsNotNull(moveTrackResult);
+            Assert.AreEqual(200, moveTrackResult.StatusCode);
 
+            playlistResult = controller.View(1) as ViewResult;
             Assert.IsNotNull(playlistResult);
 
-            var playlist = playlistResult.Model as Playlist;
-
+            playlist = playlistResult.Model as Playlist;
             Assert.IsNotNull(playlist);
-            Assert.AreEqual(1, playlist.PlaylistTracks.Count); // after moving the one and only track to the history, the tracks in the playlist view should be empty
+            Assert.AreEqual(aantalTracks - 1, playlist.PlaylistTracks.Count); // after moving the track to the history, make sure it is one less track compared to in the beginning
         }
 
 
@@ -104,7 +106,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);
             Playlist playlist = playlistManager.ReadPlaylist("Awesome party");
             Assert.AreEqual(playlist.Active, true);
-            
+
         }
     }
 }

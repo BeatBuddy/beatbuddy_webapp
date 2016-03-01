@@ -35,19 +35,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             userManager = new UserManager(contextEnum);
         }
 
-
-        // GET: api/Organisations
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Organisations/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST: api/organisations
         [HttpPost]
         [Authorize]
@@ -97,14 +84,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         }
 
-        // PUT: api/Organisations/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Organisations/5
-        public void Delete(int id)
-        {
-        }
+       
     }
 }

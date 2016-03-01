@@ -48,7 +48,7 @@ namespace BB.BL
         void DeleteTrackSource(long trackSourceId);
 
         //Vote
-        Vote CreateVote(int score, User user);
+        Vote CreateVote(int score, long id, long trackId);
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
