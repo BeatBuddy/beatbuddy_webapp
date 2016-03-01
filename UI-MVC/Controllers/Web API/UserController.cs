@@ -125,7 +125,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     p.MaximumVotesPerUser,
                     p.Active,
                     p.ImageUrl,
-                    p.PlaylistMasterId,
                     p.CreatedById,
                     p.Description
                 });
@@ -139,7 +138,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             {
                 return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
-            private set
+            set
             {
                 _userManager = value;
             }

@@ -24,8 +24,9 @@ namespace BB.DAL.EFPlaylist
         IEnumerable<Playlist> ReadPlaylists(Organisation organisation);
         IEnumerable<Playlist> ReadPlaylists(long userId);
         void DeletePlaylist(long playlistId);
+        IEnumerable<Playlist> ReadPlaylistsForUser(long userId);
 
-        //PlaylistTracks
+            //PlaylistTracks
         PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack);
         PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack);
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
@@ -47,7 +48,7 @@ namespace BB.DAL.EFPlaylist
         void DeleteTrackSource(long trackSourceId);
 
         //Vote
-        Vote CreateVote(Vote vote);
+        Vote CreateVote(Vote vote, long userId, long trackId);
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);

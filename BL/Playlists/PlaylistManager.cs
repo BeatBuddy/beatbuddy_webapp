@@ -63,6 +63,12 @@ namespace BB.BL
             return repo.CreatePlaylist(playlist, organisation);
         }
 
+
+        public IEnumerable<Playlist> ReadPlaylistsForUser(long userId)
+        {
+            return repo.ReadPlaylistsForUser(userId);
+        }
+
         public PlaylistTrack CreatePlaylistTrack(Track track)
         {
             PlaylistTrack playlistTrack = new PlaylistTrack()
@@ -84,14 +90,13 @@ namespace BB.BL
             return repo.CreateTrackSource(trackSource);
         }
 
-        public Vote CreateVote(int score, User user)
+        public Vote CreateVote(int score, long id, long trackId)
         {
             Vote vote = new Vote()
             {
                 Score = score,
-                User = user
             };
-            return repo.CreateVote(vote);
+            return repo.CreateVote(vote, id, trackId);
         }
 
         public void DeleteComment(long commentId)

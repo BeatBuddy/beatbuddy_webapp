@@ -4,6 +4,7 @@ using BB.BL.Domain;
 using BB.DAL.EFUser;
 using BB.BL.Domain.Organisations;
 using BB.DAL.EFOrganisation;
+using System;
 
 namespace BB.BL
 {
@@ -96,6 +97,16 @@ namespace BB.BL
         public IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation)
         {
             return repo.ReadCoOrganiserFromOrganisation(organisation);
+        }
+
+        public UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId)
+        {
+            return repo.ReadUserRoleForUserAndOrganisation(userId, organisationId);
+        }
+
+        public void DeleteUserRole(UserRole userRole)
+        {
+            repo.DeleteUserRole(userRole);
         }
     }
 }

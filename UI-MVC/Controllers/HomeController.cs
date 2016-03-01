@@ -36,8 +36,8 @@ namespace BB.UI.Web.MVC.Controllers
             if (user == null) return RedirectToAction("Index", "Home");
 
             ViewBag.Name = user.FirstName;
-            ViewBag.MyOrganisations = organisationManager.ReadOrganisations(user.Id).ToList();
-            ViewBag.MyPlaylists = playlistManager.ReadPlaylists(user.Id).ToList();
+            ViewBag.MyOrganisations = organisationManager.ReadOrganisationsForUser(user.Id).ToList(); 
+            ViewBag.MyPlaylists = playlistManager.ReadPlaylistsForUser(user.Id).ToList(); 
             ViewBag.RecommendedPlaylists = playlistManager.ReadPlaylists().Reverse().Take(3).ToList();
             return View();
         }

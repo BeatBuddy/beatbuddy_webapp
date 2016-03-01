@@ -25,7 +25,17 @@ namespace BB.BL
             organisationsRepository = new OrganisationRepository(ContextEnum.BeatBuddy);
             userRepository = new UserRepository(ContextEnum.BeatBuddy);
         }
-        
+
+        public Organisation ReadOrganisationForPlaylist(long playlistId)
+        {
+            return organisationsRepository.ReadOrganisationForPlaylist(playlistId);
+        }
+
+        public IEnumerable<Organisation> ReadOrganisationsForUser(long userId)
+        {
+            return organisationsRepository.ReadOrganisationsForUser(userId);
+        }
+
         public DashboardBlock CreateDashboardBlock(string blockName, int sequence)
         {
             DashboardBlock block = new DashboardBlock

@@ -11,6 +11,9 @@
   line-height: .3em;
   margin-left: -.1em; }
 
+.material-icons.grey400 {
+  color: #BDBDBD; }
+
 a.disabled {
   pointer-events: none;
   cursor: default; }
@@ -216,13 +219,12 @@ header {
 
 .co-organiser {
   display: inline-block;
-  text-align: center;
-  margin: .5em; }
+  text-align: center; }
   .co-organiser img {
     display: block;
     width: 50px;
     height: 50px;
-    margin-bottom: .5em; }
+    padding-left: .5em; }
     @media screen and (max-width: 600px) {
       .co-organiser img {
         max-width: 10px;
@@ -235,6 +237,10 @@ header {
       .co-organiser img {
         display: inline-block;
         vertical-align: middle; } }
+
+.add-playlist {
+  margin-bottom: 20px;
+  padding-bottom: 20px; }
 
 .body-content {
   padding: 1em 5em;
@@ -307,6 +313,10 @@ header {
       min-width: 150px; }
     #playlist-tracks .track .tracktitle {
       min-width: 150px; }
+
+#playlist-overview {
+  padding: 0;
+  width: 100%; }
 
 #player {
   margin-top: 2em;
@@ -491,6 +501,9 @@ header {
 
 .btn-right {
   float: right; }
+
+.btn-portal {
+  width: 175px; }
 
 .btn-left {
   float: left; }

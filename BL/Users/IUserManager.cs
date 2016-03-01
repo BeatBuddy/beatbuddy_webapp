@@ -21,5 +21,7 @@ namespace BB.BL
         UserRole CreateUserRole(long userId, long organisationId, Role role);
         IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation);
         IEnumerable<UserRole> ReadOrganisationsForUser(long userId);
+        UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId);
+        void DeleteUserRole(UserRole userRole);
     }
 }

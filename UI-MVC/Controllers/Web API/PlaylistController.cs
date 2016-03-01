@@ -146,7 +146,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     p.MaximumVotesPerUser,
                     p.Active,
                     p.ImageUrl,
-                    p.PlaylistMasterId,
                     p.CreatedById,
                     p.Description
                 }));

@@ -1,6 +1,8 @@
 ﻿@using BB.BL.Domain.Organisations
 @using BB.BL.Domain.Playlists
 @using BB.UI.Web.MVC.Controllers.Utils
+@using BB.UI.Web.MVC.Models
+
 @{
     ViewBag.Title = "Portal";
 }
@@ -16,11 +18,21 @@
         </div>
     </div>
 }
-
+<div id="myModal" class="modal" style="margin-top: -90px">
+    <div class="modal-content" style="width: 620px; height: 530px">
+        <a href="#close" title="Close" class="close">X</a>
+        <div class="modal-body" style="margin-left: 60px; width: 100%">
+            @Html.Partial("~/Views/Organisations/Create.cshtml", new OrganisationViewModel())
+        </div>
+    </div>
+</div>
 <section>
     <div class="title">
         <h1>My Organisations</h1>
         @ViewBag.MyOrganisations.Count
+        <a href="#myModal" class="btn btn-right btn-portal" style="font-size: 0.6em">
+            <i class="material-icons">playlist_add</i> add organisation
+        </a>
     </div>
     <div class="container row">
         @foreach (Organisation organisation in ViewBag.MyOrganisations)
@@ -54,6 +66,9 @@
     <div class="title">
         <h1>My playlists</h1>
         @ViewBag.MyPlaylists.Count
+        <a href="" class="btn btn-right btn-portal" style="font-size: 0.6em">
+            <i class="material-icons">playlist_add</i> add playlist
+        </a>
     </div>
 
     <div class="container row">
@@ -62,7 +77,7 @@
             <a href="@Url.Action("View", "Playlist", new { id = playlist.Id })">
                 <div class="col-md-4 col-xs-12 organisation-wrapper">
                     @{
-                        var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                        var playlistSource = "/Content/img/playlistavatar.png";
                         if (playlist.ImageUrl != null)
                         {
                             playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
@@ -72,7 +87,7 @@
 
                     <h3>@playlist.Name</h3>
 
-                    <div>@playlist.PlaylistTracks.Count tracks</div>
+                    <div>@playlist.PlaylistTracks.ToList().FindAll(p => p.PlayedAt == null).Count tracks in queue</div>
                     <div class="clear-playlist">&nbsp;</div>
                 </div>
             </a>
@@ -97,7 +112,7 @@
             <a href="@Url.Action("View", "Playlist", new { id = playlist.Id })">
                 <div class="col-md-4 col-xs-12 organisation-wrapper">
                     @{
-                        var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                        var playlistSource = "/Content/img/playlistavatar.png";
                         if (playlist.ImageUrl != null)
                         {
                             playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
@@ -107,7 +122,7 @@
 
                     <h3>@playlist.Name</h3>
 
-                    <div>@playlist.PlaylistTracks.Count tracks</div>
+                    <div>@playlist.PlaylistTracks.ToList().FindAll(p => p.PlayedAt == null).Count tracks in queue</div>
                     <div class="clear-playlist">&nbsp;</div>
                 </div>
             </a>

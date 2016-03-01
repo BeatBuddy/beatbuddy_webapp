@@ -9,7 +9,7 @@ namespace BB.UI.Web.MVC
 {
     public partial class Startup
     {
-        public void Configuration(IAppBuilder app)
+        public virtual void Configuration(IAppBuilder app)
         {
 
             ConfigureAuth(app);
@@ -18,6 +18,7 @@ namespace BB.UI.Web.MVC
         {
             HttpConfiguration config = new HttpConfiguration();
             WebApiConfig.Register(config);
+            
             ConfigureOAuth(inner);
             inner.UseWebApi(config);
         });
