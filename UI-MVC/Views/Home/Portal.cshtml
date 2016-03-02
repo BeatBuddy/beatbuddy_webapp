@@ -49,16 +49,17 @@
 <section>
     <div class="title">
         <h1>My Organisations</h1>
-        @ViewBag.MyOrganisations.Count
+        <div id="organisationCount" style="display: inline">@ViewBag.MyOrganisations.Count</div>
         <a href="#myModal" class="btn btn-right btn-portal" style="font-size: 0.6em">
             <i class="material-icons">playlist_add</i> add organisation
         </a>
     </div>
-    <div class="container row">
+    
+    <div class="container row" id="myOrganisations">
         @foreach (Organisation organisation in ViewBag.MyOrganisations)
         {
-            <a href="@Url.Action("Details", "Organisations", new { id = organisation.Id })">
-            <div class="col-md-4 col-xs-12 organisation-wrapper">
+            
+            <div class="col-md-4 col-xs-12 organisation-wrapper" >
                 @{
                     var organisationSource = "https://unsplash.com/photos/P8kVtyU32I0/download";
                     if (organisation.BannerUrl != null)
@@ -66,13 +67,25 @@
                         organisationSource = FileHelper.GetImagePath("OrganisationsImgPath", organisation.BannerUrl);
                     }
                 }
+                <a href="@Url.Action("Details", "Organisations", new {id = organisation.Id})">
+                    <div style="background-image: url(@organisationSource)" class="organisation-banner">&nbsp;</div>
 
-                <div style="background-image: url(@organisationSource)" class="organisation-banner">&nbsp;</div>
-
-                <h3>@organisation.Name</h3>
-                <div>@organisation.Playlists.Count playlists</div>
-            </div>
-            </a>
+                    <h3>@organisation.Name</h3>
+                </a>
+                    <div style="display: inline-block; float: right;margin: 0; margin-top: 0.6em; margin-bottom: 0.2em;">
+                        <ul class="menu">
+                            <li>
+                                <a href="#"><i class="material-icons" style="color: black">settings</i></a>
+                                <ul>
+                                    <li style="cursor: pointer"><a onclick="updateOrganisation(@organisation.Id)">Edit</a></li>
+                                    <li style="cursor: pointer"><a onclick="deleteOrganisation(@organisation.Id)">Delete</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>@organisation.Playlists.Count playlists</div>
+</div>
+            
          }
         @if (ViewBag.MyOrganisations.Count == 0)
         {
@@ -182,6 +195,25 @@
         });
     }
         function updatePlaylist(playlistId) {
+            $('#editPlaylistModal-body').load("/Playlist/Edit/" + playlistId);
+            window.location.href = '#editPlaylistModal';
+        }
+
+        function deleteOrganisation(organisationId) {
+            $.ajax({
+                url: '@Url.Action("Delete","Organisations")',
+                method: 'POST',
+                data: { id: organisationId }
+            }).done(function () {
+                notie.alert(1, 'Organisation successfull deleted', 2.5);
+                $("#myOrganisations").load(location.href + " #myOrganisations");
+                $("#organisationCount").load(location.href + " #organisationCount");
+
+            }).fail(function() {
+                notie.alert(3, 'Failed to delete organisation', 2.5);
+            });
+        }
+        function updateOrganisation(organisationId) {
             $('#editPlaylistModal-body').load("/Playlist/Edit/" + playlistId);
             window.location.href = '#editPlaylistModal';
         }

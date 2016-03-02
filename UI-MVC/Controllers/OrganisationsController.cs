@@ -208,26 +208,16 @@ namespace BB.UI.Web.MVC.Controllers
             }
         }
 
-        // GET: Organisations/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+      
 
-        // POST: Organisations/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Delete(long id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var organisation = organisationManager.DeleteOrganisation(id);
+            if (organisation == null) return new HttpStatusCodeResult(400);
+            return new HttpStatusCodeResult(200);
         }
+       
     }
 }

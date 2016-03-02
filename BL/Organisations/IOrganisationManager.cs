@@ -13,7 +13,7 @@ namespace BB.BL
         IEnumerable<Organisation> ReadOrganisations(long userId);
         Organisation ReadOrganisation(long organisationId);
         Organisation ReadOrganisation(string organisationName);
-        void DeleteOrganisation(long organisationId);
+        Organisation DeleteOrganisation(long organisationId);
         Organisation ReadOrganisationForPlaylist(long playlistId);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
 

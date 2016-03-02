@@ -64,9 +64,9 @@ namespace BB.BL
             organisationsRepository.DeleteDashboardBlock(blockId);
         }
 
-        public void DeleteOrganisation(long organisationId)
+        public Organisation DeleteOrganisation(long organisationId)
         {
-            organisationsRepository.DeleteOrganisation(organisationId);
+            return organisationsRepository.DeleteOrganisation(organisationId);
         }
 
         public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)

@@ -13,7 +13,7 @@ namespace BB.DAL.EFOrganisation
         Organisation ReadOrganisation(long organisationId);
         Organisation ReadOrganisation(string organisationName);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
-        void DeleteOrganisation(long organisationId);
+        Organisation DeleteOrganisation(long organisationId);
         Organisation ReadOrganisationForPlaylist(long playlistId);
         //DashboardBlock
         DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock);
