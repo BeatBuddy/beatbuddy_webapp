@@ -24,7 +24,7 @@ namespace BB.BL
         IEnumerable<Playlist> ReadPlaylists();
         IEnumerable<Playlist> ReadPlaylists(Organisation organisation);
         IEnumerable<Playlist> ReadPlaylists(long userId);
-        void DeletePlaylist(long playlistId);
+        Playlist DeletePlaylist(long playlistId);
         IEnumerable<Playlist> ReadPlaylistsForUser(long userId);
         //PlaylistTracks
         PlaylistTrack CreatePlaylistTrack(Track track);

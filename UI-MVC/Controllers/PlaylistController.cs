@@ -88,6 +88,7 @@ namespace BB.UI.Web.MVC.Controllers
             
             return View(playlist);
         }
+        
 
         [HttpPost]
         public ActionResult AddVote(int vote, long id)
@@ -178,6 +179,52 @@ namespace BB.UI.Web.MVC.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Edit(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            var model = new PlaylistViewModel()
+            {
+                Name = playlist.Name,
+                Description = playlist.Description,
+                ImageUrl = playlist.ImageUrl,
+                Key = playlist.Key,
+                MaximumVotesPerUser = playlist.MaximumVotesPerUser
+            };
+            return PartialView(model);
+        }
+
+        // POST: Default/Edit/5
+        [HttpPost]
+        public ActionResult Edit(long id, PlaylistViewModel model, HttpPostedFileBase avatarImage)
+        {
+            try
+            {
+                var playlist = playlistManager.ReadPlaylist(id);
+                playlist.Name = model.Name;
+                playlist.Description = model.Description;
+                playlist.Key = model.Key;
+                playlist.ImageUrl = model.ImageUrl;
+                string path = null;
+
+                if (avatarImage != null && avatarImage.ContentLength > 0)
+                {
+                    var bannerFileName = Path.GetFileName(avatarImage.FileName);
+                    path = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), bannerFileName));
+                    avatarImage.SaveAs(path);
+                    path = Path.GetFileName(path);
+                }
+                playlist.ImageUrl = path;
+
+                playlistManager.UpdatePlaylist(playlist);
+
+                return RedirectToAction("Portal", "Home");
+            }
+            catch
+            {
+                return new HttpStatusCodeResult(400);
+            }
+        }
+
         // GET: Playlists
         public ActionResult Index()
         {
@@ -237,6 +284,15 @@ namespace BB.UI.Web.MVC.Controllers
 
             return RedirectToAction("View/" + playlist.Id);
 
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Delete(long id)
+        {
+            var playlist = playlistManager.DeletePlaylist(id);
+            if (playlist == null) return new HttpStatusCodeResult(400);
+            return new HttpStatusCodeResult(200);
         }
     }
 }

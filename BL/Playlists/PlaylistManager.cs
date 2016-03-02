@@ -109,9 +109,9 @@ namespace BB.BL
             return repo.ReadPlaylists(userId);
         }
 
-        public void DeletePlaylist(long playlistId)
+        public Playlist DeletePlaylist(long playlistId)
         {
-            repo.DeletePlaylist(playlistId);
+            return repo.DeletePlaylist(playlistId);
         }
 
         public void DeletePlaylistTrack(long playlistTrackId)

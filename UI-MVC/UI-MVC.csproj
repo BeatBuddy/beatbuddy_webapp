@@ -267,11 +267,13 @@
     <Content Include="Content\bootstrap-grid.min.css">
       <DependentUpon>bootstrap-grid.css</DependentUpon>
     </Content>
+    <Content Include="Content\dropit.css" />
     <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\ignace.jpg" />
     <Content Include="Content\img\jonah.jpg" />
     <Content Include="Content\img\kelly.jpg" />
     <Content Include="Content\img\lennart.jpg" />
+    <Content Include="Content\img\login-banner.jpg" />
     <Content Include="Content\img\logo_header.png" />
     <Content Include="Content\img\logo_small.png" />
     <Content Include="Content\img\maarten.jpg" />
@@ -314,6 +316,7 @@
     </None>
     <Content Include="Content\Portal.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\dropit.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -372,6 +375,7 @@
     <Content Include="Views\Home\Portal.cshtml" />
     <Content Include="Views\History\PlaylistTable.cshtml" />
     <Content Include="Views\History\View.cshtml" />
+    <Content Include="Views\Playlist\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
@@ -380,6 +384,7 @@
     <Folder Include="Content\img\Organisations\" />
     <Folder Include="Content\img\Playlists\" />
     <Folder Include="Content\img\Users\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

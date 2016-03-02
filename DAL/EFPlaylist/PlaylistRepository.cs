@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
@@ -82,9 +83,12 @@ namespace BB.DAL.EFPlaylist
             return context.Playlists.Where(p => p.CreatedById == userId);
         }
 
-        public void DeletePlaylist(long playlistId)
+        public Playlist DeletePlaylist(long playlistId)
         {
-            throw new NotImplementedException();
+            var playlist = ReadPlaylist(playlistId);
+            playlist = context.Playlists.Remove(playlist);
+            context.SaveChanges();
+            return playlist ;
         }
 
         public void DeletePlaylistTrack(long playlistTrackId)
@@ -214,7 +218,10 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist UpdatePlaylist(Playlist playlist)
         {
-            throw new NotImplementedException();
+            context.Playlists.AddOrUpdate(playlist);
+            context.Entry(playlist).State = EntityState.Modified;
+            context.SaveChanges();
+            return playlist;
         }
 
         public PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack)
