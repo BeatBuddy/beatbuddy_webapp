@@ -2,9 +2,8 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using BB.UI.Web.MVC.Controllers;
-using Microsoft.Web.Administration;
-using System.Linq;
 using System;
+using OpenQA.Selenium.Support.UI;
 
 namespace BB.UI.Web.MVC.Tests.IT
 {
@@ -32,8 +31,11 @@ namespace BB.UI.Web.MVC.Tests.IT
 
             chromeDriver.FindElement(By.XPath("//a[@href='#loginModal']")).Click();
 
+            
             loginModal = chromeDriver.FindElement(By.Id("loginModal"));
-            Assert.IsTrue(loginModal.Displayed);
+            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(5));
+            wait.Until(driver => driver.FindElement(By.Id("loginModal")).Displayed);
+            //Assert.IsTrue(loginModal.Displayed);
 
             loginModal.FindElement(By.Id("Email")).SendKeys("admin@admin.com");
             loginModal.FindElement(By.Id("Password")).SendKeys("password");
