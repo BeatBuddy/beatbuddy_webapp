@@ -11,6 +11,10 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using BB.DAL.EFUser;
+using BB.DAL;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFPlaylist;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -21,6 +25,13 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IOrganisationManager organisationManager;
         private readonly IPlaylistManager playlistManager;
         private ApplicationUserManager _userManager;
+
+        public UserController()
+        {
+            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+        }
 
         public UserController(IUserManager userManager, IOrganisationManager organisationManager, IPlaylistManager playlistManager)
         {

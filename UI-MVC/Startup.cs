@@ -25,6 +25,6 @@ namespace BB.UI.Web.MVC
             inner.UseWebApi(config);
         });
         }
-        
+         
     }
 }

@@ -113,9 +113,22 @@ namespace BB.UI.Web.MVC.Controllers
         public JsonResult SearchTrack(string q)
         {
             var youtubeProvider = new YouTubeTrackProvider();
-            var searchResult = youtubeProvider.Search(q);
+            var searchResult = youtubeProvider.Search(q, maxResults:3);
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AssignPlaylistMaster(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            var user = userManager.ReadUser(User.Identity.Name);
+            playlist.PlaylistMasterId = user.Id;
+            playlist = playlistManager.UpdatePlaylist(playlist);
+            if (playlist.PlaylistMasterId != user.Id)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.Accepted);
         }
 
         public ActionResult GetNextTrack(long id)

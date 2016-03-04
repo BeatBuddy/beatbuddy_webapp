@@ -17,6 +17,9 @@ using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Controllers.Utils;
 using YoutubeExtractor;
 using VideoLibrary;
+using BB.DAL.EFUser;
+using BB.DAL;
+using BB.DAL.EFPlaylist;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -28,6 +31,14 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IUserManager userManager;
         private readonly ITrackProvider trackProvider;
         private readonly IAlbumArtProvider albumArtProvider;
+
+        public PlaylistController()
+        {
+            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.trackProvider = new YouTubeTrackProvider();
+            this.albumArtProvider = new BingAlbumArtProvider();
+        }
 
         public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, ITrackProvider iTrackProvider, IAlbumArtProvider albumArtProvider)
         {
@@ -109,7 +120,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             return Request.CreateResponse(HttpStatusCode.OK, searchResult);
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         [Route("{playlistId}/nextTrack")]
