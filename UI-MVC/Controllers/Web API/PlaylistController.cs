@@ -134,21 +134,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var video = youTube.GetVideo(playListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
             playListTrack.Track.TrackSource.Url = video.Uri;
 
-            //YoutubeExtractor
-            /*
-            IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(track.Track.TrackSource.Url);
 
-            VideoInfo video = videoInfos
-                .Where(info => info.CanExtractAudio)
-                .OrderByDescending(info => info.AudioBitrate)
-                .Last();
 
-            if (video.RequiresDecryption)
-            {
-                DownloadUrlResolver.DecryptDownloadUrl(video);
-            }
-            track.Track.TrackSource.Url = video.DownloadUrl;
-            */
             return Ok(playListTrack.Track);
         }
 
