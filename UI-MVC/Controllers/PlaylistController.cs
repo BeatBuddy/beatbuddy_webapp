@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Models;
 using BB.BL.Domain.Organisations;
@@ -12,7 +10,6 @@ using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
-using System.Net;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -20,9 +17,9 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private readonly IPlaylistManager playlistManager;
         private readonly ITrackProvider trackProvider;
+        private readonly IAlbumArtProvider albumArtProvider;
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
-
         
         private const string testName = "jonah@gmail.com";
 
@@ -32,14 +29,14 @@ namespace BB.UI.Web.MVC.Controllers
         };
 
 
-        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, IUserManager userManager, IOrganisationManager organisationManager)
+        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, IUserManager userManager, IOrganisationManager organisationManager, IAlbumArtProvider albumArtProvider)
         {
             this.playlistManager = playlistManager;
             this.trackProvider = trackProvider;
             this.userManager = userManager;
             this.organisationManager = organisationManager;
+            this.albumArtProvider = albumArtProvider;
         }
-        
         
 
         public ActionResult View(long id)
@@ -98,6 +95,9 @@ namespace BB.UI.Web.MVC.Controllers
 
             var track = trackProvider.LookupTrack(id);
             if (track == null) return new HttpStatusCodeResult(400);
+
+            var albumArtUrl = albumArtProvider.Find(track.Artist + " " + track.Title);
+            track.CoverArtUrl = albumArtUrl;
 
             track = playlistManager.AddTrackToPlaylist(
                 playlistId,

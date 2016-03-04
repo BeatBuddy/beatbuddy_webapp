@@ -83,7 +83,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Ok(user);
         }
 
-        // GET: api/users/1234/organisations
+        // GET: api/users/organisations
         [Authorize]
         [HttpGet]
         [Route("userOrganisations")]
@@ -108,7 +108,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Ok(organisations);
         }
 
-        // GET: api/users/1234/playlists
+        // GET: api/users/userPlaylists
         [Authorize]
         [HttpGet]
         [Route("userPlaylists")]

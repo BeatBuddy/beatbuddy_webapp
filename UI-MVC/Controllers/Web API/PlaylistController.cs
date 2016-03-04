@@ -30,19 +30,22 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IPlaylistManager playlistManager;
         private readonly IUserManager userManager;
         private readonly ITrackProvider trackProvider;
+        private readonly IAlbumArtProvider albumArtProvider;
 
         public PlaylistController()
         {
             this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             this.trackProvider = new YouTubeTrackProvider();
+            this.albumArtProvider = new BingAlbumArtProvider();
         }
 
-        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, ITrackProvider iTrackProvider)
+        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, ITrackProvider iTrackProvider, IAlbumArtProvider albumArtProvider)
         {
             this.playlistManager = playlistManager;
             this.userManager = userManager;
             this.trackProvider = iTrackProvider;
+            this.albumArtProvider = albumArtProvider;
         }
 
 
@@ -147,6 +150,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var track = trackProvider.LookupTrack(trackId);
             if (track == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
+            var albumArtUrl = albumArtProvider.Find(track.Artist + " " + track.Title);
+            track.CoverArtUrl = albumArtUrl;
+
             track = playlistManager.AddTrackToPlaylist(
                 playlistId,
                 track
@@ -157,6 +163,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Request.CreateResponse(HttpStatusCode.OK, track);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("recommendations")]
         [ResponseType(typeof (IEnumerable<Track>))]

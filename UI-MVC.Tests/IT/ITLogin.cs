@@ -22,7 +22,7 @@ namespace BB.UI.Web.MVC.Tests.IT
         public void TestInitialize()
         {
             chromeDriver = new ChromeDriver();
-            
+
             IUserManager userManager = DbInitializer.CreateUserManager();
             AccountController _acountController = new AccountController(userManager);
         }
