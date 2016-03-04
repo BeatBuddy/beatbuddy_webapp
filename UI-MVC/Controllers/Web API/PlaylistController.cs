@@ -15,6 +15,8 @@ using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Controllers.Utils;
+using YoutubeExtractor;
+using VideoLibrary;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -25,20 +27,16 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IPlaylistManager playlistManager;
         private readonly IUserManager userManager;
         private readonly ITrackProvider trackProvider;
+        private readonly IAlbumArtProvider albumArtProvider;
 
-        public PlaylistController()
+        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, ITrackProvider iTrackProvider, IAlbumArtProvider albumArtProvider)
         {
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            trackProvider = new YouTubeTrackProvider();
+            this.playlistManager = playlistManager;
+            this.userManager = userManager;
+            this.trackProvider = iTrackProvider;
+            this.albumArtProvider = albumArtProvider;
         }
 
-        public PlaylistController(ContextEnum contextEnum)
-        {
-            playlistManager = new PlaylistManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-            trackProvider = new YouTubeTrackProvider();
-        }
 
         [AllowAnonymous]
         [HttpGet]
@@ -112,6 +110,40 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Request.CreateResponse(HttpStatusCode.OK, searchResult);
         }
         
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("{playlistId}/nextTrack")]
+        public IHttpActionResult getNextTrack(long playlistId)
+        {
+            var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
+                 .Where(t => t.PlayedAt == null);
+
+            if (!playlistTracks.Any()) return NotFound();
+
+            var playListTrack = playlistTracks.First(t => t.PlayedAt == null);
+
+            var youTube = YouTube.Default; // starting point for YouTube actions
+            var video = youTube.GetVideo(playListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
+            playListTrack.Track.TrackSource.Url = video.Uri;
+
+            //YoutubeExtractor
+            /*
+            IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(track.Track.TrackSource.Url);
+
+            VideoInfo video = videoInfos
+                .Where(info => info.CanExtractAudio)
+                .OrderByDescending(info => info.AudioBitrate)
+                .Last();
+
+            if (video.RequiresDecryption)
+            {
+                DownloadUrlResolver.DecryptDownloadUrl(video);
+            }
+            track.Track.TrackSource.Url = video.DownloadUrl;
+            */
+            return Ok(playListTrack.Track);
+        }
+
         [HttpPost]
         [Route("{playlistId}/addTrack")]
         [ResponseType(typeof(Track))]
@@ -119,6 +151,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         {
             var track = trackProvider.LookupTrack(trackId);
             if (track == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            var albumArtUrl = albumArtProvider.Find(track.Artist + " " + track.Title);
+            track.CoverArtUrl = albumArtUrl;
 
             track = playlistManager.AddTrackToPlaylist(
                 playlistId,

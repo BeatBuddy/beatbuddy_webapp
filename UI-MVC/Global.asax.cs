@@ -4,6 +4,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using BB.UI.Web.MVC.App_Start;
+using Microsoft.Practices.Unity;
 
 namespace BB.UI.Web.MVC
 {
@@ -12,6 +14,8 @@ namespace BB.UI.Web.MVC
        
         protected void Application_Start()
         {
+
+            UnityConfig.GetConfiguredContainer();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             //WebApiConfig.Register(GlobalConfiguration.Configuration);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
@@ -11,9 +12,9 @@ namespace BB.DAL.EFUser
     {
         private readonly EFDbContext context;
         
-        public UserRepository(ContextEnum contextEnum)
+        public UserRepository(EFDbContext context)
         {
-            context = new EFDbContext(contextEnum);
+            this.context = context;
         }
 
         public User CreateUser(User user)

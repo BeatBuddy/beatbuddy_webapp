@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Models;
 using BB.BL.Domain.Organisations;
@@ -12,7 +10,6 @@ using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
-using System.Net;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -20,9 +17,9 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private readonly IPlaylistManager playlistManager;
         private readonly ITrackProvider trackProvider;
+        private readonly IAlbumArtProvider albumArtProvider;
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
-
         
         private const string testName = "jonah@gmail.com";
 
@@ -32,28 +29,15 @@ namespace BB.UI.Web.MVC.Controllers
         };
 
 
-        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
+        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, IUserManager userManager, IOrganisationManager organisationManager, IAlbumArtProvider albumArtProvider)
         {
             this.playlistManager = playlistManager;
             this.trackProvider = trackProvider;
             this.userManager = userManager;
+            this.organisationManager = organisationManager;
+            this.albumArtProvider = albumArtProvider;
         }
-
-        public PlaylistController()
-        {
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            trackProvider = new YouTubeTrackProvider();
-        }
-
-        public PlaylistController(ContextEnum contextEnum)
-        {
-            playlistManager = new PlaylistManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-            organisationManager = new OrganisationManager(contextEnum);
-            trackProvider = new YouTubeTrackProvider();
-        }
+        
 
         public ActionResult View(long id)
         {
@@ -88,6 +72,7 @@ namespace BB.UI.Web.MVC.Controllers
             
             return View(playlist);
         }
+        
 
         [HttpPost]
         public ActionResult AddVote(int vote, long id)
@@ -110,6 +95,9 @@ namespace BB.UI.Web.MVC.Controllers
 
             var track = trackProvider.LookupTrack(id);
             if (track == null) return new HttpStatusCodeResult(400);
+
+            var albumArtUrl = albumArtProvider.Find(track.Artist + " " + track.Title);
+            track.CoverArtUrl = albumArtUrl;
 
             track = playlistManager.AddTrackToPlaylist(
                 playlistId,
@@ -178,6 +166,52 @@ namespace BB.UI.Web.MVC.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Edit(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            var model = new PlaylistViewModel()
+            {
+                Name = playlist.Name,
+                Description = playlist.Description,
+                ImageUrl = playlist.ImageUrl,
+                Key = playlist.Key,
+                MaximumVotesPerUser = playlist.MaximumVotesPerUser
+            };
+            return PartialView(model);
+        }
+
+        // POST: Default/Edit/5
+        [HttpPost]
+        public ActionResult Edit(long id, PlaylistViewModel model, HttpPostedFileBase avatarImage)
+        {
+            try
+            {
+                var playlist = playlistManager.ReadPlaylist(id);
+                playlist.Name = model.Name;
+                playlist.Description = model.Description;
+                playlist.Key = model.Key;
+                playlist.ImageUrl = model.ImageUrl;
+                string path = null;
+
+                if (avatarImage != null && avatarImage.ContentLength > 0)
+                {
+                    var bannerFileName = Path.GetFileName(avatarImage.FileName);
+                    path = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), bannerFileName));
+                    avatarImage.SaveAs(path);
+                    path = Path.GetFileName(path);
+                }
+                playlist.ImageUrl = path;
+
+                playlistManager.UpdatePlaylist(playlist);
+
+                return RedirectToAction("Portal", "Home");
+            }
+            catch
+            {
+                return new HttpStatusCodeResult(400);
+            }
+        }
+
         // GET: Playlists
         public ActionResult Index()
         {
@@ -189,7 +223,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult Create()
         {
             var user = userManager.ReadUser(User.Identity.Name);
-            ViewBag.UserOrganisations = organisationManager.ReadOrganisations(user.Id);
+            ViewBag.UserOrganisations = organisationManager.ReadOrganisationsForUser(user.Id);
             return View();
         }
 
@@ -237,6 +271,15 @@ namespace BB.UI.Web.MVC.Controllers
 
             return RedirectToAction("View/" + playlist.Id);
 
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Delete(long id)
+        {
+            var playlist = playlistManager.DeletePlaylist(id);
+            if (playlist == null) return new HttpStatusCodeResult(400);
+            return new HttpStatusCodeResult(200);
         }
     }
 }

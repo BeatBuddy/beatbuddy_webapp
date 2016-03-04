@@ -25,17 +25,14 @@ namespace BB.UI.Web.MVC.Controllers
             FirstName = "Jonah"
         };
 
-        public OrganisationsController()
+        public OrganisationsController(IOrganisationManager organisationManager, IUserManager userManager)
         {
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
+            this.organisationManager = organisationManager;
+            this.userManager = userManager;
         }
 
-        public OrganisationsController(ContextEnum contextEnum)
-        {
-            organisationManager = new OrganisationManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-        }
+        
+
 
         // GET: Organisations
         public ActionResult Index()
@@ -208,26 +205,16 @@ namespace BB.UI.Web.MVC.Controllers
             }
         }
 
-        // GET: Organisations/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+      
 
-        // POST: Organisations/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Delete(long id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var organisation = organisationManager.DeleteOrganisation(id);
+            if (organisation == null) return new HttpStatusCodeResult(400);
+            return new HttpStatusCodeResult(200);
         }
+       
     }
 }

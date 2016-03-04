@@ -19,16 +19,12 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private UserManager userMgr;
+        private IUserManager userMgr;
 
-        public AccountController(ContextEnum contextEnum)
+        
+        public AccountController(IUserManager userManager)
         {
-            userMgr = new UserManager(contextEnum);
-        }
-
-        public AccountController()
-        {
-            userMgr = new UserManager(ContextEnum.BeatBuddy);
+            this.userMgr = userManager;
         }
 
 

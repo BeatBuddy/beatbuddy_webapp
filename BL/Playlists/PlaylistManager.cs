@@ -12,9 +12,9 @@ namespace BB.BL
     {
         private readonly IPlaylistRepository repo;
 
-        public PlaylistManager(ContextEnum contextEnum)
+        public PlaylistManager(IPlaylistRepository playlistRepository)
         {
-            repo = new PlaylistRepository(contextEnum);
+            this.repo = playlistRepository;
         }
         public Comment CreateComment(string text, User user)
         {
@@ -109,9 +109,9 @@ namespace BB.BL
             return repo.ReadPlaylists(userId);
         }
 
-        public void DeletePlaylist(long playlistId)
+        public Playlist DeletePlaylist(long playlistId)
         {
-            repo.DeletePlaylist(playlistId);
+            return repo.DeletePlaylist(playlistId);
         }
 
         public void DeletePlaylistTrack(long playlistTrackId)

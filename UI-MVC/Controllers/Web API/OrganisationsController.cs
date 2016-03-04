@@ -23,17 +23,12 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IOrganisationManager organisationManager;
         private readonly IUserManager userManager;
 
-        public OrganisationsController()
+        public OrganisationsController(IOrganisationManager organisationManager, IUserManager userManager)
         {
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
+            this.organisationManager = organisationManager;
+            this.userManager = userManager;
         }
-
-        public OrganisationsController(ContextEnum contextEnum)
-        {
-            organisationManager = new OrganisationManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-        }
+        
 
         // POST: api/organisations
         [HttpPost]

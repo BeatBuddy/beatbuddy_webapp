@@ -10,10 +10,10 @@ namespace BB.BL
         Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator);
         Organisation UpdateOrganisation(Organisation organisation);
         IEnumerable<Organisation> ReadOrganisations();
-        IEnumerable<Organisation> ReadOrganisations(long userId);
+        
         Organisation ReadOrganisation(long organisationId);
         Organisation ReadOrganisation(string organisationName);
-        void DeleteOrganisation(long organisationId);
+        Organisation DeleteOrganisation(long organisationId);
         Organisation ReadOrganisationForPlaylist(long playlistId);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
 

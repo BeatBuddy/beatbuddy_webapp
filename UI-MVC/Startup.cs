@@ -4,6 +4,8 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using System;
 using System.Web.Http;
+using BB.UI.Web.MVC.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace BB.UI.Web.MVC
 {
@@ -23,5 +25,6 @@ namespace BB.UI.Web.MVC
             inner.UseWebApi(config);
         });
         }
+        
     }
 }

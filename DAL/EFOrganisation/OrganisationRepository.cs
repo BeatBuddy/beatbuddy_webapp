@@ -11,9 +11,9 @@ namespace BB.DAL.EFOrganisation
     {
         private readonly EFDbContext context;
 
-        public OrganisationRepository(ContextEnum contextEnum)
+        public OrganisationRepository(EFDbContext context)
         {
-            context = new EFDbContext(contextEnum);
+            this.context = context;
         }
 
         public Organisation ReadOrganisationForPlaylist(long playlistId)
@@ -54,9 +54,15 @@ namespace BB.DAL.EFOrganisation
             return userRoles.Count > 0 ? userRoles.Select(userRole => userRole.Organisation).ToList() : new List<Organisation>();
         }
 
-        public void DeleteOrganisation(long organisationId)
+        public Organisation DeleteOrganisation(long organisationId)
         {
-            throw new NotImplementedException();
+           
+            var org = ReadOrganisation(organisationId);
+            var userRoles = context.UserRole.ToList().FindAll(p => p.Organisation == org);
+            context.UserRole.RemoveRange(userRoles);
+            org = context.Organisations.Remove(org);
+            context.SaveChanges();
+            return org;
         }
 
         public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)

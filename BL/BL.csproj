@@ -131,6 +131,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="BingAlbumArtProvider.cs" />
+    <Compile Include="IAlbumArtProvider.cs" />
     <Compile Include="ITrackProvider.cs" />
     <Compile Include="Organisations\IOrganisationManager.cs" />
     <Compile Include="Playlists\IPlaylistManager.cs" />
