@@ -16,6 +16,7 @@ using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Controllers.Utils;
 using YoutubeExtractor;
+using VideoLibrary;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -123,8 +124,14 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             if (!playlistTracks.Any()) return NotFound();
 
-            var track = playlistTracks.First(t => t.PlayedAt == null);
+            var playListTrack = playlistTracks.First(t => t.PlayedAt == null);
 
+            var youTube = YouTube.Default; // starting point for YouTube actions
+            var video = youTube.GetVideo(playListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
+            playListTrack.Track.TrackSource.Url = video.Uri;
+
+            //YoutubeExtractor
+            /*
             IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(track.Track.TrackSource.Url);
 
             VideoInfo video = videoInfos
@@ -136,8 +143,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             {
                 DownloadUrlResolver.DecryptDownloadUrl(video);
             }
-
-            return Ok(video.DownloadUrl);
+            track.Track.TrackSource.Url = video.DownloadUrl;
+            */
+            return Ok(playListTrack.Track);
         }
 
         [HttpPost]
