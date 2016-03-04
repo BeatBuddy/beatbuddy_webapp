@@ -15,6 +15,7 @@ using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Controllers.Utils;
+using YoutubeExtractor;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -111,7 +112,34 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             return Request.CreateResponse(HttpStatusCode.OK, searchResult);
         }
-        
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("{playlistId}/nextTrack")]
+        public IHttpActionResult getNextTrack(long playlistId)
+        {
+            var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
+                 .Where(t => t.PlayedAt == null);
+
+            if (!playlistTracks.Any()) return NotFound();
+
+            var track = playlistTracks.First(t => t.PlayedAt == null);
+
+            IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(track.Track.TrackSource.Url);
+
+            VideoInfo video = videoInfos
+                .Where(info => info.CanExtractAudio)
+                .OrderByDescending(info => info.AudioBitrate)
+                .Last();
+
+            if (video.RequiresDecryption)
+            {
+                DownloadUrlResolver.DecryptDownloadUrl(video);
+            }
+
+            return Ok(video.DownloadUrl);
+        }
+
         [HttpPost]
         [Route("{playlistId}/addTrack")]
         [ResponseType(typeof(Track))]
