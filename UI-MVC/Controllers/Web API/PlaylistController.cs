@@ -130,6 +130,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Request.CreateResponse(HttpStatusCode.OK, track);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("recommendations")]
         [ResponseType(typeof (IEnumerable<Track>))]
