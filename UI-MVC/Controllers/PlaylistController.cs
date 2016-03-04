@@ -71,10 +71,11 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddVote(int vote, long id)
+        public ActionResult AddVote(int vote, long id, int aantalVotes)
         {
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
             playlistManager.CreateVote(vote, user.Id, id);
+            if (aantalVotes > 3) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list");
             return new HttpStatusCodeResult(200);
         }
 
