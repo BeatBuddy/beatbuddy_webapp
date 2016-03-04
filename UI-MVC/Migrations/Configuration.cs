@@ -1,3 +1,7 @@
+using BB.DAL;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFUser;
+
 namespace BB.UI.Web.MVC.Migrations
 {
     using BL;
@@ -63,7 +67,7 @@ namespace BB.UI.Web.MVC.Migrations
             if (ir1.Succeeded == false)
                 return ir1.Succeeded;
             ir1 = um.AddToRole(user1.Id, "User");
-            var userManager = new UserManager(ContextEnum.BeatBuddyTest);
+            var userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             userManager.CreateUser("admin@admin.com", "Heylen", "Matthias", "acidshards", "/");
             return ir.Succeeded;
         }

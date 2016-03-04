@@ -26,19 +26,13 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IUserManager userManager;
         private readonly ITrackProvider trackProvider;
 
-        public PlaylistController()
+        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, ITrackProvider iTrackProvider)
         {
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            trackProvider = new YouTubeTrackProvider();
+            this.playlistManager = playlistManager;
+            this.userManager = userManager;
+            this.trackProvider = iTrackProvider;
         }
-
-        public PlaylistController(ContextEnum contextEnum)
-        {
-            playlistManager = new PlaylistManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-            trackProvider = new YouTubeTrackProvider();
-        }
+        
 
         [AllowAnonymous]
         [HttpGet]

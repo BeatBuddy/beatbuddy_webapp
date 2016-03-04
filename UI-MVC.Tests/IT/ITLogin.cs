@@ -1,4 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BB.BL;
+using BB.BL.Domain;
+using BB.DAL;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFUser;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using BB.UI.Web.MVC.Controllers;
@@ -14,7 +19,10 @@ namespace BB.UI.Web.MVC.Tests.IT
         public void TestInitialize()
         {
             chromeDriver = new ChromeDriver();
-            AccountController _acountController = new AccountController();
+
+            IOrganisationManager organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
+            UserManager userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
+            AccountController _acountController = new AccountController(userManager);
         }
 
         [TestMethod]

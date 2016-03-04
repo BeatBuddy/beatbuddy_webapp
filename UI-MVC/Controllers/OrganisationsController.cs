@@ -25,17 +25,14 @@ namespace BB.UI.Web.MVC.Controllers
             FirstName = "Jonah"
         };
 
-        public OrganisationsController()
+        public OrganisationsController(IOrganisationManager organisationManager, IUserManager userManager)
         {
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
+            this.organisationManager = organisationManager;
+            this.userManager = userManager;
         }
 
-        public OrganisationsController(ContextEnum contextEnum)
-        {
-            organisationManager = new OrganisationManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-        }
+        
+
 
         // GET: Organisations
         public ActionResult Index()

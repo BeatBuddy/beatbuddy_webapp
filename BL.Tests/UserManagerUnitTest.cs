@@ -9,6 +9,8 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using BB.BL.Domain;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Migrations;
 
 namespace BB.BL.Tests
@@ -21,7 +23,7 @@ namespace BB.BL.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            userManager = new UserManager(ContextEnum.BeatBuddyTest);
+            userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)) );
             var migratorConfig = new UI.Web.MVC.Migrations.Configuration();
             migratorConfig.TargetDatabase = new DbConnectionInfo(ContextEnum.BeatBuddyTest.ToString());
             var dbMigrator = new DbMigrator(migratorConfig);

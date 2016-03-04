@@ -22,19 +22,13 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IPlaylistManager playlistManager;
         private ApplicationUserManager _userManager;
 
-        public UserController()
+        public UserController(IUserManager userManager, IOrganisationManager organisationManager, IPlaylistManager playlistManager)
         {
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
+            this.userManager = userManager;
+            this.organisationManager = organisationManager;
+            this.playlistManager = playlistManager;
         }
-
-        public UserController(ContextEnum contextEnum)
-        {
-            userManager = new UserManager(contextEnum);
-            organisationManager = new OrganisationManager(contextEnum);
-            playlistManager = new PlaylistManager(contextEnum);
-        }
+        
 
         [AllowAnonymous]
         [HttpPost]
@@ -91,7 +85,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 return NotFound();
             }
 
-            var organisations = organisationManager.ReadOrganisations(user.Id)
+            var organisations = organisationManager.ReadOrganisationsForUser(user.Id)
                 .Select(o => new
                 {
                     o.Id,

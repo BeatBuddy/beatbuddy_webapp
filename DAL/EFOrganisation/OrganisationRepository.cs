@@ -11,9 +11,9 @@ namespace BB.DAL.EFOrganisation
     {
         private readonly EFDbContext context;
 
-        public OrganisationRepository(ContextEnum contextEnum)
+        public OrganisationRepository(EFDbContext context)
         {
-            context = new EFDbContext(contextEnum);
+            this.context = context;
         }
 
         public Organisation ReadOrganisationForPlaylist(long playlistId)

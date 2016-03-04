@@ -11,13 +11,11 @@ namespace BB.BL
     public class UserManager : IUserManager
     {
         private IUserRepository repo;
-        private IOrganisationManager mgrOrganisation;
 
 
-        public UserManager(ContextEnum contextEnum)
+        public UserManager(IUserRepository userRepository)
         {
-            mgrOrganisation = new OrganisationManager(contextEnum);
-            repo = new UserRepository(contextEnum);
+            this.repo = userRepository;
         }
 
         public User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl)
