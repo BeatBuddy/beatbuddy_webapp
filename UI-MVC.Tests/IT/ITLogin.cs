@@ -8,6 +8,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using BB.UI.Web.MVC.Controllers;
 using System;
+using BB.UI.Web.MVC.Tests.Helpers;
 using OpenQA.Selenium.Support.UI;
 
 namespace BB.UI.Web.MVC.Tests.IT
@@ -21,9 +22,8 @@ namespace BB.UI.Web.MVC.Tests.IT
         public void TestInitialize()
         {
             chromeDriver = new ChromeDriver();
-
-            IOrganisationManager organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
-            UserManager userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
+            
+            IUserManager userManager = DbInitializer.CreateUserManager();
             AccountController _acountController = new AccountController(userManager);
         }
 
