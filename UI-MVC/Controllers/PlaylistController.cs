@@ -10,6 +10,7 @@ using System.Web;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
+using System.Net;
 
 namespace BB.UI.Web.MVC.Controllers
 {

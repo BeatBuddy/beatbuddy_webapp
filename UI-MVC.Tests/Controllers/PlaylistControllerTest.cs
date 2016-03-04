@@ -23,7 +23,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestInitialize]
         public void TestInitialize()
         {
-            controller = new PlaylistController(DbInitializer.CreatePlaylistManager(),new YouTubeTrackProvider(), DbInitializer.CreateUserManager(), DbInitializer.CreateOrganisationManager());
+            controller = new PlaylistController(DbInitializer.CreatePlaylistManager(),new YouTubeTrackProvider(), DbInitializer.CreateUserManager(), DbInitializer.CreateOrganisationManager(), new BingAlbumArtProvider());
             
             DbInitializer.Initialize();
         }
