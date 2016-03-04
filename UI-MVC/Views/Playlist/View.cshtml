@@ -46,8 +46,8 @@
 </div>
 
 
-<div id="addTrackModal" class="modal" style="margin-top: -180px">
-    <div class="modal-content" style="width: 30%; height: 70%">
+<div id="addTrackModal" class="modal" style="margin-top: -150px">
+    <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
         <a href="#close" id="close-modal" title="Close" class="close">X</a>
         <div class="modal-body" style="height: 100%; width: 100%">
             @{
@@ -219,6 +219,7 @@
             if (firstPlay) {
                 var playButton = document.getElementById("playBtn");
                 playButton.addEventListener("click", getNextTrack);
+                assignPlaylistMaster();
                 firstPlay = false;
                 
             }
@@ -228,6 +229,9 @@
             });
             
 
+        }
+        function assignPlaylistMaster() {
+            
         }
         function updateTime() {
             var time = document.getElementById("time");

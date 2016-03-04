@@ -6,6 +6,7 @@
         Co_Organiser,
         Follower,
         RegisteredUser,
-        Guest
+        Guest,
+        
     }
 }
