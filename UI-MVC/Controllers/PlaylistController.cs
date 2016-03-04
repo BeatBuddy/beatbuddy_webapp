@@ -121,9 +121,14 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult AssignPlaylistMaster(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
-            //playlist.
-            //playlistManager.UpdatePlaylist()
-            return null;
+            var user = userManager.ReadUser(User.Identity.Name);
+            playlist.PlaylistMasterId = user.Id;
+            playlist = playlistManager.UpdatePlaylist(playlist);
+            if (playlist.PlaylistMasterId != user.Id)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.Accepted);
         }
 
         public ActionResult GetNextTrack(long id)

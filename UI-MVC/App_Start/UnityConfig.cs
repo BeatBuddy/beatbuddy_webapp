@@ -1,4 +1,5 @@
 using System;
+using System.Web.Http;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
@@ -9,6 +10,7 @@ using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
+
 
 namespace BB.UI.Web.MVC
 {
@@ -52,6 +54,7 @@ namespace BB.UI.Web.MVC
             container.RegisterType<AccountController>(new InjectionConstructor(new UserManager(new UserRepository(efDbContext))));
             container.RegisterType<ManageController>(new InjectionConstructor());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
         }
     }
 }
