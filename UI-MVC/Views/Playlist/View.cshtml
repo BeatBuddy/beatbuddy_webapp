@@ -32,13 +32,14 @@
          if (Model.PlaylistTracks.Count != 0)
     {
         <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+        <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
     }
-    else
-    {
+        else
+        {
         <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
     }
     }
-    <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+    
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>

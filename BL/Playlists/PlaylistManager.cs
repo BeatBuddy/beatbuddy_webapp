@@ -12,9 +12,9 @@ namespace BB.BL
     {
         private readonly IPlaylistRepository repo;
 
-        public PlaylistManager(ContextEnum contextEnum)
+        public PlaylistManager(IPlaylistRepository playlistRepository)
         {
-            repo = new PlaylistRepository(contextEnum);
+            this.repo = playlistRepository;
         }
         public Comment CreateComment(string text, User user)
         {

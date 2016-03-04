@@ -15,9 +15,9 @@ namespace BB.DAL.EFPlaylist
     {
         private readonly EFDbContext context;
         
-        public PlaylistRepository(ContextEnum contextEnum)
+        public PlaylistRepository(EFDbContext context)
         {
-            context = new EFDbContext(contextEnum);
+            this.context = context;
         }
 
         public Comment CreateComment(Comment comment)

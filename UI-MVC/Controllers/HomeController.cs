@@ -11,19 +11,17 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IPlaylistManager playlistManager;
         private readonly IOrganisationManager organisationManager;
 
-        public HomeController(ContextEnum contextEnum)
-        {
-            userManager = new UserManager(contextEnum);
-            playlistManager = new PlaylistManager(contextEnum);
-            organisationManager = new OrganisationManager(contextEnum);
-        }
 
-        public HomeController()
+        public HomeController(IUserManager userManager, IPlaylistManager playlistManager,
+            IOrganisationManager organisationManager)
         {
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
+            this.userManager = userManager;
+            this.playlistManager = playlistManager;
+            this.organisationManager = organisationManager;
         }
+        
+
+        
 
         public ActionResult Index()
         {

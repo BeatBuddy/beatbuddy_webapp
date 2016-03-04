@@ -12,19 +12,12 @@ namespace BB.BL
     public class OrganisationManager : IOrganisationManager
     {
         private readonly IOrganisationRepository organisationsRepository;
-        private readonly IUserRepository userRepository;
 
-        public OrganisationManager(ContextEnum contextEnum)
+        public OrganisationManager(IOrganisationRepository organisationRepository)
         {
-            organisationsRepository = new OrganisationRepository(contextEnum);
-            userRepository = new UserRepository(contextEnum);
+            this.organisationsRepository = organisationRepository;
         }
-
-        public OrganisationManager()
-        {
-            organisationsRepository = new OrganisationRepository(ContextEnum.BeatBuddy);
-            userRepository = new UserRepository(ContextEnum.BeatBuddy);
-        }
+        
 
         public Organisation ReadOrganisationForPlaylist(long playlistId)
         {
@@ -89,10 +82,7 @@ namespace BB.BL
             return organisationsRepository.ReadOrganisations();
         }
 
-        public IEnumerable<Organisation> ReadOrganisations(long userId)
-        {
-            return userRepository.ReadOrganisationsForUser(userId).Select(r => r.Organisation);
-        }
+        
 
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
         {

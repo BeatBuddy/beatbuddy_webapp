@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace BB.DAL
 {
-    class EFDbTestInitializer : DropCreateDatabaseAlways<EFDbContext>
+    public class EFDbTestInitializer : DropCreateDatabaseAlways<EFDbContext>
     {
-
+        
         protected override void Seed(EFDbContext context)
         {
             var organisation = new Organisation()
@@ -62,6 +62,5 @@ namespace BB.DAL
             context.Playlists.Add(playlist);
             context.SaveChanges();
         }
-        
     }
 }

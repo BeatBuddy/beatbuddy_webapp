@@ -204,6 +204,10 @@
       <Project>{e02e9689-c627-4cf4-916d-df676423ac79}</Project>
       <Name>BL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{61c8fa1a-dec4-41e7-88a6-13d181872105}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{BBC45856-B2D8-461B-9AF9-9268D7F1032D}</Project>
       <Name>Domain</Name>

@@ -32,28 +32,15 @@ namespace BB.UI.Web.MVC.Controllers
         };
 
 
-        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
+        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, IUserManager userManager, IOrganisationManager organisationManager)
         {
             this.playlistManager = playlistManager;
             this.trackProvider = trackProvider;
             this.userManager = userManager;
+            this.organisationManager = organisationManager;
         }
-
-        public PlaylistController()
-        {
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            trackProvider = new YouTubeTrackProvider();
-        }
-
-        public PlaylistController(ContextEnum contextEnum)
-        {
-            playlistManager = new PlaylistManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-            organisationManager = new OrganisationManager(contextEnum);
-            trackProvider = new YouTubeTrackProvider();
-        }
+        
+        
 
         public ActionResult View(long id)
         {
@@ -236,7 +223,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult Create()
         {
             var user = userManager.ReadUser(User.Identity.Name);
-            ViewBag.UserOrganisations = organisationManager.ReadOrganisations(user.Id);
+            ViewBag.UserOrganisations = organisationManager.ReadOrganisationsForUser(user.Id);
             return View();
         }
 
