@@ -1,6 +1,9 @@
 ﻿using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
+using BB.DAL;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System;
 using System.Collections.Generic;
@@ -28,7 +31,13 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.organisationManager = organisationManager;
             this.userManager = userManager;
         }
-        
+
+        public OrganisationsController()
+        {
+            this.organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+        }
+
 
         // POST: api/organisations
         [HttpPost]
