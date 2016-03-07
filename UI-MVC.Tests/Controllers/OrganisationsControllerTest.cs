@@ -4,6 +4,9 @@ using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Users;
+using BB.DAL;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers;
 using BB.UI.Web.MVC.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,8 +24,9 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestInitialize]
         public void TestInitialize()
         {
-            _organisationsController = new OrganisationsController(ContextEnum.BeatBuddyTest);
-            userManager = new UserManager(ContextEnum.BeatBuddyTest);
+            userManager = DbInitializer.CreateUserManager();
+
+            _organisationsController = new OrganisationsController(DbInitializer.CreateOrganisationManager(), userManager);
             DbInitializer.Initialize();
         }
 

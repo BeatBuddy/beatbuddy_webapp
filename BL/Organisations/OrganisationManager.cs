@@ -12,20 +12,23 @@ namespace BB.BL
     public class OrganisationManager : IOrganisationManager
     {
         private readonly IOrganisationRepository organisationsRepository;
-        private readonly IUserRepository userRepository;
 
-        public OrganisationManager(ContextEnum contextEnum)
+        public OrganisationManager(IOrganisationRepository organisationRepository)
         {
-            organisationsRepository = new OrganisationRepository(contextEnum);
-            userRepository = new UserRepository(contextEnum);
-        }
-
-        public OrganisationManager()
-        {
-            organisationsRepository = new OrganisationRepository(ContextEnum.BeatBuddy);
-            userRepository = new UserRepository(ContextEnum.BeatBuddy);
+            this.organisationsRepository = organisationRepository;
         }
         
+
+        public Organisation ReadOrganisationForPlaylist(long playlistId)
+        {
+            return organisationsRepository.ReadOrganisationForPlaylist(playlistId);
+        }
+
+        public IEnumerable<Organisation> ReadOrganisationsForUser(long userId)
+        {
+            return organisationsRepository.ReadOrganisationsForUser(userId);
+        }
+
         public DashboardBlock CreateDashboardBlock(string blockName, int sequence)
         {
             DashboardBlock block = new DashboardBlock
@@ -54,9 +57,9 @@ namespace BB.BL
             organisationsRepository.DeleteDashboardBlock(blockId);
         }
 
-        public void DeleteOrganisation(long organisationId)
+        public Organisation DeleteOrganisation(long organisationId)
         {
-            organisationsRepository.DeleteOrganisation(organisationId);
+            return organisationsRepository.DeleteOrganisation(organisationId);
         }
 
         public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
@@ -79,10 +82,7 @@ namespace BB.BL
             return organisationsRepository.ReadOrganisations();
         }
 
-        public IEnumerable<Organisation> ReadOrganisations(long userId)
-        {
-            return userRepository.ReadOrganisationsForUser(userId).Select(r => r.Organisation);
-        }
+        
 
         public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
         {

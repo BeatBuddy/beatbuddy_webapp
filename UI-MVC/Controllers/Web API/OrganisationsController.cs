@@ -1,6 +1,9 @@
 ﻿using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
+using BB.DAL;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System;
 using System.Collections.Generic;
@@ -23,30 +26,18 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         private readonly IOrganisationManager organisationManager;
         private readonly IUserManager userManager;
 
+        public OrganisationsController(IOrganisationManager organisationManager, IUserManager userManager)
+        {
+            this.organisationManager = organisationManager;
+            this.userManager = userManager;
+        }
+
         public OrganisationsController()
         {
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
+            this.organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
         }
 
-        public OrganisationsController(ContextEnum contextEnum)
-        {
-            organisationManager = new OrganisationManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-        }
-
-
-        // GET: api/Organisations
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Organisations/5
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST: api/organisations
         [HttpPost]
@@ -97,14 +88,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         }
 
-        // PUT: api/Organisations/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Organisations/5
-        public void Delete(int id)
-        {
-        }
+       
     }
 }

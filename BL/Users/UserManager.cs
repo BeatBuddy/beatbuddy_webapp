@@ -4,19 +4,18 @@ using BB.BL.Domain;
 using BB.DAL.EFUser;
 using BB.BL.Domain.Organisations;
 using BB.DAL.EFOrganisation;
+using System;
 
 namespace BB.BL
 {
     public class UserManager : IUserManager
     {
         private IUserRepository repo;
-        private IOrganisationManager mgrOrganisation;
 
 
-        public UserManager(ContextEnum contextEnum)
+        public UserManager(IUserRepository userRepository)
         {
-            mgrOrganisation = new OrganisationManager(contextEnum);
-            repo = new UserRepository(contextEnum);
+            this.repo = userRepository;
         }
 
         public User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl)
@@ -96,6 +95,16 @@ namespace BB.BL
         public IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation)
         {
             return repo.ReadCoOrganiserFromOrganisation(organisation);
+        }
+
+        public UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId)
+        {
+            return repo.ReadUserRoleForUserAndOrganisation(userId, organisationId);
+        }
+
+        public void DeleteUserRole(UserRole userRole)
+        {
+            repo.DeleteUserRole(userRole);
         }
     }
 }

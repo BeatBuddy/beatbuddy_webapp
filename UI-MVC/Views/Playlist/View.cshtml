@@ -1,4 +1,5 @@
-﻿@model BB.BL.Domain.Playlists.Playlist
+﻿@using BB.BL.Domain.Users
+@model BB.BL.Domain.Playlists.Playlist
 @{
     ViewBag.Title = "View";
     ViewBag.NoFooter = true;
@@ -25,23 +26,28 @@
     @Html.Partial("PlaylistTable", @Model)
 </div>
 
-<div id="nowPlayingRow" style="margin-top: 5em; margin-bottom: 3em;">
-    @if (Model.PlaylistTracks.Count != 0)
+<div id="nowPlayingRow" style="margin-top: 5em">
+    @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    {
+         if (Model.PlaylistTracks.Count != 0)
     {
         <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+        <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
     }
-    else
-    {
+        else
+        {
         <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
     }
-    <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+    }
+    
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>
 </div>
 
-<div id="addTrackModal" class="modal" style="margin-top: -180px">
-    <div class="modal-content" style="width: 30%; height: 70%">
+
+<div id="addTrackModal" class="modal" style="margin-top: -150px">
+    <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
         <a href="#close" id="close-modal" title="Close" class="close">X</a>
         <div class="modal-body" style="height: 100%; width: 100%">
             @{
@@ -160,7 +166,7 @@
                     playBtn.className = 'btn';
                 })
                 .fail(function() {
-                    notie.alert(3, 'You cannot add a song that is already in the list', 2.5);
+                    notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
                 });
         }
 
@@ -213,6 +219,7 @@
             if (firstPlay) {
                 var playButton = document.getElementById("playBtn");
                 playButton.addEventListener("click", getNextTrack);
+                assignPlaylistMaster();
                 firstPlay = false;
                 
             }
@@ -222,6 +229,9 @@
             });
             
 
+        }
+        function assignPlaylistMaster() {
+            
         }
         function updateTime() {
             var time = document.getElementById("time");

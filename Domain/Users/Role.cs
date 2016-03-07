@@ -4,8 +4,9 @@
     {
         Organiser,
         Co_Organiser,
-        PlaylistMaster,
+        Follower,
         RegisteredUser,
-        Guest
+        Guest,
+        
     }
 }

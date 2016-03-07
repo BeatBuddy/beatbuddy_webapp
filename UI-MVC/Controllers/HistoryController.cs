@@ -9,15 +9,11 @@ namespace BB.UI.Web.MVC.Controllers
     {
         readonly IPlaylistManager playlistManager;
 
-        public HistoryController(ContextEnum contextEnum)
+        public HistoryController(IPlaylistManager playlistManager)
         {
-            playlistManager = new PlaylistManager(contextEnum);
+            this.playlistManager = playlistManager;
         }
 
-        public HistoryController()
-        {
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-        }
 
         // GET: History/View/1
         public ActionResult View(long id)

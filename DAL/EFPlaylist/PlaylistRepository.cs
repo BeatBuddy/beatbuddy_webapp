@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
@@ -14,9 +15,9 @@ namespace BB.DAL.EFPlaylist
     {
         private readonly EFDbContext context;
         
-        public PlaylistRepository(ContextEnum contextEnum)
+        public PlaylistRepository(EFDbContext context)
         {
-            context = new EFDbContext(contextEnum);
+            this.context = context;
         }
 
         public Comment CreateComment(Comment comment)
@@ -39,6 +40,11 @@ namespace BB.DAL.EFPlaylist
             context.Playlists.Add(playlist1);
             context.SaveChanges();
             return playlist;
+        }
+
+        public IEnumerable<Playlist> ReadPlaylistsForUser(long userId)
+        {
+           return context.Playlists.ToList().FindAll(p => p.CreatedById == userId);
         }
 
         public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
@@ -72,9 +78,17 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public void DeletePlaylist(long playlistId)
+        public IEnumerable<Playlist> ReadPlaylists(long userId)
         {
-            throw new NotImplementedException();
+            return context.Playlists.Where(p => p.CreatedById == userId);
+        }
+
+        public Playlist DeletePlaylist(long playlistId)
+        {
+            var playlist = ReadPlaylist(playlistId);
+            playlist = context.Playlists.Remove(playlist);
+            context.SaveChanges();
+            return playlist ;
         }
 
         public void DeletePlaylistTrack(long playlistTrackId)
@@ -115,6 +129,8 @@ namespace BB.DAL.EFPlaylist
         {
             throw new NotImplementedException();
         }
+
+       
 
         public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {
@@ -202,7 +218,10 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist UpdatePlaylist(Playlist playlist)
         {
-            throw new NotImplementedException();
+            context.Playlists.AddOrUpdate(playlist);
+            context.Entry(playlist).State = EntityState.Modified;
+            context.SaveChanges();
+            return playlist;
         }
 
         public PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack)

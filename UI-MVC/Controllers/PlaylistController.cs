@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
@@ -30,28 +32,15 @@ namespace BB.UI.Web.MVC.Controllers
         };
 
 
-        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, UserManager userManager)
+        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, IUserManager userManager, IOrganisationManager organisationManager)
         {
             this.playlistManager = playlistManager;
             this.trackProvider = trackProvider;
             this.userManager = userManager;
+            this.organisationManager = organisationManager;
         }
-
-        public PlaylistController()
-        {
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
-            trackProvider = new YouTubeTrackProvider();
-        }
-
-        public PlaylistController(ContextEnum contextEnum)
-        {
-            playlistManager = new PlaylistManager(contextEnum);
-            userManager = new UserManager(contextEnum);
-            organisationManager = new OrganisationManager(contextEnum);
-            trackProvider = new YouTubeTrackProvider();
-        }
+        
+        
 
         public ActionResult View(long id)
         {
@@ -59,23 +48,41 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 user = userManager.ReadUser(User.Identity.Name);
             }
-
+            var playlist = playlistManager.ReadPlaylist(id);
             var votesUser = playlistManager.ReadVotesForUser(user);
+            var organisation = organisationManager.ReadOrganisationForPlaylist(id);
+            List<User> playlistOwners = new List<User>();
+            if (organisation != null)
+            {
+                playlistOwners = userManager.ReadCoOrganiserFromOrganisation(organisation).ToList();
+                playlistOwners.Add(userManager.ReadOrganiserFromOrganisation(organisation));
+            }
+            else
+            {
+                if (playlist.CreatedById != null)
+                {
+                    playlistOwners.Add(userManager.ReadUser((long)playlist.CreatedById));
+                }
+            }
+            ViewBag.Organisers = playlistOwners;
+      
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
+            
 
-            var playlist = playlistManager.ReadPlaylist(id);
+            
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
             
             return View(playlist);
         }
+        
 
         [HttpPost]
-        public ActionResult AddVote(int vote, long id, int aantalVotes)
+        public ActionResult AddVote(int vote, long id)
         {
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
             playlistManager.CreateVote(vote, user.Id, id);
-            if (aantalVotes > 3) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list");
+            //if (aantalVotes > 3) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list");
             return new HttpStatusCodeResult(200);
         }
 
@@ -107,9 +114,17 @@ namespace BB.UI.Web.MVC.Controllers
         public JsonResult SearchTrack(string q)
         {
             var youtubeProvider = new YouTubeTrackProvider();
-            var searchResult = youtubeProvider.Search(q);
+            var searchResult = youtubeProvider.Search(q, maxResults:3);
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AssignPlaylistMaster(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            //playlist.
+            //playlistManager.UpdatePlaylist()
+            return null;
         }
 
         public ActionResult GetNextTrack(long id)
@@ -160,6 +175,52 @@ namespace BB.UI.Web.MVC.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Edit(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            var model = new PlaylistViewModel()
+            {
+                Name = playlist.Name,
+                Description = playlist.Description,
+                ImageUrl = playlist.ImageUrl,
+                Key = playlist.Key,
+                MaximumVotesPerUser = playlist.MaximumVotesPerUser
+            };
+            return PartialView(model);
+        }
+
+        // POST: Default/Edit/5
+        [HttpPost]
+        public ActionResult Edit(long id, PlaylistViewModel model, HttpPostedFileBase avatarImage)
+        {
+            try
+            {
+                var playlist = playlistManager.ReadPlaylist(id);
+                playlist.Name = model.Name;
+                playlist.Description = model.Description;
+                playlist.Key = model.Key;
+                playlist.ImageUrl = model.ImageUrl;
+                string path = null;
+
+                if (avatarImage != null && avatarImage.ContentLength > 0)
+                {
+                    var bannerFileName = Path.GetFileName(avatarImage.FileName);
+                    path = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), bannerFileName));
+                    avatarImage.SaveAs(path);
+                    path = Path.GetFileName(path);
+                }
+                playlist.ImageUrl = path;
+
+                playlistManager.UpdatePlaylist(playlist);
+
+                return RedirectToAction("Portal", "Home");
+            }
+            catch
+            {
+                return new HttpStatusCodeResult(400);
+            }
+        }
+
         // GET: Playlists
         public ActionResult Index()
         {
@@ -171,7 +232,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult Create()
         {
             var user = userManager.ReadUser(User.Identity.Name);
-            ViewBag.UserOrganisations = organisationManager.ReadOrganisations(user.Id);
+            ViewBag.UserOrganisations = organisationManager.ReadOrganisationsForUser(user.Id);
             return View();
         }
 
@@ -219,6 +280,15 @@ namespace BB.UI.Web.MVC.Controllers
 
             return RedirectToAction("View/" + playlist.Id);
 
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Delete(long id)
+        {
+            var playlist = playlistManager.DeletePlaylist(id);
+            if (playlist == null) return new HttpStatusCodeResult(400);
+            return new HttpStatusCodeResult(200);
         }
     }
 }

@@ -8,6 +8,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BB.UI.Web.MVC.Tests.Helpers;
 using BB.UI.Web.MVC.Models;
 using BB.BL;
+using BB.DAL;
+using BB.DAL.EFOrganisation;
+using BB.DAL.EFPlaylist;
+using BB.DAL.EFUser;
 
 namespace BB.UI.Web.MVC.Tests.Controllers
 {
@@ -15,13 +19,12 @@ namespace BB.UI.Web.MVC.Tests.Controllers
     public class PlaylistControllerTest
     {
         private PlaylistController controller;
-        private IPlaylistManager playlistManager;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            controller = new PlaylistController(ContextEnum.BeatBuddyTest);
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddyTest);
+            controller = new PlaylistController(DbInitializer.CreatePlaylistManager(),new YouTubeTrackProvider(), DbInitializer.CreateUserManager(), DbInitializer.CreateOrganisationManager());
+            
             DbInitializer.Initialize();
         }
 
@@ -104,7 +107,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             };
 
             RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);
-            Playlist playlist = playlistManager.ReadPlaylist("Awesome party");
+            Playlist playlist = DbInitializer.CreatePlaylistManager().ReadPlaylist("Awesome party");
             Assert.AreEqual(playlist.Active, true);
 
         }

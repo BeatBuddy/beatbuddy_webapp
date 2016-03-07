@@ -22,5 +22,7 @@ namespace BB.DAL.EFUser
         IEnumerable<UserRole> ReadOrganisationsForUser(long userId);
         UserRole CreateUserRole(long userId, long organisationId, Role role);
         UserRole CreateUserRole(UserRole userRole);
+        UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId);
+        void DeleteUserRole(UserRole userRole);
     }
 }

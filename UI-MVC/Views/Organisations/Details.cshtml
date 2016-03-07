@@ -21,11 +21,29 @@
         {
             <img src="~/Content/img/playlistheader.jpg" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
         }
-
     </div>
 
     <div> 
         <h1>@Model.Name</h1>
+        @if (ViewBag.Following.Equals("None"))
+        {
+            <a href='javascript:Follow()' class="btn" style="margin-top: 1em;">
+                <i class="material-icons">follow_organisation</i> Follow
+            </a>
+        } else if(ViewBag.Following.Equals("Following")) {
+            <a href='javascript:UnFollow()' class="btn" style="margin-top: 1em;">
+                <i class="material-icons">follow_organisation</i> Un follow
+            </a>
+        }
+        else if (ViewBag.Following.Equals("Co-Organiser"))
+        {
+            <a href='javascript:Leave()' class="btn" style="margin-top: 1em;">
+                <i class="material-icons">follow_organisation</i> Leave organisation
+            </a>
+        }else if (ViewBag.Following.Equals("Organiser"))
+        {
+
+        }
         <hr />
         <p>Organiser: @Model.Organiser.FirstName @Model.Organiser.LastName</p>
         <p>Co-organisers: </p>
@@ -64,8 +82,10 @@
 
     
 <div class="title">
-    <h1>Playlists</h1>
-    <table id="playlist-overview">
+    <h1>Playlists</h1> in organisation
+</div>
+
+<table id="playlists">
         <tr>
             <th></th>
             <th></th>
@@ -79,9 +99,7 @@
         @foreach (Playlist playlist in Model.Playlists)
         {
             <tr class="track">
-                <td>
-                    
-                </td>
+            <td></td>
                 <td>
                     @if (Model.ImageUrl != null)
                     {
@@ -106,9 +124,7 @@
                         <p>No</p>
                     }
                 </td>
-                <td>
-                    
-                </td>
+            <td></td>
                 <td class="artist">
                     @playlist.Description
                 </td>
@@ -116,17 +132,19 @@
                     @playlist.PlaylistTracks.Count()
                 </td>
                 <td>
-                    @Html.ActionLink("View Playlist", "View", "Playlist", new { id = playlist.Id},null)
+                @Html.ActionLink("View Playlist", "View", "Playlist", new { id = playlist.Id }, null)
                 </td>
                 
             </tr>
         }
     </table>
-    <br />
-    Page @(Model.Playlists.PageCount < Model.Playlists.PageNumber ? 0 : Model.Playlists.PageNumber) of @Model.Playlists.PageCount
+        <br/>
 
-    @Html.PagedListPager(Model.Playlists, page => Url.Action("Details", new { Model.Id, page}))
-</div>
+        <div>
+            Page @(Model.Playlists.PageCount < Model.Playlists.PageNumber ? 0 : Model.Playlists.PageNumber) of @Model.Playlists.PageCount
+            @Html.PagedListPager(Model.Playlists, page => Url.Action("Details", new { Model.Id, page }))
+        </div>
+
     }
 @if (Model.Organiser.Email.Equals(User.Identity.Name))
 {
@@ -153,6 +171,66 @@ else
 }
 
     @section scripts{
+        <script>
+            function Leave() {
+                $.ajax({
+                    url: "/Organisations/LeaveOrganisation",
+                    type: "POST",
+                    data: {
+                        organisationId: @Model.Id, email: "@User.Identity.Name"
+                    },
+                    succes: function (e){
+
+                    },
+                    error: function (e){
+                        notie.alert(3, "Could not leave this organisation", 3);
+                    }
+                })
+                .done(function (){
+                    window.location.href = '@Url.Action("Details", new { id = Model.Id})';
+                });
+            }
+</script>
+<script>
+            function UnFollow() {
+                $.ajax({
+                    url: "/Organisations/UnFollowOrganisation",
+                    type: "POST",
+                    data: {
+                        organisationId: @Model.Id, email: "@User.Identity.Name"
+                    },
+                    succes: function (e){
+
+                    },
+                    error: function (e){
+                        notie.alert(3, "Could not unfollow this organisation", 3);
+                    }
+                })
+                .done(function (){
+                    window.location.href = '@Url.Action("Details", new { id = Model.Id})';
+                });
+            }
+</script>
+        <script>
+            function Follow() {
+                $.ajax({
+                    url: "/Organisations/FollowOrganisation",
+                    type: "POST",
+                    data: {
+                        organisationId: @Model.Id, email: "@User.Identity.Name"
+                    },
+                    succes: function (e){
+
+                    },
+                    error: function (e){
+                        notie.alert(3, "Could not follow this organisation", 3);
+                    }
+                })
+                .done(function (){
+                    window.location.href = '@Url.Action("Details", new { id = Model.Id})';
+                });
+            }
+        </script>
         <script>
             function AddPlaylist(){
                 window.location.href = '@Url.Action("Create", "Playlist")';

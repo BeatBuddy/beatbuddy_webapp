@@ -11,19 +11,17 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IPlaylistManager playlistManager;
         private readonly IOrganisationManager organisationManager;
 
-        public HomeController(ContextEnum contextEnum)
-        {
-            userManager = new UserManager(contextEnum);
-            playlistManager = new PlaylistManager(contextEnum);
-            organisationManager = new OrganisationManager(contextEnum);
-        }
 
-        public HomeController()
+        public HomeController(IUserManager userManager, IPlaylistManager playlistManager,
+            IOrganisationManager organisationManager)
         {
-            userManager = new UserManager(ContextEnum.BeatBuddy);
-            playlistManager = new PlaylistManager(ContextEnum.BeatBuddy);
-            organisationManager = new OrganisationManager(ContextEnum.BeatBuddy);
+            this.userManager = userManager;
+            this.playlistManager = playlistManager;
+            this.organisationManager = organisationManager;
         }
+        
+
+        
 
         public ActionResult Index()
         {
@@ -36,9 +34,9 @@ namespace BB.UI.Web.MVC.Controllers
             if (user == null) return RedirectToAction("Index", "Home");
 
             ViewBag.Name = user.FirstName;
-            ViewBag.MyOrganisations = organisationManager.ReadOrganisations().ToList(); //userManager.ReadOrganisationsForUser(user.Id).ToList();
-            ViewBag.MyPlaylists = playlistManager.ReadPlaylists().ToList(); //TODO: only fetch playlists of user
-            ViewBag.RecommendedPlaylists = playlistManager.ReadPlaylists().Take(3).ToList();
+            ViewBag.MyOrganisations = organisationManager.ReadOrganisationsForUser(user.Id).ToList(); 
+            ViewBag.MyPlaylists = playlistManager.ReadPlaylistsForUser(user.Id).ToList(); 
+            ViewBag.RecommendedPlaylists = playlistManager.ReadPlaylists().Reverse().Take(3).ToList();
             return View();
         }
     }

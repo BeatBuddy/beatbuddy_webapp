@@ -1,14 +1,18 @@
 ﻿@using BB.BL.Domain.Organisations
 @using BB.BL.Domain.Playlists
 @using BB.UI.Web.MVC.Controllers.Utils
+@using BB.UI.Web.MVC.Models
 
 @{
     ViewBag.Title = "Portal";
+    int plId = 0;
 }
 
 @section PortalPageStyle{
-    <link href="@Url.Content("~/Content/Portal.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Portal.min.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/Content/dropit.css")" rel="stylesheet" type="text/css" />
 }
+
 
 @section escape_padding {
     <div class="loggedin-banner">
@@ -18,16 +22,44 @@
     </div>
 }
 
+<div id="myModal" class="modal" style="margin-top: -90px">
+    <div class="modal-content" style="width: 620px; height: 530px; overflow: hidden">
+        <a href="#close" title="Close" class="close">X</a>
+        <div class="modal-body" style="margin-left: 60px; width: 100%">
+            @Html.Partial("~/Views/Organisations/Create.cshtml", new OrganisationViewModel())
+        </div>
+    </div>
+</div>
+<div id="playlistModal" class="modal" style="margin-top: -90px">
+    <div class="modal-content" style="width: 850px; height: 530px; overflow: hidden">
+        <a href="#close" title="Close" class="close">X</a>
+        <div class="modal-body" style="margin-left: 60px; width: 100%">
+            @Html.Partial("~/Views/Playlist/Create.cshtml", new PlaylistViewModel())
+        </div>
+    </div>
+</div>
+<div id="editPlaylistModal" class="modal" style="margin-top: -90px">
+    <div class="modal-content" style="width: 850px; height: 530px; overflow: hidden">
+        <a href="#close" title="Close" class="close">X</a>
+        <div class="modal-body" id="editPlaylistModal-body" style="margin-left: 60px; width: 100%">
+            
+        </div>
+    </div>
+</div>
 <section>
     <div class="title">
         <h1>My Organisations</h1>
-        @ViewBag.MyOrganisations.Count
+        <div id="organisationCount" style="display: inline">@ViewBag.MyOrganisations.Count</div>
+        <a href="#myModal" class="btn btn-right btn-portal" style="font-size: 0.6em">
+            <i class="material-icons">playlist_add</i> add organisation
+        </a>
     </div>
-    <div class="container row">
+    
+    <div class="container row" id="myOrganisations">
         @foreach (Organisation organisation in ViewBag.MyOrganisations)
         {
-            <a href="@Url.Action("Details", "Organisations", new { id = organisation.Id })">
-            <div class="col-md-4 col-xs-12 organisation-wrapper">
+            
+            <div class="col-md-4 col-xs-12 organisation-wrapper" >
                 @{
                     var organisationSource = "https://unsplash.com/photos/P8kVtyU32I0/download";
                     if (organisation.BannerUrl != null)
@@ -35,47 +67,80 @@
                         organisationSource = FileHelper.GetImagePath("OrganisationsImgPath", organisation.BannerUrl);
                     }
                 }
+                <a href="@Url.Action("Details", "Organisations", new {id = organisation.Id})">
+                    <div style="background-image: url(@organisationSource)" class="organisation-banner">&nbsp;</div>
 
-                <div style="background-image: url(@organisationSource)" class="organisation-banner">&nbsp;</div>
-
-                <h3>@organisation.Name</h3>
-
-                <div>@organisation.Playlists.Count playlists</div>
-            </div>
-            </a>
+                    <h3>@organisation.Name</h3>
+                </a>
+                    <div style="display: inline-block; float: right;margin: 0; margin-top: 0.6em; margin-bottom: 0.2em;">
+                        <ul class="menu">
+                            <li>
+                                <a href="#"><i class="material-icons" style="color: black">settings</i></a>
+                                <ul>
+                                    <li style="cursor: pointer"><a onclick="updateOrganisation(@organisation.Id)">Edit</a></li>
+                                    <li style="cursor: pointer"><a onclick="deleteOrganisation(@organisation.Id)">Delete</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>@organisation.Playlists.Count playlists</div>
+</div>
+            
          }
+        @if (ViewBag.MyOrganisations.Count == 0)
+        {
+            <p style="padding-left: 15px">You are not a member of any organisation... </p>
+        }
     </div>
     <div class="clearfix">&nbsp;</div>
 </section>
 
 <section>
     <div class="title">
-        <h1>My playlists</h1>
-        @ViewBag.MyPlaylists.Count
+            <h1>My playlists</h1>
+        <div id="playlistCount" style="display: inline">@ViewBag.MyPlaylists.Count</div>
+        <a href="#playlistModal" class="btn btn-right btn-portal" style="font-size: 0.6em">
+            <i class="material-icons">playlist_add</i> add playlist
+        </a>
     </div>
-
-    <div class="container row">
+    
+    <div class="container row more-margin-top" id="myplaylists">
         @foreach (Playlist playlist in ViewBag.MyPlaylists)
         {
-            <a href="@Url.Action("View", "Playlist", new { id = playlist.Id })">
+            
                 <div class="col-md-4 col-xs-12 organisation-wrapper">
                     @{
-                        var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                        var playlistSource = "/Content/img/playlistavatar.png";
                         if (playlist.ImageUrl != null)
                         {
                             playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
                         }
                     }
-                    <img src="@playlistSource" alt="playlist image" class="playlist-image" />
+                    <a href="@Url.Action("View", "Playlist", new {id = playlist.Id})">
+                        <img src="@playlistSource" alt="playlist image" class="playlist-image" />
 
-                    <h3>@playlist.Name</h3>
 
-                    <div>@playlist.PlaylistTracks.Count tracks</div>
-                    <div class="clear-playlist">&nbsp;</div>
-                </div>
-            </a>
-         }
+                        <h3>@playlist.Name</h3>
+                    </a>
+                        <div>@playlist.PlaylistTracks.ToList().FindAll(p => p.PlayedAt == null).Count tracks in queue</div>
+                        <ul class="menu pull-right">
+                            <li>
+                                <a href="#"><i class="material-icons" style="color: black">settings</i></a>
+                                <ul>
+                                    <li style="cursor: pointer"><a onclick="updatePlaylist(@playlist.Id)">Edit</a></li>
+                                    <li style="cursor: pointer"><a onclick="deletePlaylist(@playlist.Id)">Delete</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="clear-playlist">&nbsp;</div>
+</div>
+        }
+        @if (ViewBag.MyPlaylists.Count == 0)
+        {
+            <p style="padding-left: 15px">You do not have any playlists yet...</p>
+        }
     </div>
+    
     <div class="clearfix">&nbsp;</div>
 </section>
 
@@ -88,20 +153,20 @@
     <div class="container row">
         @foreach (Playlist playlist in ViewBag.RecommendedPlaylists)
         {
-            <a href="@Url.Action("View", "Playlist", new { id = playlist.Id })">
+            <a href="@Url.Action("View", "Playlist", new {id = playlist.Id})">
                 <div class="col-md-4 col-xs-12 organisation-wrapper">
                     @{
-                        var playlistSource = "https://unsplash.com/photos/1wmfqA0rEjM/download";
+                        var playlistSource = "/Content/img/playlistavatar.png";
                         if (playlist.ImageUrl != null)
                         {
                             playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
                         }
                     }
-                    <img src="@playlistSource" alt="playlist image" class="playlist-image" />
+                    <img src="@playlistSource" alt="playlist image" class="playlist-image"/>
 
                     <h3>@playlist.Name</h3>
 
-                    <div>@playlist.PlaylistTracks.Count tracks</div>
+                    <div>@playlist.PlaylistTracks.ToList().FindAll(p => p.PlayedAt == null).Count tracks in queue</div>
                     <div class="clear-playlist">&nbsp;</div>
                 </div>
             </a>
@@ -109,3 +174,60 @@
     </div>
     <div class="clearfix">&nbsp;</div>
 </section>
+@section Scripts{
+    <script>
+    $(document).ready(function () {
+        $('.menu').dropit();
+    });
+
+    function deletePlaylist(platlistId) {
+        $.ajax({
+            url: '@Url.Action("Delete","Playlist")',
+            method: 'POST',
+            data: { id: platlistId }
+        }).done(function () {
+            notie.alert(1, 'Playlist successfull deleted', 2.5);
+            $("#myplaylists").load(location.href + " #myplaylists");
+            $("#playlistCount").load(location.href + " #playlistCount");
+
+        }).fail(function() {
+            notie.alert(3, 'Failed to delete playlist', 2.5);
+        });
+    }
+        function updatePlaylist(playlistId) {
+            $('#editPlaylistModal-body').load("/Playlist/Edit/" + playlistId);
+            window.location.href = '#editPlaylistModal';
+        }
+
+        function deleteOrganisation(organisationId) {
+            $.ajax({
+                url: '@Url.Action("Delete","Organisations")',
+                method: 'POST',
+                data: { id: organisationId }
+            }).done(function () {
+                notie.alert(1, 'Organisation successfull deleted', 2.5);
+                $("#myOrganisations").load(location.href + " #myOrganisations");
+                $("#organisationCount").load(location.href + " #organisationCount");
+
+            }).fail(function() {
+                notie.alert(3, 'Failed to delete organisation', 2.5);
+            });
+        }
+        function updateOrganisation(organisationId) {
+            $('#editPlaylistModal-body').load("/Playlist/Edit/" + playlistId);
+            window.location.href = '#editPlaylistModal';
+        }
+
+        document.getElementById('avatar_click2').onclick = function () {
+            document.getElementById('avatarImage2').click();
+        };
+        document.getElementById("avatarImage2").onchange = function () {
+            var filename = document.getElementById("avatarImage2").value;
+            var lastIndex = filename.lastIndexOf("\\");
+            if (lastIndex >= 0) {
+                filename = filename.substring(lastIndex + 1);
+            }
+            document.getElementById("avatarLabel2").innerText = filename;
+        };
+    </script>    
+}

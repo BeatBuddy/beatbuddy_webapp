@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
@@ -11,9 +12,9 @@ namespace BB.DAL.EFUser
     {
         private readonly EFDbContext context;
         
-        public UserRepository(ContextEnum contextEnum)
+        public UserRepository(EFDbContext context)
         {
-            context = new EFDbContext(contextEnum);
+            this.context = context;
         }
 
         public User CreateUser(User user)
@@ -48,6 +49,12 @@ namespace BB.DAL.EFUser
         public void DeleteUser(long userId)
         {
             throw new NotImplementedException();
+        }
+
+        public void DeleteUserRole(UserRole userRole)
+        {
+            context.UserRole.Remove(userRole);
+            context.SaveChanges();
         }
 
         public IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation)
@@ -86,6 +93,16 @@ namespace BB.DAL.EFUser
         public User ReadUser(string lastname, string firstname)
         {
             throw new NotImplementedException();
+        }
+
+        public UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId)
+        {
+            IEnumerable<UserRole> userRoles = context.UserRole.Include("Organisation").Include("User").Where(u => u.User.Id == userId);
+            if(userRoles != null)
+                return userRoles.SingleOrDefault(o => o.Organisation.Id == organisationId);
+
+            return null;
+            
         }
 
         public IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
