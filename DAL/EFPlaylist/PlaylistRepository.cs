@@ -66,8 +66,11 @@ namespace BB.DAL.EFPlaylist
         {
             var user = context.User.Find(userId);
             vote.User = user;
-            vote = context.Votes.Add(vote);
             var playlistTrack = context.PlaylistTracks.Find(trackId);
+            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
+            var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Where(v => v.User.Id == userId).Count();
+            if(count >= playlist.MaximumVotesPerUser) { return null; }
+            vote = context.Votes.Add(vote);
             playlistTrack.Votes.Add(vote);
             context.SaveChanges();
             return vote;
@@ -127,10 +130,10 @@ namespace BB.DAL.EFPlaylist
 
         public void DeleteVote(long voteId)
         {
-            throw new NotImplementedException();
+            var vote = context.Votes.Find(voteId);
+            context.Votes.Remove(vote);
+            context.SaveChanges();
         }
-
-       
 
         public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {
@@ -168,7 +171,7 @@ namespace BB.DAL.EFPlaylist
 
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
         {
-            return context.PlaylistTracks.Find(playlistTrackId);
+            return context.PlaylistTracks.Include(p => p.Votes).Include("Votes.User").FirstOrDefault(p => p.Id == playlistTrackId);
         }
 
         public IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
