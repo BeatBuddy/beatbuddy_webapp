@@ -183,6 +183,13 @@ namespace BB.BL
             return repo.ReadPlaylists(organisation);
         }
 
+        public bool CheckIfUserCreatedPlaylist(long playlistId, long userId)
+        {
+            Playlist playlist = ReadPlaylist(playlistId);
+            if (playlist.CreatedById == userId) { return true; }
+            return false;
+        }
+
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
         {
             return repo.ReadPlaylistTrack(playlistTrackId);
@@ -256,5 +263,6 @@ namespace BB.BL
         {
             return repo.UpdateVote(vote);
         }
+
     }
 }
