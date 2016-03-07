@@ -21,6 +21,7 @@ using BB.DAL.EFUser;
 using BB.DAL;
 using BB.DAL.EFPlaylist;
 using BB.BL.Domain.Users;
+using BB.UI.Web.MVC.Models;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -62,6 +63,53 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if(playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
             return Request.CreateResponse(HttpStatusCode.OK, playlist);
+        }
+
+        [HttpGet]
+        [Route("{id}/live")]
+        [ResponseType(typeof(LivePlaylistViewModel))]
+        public HttpResponseMessage getLivePlaylist(long id)
+        {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            if (userIdentity == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+
+            var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
+            if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+
+            var playlist = playlistManager.ReadPlaylist(id);
+            if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
+            foreach (var playlistTrack in playlist.PlaylistTracks.Where(t => t.PlayedAt == null))
+            {
+                var score = playlistTrack.Votes.FirstOrDefault(v => v.User.Email == email)?.Score;
+                livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
+                {
+                    Track = playlistTrack.Track,
+                    AlreadyPlayed = false,
+                    Score = playlistTrack.Votes.Sum(v => v.Score),
+                    PersonalScore = score ?? 0
+                });
+            }
+            livePlaylistTracks.Sort((t1, t2) => t2.Score - t1.Score);
+
+            var livePlaylist = new LivePlaylistViewModel()
+            {
+                Id = playlist.Id,
+                PlaylistTracks = livePlaylistTracks,
+                Active = playlist.Active,
+                ChatComments = playlist.ChatComments,
+                Comments = playlist.Comments,
+                CreatedById = playlist.CreatedById,
+                Description = playlist.Description,
+                ImageUrl = playlist.ImageUrl,
+                Key = playlist.Key,
+                MaximumVotesPerUser = playlist.MaximumVotesPerUser,
+                PlaylistMasterId = playlist.PlaylistMasterId,
+                Name = playlist.Name
+            };
+
+            return Request.CreateResponse(HttpStatusCode.OK, livePlaylist);
         }
 
         [HttpPost]
@@ -140,15 +188,15 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (AssignPlaylistMaster(playlistId, user.Id))
             {
 
-                var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
-                     .Where(t => t.PlayedAt == null);
+            var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
+                 .Where(t => t.PlayedAt == null);
 
-                if (!playlistTracks.Any()) return NotFound();
+            if (!playlistTracks.Any()) return NotFound();
 
                 var originalPlayListTrack = playlistTracks.First(t => t.PlayedAt == null);
-                
 
-                var youTube = YouTube.Default; // starting point for YouTube actions
+
+            var youTube = YouTube.Default; // starting point for YouTube actions
                 var video = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
 
                 Track newTrack = new Track()
@@ -179,7 +227,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             else {
                 return BadRequest("Playlistmaster already set or you are not the organiser or co-organiser.");
             }
-                  
+
 
         }
 
