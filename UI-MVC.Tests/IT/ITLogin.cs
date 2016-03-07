@@ -22,7 +22,7 @@ namespace BB.UI.Web.MVC.Tests.IT
         public void TestInitialize()
         {
             chromeDriver = new ChromeDriver();
-            
+
             IUserManager userManager = DbInitializer.CreateUserManager();
             AccountController _acountController = new AccountController(userManager);
         }
@@ -37,7 +37,6 @@ namespace BB.UI.Web.MVC.Tests.IT
 
             chromeDriver.FindElement(By.XPath("//a[@href='#loginModal']")).Click();
 
-            
             loginModal = chromeDriver.FindElement(By.Id("loginModal"));
             WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(5));
             wait.Until(driver => driver.FindElement(By.Id("loginModal")).Displayed);
@@ -48,6 +47,8 @@ namespace BB.UI.Web.MVC.Tests.IT
 
             var loginButton = chromeDriver.FindElement(By.XPath("//input[@value='Login']"));
             loginButton.Click();
+
+            wait.Until(driver => driver.FindElement(By.XPath("//a[@href='/Manage']")).Displayed);
             var helloMessage = chromeDriver.FindElement(By.XPath("//a[@href='/Manage']"));
             Assert.AreEqual("hello admin@admin.com!", helloMessage.Text);
 

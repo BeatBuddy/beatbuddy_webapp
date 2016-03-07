@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Models;
 using BB.BL.Domain.Organisations;
@@ -20,9 +18,9 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private readonly IPlaylistManager playlistManager;
         private readonly ITrackProvider trackProvider;
+        private readonly IAlbumArtProvider albumArtProvider;
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
-
         
         private const string testName = "jonah@gmail.com";
 
@@ -32,14 +30,14 @@ namespace BB.UI.Web.MVC.Controllers
         };
 
 
-        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, IUserManager userManager, IOrganisationManager organisationManager)
+        public PlaylistController(IPlaylistManager playlistManager, ITrackProvider trackProvider, IUserManager userManager, IOrganisationManager organisationManager, IAlbumArtProvider albumArtProvider)
         {
             this.playlistManager = playlistManager;
             this.trackProvider = trackProvider;
             this.userManager = userManager;
             this.organisationManager = organisationManager;
+            this.albumArtProvider = albumArtProvider;
         }
-        
         
 
         public ActionResult View(long id)
@@ -100,6 +98,9 @@ namespace BB.UI.Web.MVC.Controllers
             var track = trackProvider.LookupTrack(id);
             if (track == null) return new HttpStatusCodeResult(400);
 
+            var albumArtUrl = albumArtProvider.Find(track.Artist + " " + track.Title);
+            track.CoverArtUrl = albumArtUrl;
+
             track = playlistManager.AddTrackToPlaylist(
                 playlistId,
                 track
@@ -122,9 +123,14 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult AssignPlaylistMaster(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
-            //playlist.
-            //playlistManager.UpdatePlaylist()
-            return null;
+            var user = userManager.ReadUser(User.Identity.Name);
+            playlist.PlaylistMasterId = user.Id;
+            playlist = playlistManager.UpdatePlaylist(playlist);
+            if (playlist.PlaylistMasterId != user.Id)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.Accepted);
         }
 
         public ActionResult GetNextTrack(long id)
