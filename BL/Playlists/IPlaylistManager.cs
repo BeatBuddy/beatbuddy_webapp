@@ -54,7 +54,7 @@ namespace BB.BL
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
         IEnumerable<Vote> ReadVotesForUser(User user);
-        void DeleteVote(long voteId);
+        void DeleteVote(long playlistTrackId, long userId);
 
 
     }
