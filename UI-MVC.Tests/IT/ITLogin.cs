@@ -38,7 +38,7 @@ namespace BB.UI.Web.MVC.Tests.IT
             chromeDriver.FindElement(By.XPath("//a[@href='#loginModal']")).Click();
 
             loginModal = chromeDriver.FindElement(By.Id("loginModal"));
-            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(5));
+            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(10));
             wait.Until(driver => driver.FindElement(By.Id("loginModal")).Displayed);
             //Assert.IsTrue(loginModal.Displayed);
 
@@ -75,7 +75,7 @@ namespace BB.UI.Web.MVC.Tests.IT
             Assert.IsFalse(loginModal.Displayed);
 
             chromeDriver.FindElement(By.XPath("//a[@href='#loginModal']")).Click();
-            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(5));
+            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(10));
             wait.Until(driver => driver.FindElement(By.Id("loginModal")).Displayed);
             //Assert.IsTrue(loginModal.Displayed);
 
