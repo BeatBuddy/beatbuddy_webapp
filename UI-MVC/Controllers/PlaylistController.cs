@@ -148,15 +148,15 @@ namespace BB.UI.Web.MVC.Controllers
             if (!playlistTracks.Any()) return Json(null, JsonRequestBehavior.DenyGet);
 
             var track = playlistTracks.First(t => t.PlayedAt == null);
-
-                return Json(new
-                {
-                trackId = track.Track.TrackSource.TrackId,
-                trackName = track.Track.Title,
-                artist = track.Track.Artist,
-                nextTracks = playlistTracks.Count(),
-                thumbnail = track.Track.CoverArtUrl
-                }, JsonRequestBehavior.AllowGet);
+            var playingViewModel = new CurrentPlayingViewModel()
+            {
+                TrackId = track.Track.TrackSource.TrackId,
+                Title = track.Track.Title,
+                Artist = track.Track.Artist,
+                NextTracks = playlistTracks.Count(),
+                CoverArtUrl = track.Track.CoverArtUrl
+            };
+                return Json(playingViewModel, JsonRequestBehavior.AllowGet);
 
         }
 
