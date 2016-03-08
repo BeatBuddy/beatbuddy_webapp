@@ -30,15 +30,18 @@ namespace BB.UI.Web.MVC.Tests.IT
         [TestMethod]
         public void LoginTest()
         {
+            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(10));
+
             chromeDriver.Navigate().GoToUrl("http://teamd.azurewebsites.net/");
             var loginModal = chromeDriver.FindElement(By.Id("loginModal"));
 
             Assert.IsFalse(loginModal.Displayed);
 
+
+            wait.Until(driver => driver.FindElement(By.XPath("//a[@href='#loginModal']")));
             chromeDriver.FindElement(By.XPath("//a[@href='#loginModal']")).Click();
 
             loginModal = chromeDriver.FindElement(By.Id("loginModal"));
-            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(5));
             wait.Until(driver => driver.FindElement(By.Id("loginModal")).Displayed);
             //Assert.IsTrue(loginModal.Displayed);
 

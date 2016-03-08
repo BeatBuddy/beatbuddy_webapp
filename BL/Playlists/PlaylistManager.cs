@@ -93,11 +93,11 @@ namespace BB.BL
 
         public Vote CreateVote(int score, long userId, long trackId)
         {
-
+            //if(repo.ReadMaximumVotesPerUser(trackId)>=)
 
             Vote vote = new Vote()
             {
-                Score = score,
+                Score = score
             };
             return repo.CreateVote(vote, userId, trackId);
         }
