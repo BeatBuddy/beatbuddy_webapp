@@ -96,6 +96,10 @@
         chat.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
+        chat.client.startMusicPlaying = function(data) {
+            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+            openFooter();
+        }
 
 
         var playing = false;
@@ -298,6 +302,7 @@
             if (event.data === YT.PlayerState.ENDED) {
                 playing = false;
                 getNextTrack();
+                //getnexttrack mag enkel door master aangeroepen worden! 
 
             }
         }
@@ -310,26 +315,24 @@
                 dataType : "json"
             }).done(function(data) {
                 if (data!=null) {
-                    
-                    player.cueVideoById(data.trackId);
-                    document.getElementById("nowPlaying").innerHTML = data.trackName + ' - ' + data.artist;
+                    player.cueVideoById(data.TrackId);
+                    document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
                     $(function() {
                         setInterval(updateTime, 50);
                     });
                     var nextButton = document.getElementById("nextBtn");
                     if (nextButton != null) {
-                        if (data.nextTracks === 1) {
+                        if (data.NextTracks === 1) {
                             nextButton.className = 'btn disabled';
                         } else {
                             nextButton.className = 'btn';
                         }
                     }
-
                     openFooter();
                     moveTrackToHistory();
-                    $('#thumbnail').attr("src", data.thumbnail);
+                    $('#thumbnail').attr("src", data.CoverArtUrl);
                     player.playVideo();
-
+                    chat.server.startPlaying(data);
                 }
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
