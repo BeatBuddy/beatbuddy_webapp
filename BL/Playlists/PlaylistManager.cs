@@ -108,7 +108,7 @@ namespace BB.BL
                 else {
                     vote = existingVote;
                     vote.Score = score;
-                    return repo.CreateVote(vote, userId, trackId);
+                    return repo.UpdateVote(vote);
                 }
             }
             vote = new Vote()

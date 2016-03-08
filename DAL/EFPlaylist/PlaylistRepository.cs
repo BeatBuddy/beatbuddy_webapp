@@ -294,7 +294,10 @@ namespace BB.DAL.EFPlaylist
 
         public Vote UpdateVote(Vote vote)
         {
-            throw new NotImplementedException();
+            context.Votes.Attach(vote);
+            context.Entry(vote).State = EntityState.Modified;
+            context.SaveChanges();
+            return vote;
         }
     }
 }
