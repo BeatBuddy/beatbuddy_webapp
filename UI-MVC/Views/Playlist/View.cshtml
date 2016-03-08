@@ -268,12 +268,8 @@
         var firstPlay = false;
 
         function onPlayerReady(event) {
-
             var playButton = document.getElementById("playBtn");
-            if(playButton != null) playButton.addEventListener("click", function() {
-                getNextTrack();
-                openFooter();
-            });
+            if(playButton != null) playButton.addEventListener("click", getNextTrack);
 
             var nextButton = document.getElementById("nextBtn");
             if(nextButton != null) nextButton.addEventListener("click", function() {
@@ -292,15 +288,21 @@
 
             });
         }
+
         function updateTime() {
             var time = document.getElementById("time");
             var currentTime = secondsToTime(player.getCurrentTime());
             var duration = secondsToTime(player.getDuration());
             time.innerHTML = currentTime +' | ' + duration;
             var percentageTime = (player.getCurrentTime() / player.getDuration()) * 100;
+
             var bar = document.getElementById("myBar");
             bar.style.width = percentageTime + '%';
+
+            var barFullscreen = document.getElementById("nowPlayingProgressBar");
+            barFullscreen.style.width = percentageTime + '%';
         }
+
         function secondsToTime(secs)
         {
             d = Number(secs);
@@ -309,6 +311,7 @@
             var s = Math.floor(d % 3600 % 60);
             return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
         }
+
         function onPlayerStateChange(event) {
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
