@@ -103,7 +103,8 @@ namespace BB.BL
                 if (existingVote.Score == score)
                 {
                     DeleteVote(existingVote);
-                    return null;
+                    existingVote.Score = 0;
+                    return existingVote;
                 }
                 else {
                     vote = existingVote;

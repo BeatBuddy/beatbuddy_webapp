@@ -303,14 +303,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
             var user = getUser(userIdentity);
             var createVote = playlistManager.CreateVote(1, user.Id, trackId);
-            if (createVote == null) {
-                return Ok(String.Format("Unvoted track with id {0} from playlist with id {1} by user id {2}",
-                    trackId,id,user.Id));
-            }
             return Ok(createVote);
         }
 
-        
         [HttpPost]
         [Route("{id}/track/{trackId}/downvote")]
         public IHttpActionResult Downvote(long id, long trackId)
@@ -318,14 +313,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
             var user = getUser(userIdentity);
             var createVote = playlistManager.CreateVote(-1, user.Id, trackId);
-            if (createVote == null)
-            {
-                return Ok(String.Format("Undownvoted track with id {0} from playlist with id {1} by user id {2}",
-                    trackId, id, user.Id));
-            }
             return Ok(createVote);
         }
-        
 
         private User getUser(ClaimsIdentity claimsIdentity)
         {
