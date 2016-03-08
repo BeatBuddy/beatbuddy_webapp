@@ -54,8 +54,10 @@ namespace BB.DAL.EFPlaylist
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
         IEnumerable<Vote> ReadVotesUser(User user);
         void DeleteVote(long voteId);
+        void DeleteVote(Vote vote);
         Playlist UpdatePlaylist(Playlist playlist, string email);
-        int ReadNumberOfVotesUserForPlaylist(long userId, long trackId);
+        int ReadNumberOfVotesOfUserForPlaylist(long userId, long trackId);
         int ReadMaximumVotesPerUser(long trackId);
+        Vote ReadVoteOfUserFromPlaylistTrack(long userId, long trackId);
     }
 }

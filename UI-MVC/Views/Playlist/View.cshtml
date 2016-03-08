@@ -27,7 +27,7 @@
 </div>
 
 <div id="nowPlayingRow" style="margin-top: 5em">
-        @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
         {
             if (Model.PlaylistTracks.Count != 0)
             {
@@ -49,7 +49,6 @@
     </a>
 </div>
 
-
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
         <a href="#close" id="close-modal" title="Close" class="close">X</a>
@@ -63,11 +62,14 @@
 
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
-        <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter"><i id="footerIcon"class="material-icons">keyboard_arrow_up</i></div>
+        <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter">
+            <i id="footerIcon" class="material-icons">keyboard_arrow_up</i>
+        </div>
+        <i id="fullscreenbutton" class="material-icons">fullscreen</i>
         <table style="width: 100%; margin-top: -15px">
             <tr>
                 <td style="width: 5%">
-                    <img src="~/Content/img/song-note.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em"/>
+                    <img src="~/Content/img/default_cover.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em" />
                 </td>
                 <td style="width: 95%">
                     <div class="title" style="margin-top: 0.5em">
@@ -84,7 +86,21 @@
         
     </div>
 </div>
+
 <div id="player" style="display: none">
+</div>
+
+<div id="fullscreenplayer" style="display: none">
+    <div id="darkoverlay">
+        <img id="nowPlayingLogo" src="~/Content/img/logo_header_white.png" alt="beatbuddy logo" />
+    </div>
+    <div id="nowPlayingAlbumArt"></div>
+    <span id="nowPlayingArtist">Nothing</span>
+    <span id="nowPlayingTitle">Is playing right now</span>
+    <div id="nowPlayingProgress">
+        <div id="nowPlayingProgressBar"></div>
+    </div>
+    <i id="fullscreenexitbutton" class="material-icons">fullscreen_exit</i>
 </div>
 
 @section Scripts{
@@ -109,7 +125,7 @@
             updatePlaylist();
             player.playVideo();
         }
-
+            
         chat.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
@@ -123,8 +139,8 @@
         var playing = false;
         var footerOpen = false;
         jQuery(function($) {
-            $('#footertop').click(function() {
-                if (footerOpen === false) {
+            $('#footertop').click(function () {
+                if(footerOpen === false) {
                     openFooter();
                 } else {
                     closeFooter();
@@ -203,9 +219,7 @@
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
                 chat.server.addTrack("@Model.Id");
-        })
-        .
-        fail(function() {
+            }).fail(function() {
             notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
         });
     }
@@ -253,19 +267,15 @@
         var firstPlay = false;
 
         function onPlayerReady(event) {
-
             var playButton = document.getElementById("playBtn");
-            playButton.addEventListener("click", getNextTrack);
-
+            if(playButton != null) playButton.addEventListener("click", getNextTrack);
+                
             var nextButton = document.getElementById("nextBtn");
-            if (nextButton != null) {
-                nextButton.addEventListener("click", function() {
+            if(nextButton != null) nextButton.addEventListener("click", function() {
                     getNextTrack();
                 });
             }
 
-
-        }
         function assignPlaylistMaster(userData) {
             $.ajax('/Playlist/AssignPlaylistMaster/', {
                 type: 'POST',
@@ -274,19 +284,24 @@
             }).done(function() {
                 updatePlaylist();
             }).fail(function() {
-
-
+                
             });
         }
+
         function updateTime() {
             var time = document.getElementById("time");
             var currentTime = secondsToTime(player.getCurrentTime());
             var duration = secondsToTime(player.getDuration());
             time.innerHTML = currentTime +' | ' + duration;
             var percentageTime = (player.getCurrentTime() / player.getDuration()) * 100;
+
             var bar = document.getElementById("myBar");
             bar.style.width = percentageTime + '%';
+
+            var barFullscreen = document.getElementById("nowPlayingProgressBar");
+            barFullscreen.style.width = percentageTime + '%';
         }
+
         function secondsToTime(secs)
         {
             d = Number(secs);
@@ -342,18 +357,32 @@
                     });
                     var nextButton = document.getElementById("nextBtn");
                     if (nextButton != null) {
-                        if (data.NextTracks === 1) {
+                        if (data.nextTracks === 1) {
                             nextButton.className = 'btn disabled';
                         } else {
                             nextButton.className = 'btn';
                         }
                     }
+                }
                     openFooter();
                     moveTrackToHistory();
+
+                if (data.CoverArtUrl != null) {
                     $('#thumbnail').attr("src", data.CoverArtUrl);
+                    $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                    $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+                } else {
+                    $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                    $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                    $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                }
+
+                $('#nowPlayingTitle').html(data.Title);
+                $('#nowPlayingArtist').html(data.Artist);
+                    $('#thumbnail').attr("src", data.CoverArtUrl);
+
                     player.playVideo();
                     chat.server.startPlaying(data, "@Model.Id");
-                }
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn disabled';
@@ -366,8 +395,6 @@
                 time.innerHTML = '';
             });
         }
-
-
 
         function moveTrackToHistory() {
             $.ajax('/Playlist/MoveTrackToHistory/', {
@@ -390,9 +417,11 @@
                 icon.innerHTML = 'play_arrow';
             });
         }
+
         function stopVideo() {
             player.stopVideo();
         }
+
         function updatePlaylist() {
             $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
             var rowCount = $('#playlist-tracks tr').length;
@@ -401,9 +430,31 @@
                 nextButton.className = 'btn';
             }
         }
+
+        var fullscreenEnabled = false;
+        function fullscreenToggle() {
+            $('#fullscreenplayer').fadeToggle(200);
+            fullscreenEnabled = !fullscreenEnabled;
+        }
+
+        $('#fullscreenbutton').on('click', function() {
+            fullscreenToggle();
+        });
+
+        $('#fullscreenexitbutton').on('click', function() {
+            fullscreenToggle();
+        });
+
+        $(document).keyup(function(e) {
+            if (e.which === 27) {
+                $('#fullscreenplayer').fadeOut(200);
+                fullscreenEnabled = false;
+        }
+        });
+
         window.onbeforeunload = function(){
             assignPlaylistMaster(@null);
-
+            
         }
     </script>
 }

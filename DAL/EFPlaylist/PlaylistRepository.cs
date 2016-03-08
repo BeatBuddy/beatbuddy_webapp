@@ -62,32 +62,6 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-        public Vote CreateVote(Vote vote, long userId, long trackId)
-        {
-            var user = context.User.Find(userId);
-            vote.User = user;
-            var playlistTrack = context.PlaylistTracks.Find(trackId);
-            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
-            var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Where(v => v.User.Id == userId).Count();
-            if(count >= playlist.MaximumVotesPerUser) { return null; }
-            vote = context.Votes.Add(vote);
-            playlistTrack.Votes.Add(vote);
-            context.SaveChanges();
-            return vote;
-        }
-
-        public int ReadMaximumVotesPerUser(long trackId) {
-            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
-            return playlist.MaximumVotesPerUser;
-        }
-
-        public int ReadNumberOfVotesUserForPlaylist(long userId, long trackId)
-        {
-            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
-            var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Where(v => v.User.Id == userId).Count();
-            return count;
-        }
-
         public void DeleteComment(long commentId)
         {
             throw new NotImplementedException();
@@ -143,6 +117,12 @@ namespace BB.DAL.EFPlaylist
         public void DeleteVote(long voteId)
         {
             var vote = context.Votes.Find(voteId);
+            context.Votes.Remove(vote);
+            context.SaveChanges();
+        }
+
+        public void DeleteVote(Vote vote)
+        {
             context.Votes.Remove(vote);
             context.SaveChanges();
         }
@@ -245,6 +225,36 @@ namespace BB.DAL.EFPlaylist
         public IEnumerable<Vote> ReadVotesUser(User user)
         {
             return context.Votes.Where(v => v.User == user);
+        }
+
+
+        public Vote CreateVote(Vote vote, long userId, long trackId)
+        {
+            var user = context.User.Find(userId);
+            vote.User = user;
+            var playlistTrack = context.PlaylistTracks.Find(trackId);
+            vote = context.Votes.Add(vote);
+            playlistTrack.Votes.Add(vote);
+            context.SaveChanges();
+            return vote;
+        }
+
+        public int ReadMaximumVotesPerUser(long trackId)
+        {
+            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
+            return playlist.MaximumVotesPerUser;
+        }
+
+        public int ReadNumberOfVotesOfUserForPlaylist(long userId, long trackId)
+        {
+            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
+            var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Where(v => v.User.Id == userId).Count();
+            return count;
+        }
+
+        public Vote ReadVoteOfUserFromPlaylistTrack(long userId, long trackId) {
+            var vote = context.PlaylistTracks.FirstOrDefault(pt => pt.Id == trackId).Votes.FirstOrDefault(v => v.User.Id == userId);
+            return vote;
         }
 
         public Comment UpdateComment(Comment comment)
