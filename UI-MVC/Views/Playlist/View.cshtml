@@ -1,5 +1,6 @@
 ﻿@using BB.BL.Domain.Playlists
 @using BB.BL.Domain.Users
+@using Microsoft.AspNet.Identity
 @model BB.BL.Domain.Playlists.Playlist
 @{
     ViewBag.Title = "View";
@@ -50,26 +51,13 @@
     </a>
 </div>
 
-<div class="title more-margin-top">
-    <h1>Discussion</h1> @ViewBag.CommentCount comments
-</div>
-<ul class="comments">
-    @foreach (Comment comment in ViewBag.Comments)
-    {
-        <li class="comment">
-            @if (comment.User != null)
-            {
-                <span class="commentuser">@@@comment.User.Nickname</span>
-            }
-            <span class="commenttext">@comment.Text</span>
-        </li>
-    }
-</ul>
-
 @if (Request.IsAuthenticated)
 {
-    @Html.Partial("_CreateCommentPartial", new Comment())
+    <div class="title more-margin-top">
+        @Html.Partial("Chat")
+    </div>
 }
+   
 
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
@@ -128,15 +116,34 @@
 @section Scripts{
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script>
-        var chat = $.connection.playlistHub;
-        $.connection.hub.start().done(function() {
-            chat.server.joinGroup("@Model.Id");
-        });
-        chat.client.addNewMessageToPage = function() {
+
+<script type="text/javascript">
+       $(function () {
+           var chat = $.connection.chatHub;
+           var play = $.connection.playlistHub;
+
+           chat.client.broadcastMessage = function (name, message) {
+               var encodedName = $('<div />').text(name).html();
+               var encodedMsg = $('<div />').text(message).html();
+               $('#discussion').append('<li><strong>' + encodedName
+                   + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+           };
+           $('#displayname').val('@User.Identity.GetUserName()');
+           $('#message').focus();
+           $.connection.hub.start().done(function () {
+               chat.server.joinGroup("@Model.Id");
+               $('#sendmessage').click(function () {
+                   chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
+                   $('#message').val('').focus();
+               });
+               play.server.joinGroup("@Model.Id");
+           });
+       });
+
+        play.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
-        chat.client.startMusicPlaying = function(data) {
+        play.client.startMusicPlaying = function(data) {
             player.cueVideoById(data.TrackId);
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
             $(function() {
@@ -157,10 +164,10 @@
             player.playVideo();
         }
 
-        chat.client.pauseMusicPlaying = function() {
+        play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
-        chat.client.resumeMusicPlaying = function(data) {
+        play.client.resumeMusicPlaying = function(data) {
             console.log(data);
             player.playVideo();
         }
@@ -249,7 +256,7 @@
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
-                chat.server.addTrack("@Model.Id");
+                play.server.addTrack("@Model.Id");
             }).fail(function() {
                 notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
             });
@@ -354,7 +361,7 @@
                 playing = true;
                 playButton.addEventListener("click", function() {
                     player.pauseVideo();
-                    chat.server.pausePlaying("@Model.Id");
+                    play.server.pausePlaying("@Model.Id");
                 });
                 icon.innerHTML = 'pause';
             }
@@ -362,7 +369,7 @@
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
                     player.playVideo();
-                    chat.server.resumePlaying(player.getCurrentTime(),"@Model.Id");
+                    play.server.resumePlaying(player.getCurrentTime(),"@Model.Id");
                 });
             }
 
@@ -413,7 +420,7 @@
                 $('#thumbnail').attr("src", data.CoverArtUrl);
 
                 player.playVideo();
-                chat.server.startPlaying(data, "@Model.Id");
+                play.server.startPlaying(data, "@Model.Id");
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn disabled';

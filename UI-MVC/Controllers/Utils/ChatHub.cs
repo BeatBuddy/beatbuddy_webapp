@@ -9,9 +9,14 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 {
     public class ChatHub : Hub
     {
-        public void Send(string name, string message)
+        public void Send(string name, string message, string groupName)
         {
-            Clients.All.BroadcastMessage(name, message);
+            Clients.Group(groupName).BroadcastMessage(name, message);
+        }
+
+        public void JoinGroup(string groupName)
+        {
+            Groups.Add(this.Context.ConnectionId, groupName);
         }
     }
 }
