@@ -81,14 +81,12 @@ namespace BB.DAL.EFPlaylist
             return playlist.MaximumVotesPerUser;
         }
 
-        public int ReadNumberOfVotesUserPlaylist(long userId, long trackId)
+        public int ReadNumberOfVotesUserForPlaylist(long userId, long trackId)
         {
             var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
             var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Where(v => v.User.Id == userId).Count();
             return count;
         }
-
-
 
         public void DeleteComment(long commentId)
         {
@@ -288,7 +286,5 @@ namespace BB.DAL.EFPlaylist
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
