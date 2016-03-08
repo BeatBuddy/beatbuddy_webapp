@@ -133,14 +133,7 @@ namespace BB.BL
 
         public bool MarkTrackAsPlayed(long playlistTrackId)
         {
-            var track = repo.ReadPlaylistTrack(playlistTrackId);
-
-            if (track == null) return false;
-
-            track.PlayedAt = DateTime.Now;
-            repo.UpdatePlayListTrack(track);
-
-            return true;
+            return repo.SetPlaylistTrackPlayedAtTimestamp(playlistTrackId);
         }
 
         public Playlist UpdatePlaylist(Playlist playlist, string email)

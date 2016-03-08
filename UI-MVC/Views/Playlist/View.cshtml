@@ -130,7 +130,15 @@
             }
             openFooter();
 
-            $('#thumbnail').attr("src", data.CoverArtUrl);
+            if (data.CoverArtUrl != null) {
+                $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+            } else {
+                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            }
             player.playVideo();
 
         }
