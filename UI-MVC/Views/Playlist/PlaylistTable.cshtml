@@ -29,7 +29,14 @@
                 @track.Votes.Sum(s => s.Score)
             </td>
             <td>
-                <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
+                @if (track.Track.CoverArtUrl != null)
+                {
+                    <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
+                }
+                else
+                {
+                    <img class="albumart" src="~/Content/img/default_cover.png" alt="album art" />
+                }
             </td>
             <td class="tracktitle">
                 @track.Track.Title
