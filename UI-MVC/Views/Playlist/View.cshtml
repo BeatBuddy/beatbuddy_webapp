@@ -92,15 +92,32 @@
     <script src="~/signalr/hubs"></script>
     <script>
         var chat = $.connection.playlistHub;
-        $.connection.hub.start();
+        $.connection.hub.start().done(function() {
+            chat.server.joinGroup("@Model.Id");
+        });
         chat.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
         chat.client.startMusicPlaying = function(data) {
+            player.cueVideoById(data.TrackId);
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+            $(function() {
+                setInterval(updateTime, 50);
+            });
+            var nextButton = document.getElementById("nextBtn");
+            if (nextButton != null) {
+                if (data.NextTracks === 1) {
+                    nextButton.className = 'btn disabled';
+                } else {
+                    nextButton.className = 'btn';
+                }
+            }
             openFooter();
+            
+            $('#thumbnail').attr("src", data.CoverArtUrl);
+            player.playVideo();
+            
         }
-
 
         var playing = false;
         var footerOpen = false;
@@ -184,7 +201,7 @@
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
-                chat.server.addTrack();
+                chat.server.addTrack("@Model.Id");
         })
         .
         fail(function() {
@@ -231,7 +248,7 @@
                     'onStateChange': onPlayerStateChange
                 }
             });
-            //player.setPlayBackQuality('small');
+            
         }
 
         var firstPlay = false;
@@ -332,7 +349,7 @@
                     moveTrackToHistory();
                     $('#thumbnail').attr("src", data.CoverArtUrl);
                     player.playVideo();
-                    chat.server.startPlaying(data);
+                    chat.server.startPlaying(data, "@Model.Id");
                 }
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');

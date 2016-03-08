@@ -11,15 +11,20 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 {
     public class PlaylistHub : Hub
     {
-        public void AddTrack()
+        public void AddTrack(string groupName)
         {
             Thread.Sleep(1000);
-            Clients.All.addNewMessageToPage();
+            Clients.Group(groupName).addNewMessageToPage();
         }
 
-        public void StartPlaying(CurrentPlayingViewModel track)
+        public void JoinGroup(string groupName)
         {
-            Clients.All.startMusicPlaying(track);
+            Groups.Add(this.Context.ConnectionId, groupName);
+        }
+
+        public void StartPlaying(CurrentPlayingViewModel track, string groupName)
+        {
+            Clients.Group(groupName).startMusicPlaying(track);
         }
     }
 }
