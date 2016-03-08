@@ -106,12 +106,13 @@ namespace BB.BL
                 if (existingVote.Score == score)
                 {
                     DeleteVote(existingVote);
-                    return null;
+                    existingVote.Score = 0;
+                    return existingVote;
                 }
                 else {
                     vote = existingVote;
                     vote.Score = score;
-                    return repo.CreateVote(vote, userId, trackId);
+                    return repo.UpdateVote(vote);
                 }
             }
             vote = new Vote()
