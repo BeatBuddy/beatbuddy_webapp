@@ -119,6 +119,12 @@ namespace BB.DAL.EFPlaylist
             context.SaveChanges();
         }
 
+        public void DeleteVote(Vote vote)
+        {
+            context.Votes.Remove(vote);
+            context.SaveChanges();
+        }
+
         public Playlist UpdatePlaylist(Playlist playlist, string email)
         {
             var pl = context.Playlists.ToList().Single(p => p.Id == playlist.Id);

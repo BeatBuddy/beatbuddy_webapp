@@ -91,24 +91,41 @@ namespace BB.BL
             return repo.CreateTrackSource(trackSource);
         }
 
+        public bool CheckIfReachedMaximumVotes(long userId, long trackId) {
+            return repo.ReadNumberOfVotesOfUserForPlaylist(userId, trackId) >= repo.ReadMaximumVotesPerUser(trackId);
+        }
+
         public Vote CreateVote(int score, long userId, long trackId)
         {
-            if (repo.ReadNumberOfVotesOfUserForPlaylist(userId, trackId) >= repo.ReadMaximumVotesPerUser(trackId)) {
-                return null;
-            }
-            
-            if(repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null) {
+            Vote vote;
+            if (repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null) {
                 var existingVote = repo.ReadVoteOfUserFromPlaylistTrack(userId, trackId);
-                if (existingVote.Score == score) {
-                    //DeleteVote()
+                if (existingVote.Score == score)
+                {
+                    DeleteVote(existingVote);
+                    return null;
+                }
+                else {
+                    vote = existingVote;
+                    vote.Score = score;
+                    return repo.CreateVote(vote, userId, trackId);
                 }
             }
-
-            Vote vote = new Vote()
+            vote = new Vote()
             {
                 Score = score
             };
             return repo.CreateVote(vote, userId, trackId);
+        }
+
+        public void DeleteVote(long voteId)
+        {
+            repo.DeleteVote(voteId);
+        }
+
+        public void DeleteVote(Vote vote)
+        {
+            repo.DeleteVote(vote);
         }
 
         public void DeleteComment(long commentId)
@@ -158,6 +175,8 @@ namespace BB.BL
 
         public void DeleteVote(long playlistTrackId, long userId)
         {
+            var playlist = repo.ReadPlaylistTrack(playlistTrackId);
+
             var vote = repo.ReadPlaylistTrack(playlistTrackId).Votes.First(v => v.User.Id == userId);
             repo.DeleteVote(vote.Id);
         }
