@@ -6,14 +6,13 @@ using System;
 using System.Web.Http;
 using BB.UI.Web.MVC.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
-
 namespace BB.UI.Web.MVC
 {
     public partial class Startup
     {
         public virtual void Configuration(IAppBuilder app)
         {
-
+            
             ConfigureAuth(app);
 
             app.Map("/api", inner =>

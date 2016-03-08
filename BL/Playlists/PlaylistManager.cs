@@ -134,6 +134,11 @@ namespace BB.BL
             return true;
         }
 
+        public Playlist UpdatePlaylist(Playlist playlist, string email)
+        {
+            return repo.UpdatePlaylist(playlist, email);
+        }
+
         public Track AddTrackToPlaylist(long playlistId, Track track)
         {
             return repo.CreateTrack(playlistId, track);

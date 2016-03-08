@@ -67,8 +67,6 @@ namespace BB.UI.Web.MVC.Controllers
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
             
-
-            
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
             
             return View(playlist);
@@ -128,17 +126,18 @@ namespace BB.UI.Web.MVC.Controllers
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AssignPlaylistMaster(long id)
+        public ActionResult AssignPlaylistMaster(long id, string userEmail)
         {
-            var playlist = playlistManager.ReadPlaylist(id);
-            var user = userManager.ReadUser(User.Identity.Name);
-            playlist.PlaylistMasterId = user.Id;
-            playlist = playlistManager.UpdatePlaylist(playlist);
-            if (playlist.PlaylistMasterId != user.Id)
+            try
+            {
+                var playlist = playlistManager.ReadPlaylist(id);
+                playlistManager.UpdatePlaylist(playlist, userEmail);
+                return new HttpStatusCodeResult(HttpStatusCode.Accepted);
+            }
+            catch
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return new HttpStatusCodeResult(HttpStatusCode.Accepted);
         }
 
         public ActionResult GetNextTrack(long id)
@@ -149,15 +148,15 @@ namespace BB.UI.Web.MVC.Controllers
             if (!playlistTracks.Any()) return Json(null, JsonRequestBehavior.DenyGet);
 
             var track = playlistTracks.First(t => t.PlayedAt == null);
-
-                return Json(new
-                {
-                trackId = track.Track.TrackSource.TrackId,
-                trackName = track.Track.Title,
-                artist = track.Track.Artist,
-                nextTracks = playlistTracks.Count(),
-                thumbnail = track.Track.CoverArtUrl
-                }, JsonRequestBehavior.AllowGet);
+            var playingViewModel = new CurrentPlayingViewModel()
+            {
+                TrackId = track.Track.TrackSource.TrackId,
+                Title = track.Track.Title,
+                Artist = track.Track.Artist,
+                NextTracks = playlistTracks.Count(),
+                CoverArtUrl = track.Track.CoverArtUrl
+            };
+                return Json(playingViewModel, JsonRequestBehavior.AllowGet);
 
         }
 
