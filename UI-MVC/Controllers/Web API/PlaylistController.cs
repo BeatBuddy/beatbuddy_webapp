@@ -83,7 +83,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
                 {
                     Track = playlistTrack.Track,
-                    AlreadyPlayed = false,
                     Score = playlistTrack.Votes.Sum(v => v.Score),
                     PersonalScore = score ?? 0
                 });
