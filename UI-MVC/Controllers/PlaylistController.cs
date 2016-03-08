@@ -304,5 +304,11 @@ namespace BB.UI.Web.MVC.Controllers
             if (playlist == null) return new HttpStatusCodeResult(400);
             return new HttpStatusCodeResult(200);
         }
+
+        public ActionResult Chat()
+        {
+            return View();
+        }
+
     }
 }
