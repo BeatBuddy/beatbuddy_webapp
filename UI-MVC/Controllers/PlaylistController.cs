@@ -49,7 +49,9 @@ namespace BB.UI.Web.MVC.Controllers
             var playlist = playlistManager.ReadPlaylist(id);
             var votesUser = playlistManager.ReadVotesForUser(user);
             var organisation = organisationManager.ReadOrganisationForPlaylist(id);
-            List<User> playlistOwners = new List<User>();
+            var comments = playlistManager.ReadComments(playlist);
+
+            var playlistOwners = new List<User>();
             if (organisation != null)
             {
                 playlistOwners = userManager.ReadCoOrganiserFromOrganisation(organisation).ToList();
@@ -63,7 +65,8 @@ namespace BB.UI.Web.MVC.Controllers
                 }
             }
             ViewBag.Organisers = playlistOwners;
-
+            ViewBag.CommentCount = comments.Count();
+            ViewBag.Comments = comments;
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
 

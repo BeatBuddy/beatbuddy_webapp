@@ -37,7 +37,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         public PlaylistController()
         {
-            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             this.trackProvider = new YouTubeTrackProvider();
             this.albumArtProvider = new BingAlbumArtProvider();

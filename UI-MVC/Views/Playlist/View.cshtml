@@ -1,4 +1,5 @@
-﻿@using BB.BL.Domain.Users
+﻿@using BB.BL.Domain.Playlists
+@using BB.BL.Domain.Users
 @model BB.BL.Domain.Playlists.Playlist
 @{
     ViewBag.Title = "View";
@@ -27,12 +28,12 @@
 </div>
 
 <div id="nowPlayingRow" style="margin-top: 5em">
-    @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
     {
         if (Model.PlaylistTracks.Count != 0)
         {
             <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-                <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
         }
         else
         {
@@ -42,12 +43,33 @@
     else
     {
         <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
-            <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+        <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
     }
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>
 </div>
+
+<div class="title more-margin-top">
+    <h1>Discussion</h1> @ViewBag.CommentCount comments
+</div>
+<ul class="comments">
+    @foreach (Comment comment in ViewBag.Comments)
+    {
+        <li class="comment">
+            @if (comment.User != null)
+            {
+                <span class="commentuser">@@@comment.User.Nickname</span>
+            }
+            <span class="commenttext">@comment.Text</span>
+        </li>
+    }
+</ul>
+
+@if (Request.IsAuthenticated)
+{
+    @Html.Partial("_CreateCommentPartial", new Comment())
+}
 
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">

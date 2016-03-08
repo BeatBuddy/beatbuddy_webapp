@@ -289,6 +289,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -462,6 +463,7 @@
     <Content Include="Views\History\View.cshtml" />
     <Content Include="Views\Playlist\Edit.cshtml" />
     <Content Include="Scripts\jquery-2.2.1.min.map" />
+    <Content Include="Views\Playlist\_CreateCommentPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
@@ -470,6 +472,7 @@
     <Folder Include="Content\img\Organisations\" />
     <Folder Include="Content\img\Playlists\" />
     <Folder Include="Content\img\Users\" />
+    <Folder Include="Views\Comment\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
@@ -513,6 +516,8 @@
           <DevelopmentServerPort>3092</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:44301/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:44301/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://localhost:3092/</CustomServerUrl>

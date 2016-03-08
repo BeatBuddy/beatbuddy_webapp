@@ -8,7 +8,7 @@ namespace BB.DAL.EFPlaylist
     public interface IPlaylistRepository
     {
         //Comments
-        Comment CreateComment(Comment comment);
+        Comment CreateComment(long playlistId, Comment comment);
         Comment UpdateComment(Comment comment);
         IEnumerable<Comment> ReadChatComments(Playlist playlist);
         IEnumerable<Comment> ReadComments(Playlist playlist);

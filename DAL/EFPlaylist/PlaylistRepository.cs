@@ -18,9 +18,15 @@ namespace BB.DAL.EFPlaylist
             this.context = context;
         }
 
-        public Comment CreateComment(Comment comment)
+        public Comment CreateComment(long playlistId, Comment comment)
         {
-            throw new NotImplementedException();
+            var playlist = context.Playlists
+                .Include(p => p.Comments)
+                .First(p => p.Id == playlistId);
+
+            playlist.Comments.Add(comment);
+            context.SaveChanges();
+            return comment;
         }
 
         public Playlist CreatePlaylist(Playlist playlist)
@@ -153,7 +159,11 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Comment> ReadComments(Playlist playlist)
         {
-            throw new NotImplementedException();
+            var pl = context.Playlists
+                .Include(p => p.Comments)
+                .Include("Comments.User")
+                .First(p => p.Id == playlist.Id);
+            return pl.Comments;
         }
 
         public Playlist ReadPlaylist(string name)
