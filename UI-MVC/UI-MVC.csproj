@@ -294,6 +294,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrganisationsController.cs" />
     <Compile Include="Controllers\PlaylistController.cs" />
+    <Compile Include="Controllers\Utils\ChatHub.cs" />
     <Compile Include="Controllers\Utils\FileHelper.cs" />
     <Compile Include="Controllers\Utils\ImageDecoder.cs" />
     <Compile Include="Controllers\Utils\PlaylistHub.cs" />
@@ -460,6 +461,7 @@
     <Content Include="Views\History\View.cshtml" />
     <Content Include="Views\Playlist\Edit.cshtml" />
     <Content Include="Scripts\jquery-2.2.1.min.map" />
+    <Content Include="Views\Playlist\Chat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
@@ -510,7 +512,9 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>3092</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49989/</IISUrl>
+          <IISUrl>http://localhost:44301/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:44301/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://localhost:3092/</CustomServerUrl>
