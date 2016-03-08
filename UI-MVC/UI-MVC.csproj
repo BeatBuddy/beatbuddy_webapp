@@ -310,6 +310,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrganisationViewModel.cs" />
+    <Compile Include="Models\LivePlaylistViewModel.cs" />
     <Compile Include="Models\PlaylistViewModel.cs" />
     <Compile Include="App_Start\Startup.Owin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

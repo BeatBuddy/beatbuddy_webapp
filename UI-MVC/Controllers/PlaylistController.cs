@@ -77,7 +77,16 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult AddVote(int vote, long id)
         {
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
-            playlistManager.CreateVote(vote, user.Id, id);
+            var createdVote = playlistManager.CreateVote(vote, user.Id, id);
+            if (createdVote == null ) return new HttpStatusCodeResult(400, "You have reached your vote limit for this playlist");
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult UnVote(long id)
+        {
+            var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
+            playlistManager.DeleteVote(id, user.Id);
             return new HttpStatusCodeResult(200);
         }
 
