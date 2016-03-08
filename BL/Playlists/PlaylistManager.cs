@@ -93,7 +93,16 @@ namespace BB.BL
 
         public Vote CreateVote(int score, long userId, long trackId)
         {
-            //if(repo.ReadMaximumVotesPerUser(trackId)>=)
+            if (repo.ReadNumberOfVotesOfUserForPlaylist(userId, trackId) >= repo.ReadMaximumVotesPerUser(trackId)) {
+                return null;
+            }
+            
+            if(repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null) {
+                var existingVote = repo.ReadVoteOfUserFromPlaylistTrack(userId, trackId);
+                if (existingVote.Score == score) {
+                    //DeleteVote()
+                }
+            }
 
             Vote vote = new Vote()
             {

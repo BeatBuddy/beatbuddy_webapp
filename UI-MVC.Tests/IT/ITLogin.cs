@@ -37,8 +37,7 @@ namespace BB.UI.Web.MVC.Tests.IT
 
             Assert.IsFalse(loginModal.Displayed);
 
-
-            wait.Until(driver => driver.FindElement(By.XPath("//a[@href='#loginModal']")));
+            wait.Until(driver => driver.FindElement(By.XPath("//a[@href='#loginModal']")).Displayed);
             chromeDriver.FindElement(By.XPath("//a[@href='#loginModal']")).Click();
 
             loginModal = chromeDriver.FindElement(By.Id("loginModal"));
