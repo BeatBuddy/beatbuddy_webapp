@@ -76,6 +76,20 @@ namespace BB.DAL.EFPlaylist
             return vote;
         }
 
+        public int ReadMaximumVotesPerUser(long trackId) {
+            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
+            return playlist.MaximumVotesPerUser;
+        }
+
+        public int ReadNumberOfVotesUserPlaylist(long userId, long trackId)
+        {
+            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
+            var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Where(v => v.User.Id == userId).Count();
+            return count;
+        }
+
+
+
         public void DeleteComment(long commentId)
         {
             throw new NotImplementedException();
@@ -252,8 +266,9 @@ namespace BB.DAL.EFPlaylist
         {
             if (context.PlaylistTracks.Find(playlistTrack.Id) == null) return null;
 
-            context.PlaylistTracks.Attach(playlistTrack);
+            context.PlaylistTracks.AddOrUpdate(playlistTrack);
             context.Entry(playlistTrack).State = EntityState.Modified;
+            
             context.SaveChanges();
 
             return playlistTrack;
