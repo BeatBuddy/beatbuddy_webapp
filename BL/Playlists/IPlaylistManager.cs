@@ -59,5 +59,6 @@ namespace BB.BL
         void DeleteVote(long playlistTrackId, long userId);
 
 
+
     }
 }
