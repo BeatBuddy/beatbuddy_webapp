@@ -91,13 +91,15 @@ namespace BB.BL
             return repo.CreateTrackSource(trackSource);
         }
 
-        public Vote CreateVote(int score, long id, long trackId)
+        public Vote CreateVote(int score, long userId, long trackId)
         {
+
+
             Vote vote = new Vote()
             {
                 Score = score,
             };
-            return repo.CreateVote(vote, id, trackId);
+            return repo.CreateVote(vote, userId, trackId);
         }
 
         public void DeleteComment(long commentId)

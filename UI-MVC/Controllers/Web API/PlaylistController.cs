@@ -198,7 +198,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             var youTube = YouTube.Default; // starting point for YouTube actions
                 var video = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
-
+                var boolean = video.IsEncrypted;
                 Track newTrack = new Track()
                 {
                     Id = originalPlayListTrack.Track.Id,
@@ -297,5 +297,51 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     p.Description
                 }));
         }
+
+        [HttpPost]
+        [Route("{id}/track/{trackId}/upvote")]
+        public IHttpActionResult Upvote(long id, long trackId) {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            var user = getUser(userIdentity);
+            var createVote = playlistManager.CreateVote(1, user.Id, trackId);
+            if (createVote == null) {
+                playlistManager.DeleteVote(id, user.Id);
+                return Ok(String.Format("Unvoted track with id {0} from playlist with id {1} by user id {2}",
+                    trackId,id,user.Id));
+            }
+            return Ok(createVote);
+        }
+
+        /*
+        [HttpPost]
+        [Route("{id}/track/{trackId}/upvote")]
+        public IHttpActionResult Upvote(long id, long trackId)
+        {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            var user = getUser(userIdentity);
+            var createVote = playlistManager.CreateVote(1, id, trackId);
+            if (createVote == null)
+            {
+                return Conflict();
+            }
+
+        }
+        */
+
+        private User getUser(ClaimsIdentity claimsIdentity)
+        {
+            if (claimsIdentity == null) return null;
+
+            var email = claimsIdentity.Claims.First(c => c.Type == "sub").Value;
+            if (email == null) return null;
+
+            var user = userManager.ReadUser(email);
+            if (user == null) return null;
+
+            return user;
+        }
+
+
+
     }
 }

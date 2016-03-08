@@ -72,7 +72,7 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation ReadOrganisation(string organisationName)
         {
-            return context.Organisations.Single(o => o.Name.Equals(organisationName));
+            return context.Organisations.FirstOrDefault(o => o.Name.Equals(organisationName));
         }
 
         public Organisation ReadOrganisation(long organisationId)
