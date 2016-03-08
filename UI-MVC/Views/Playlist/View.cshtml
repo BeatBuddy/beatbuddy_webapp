@@ -117,11 +117,10 @@
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
 
-<script type="text/javascript">
-       $(function () {
-           var chat = $.connection.chatHub;
-           var play = $.connection.playlistHub;
-
+<script>
+    var play = $.connection.playlistHub;
+    var chat = $.connection.chatHub;
+    $(function () {
            chat.client.broadcastMessage = function (name, message) {
                var encodedName = $('<div />').text(name).html();
                var encodedMsg = $('<div />').text(message).html();
@@ -130,15 +129,19 @@
            };
            $('#displayname').val('@User.Identity.GetUserName()');
            $('#message').focus();
-           $.connection.hub.start().done(function () {
+           $.connection.hub.start().done(
+               function () {
+               play.server.joinGroup("@Model.Id");
                chat.server.joinGroup("@Model.Id");
                $('#sendmessage').click(function () {
                    chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
                    $('#message').val('').focus();
                });
-               play.server.joinGroup("@Model.Id");
+
            });
        });
+
+       $.connection.hub.start().done()
 
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
