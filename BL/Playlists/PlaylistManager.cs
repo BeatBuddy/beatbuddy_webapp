@@ -3,29 +3,32 @@ using System.Collections.Generic;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
-using BB.BL.Domain;
 using BB.DAL.EFPlaylist;
 using System.Linq;
+using BB.DAL.EFUser;
 
 namespace BB.BL
 {
     public class PlaylistManager : IPlaylistManager
     {
         private readonly IPlaylistRepository repo;
+        private readonly IUserRepository userRepo;
 
-        public PlaylistManager(IPlaylistRepository playlistRepository)
+        public PlaylistManager(IPlaylistRepository playlistRepository, IUserRepository userRepo)
         {
             this.repo = playlistRepository;
+            this.userRepo = userRepo;
         }
-        public Comment CreateComment(string text, User user)
+
+        public Comment CreateComment(long playlistId, string text, string userEmail)
         {
             var comment = new Comment
             {
                 Text = text,
-                User = user,
+                User = userRepo.ReadUser(userEmail),
                 TimeStamp = DateTime.Now
             };
-            return repo.CreateComment(comment);
+            return repo.CreateComment(playlistId, comment);
         }
 
         public Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy)
@@ -91,24 +94,42 @@ namespace BB.BL
             return repo.CreateTrackSource(trackSource);
         }
 
+        public bool CheckIfReachedMaximumVotes(long userId, long trackId) {
+            return repo.ReadNumberOfVotesOfUserForPlaylist(userId, trackId) >= repo.ReadMaximumVotesPerUser(trackId);
+        }
+
         public Vote CreateVote(int score, long userId, long trackId)
         {
-            if (repo.ReadNumberOfVotesOfUserForPlaylist(userId, trackId) >= repo.ReadMaximumVotesPerUser(trackId)) {
-                return null;
-            }
-            
-            if(repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null) {
+            Vote vote;
+            if (repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null) {
                 var existingVote = repo.ReadVoteOfUserFromPlaylistTrack(userId, trackId);
-                if (existingVote.Score == score) {
-                    //DeleteVote()
+                if (existingVote.Score == score)
+                {
+                    DeleteVote(existingVote);
+                    existingVote.Score = 0;
+                    return existingVote;
+                }
+                else {
+                    vote = existingVote;
+                    vote.Score = score;
+                    return repo.UpdateVote(vote);
                 }
             }
-
-            Vote vote = new Vote()
+            vote = new Vote()
             {
                 Score = score
             };
             return repo.CreateVote(vote, userId, trackId);
+        }
+
+        public void DeleteVote(long voteId)
+        {
+            repo.DeleteVote(voteId);
+        }
+
+        public void DeleteVote(Vote vote)
+        {
+            repo.DeleteVote(vote);
         }
 
         public void DeleteComment(long commentId)
@@ -133,14 +154,7 @@ namespace BB.BL
 
         public bool MarkTrackAsPlayed(long playlistTrackId)
         {
-            var track = repo.ReadPlaylistTrack(playlistTrackId);
-
-            if (track == null) return false;
-
-            track.PlayedAt = DateTime.Now;
-            repo.UpdatePlayListTrack(track);
-
-            return true;
+            return repo.SetPlaylistTrackPlayedAtTimestamp(playlistTrackId);
         }
 
         public Playlist UpdatePlaylist(Playlist playlist, string email)
@@ -165,6 +179,8 @@ namespace BB.BL
 
         public void DeleteVote(long playlistTrackId, long userId)
         {
+            var playlist = repo.ReadPlaylistTrack(playlistTrackId);
+
             var vote = repo.ReadPlaylistTrack(playlistTrackId).Votes.First(v => v.User.Id == userId);
             repo.DeleteVote(vote.Id);
         }

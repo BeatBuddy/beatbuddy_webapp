@@ -9,7 +9,7 @@ namespace BB.BL
     public interface IPlaylistManager
     {
         //Comments
-        Comment CreateComment(string text, User user);
+        Comment CreateComment(long playlistId, string text, string userEmail);
         Comment UpdateComment(Comment comment);
         IEnumerable<Comment> ReadChatComments(Playlist playlist);
         IEnumerable<Comment> ReadComments(Playlist playlist);

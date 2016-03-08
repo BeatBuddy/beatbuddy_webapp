@@ -49,7 +49,7 @@ namespace BB.UI.Web.MVC
             EFDbContext efDbContext = new EFDbContext(ContextEnum.BeatBuddy);
             container.RegisterType<IOrganisationManager, OrganisationManager>(new InjectionConstructor(new OrganisationRepository(efDbContext)));
             container.RegisterType<IUserManager, UserManager>(new InjectionConstructor(new UserRepository(efDbContext)));
-            container.RegisterType<IPlaylistManager, PlaylistManager>(new InjectionConstructor(new PlaylistRepository(efDbContext)));
+            container.RegisterType<IPlaylistManager, PlaylistManager>(new InjectionConstructor(new PlaylistRepository(efDbContext), new UserRepository(efDbContext)));
             container.RegisterType<ITrackProvider, YouTubeTrackProvider>();
             container.RegisterType<IAlbumArtProvider, BingAlbumArtProvider>();
             container.RegisterType<AccountController>(new InjectionConstructor(new UserManager(new UserRepository(efDbContext))));

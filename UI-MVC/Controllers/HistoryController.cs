@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 
 namespace BB.UI.Web.MVC.Controllers
 {

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
@@ -20,9 +18,15 @@ namespace BB.DAL.EFPlaylist
             this.context = context;
         }
 
-        public Comment CreateComment(Comment comment)
+        public Comment CreateComment(long playlistId, Comment comment)
         {
-            throw new NotImplementedException();
+            var playlist = context.Playlists
+                .Include(p => p.Comments)
+                .First(p => p.Id == playlistId);
+
+            playlist.Comments.Add(comment);
+            context.SaveChanges();
+            return comment;
         }
 
         public Playlist CreatePlaylist(Playlist playlist)
@@ -121,6 +125,12 @@ namespace BB.DAL.EFPlaylist
             context.SaveChanges();
         }
 
+        public void DeleteVote(Vote vote)
+        {
+            context.Votes.Remove(vote);
+            context.SaveChanges();
+        }
+
         public Playlist UpdatePlaylist(Playlist playlist, string email)
         {
             var pl = context.Playlists.ToList().Single(p => p.Id == playlist.Id);
@@ -149,7 +159,11 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Comment> ReadComments(Playlist playlist)
         {
-            throw new NotImplementedException();
+            var pl = context.Playlists
+                .Include(p => p.Comments)
+                .Include("Comments.User")
+                .First(p => p.Id == playlist.Id);
+            return pl.Comments;
         }
 
         public Playlist ReadPlaylist(string name)
@@ -235,19 +249,21 @@ namespace BB.DAL.EFPlaylist
 
         public int ReadMaximumVotesPerUser(long trackId)
         {
-            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
-            return playlist.MaximumVotesPerUser;
+            var playlist = context.Playlists.FirstOrDefault(p => p.PlaylistTracks.Any(t => t.Id == trackId));
+            return playlist?.MaximumVotesPerUser ?? 0;
         }
 
         public int ReadNumberOfVotesOfUserForPlaylist(long userId, long trackId)
         {
-            var playlist = context.Playlists.Where(p => p.PlaylistTracks.Any(t => t.Id == trackId)).FirstOrDefault();
-            var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Where(v => v.User.Id == userId).Count();
+            var playlist = context.Playlists.FirstOrDefault(p => p.PlaylistTracks.Any(t => t.Id == trackId));
+            var count = playlist.PlaylistTracks.SelectMany(p => p.Votes).Count(v => v.User.Id == userId);
             return count;
         }
 
-        public Vote ReadVoteOfUserFromPlaylistTrack(long userId, long trackId) {
-            var vote = context.PlaylistTracks.FirstOrDefault(pt => pt.Id == trackId).Votes.FirstOrDefault(v => v.User.Id == userId);
+        public Vote ReadVoteOfUserFromPlaylistTrack(long userId, long trackId)
+        {
+            var track = context.PlaylistTracks.FirstOrDefault(pt => pt.Id == trackId);
+            var vote = track?.Votes.FirstOrDefault(v => v.User.Id == userId);
             return vote;
         }
 
@@ -258,22 +274,35 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist UpdatePlaylist(Playlist playlist)
         {
-            context.Playlists.AddOrUpdate(playlist);
-            context.Entry(playlist).State = EntityState.Modified;
+            var originalPlaylist = context.Playlists.Find(playlist.Id);
+
+            context.Entry(originalPlaylist).CurrentValues.SetValues(playlist);
+            context.Entry(originalPlaylist).State = EntityState.Modified;
             context.SaveChanges();
-            return playlist;
+
+            return originalPlaylist;
         }
 
         public PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack)
         {
-            if (context.PlaylistTracks.Find(playlistTrack.Id) == null) return null;
+            var originalTrack = context.PlaylistTracks.Find(playlistTrack.Id);
+            if (originalTrack == null) return null;
 
-            context.PlaylistTracks.AddOrUpdate(playlistTrack);
-            context.Entry(playlistTrack).State = EntityState.Modified;
-            
+            context.Entry(originalTrack).CurrentValues.SetValues(playlistTrack);
+            context.Entry(originalTrack).State = EntityState.Modified;
             context.SaveChanges();
 
-            return playlistTrack;
+            return originalTrack;
+        }
+
+        public bool SetPlaylistTrackPlayedAtTimestamp(long playlistTrackId)
+        {
+            var track = context.Playlists.SelectMany(p => p.PlaylistTracks).FirstOrDefault(t => t.Id == playlistTrackId);
+            if (track == null) return false;
+
+            track.PlayedAt = DateTime.Now;
+
+            return context.SaveChanges() > 0;
         }
 
         public Track UpdateTrack(Track track)
@@ -288,7 +317,10 @@ namespace BB.DAL.EFPlaylist
 
         public Vote UpdateVote(Vote vote)
         {
-            throw new NotImplementedException();
+            context.Votes.Attach(vote);
+            context.Entry(vote).State = EntityState.Modified;
+            context.SaveChanges();
+            return vote;
         }
     }
 }
