@@ -142,7 +142,7 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult GetNextTrack(long id)
         {
-            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks
+            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks.OrderByDescending(p => p.Votes.Sum(v => v.Score))
                 .Where(t => t.PlayedAt == null);
 
             if (!playlistTracks.Any()) return Json(null, JsonRequestBehavior.DenyGet);
@@ -213,6 +213,7 @@ namespace BB.UI.Web.MVC.Controllers
                 playlist.Description = model.Description;
                 playlist.Key = model.Key;
                 playlist.ImageUrl = model.ImageUrl;
+                playlist.MaximumVotesPerUser = model.MaximumVotesPerUser;
                 string path = null;
 
                 if (avatarImage != null && avatarImage.ContentLength > 0)
