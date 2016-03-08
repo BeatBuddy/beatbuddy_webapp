@@ -20,6 +20,8 @@ using VideoLibrary;
 using BB.DAL.EFUser;
 using BB.DAL;
 using BB.DAL.EFPlaylist;
+using BB.BL.Domain.Users;
+using BB.UI.Web.MVC.Models;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -29,6 +31,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
     {
         private readonly IPlaylistManager playlistManager;
         private readonly IUserManager userManager;
+        private readonly IOrganisationManager organisationManager;
         private readonly ITrackProvider trackProvider;
         private readonly IAlbumArtProvider albumArtProvider;
 
@@ -40,10 +43,11 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.albumArtProvider = new BingAlbumArtProvider();
         }
 
-        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, ITrackProvider iTrackProvider, IAlbumArtProvider albumArtProvider)
+        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, IOrganisationManager organisationManager, ITrackProvider iTrackProvider, IAlbumArtProvider albumArtProvider)
         {
             this.playlistManager = playlistManager;
             this.userManager = userManager;
+            this.organisationManager = organisationManager;
             this.trackProvider = iTrackProvider;
             this.albumArtProvider = albumArtProvider;
         }
@@ -59,6 +63,52 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if(playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
             return Request.CreateResponse(HttpStatusCode.OK, playlist);
+        }
+
+        [HttpGet]
+        [Route("{id}/live")]
+        [ResponseType(typeof(LivePlaylistViewModel))]
+        public HttpResponseMessage getLivePlaylist(long id)
+        {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            if (userIdentity == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+
+            var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
+            if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+
+            var playlist = playlistManager.ReadPlaylist(id);
+            if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
+            foreach (var playlistTrack in playlist.PlaylistTracks.Where(t => t.PlayedAt == null))
+            {
+                var score = playlistTrack.Votes.FirstOrDefault(v => v.User.Email == email)?.Score;
+                livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
+                {
+                    Track = playlistTrack.Track,
+                    Score = playlistTrack.Votes.Sum(v => v.Score),
+                    PersonalScore = score ?? 0
+                });
+            }
+            livePlaylistTracks.Sort((t1, t2) => t2.Score - t1.Score);
+
+            var livePlaylist = new LivePlaylistViewModel()
+            {
+                Id = playlist.Id,
+                PlaylistTracks = livePlaylistTracks,
+                Active = playlist.Active,
+                ChatComments = playlist.ChatComments,
+                Comments = playlist.Comments,
+                CreatedById = playlist.CreatedById,
+                Description = playlist.Description,
+                ImageUrl = playlist.ImageUrl,
+                Key = playlist.Key,
+                MaximumVotesPerUser = playlist.MaximumVotesPerUser,
+                PlaylistMasterId = playlist.PlaylistMasterId,
+                Name = playlist.Name
+            };
+
+            return Request.CreateResponse(HttpStatusCode.OK, livePlaylist);
         }
 
         [HttpPost]
@@ -122,25 +172,87 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("{playlistId}/nextTrack")]
         public IHttpActionResult getNextTrack(long playlistId)
         {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            if (userIdentity == null) return InternalServerError();
+
+            var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
+            if (email == null) return InternalServerError();
+
+            var user = userManager.ReadUser(email);
+            if (user == null) return InternalServerError();
+
+            if (AssignPlaylistMaster(playlistId, user.Id))
+            {
+
             var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
                  .Where(t => t.PlayedAt == null);
 
             if (!playlistTracks.Any()) return NotFound();
 
-            var playListTrack = playlistTracks.First(t => t.PlayedAt == null);
+                var originalPlayListTrack = playlistTracks.First(t => t.PlayedAt == null);
+
 
             var youTube = YouTube.Default; // starting point for YouTube actions
-            var video = youTube.GetVideo(playListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
-            playListTrack.Track.TrackSource.Url = video.Uri;
+                var video = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
+                var boolean = video.IsEncrypted;
+                Track newTrack = new Track()
+                {
+                    Id = originalPlayListTrack.Track.Id,
+                    Artist = originalPlayListTrack.Track.Artist,
+                    CoverArtUrl = originalPlayListTrack.Track.CoverArtUrl,
+                    Duration = originalPlayListTrack.Track.Duration,
+                    TrackSource = new TrackSource() {
+                        Id = originalPlayListTrack.Track.TrackSource.Id,
+                        SourceType = originalPlayListTrack.Track.TrackSource.SourceType,
+                        TrackId = originalPlayListTrack.Track.TrackSource.TrackId,
+                        Url = video.Uri
+                    },
+                    Title = originalPlayListTrack.Track.Title,
+                    Url = originalPlayListTrack.Track.Url
+                };
+                
+                var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id);
+                if (success)
+                {
+                    return Ok(newTrack);
+                }
+                else {
+                    return InternalServerError(new Exception("Could not mark track as played."));
+                }
+            }
+            else {
+                return BadRequest("Playlistmaster already set or you are not the organiser or co-organiser.");
+            }
 
 
-
-            return Ok(playListTrack.Track);
         }
+
+        public bool AssignPlaylistMaster(long playlistId,long userId)
+        {
+            if (playlistManager.CheckIfUserCreatedPlaylist(playlistId,userId)) {
+                var playlist = playlistManager.ReadPlaylist(playlistId);
+                playlist.PlaylistMasterId = userId;
+                playlist = playlistManager.UpdatePlaylist(playlist);
+                return true;
+            }
+            var organisation = organisationManager.ReadOrganisationForPlaylist(playlistId);
+            if (organisation != null)
+            {
+                if (userManager.ReadOrganiserFromOrganisation(organisation).Id == userId ||
+                    userManager.ReadCoOrganiserFromOrganisation(organisation).Select(u => u.Id == userId) != null)
+                {
+                    var playlist = playlistManager.ReadPlaylist(playlistId);
+                    playlist.PlaylistMasterId = userId;
+                    playlist = playlistManager.UpdatePlaylist(playlist);
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         [HttpPost]
         [Route("{playlistId}/addTrack")]
@@ -184,5 +296,51 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     p.Description
                 }));
         }
+
+        [HttpPost]
+        [Route("{id}/track/{trackId}/upvote")]
+        public IHttpActionResult Upvote(long id, long trackId) {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            var user = getUser(userIdentity);
+            var createVote = playlistManager.CreateVote(1, user.Id, trackId);
+            if (createVote == null) {
+                playlistManager.DeleteVote(id, user.Id);
+                return Ok(String.Format("Unvoted track with id {0} from playlist with id {1} by user id {2}",
+                    trackId,id,user.Id));
+            }
+            return Ok(createVote);
+        }
+
+        /*
+        [HttpPost]
+        [Route("{id}/track/{trackId}/upvote")]
+        public IHttpActionResult Upvote(long id, long trackId)
+        {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            var user = getUser(userIdentity);
+            var createVote = playlistManager.CreateVote(1, id, trackId);
+            if (createVote == null)
+            {
+                return Conflict();
+            }
+
+        }
+        */
+
+        private User getUser(ClaimsIdentity claimsIdentity)
+        {
+            if (claimsIdentity == null) return null;
+
+            var email = claimsIdentity.Claims.First(c => c.Type == "sub").Value;
+            if (email == null) return null;
+
+            var user = userManager.ReadUser(email);
+            if (user == null) return null;
+
+            return user;
+        }
+
+
+
     }
 }

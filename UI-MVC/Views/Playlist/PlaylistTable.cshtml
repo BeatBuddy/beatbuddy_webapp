@@ -22,11 +22,11 @@
         <th>Artist</th>
         <th>Album</th>
     </tr>
-    @foreach (PlaylistTrack track in Model.PlaylistTracks)
+    @foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(p=>p.Votes.Sum(v=>v.Score)))
     {
         <tr class="track">
             <td>
-                @track.Id
+                @track.Votes.Sum(s => s.Score)
             </td>
             <td>
                 @if (track.Track.CoverArtUrl != null)
@@ -42,25 +42,26 @@
                 @track.Track.Title
             </td>
             @{ 
-                var thumbUpId = track.Id + " thumbUp";
-                var thumbDownId = track.Id + " thumbDown";
+                var thumbUpId = track.Id + "thumbUp";
+                var thumbDownId = track.Id + "thumbDown";
                 Vote vote = track.Votes.FirstOrDefault(v => v.User.Email == User.Identity.Name);
                 if(vote == null)
                 {
-                    <td style="width:60px"><a onclick="addVote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a></td>
-                    <td style="width:60px"><a onclick="addVote('@thumbDownId', '-1', '@track.Id')" style="cursor: pointer"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a></td>
+                    <td style="width:60px"><a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a></td>
+                    <td style="width:60px"><a onclick="vote('@thumbDownId', '-1', '@track.Id')" style="cursor: pointer"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a></td>
                 }
                 else
                 {
                     if (vote.Score == 1)
                     {
-                        <td style="width:10px"><i class="material-icons">thumb_up</i></td>
-                        <td style="width:10px"><i class="material-icons grey400">thumb_down</i></td>
+                        <td style="width:10px"><a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" data-voted ="true" class="material-icons">thumb_up</i></a></td>
+                        <td style="width:10px"><a style="cursor: pointer; margin:0; padding:0;"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a></td>
                     }
                     else {
-                        <td style="width:10px"><i class="material-icons grey400">thumb_up</i></td>
-                        <td style="width:10px"><i class="material-icons">thumb_down</i></td>
+                        <td style="width:10px"><a style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a></td>
+                        <td style="width:10px"><a onclick="vote('@thumbDownId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbDownId" data-voted="true" class="material-icons">thumb_down</i></a></td>
                     }
+                     
                 }
             }
             <td>
@@ -76,18 +77,49 @@
     }
 </table>
 <script>
-    function changeColor(element) {
-            document.getElementById(element).style.color = "black";
+    function changeColor(element, color) {
+        document.getElementById(element).style.color = color;
     }
 
 
-    function addVote(element, vote, id) {
-        changeColor(element);
+    function vote(element, vote, id) {
+        if ("@Request.IsAuthenticated" === "False") {
+            notie.alert(3, "You need to login to vote", 2.5)
+            return
+        }
+        if ($('#'+element).attr("data-voted")!= null) {
+            unVote(element, id)
+            return
+        }
         $.ajax({
             url: '@Url.Action("AddVote")',
             method: 'POST',
-            data: { vote: vote, id: id},
-        }).done(alert("check"))
-        changeColor(element, vote)}
+            data: {vote: vote, id: id},
+        }).done(function () {
+            changeColor(element, "black")
+            updatePlaylist()
+            notie.alert(1,"Got it!", 2.5)
+        }).fail(
+        function (xhr, status, error) {
+            if (xhr.status == 400) { notie.alert(3,"You have reached your vote limit for this playlist", 2.5); }
+            else
+            { notie.alert(3,"Error creating vote", 2.5); }
+        })  
+    }
+
+    function unVote(element, id) {
+        $.ajax({
+            url: '@Url.Action("UnVote")',
+            method: 'POST',
+            data: {id: id },
+        }).done(function () {
+            changeColor(element, "#BDBDBD")
+            updatePlaylist()
+            notie.alert(1, "Got it!", 2.5)
+        }).fail(function () {
+            notie.alert(3, "Error deleting vote", 2.5)
+        }
+       )
+    }
 </script>
 
