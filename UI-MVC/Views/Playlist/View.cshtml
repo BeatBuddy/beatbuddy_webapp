@@ -104,20 +104,21 @@
             $(function() {
                 setInterval(updateTime, 50);
             });
-            var nextButton = document.getElementById("nextBtn");
-            if (nextButton != null) {
-                if (data.NextTracks === 1) {
-                    nextButton.className = 'btn disabled';
-                } else {
-                    nextButton.className = 'btn';
-                }
-            }
             openFooter();
-            
             $('#thumbnail').attr("src", data.CoverArtUrl);
+            updatePlaylist();
             player.playVideo();
-            
         }
+
+        chat.client.pauseMusicPlaying = function() {
+            player.pauseVideo();
+        }
+        chat.client.resumeMusicPlaying = function(data) {
+            console.log(data);
+            player.playVideo();
+        }
+
+
 
         var playing = false;
         var footerOpen = false;
@@ -248,16 +249,14 @@
                     'onStateChange': onPlayerStateChange
                 }
             });
-            
         }
-
         var firstPlay = false;
 
         function onPlayerReady(event) {
 
             var playButton = document.getElementById("playBtn");
             playButton.addEventListener("click", getNextTrack);
-                
+
             var nextButton = document.getElementById("nextBtn");
             if (nextButton != null) {
                 nextButton.addEventListener("click", function() {
@@ -275,8 +274,8 @@
             }).done(function() {
                 updatePlaylist();
             }).fail(function() {
-                
-                
+
+
             });
         }
         function updateTime() {
@@ -296,6 +295,8 @@
             var s = Math.floor(d % 3600 % 60);
             return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
         }
+        var startedPlaying = false;
+
         function onPlayerStateChange(event) {
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
@@ -307,6 +308,7 @@
                 playing = true;
                 playButton.addEventListener("click", function() {
                     player.pauseVideo();
+                    chat.server.pausePlaying("@Model.Id");
                 });
                 icon.innerHTML = 'pause';
             }
@@ -314,13 +316,13 @@
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
                     player.playVideo();
+                    chat.server.resumePlaying(player.getCurrentTime(),"@Model.Id");
                 });
             }
-            if (event.data === YT.PlayerState.ENDED) {
+
+            if (startedPlaying && event.data === YT.PlayerState.ENDED) {
                 playing = false;
                 getNextTrack();
-                //getnexttrack mag enkel door master aangeroepen worden! 
-
             }
         }
 
@@ -332,6 +334,7 @@
                 dataType : "json"
             }).done(function(data) {
                 if (data!=null) {
+                    if (!startedPlaying) startedPlaying = true;
                     player.cueVideoById(data.TrackId);
                     document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
                     $(function() {
@@ -369,7 +372,8 @@
         function moveTrackToHistory() {
             $.ajax('/Playlist/MoveTrackToHistory/', {
                 type: 'POST',
-                data: { id: @ViewBag.PlaylistId }
+                data: { id: @ViewBag.PlaylistId },
+                async: false
             }).done(function() {
                 if (!firstPlay) {
                     assignPlaylistMaster('@User.Identity.Name');
@@ -399,7 +403,7 @@
         }
         window.onbeforeunload = function(){
             assignPlaylistMaster(@null);
-            
+
         }
     </script>
 }

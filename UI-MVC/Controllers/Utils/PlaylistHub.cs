@@ -6,6 +6,7 @@ using System.Web;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Models;
 using Microsoft.AspNet.SignalR;
+using VideoLibrary;
 
 namespace BB.UI.Web.MVC.Controllers.Utils
 {
@@ -14,7 +15,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
         public void AddTrack(string groupName)
         {
             Thread.Sleep(1000);
-            Clients.Group(groupName).addNewMessageToPage();
+            Clients.OthersInGroup(groupName).addNewMessageToPage();
         }
 
         public void JoinGroup(string groupName)
@@ -24,7 +25,18 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void StartPlaying(CurrentPlayingViewModel track, string groupName)
         {
-            Clients.Group(groupName).startMusicPlaying(track);
+            Clients.OthersInGroup(groupName).startMusicPlaying(track);
+            var youTube = YouTube.Default; // starting point for YouTube actions
+            var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId); // gets a Video object with info about the video
+            Clients.OthersInGroup(groupName).onPlaylinkGenerated(video.Uri);
+        }
+        public void PausePlaying(string groupName)
+        {
+            Clients.OthersInGroup(groupName).pauseMusicPlaying();
+        }
+        public void ResumePlaying(float duration, string groupName)
+        {
+            Clients.OthersInGroup(groupName).resumeMusicPlaying(duration);
         }
     }
 }
