@@ -130,7 +130,26 @@ namespace BB.DAL.EFPlaylist
             throw new NotImplementedException();
         }
 
-       
+        public Playlist UpdatePlaylist(Playlist playlist, string email)
+        {
+            var pl = context.Playlists.ToList().Single(p => p.Id == playlist.Id);
+
+            if (email == null)
+            {
+                pl.PlaylistMasterId = null;
+            }
+            else
+            {
+                var user = context.User.Single(u => u.Email == email);
+                pl.PlaylistMasterId = user.Id;
+            }
+            context.Entry(pl).State = EntityState.Modified;
+            context.SaveChanges();
+
+            return playlist;
+
+        }
+
 
         public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {
@@ -158,7 +177,7 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Playlist> ReadPlaylists()
         {
-            return context.Playlists;
+            return context.Playlists.ToList();
         }
 
         public IEnumerable<Playlist> ReadPlaylists(Organisation organisation)
@@ -168,7 +187,7 @@ namespace BB.DAL.EFPlaylist
 
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
         {
-            return context.PlaylistTracks.Find(playlistTrackId);
+            return context.PlaylistTracks.ToList().Single(p=>p.Id == playlistTrackId);
         }
 
         public IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)

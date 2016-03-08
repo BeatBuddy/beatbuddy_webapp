@@ -13,10 +13,12 @@ namespace BB.UI.Web.MVC
     {
         public void ConfigureOwin(IAppBuilder app)
         {
+            
             HttpConfiguration config = new HttpConfiguration();
             WebApiConfig.Register(config);
             ConfigureOAuth(app);
             app.UseWebApi(config);
+            
         }
 
         public void ConfigureOAuth(IAppBuilder app)
