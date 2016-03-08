@@ -5,6 +5,7 @@ using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 using BB.BL.Domain;
 using BB.DAL.EFPlaylist;
+using System.Linq;
 
 namespace BB.BL
 {
@@ -131,6 +132,11 @@ namespace BB.BL
             return true;
         }
 
+        public Playlist UpdatePlaylist(Playlist playlist, string email)
+        {
+            return repo.UpdatePlaylist(playlist, email);
+        }
+
         public Track AddTrackToPlaylist(long playlistId, Track track)
         {
             return repo.CreateTrack(playlistId, track);
@@ -146,9 +152,10 @@ namespace BB.BL
             repo.DeleteTrackSource(trackSourceId);
         }
 
-        public void DeleteVote(long voteId)
+        public void DeleteVote(long playlistTrackId, long userId)
         {
-            repo.DeleteVote(voteId);
+            var vote = repo.ReadPlaylistTrack(playlistTrackId).Votes.First(v => v.User.Id == userId);
+            repo.DeleteVote(vote.Id);
         }
 
         public IEnumerable<Comment> ReadChatComments(Playlist playlist)
@@ -179,6 +186,13 @@ namespace BB.BL
         public IEnumerable<Playlist> ReadPlaylists(Organisation organisation)
         {
             return repo.ReadPlaylists(organisation);
+        }
+
+        public bool CheckIfUserCreatedPlaylist(long playlistId, long userId)
+        {
+            Playlist playlist = ReadPlaylist(playlistId);
+            if (playlist.CreatedById == userId) { return true; }
+            return false;
         }
 
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
@@ -254,5 +268,6 @@ namespace BB.BL
         {
             return repo.UpdateVote(vote);
         }
+
     }
 }

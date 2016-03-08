@@ -26,6 +26,8 @@ namespace BB.BL
         IEnumerable<Playlist> ReadPlaylists(long userId);
         Playlist DeletePlaylist(long playlistId);
         IEnumerable<Playlist> ReadPlaylistsForUser(long userId);
+        bool CheckIfUserCreatedPlaylist(long playlistId, long userId);
+
         //PlaylistTracks
         PlaylistTrack CreatePlaylistTrack(Track track);
         PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack);
@@ -33,7 +35,7 @@ namespace BB.BL
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
         bool MarkTrackAsPlayed(long playlistTrackId);
-
+        Playlist UpdatePlaylist(Playlist playlist, string email);
         //Track
         Track AddTrackToPlaylist(long playlistId, Track track);
         Track UpdateTrack(Track track);
@@ -54,7 +56,7 @@ namespace BB.BL
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
         IEnumerable<Vote> ReadVotesForUser(User user);
-        void DeleteVote(long voteId);
+        void DeleteVote(long playlistTrackId, long userId);
 
 
     }

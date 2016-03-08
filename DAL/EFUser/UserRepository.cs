@@ -76,8 +76,12 @@ namespace BB.DAL.EFUser
 
         public User ReadOrganiserFromOrganisation(Organisation organisation)
         {
-            UserRole userRole = context.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).Single(a => a.Role == Role.Organiser);
-            return context.User.Single(o => o.Id == userRole.User.Id);
+            UserRole userRole = context.UserRole
+                .Include("Organisation")
+                .Include("User")
+                .Where(o => o.Organisation.Id == organisation.Id).First();
+            
+            return context.User.SingleOrDefault(o => o.Id == userRole.User.Id);
         }
 
         public User ReadUser(string email)

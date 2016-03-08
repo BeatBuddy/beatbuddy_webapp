@@ -17,6 +17,7 @@ namespace BB.UI.Web.MVC
 
             UnityConfig.GetConfiguredContainer();
             AreaRegistration.RegisterAllAreas();
+            
             GlobalConfiguration.Configure(WebApiConfig.Register);
             //WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

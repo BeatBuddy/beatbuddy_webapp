@@ -27,19 +27,23 @@
 </div>
 
 <div id="nowPlayingRow" style="margin-top: 5em">
-    @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
-    {
-         if (Model.PlaylistTracks.Count != 0)
-    {
-        <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-        <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
-    }
+        @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+        {
+            if (Model.PlaylistTracks.Count != 0)
+            {
+                <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+                <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            }
+            else
+            {
+                <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+            }
+        }
         else
         {
-        <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-    }
-    }
-    
+            <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+        }
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>
@@ -84,35 +88,45 @@
 </div>
 
 @section Scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/signalr/hubs"></script>
     <script>
+        var chat = $.connection.playlistHub;
+        $.connection.hub.start();
+        chat.client.addNewMessageToPage = function() {
+            updatePlaylist();
+        }
+
+
+        var playing = false;
         var footerOpen = false;
         jQuery(function($) {
-            
-            $('#footertop').click(function () {
-                if(footerOpen === false) {
+            $('#footertop').click(function() {
+                if (footerOpen === false) {
                     openFooter();
                 } else {
                     closeFooter();
                 }
-            });		
+            });
         });
+
         function clickFooter() {
             if (footerOpen) {
                 closeFooter();
-            }
-            else {
+            } else {
                 closeFooter();
             }
         }
+
         function openFooter() {
             $('#footerSlideContent').animate({ height: '125px' });
             $(this).css('backgroundPosition', 'bottom left');
             $('#nowPlayingRow').animate({ marginBottom: '9em' }, 500, null);
             footerOpen = true;
             var footerIcon = document.getElementById("footerIcon");
-
             footerIcon.innerHTML = 'keyboard_arrow_down';
         }
+
         function closeFooter() {
             $('#footerSlideContent').animate({ height: '20px' });
             $(this).css('backgroundPosition', 'top left');
@@ -121,8 +135,8 @@
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';
         }
-        		
-        
+
+
         var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
             '<img class="thumbnail" src="${CoverArtUrl}"/>' +
             '<span class="artist">${Artist}</span>' +
@@ -131,10 +145,10 @@
         $.template("trackTemplate", markup);
 
         $.ajaxSetup({
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#loading").show();
             },
-            complete: function () {
+            complete: function() {
                 $("#loading").hide();
             }
         });
@@ -142,14 +156,14 @@
 
         function fetchQueryResults() {
             $.ajax('@Url.Action("SearchTrack")/?q=' + $('#query').val())
-                .done(function (result) {
+                .done(function(result) {
                     $("#results").empty();
                     $.tmpl("trackTemplate", result).appendTo("#results");
-                    $("#results li").on("click", function () {
+                    $("#results li").on("click", function() {
                         addTrack($(this).attr('data-id'));
                     });
                 })
-                .fail(function () {
+                .fail(function() {
                     alert("error");
                 });
         }
@@ -158,17 +172,21 @@
             $.ajax({
                 url: '@Url.Action("AddTrack")',
                 method: 'POST',
-                data: { playlistId: @ViewBag.PlaylistId, id: id }
-            }).done(function () {
+                data: { playlistId: @ViewBag.PlaylistId, id: id },
+                async: false
+            }).done(function() {
                 window.location.href = @ViewBag.PlaylistId + '#close';
                 updatePlaylist();
-                    var playBtn = document.getElementById('playBtn');
-                    playBtn.className = 'btn';
-                })
-                .fail(function() {
-                    notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
-                });
-        }
+                var playBtn = document.getElementById('playBtn');
+                playBtn.className = 'btn';
+                playBtn.addEventListener("click", getNextTrack);
+                chat.server.addTrack();
+        })
+        .
+        fail(function() {
+            notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
+        });
+    }
 
         function debounce(func, wait, immediate) {
             var timeout;
@@ -204,34 +222,41 @@
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
-                videoId: 'cdwal5Kw3Fc',
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
                 }
             });
-            player.setPlayBackQuality('small');
+            //player.setPlayBackQuality('small');
         }
 
-        var firstPlay = true;
+        var firstPlay = false;
 
         function onPlayerReady(event) {
-            if (firstPlay) {
-                var playButton = document.getElementById("playBtn");
-                playButton.addEventListener("click", getNextTrack);
-                assignPlaylistMaster();
-                firstPlay = false;
+
+            var playButton = document.getElementById("playBtn");
+            playButton.addEventListener("click", getNextTrack);
                 
-            }
             var nextButton = document.getElementById("nextBtn");
-            nextButton.addEventListener("click", function() {
-                getNextTrack();
-            });
-            
+            if (nextButton != null) {
+                nextButton.addEventListener("click", function() {
+                    getNextTrack();
+                });
+            }
+
 
         }
-        function assignPlaylistMaster() {
-            
+        function assignPlaylistMaster(userData) {
+            $.ajax('/Playlist/AssignPlaylistMaster/', {
+                type: 'POST',
+                async: false,
+                data: { id: @ViewBag.PlaylistId, userEmail: userData}
+            }).done(function() {
+                updatePlaylist();
+            }).fail(function() {
+                
+                
+            });
         }
         function updateTime() {
             var time = document.getElementById("time");
@@ -248,27 +273,32 @@
             var h = Math.floor(d / 3600);
             var m = Math.floor(d % 3600 / 60);
             var s = Math.floor(d % 3600 % 60);
-            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
+            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
         }
         function onPlayerStateChange(event) {
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
             var icon = document.getElementById("icon");
-            if (event.data == YT.PlayerState.PLAYING) {
+            if (event.data === -1) {
+                player.playVideo();
+            }
+            if (event.data === YT.PlayerState.PLAYING) {
+                playing = true;
                 playButton.addEventListener("click", function() {
                     player.pauseVideo();
                 });
                 icon.innerHTML = 'pause';
             }
-            if (event.data == YT.PlayerState.PAUSED) {
+            if (event.data === YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
-                
                 playButton.addEventListener("click", function() {
                     player.playVideo();
                 });
             }
-            if (event.data == YT.PlayerState.ENDED) {
+            if (event.data === YT.PlayerState.ENDED) {
+                playing = false;
                 getNextTrack();
+
             }
         }
 
@@ -280,22 +310,27 @@
                 dataType : "json"
             }).done(function(data) {
                 if (data!=null) {
-                    player.loadVideoById(data.trackId);
+                    
+                    player.cueVideoById(data.trackId);
                     document.getElementById("nowPlaying").innerHTML = data.trackName + ' - ' + data.artist;
                     $(function() {
                         setInterval(updateTime, 50);
                     });
                     var nextButton = document.getElementById("nextBtn");
-                    if (data.nextTracks === 1) {
-                        nextButton.className = 'btn disabled';
-                    } else {
-                        nextButton.className = 'btn';     
+                    if (nextButton != null) {
+                        if (data.nextTracks === 1) {
+                            nextButton.className = 'btn disabled';
+                        } else {
+                            nextButton.className = 'btn';
+                        }
                     }
+
                     openFooter();
                     moveTrackToHistory();
                     $('#thumbnail').attr("src", data.thumbnail);
-                    
-                } 
+                    player.playVideo();
+
+                }
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn disabled';
@@ -308,13 +343,20 @@
                 time.innerHTML = '';
             });
         }
-        
+
+
+
         function moveTrackToHistory() {
             $.ajax('/Playlist/MoveTrackToHistory/', {
                 type: 'POST',
                 data: { id: @ViewBag.PlaylistId }
             }).done(function() {
-                updatePlaylist();
+                if (!firstPlay) {
+                    assignPlaylistMaster('@User.Identity.Name');
+                    firstPlay = true;
+                } else {
+                    updatePlaylist();
+                }
             }).fail(function() {
                 var nextButton = document.getElementById("nextBtn");
                 nextButton.className = 'btn disabled';
@@ -329,7 +371,15 @@
         }
         function updatePlaylist() {
             $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
+            var rowCount = $('#playlist-tracks tr').length;
+            if (rowCount >= 1 && playing) {
+                var nextButton = document.getElementById("nextBtn");
+                nextButton.className = 'btn';
+            }
         }
-
+        window.onbeforeunload = function(){
+            assignPlaylistMaster(@null);
+            
+        }
     </script>
 }
