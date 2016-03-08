@@ -59,11 +59,14 @@
 
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
-        <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter"><i id="footerIcon"class="material-icons">keyboard_arrow_up</i></div>
+        <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter">
+            <i id="footerIcon"class="material-icons">keyboard_arrow_up</i>
+        </div>
+        <i id="fullscreenbutton" class="material-icons">fullscreen</i>
         <table style="width: 100%; margin-top: -15px">
             <tr>
                 <td style="width: 5%">
-                    <img src="~/Content/img/song-note.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em"/>
+                    <img src="~/Content/img/default_cover.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em"/>
                 </td>
                 <td style="width: 95%">
                     <div class="title" style="margin-top: 0.5em">
@@ -83,18 +86,30 @@
 <div id="player" style="display: none">
 </div>
 
+<div id="fullscreenplayer" style="display: none">
+    <div id="darkoverlay">
+        <img id="nowPlayingLogo" src="~/Content/img/logo_header_white.png" alt="beatbuddy logo" />
+    </div>
+    <div id="nowPlayingAlbumArt"></div>
+    <span id="nowPlayingArtist">Nothing</span>
+    <span id="nowPlayingTitle">Is playing right now</span>
+    <div id="nowPlayingProgress">
+        <div id="nowPlayingProgressBar"></div>
+    </div>
+    <i id="fullscreenexitbutton" class="material-icons">fullscreen_exit</i>
+</div>
+
 @section Scripts{
     <script>
         var footerOpen = false;
         jQuery(function($) {
-            
             $('#footertop').click(function () {
                 if(footerOpen === false) {
                     openFooter();
                 } else {
                     closeFooter();
                 }
-            });		
+            });
         });
         function clickFooter() {
             if (footerOpen) {
@@ -121,8 +136,8 @@
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';
         }
-        		
-        
+
+
         var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
             '<img class="thumbnail" src="${CoverArtUrl}"/>' +
             '<span class="artist">${Artist}</span>' +
@@ -218,20 +233,23 @@
         function onPlayerReady(event) {
             if (firstPlay) {
                 var playButton = document.getElementById("playBtn");
-                playButton.addEventListener("click", getNextTrack);
+                if(playButton != null) playButton.addEventListener("click", function() {
+                    getNextTrack();
+                    openFooter();
+                });
                 assignPlaylistMaster();
                 firstPlay = false;
-                
+
             }
             var nextButton = document.getElementById("nextBtn");
-            nextButton.addEventListener("click", function() {
+            if(nextButton != null) nextButton.addEventListener("click", function() {
                 getNextTrack();
             });
-            
+
 
         }
         function assignPlaylistMaster() {
-            
+
         }
         function updateTime() {
             var time = document.getElementById("time");
@@ -248,7 +266,7 @@
             var h = Math.floor(d / 3600);
             var m = Math.floor(d % 3600 / 60);
             var s = Math.floor(d % 3600 % 60);
-            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
+            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
         }
         function onPlayerStateChange(event) {
             var playButton = document.getElementById("playBtn");
@@ -262,7 +280,7 @@
             }
             if (event.data == YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
-                
+
                 playButton.addEventListener("click", function() {
                     player.playVideo();
                 });
@@ -286,16 +304,27 @@
                         setInterval(updateTime, 50);
                     });
                     var nextButton = document.getElementById("nextBtn");
-                    if (data.nextTracks === 1) {
+                    if (nextButton != null && data.nextTracks === 1) {
                         nextButton.className = 'btn disabled';
                     } else {
-                        nextButton.className = 'btn';     
+                        nextButton.className = 'btn';
                     }
                     openFooter();
                     moveTrackToHistory();
-                    $('#thumbnail').attr("src", data.thumbnail);
-                    
-                } 
+
+                    if (data.thumbnail != null) {
+                        $('#thumbnail').attr("src", data.thumbnail);
+                        $('#nowPlayingAlbumArt').css('background-image', "url(" + data.thumbnail + ")");
+                        $('#fullscreenplayer').css('background-image', "url(" + data.thumbnail + ")");
+                    } else {
+                        $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                        $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                        $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                    }
+
+                    $('#nowPlayingTitle').html(data.trackName);
+                    $('#nowPlayingArtist').html(data.artist);
+                }
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn disabled';
@@ -308,7 +337,7 @@
                 time.innerHTML = '';
             });
         }
-        
+
         function moveTrackToHistory() {
             $.ajax('/Playlist/MoveTrackToHistory/', {
                 type: 'POST',
@@ -330,6 +359,27 @@
         function updatePlaylist() {
             $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
         }
+
+        var fullscreenEnabled = false;
+        function fullscreenToggle() {
+            $('#fullscreenplayer').fadeToggle(200);
+            fullscreenEnabled = !fullscreenEnabled;
+        }
+
+        $('#fullscreenbutton').on('click', function() {
+            fullscreenToggle();
+        });
+
+        $('#fullscreenexitbutton').on('click', function() {
+            fullscreenToggle();
+        });
+
+        $(document).keyup(function(e) {
+            if (e.which === 27) {
+                $('#fullscreenplayer').fadeOut(200);
+                fullscreenEnabled = false;
+            }
+        });
 
     </script>
 }

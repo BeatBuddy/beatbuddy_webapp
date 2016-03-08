@@ -315,12 +315,14 @@
     </Content>
     <Content Include="Content\dropit.css" />
     <Content Include="Content\img\avatar.png" />
+    <Content Include="Content\img\default_cover.png" />
     <Content Include="Content\img\ignace.jpg" />
     <Content Include="Content\img\jonah.jpg" />
     <Content Include="Content\img\kelly.jpg" />
     <Content Include="Content\img\lennart.jpg" />
     <Content Include="Content\img\login-banner.jpg" />
     <Content Include="Content\img\logo_header.png" />
+    <Content Include="Content\img\logo_header_white.png" />
     <Content Include="Content\img\logo_small.png" />
     <Content Include="Content\img\maarten.jpg" />
     <Content Include="Content\img\matthias.jpg" />

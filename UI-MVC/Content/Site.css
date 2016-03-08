@@ -334,6 +334,58 @@ header {
     margin-top: 0;
     margin-bottom: 0; }
 
+#fullscreenplayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  background-color: black;
+  background-size: cover; }
+  #fullscreenplayer #darkoverlay {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); }
+    #fullscreenplayer #darkoverlay #nowPlayingLogo {
+      position: absolute;
+      right: 10%;
+      bottom: 10%; }
+  #fullscreenplayer #nowPlayingAlbumArt {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+    background-size: contain;
+    background-image: url(img/default_cover.png); }
+  #fullscreenplayer #nowPlayingArtist {
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+    margin-left: 250px;
+    margin-bottom: 1.1em;
+    font-size: 3em;
+    font-weight: 500; }
+  #fullscreenplayer #nowPlayingTitle {
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+    margin-left: 250px;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    font-weight: 300; }
+  #fullscreenplayer #fullscreenexitbutton {
+    position: absolute;
+    color: white;
+    top: 10%;
+    right: 10%;
+    font-size: 4em;
+    cursor: pointer; }
+
 #custom-inputform-organisations .first-form-group, #custom-inputform-organisations .create, #custom-inputform-playlists .first-form-group, #custom-inputform-playlists .create {
   margin-top: 25px; }
 
@@ -552,5 +604,12 @@ footer {
   margin-top: 0.2em;
   vertical-align: middle;
   color: white;
-  border: none; }
+  border: none;
+  position: relative; }
+  #footerSlideContent #fullscreenbutton {
+    color: white;
+    right: 0;
+    top: 1em;
+    position: absolute;
+    cursor: pointer; }
 
