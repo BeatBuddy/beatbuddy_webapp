@@ -464,8 +464,8 @@
     <Content Include="Views\History\View.cshtml" />
     <Content Include="Views\Playlist\Edit.cshtml" />
     <Content Include="Scripts\jquery-2.2.1.min.map" />
-    <Content Include="Views\Playlist\_CreateCommentPartial.cshtml" />
     <Content Include="Views\Playlist\Chat.cshtml" />
+    <Content Include="Views\Comment\_CommentsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
@@ -474,7 +474,6 @@
     <Folder Include="Content\img\Organisations\" />
     <Folder Include="Content\img\Playlists\" />
     <Folder Include="Content\img\Users\" />
-    <Folder Include="Views\Comment\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

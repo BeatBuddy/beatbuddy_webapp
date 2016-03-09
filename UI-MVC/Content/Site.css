@@ -633,3 +633,16 @@ footer {
     position: absolute;
     cursor: pointer; }
 
+#comments ul {
+  padding-left: 0; }
+
+#comments li.comment {
+  list-style-type: none;
+  min-height: 2em; }
+  #comments li.comment .comment-user {
+    display: inline-block;
+    font-weight: 500;
+    text-decoration: underline;
+    min-width: 150px;
+    font-size: 1.1em; }
+

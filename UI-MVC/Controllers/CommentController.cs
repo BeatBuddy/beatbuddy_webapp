@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain.Playlists;
@@ -24,6 +25,12 @@ namespace BB.UI.Web.MVC.Controllers
                 return Json(createdComment);
             else 
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+        }
+
+        public ActionResult GetComments(long id)
+        {
+            var comments = playlistManager.ReadComments(new Playlist { Id = id }).OrderBy(c => c.TimeStamp);
+            return PartialView("_CommentsPartial", comments);
         }
     }
 }

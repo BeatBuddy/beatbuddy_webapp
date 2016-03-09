@@ -46,9 +46,13 @@
         <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
         <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
     }
-    <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
-        <i class="material-icons">playlist_add</i> add track
-    </a>
+    @if (Request.IsAuthenticated)
+    {
+        <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
+            <i class="material-icons">playlist_add</i> add track
+        </a>
+    }
+
 </div>
 
 @if (Request.IsAuthenticated)
