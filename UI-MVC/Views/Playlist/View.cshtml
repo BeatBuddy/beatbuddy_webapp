@@ -138,7 +138,7 @@
            $('#message').focus();
            $.connection.hub.start().done(
                function () {
-               play.server.joinGroup("@Model.Id");
+               
                chat.server.joinGroup("@Model.Id");
                $('#sendmessage').click(function () {
                    chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
@@ -148,7 +148,7 @@
            });
        });
 
-       $.connection.hub.start().done()
+        $.connection.hub.start().done();
 
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
@@ -193,14 +193,15 @@
             for (i = 0; i < users.length; i++) {
                 console.log(users[i]);
                 img = document.createElement("img");
-                if (users[i] != null) {
+                if (users[i].User != null) {
                     if (users[i].ImageUrl != null) {
-                        img.src = "/Content/img/Users/" + users[i].ImageUrl;    
+                        img.src = "/Content/img/Users/" + users[i].User.ImageUrl;    
                     } else {
                         img.src = "/Content/img/default-avatar.png";    
                     }
                     img.className = 'round';
-                    img.title = users[i].Email;
+                    img.style.marginRight = "10px";
+                    img.title = users[i].User.Email;
                     src.appendChild(img);    
                 } else {
                     unknownUserCounter++;
