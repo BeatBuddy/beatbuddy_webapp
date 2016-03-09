@@ -341,7 +341,8 @@ header {
   height: 100%;
   color: white;
   background-color: black;
-  background-size: cover; }
+  background-size: cover;
+  background-position: center center; }
   #fullscreenplayer #darkoverlay {
     position: relative;
     left: 0;

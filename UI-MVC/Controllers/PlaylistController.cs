@@ -49,7 +49,9 @@ namespace BB.UI.Web.MVC.Controllers
             var playlist = playlistManager.ReadPlaylist(id);
             var votesUser = playlistManager.ReadVotesForUser(user);
             var organisation = organisationManager.ReadOrganisationForPlaylist(id);
-            List<User> playlistOwners = new List<User>();
+            var comments = playlistManager.ReadComments(playlist);
+
+            var playlistOwners = new List<User>();
             if (organisation != null)
             {
                 playlistOwners = userManager.ReadCoOrganiserFromOrganisation(organisation).ToList();
@@ -63,7 +65,8 @@ namespace BB.UI.Web.MVC.Controllers
                 }
             }
             ViewBag.Organisers = playlistOwners;
-      
+            ViewBag.CommentCount = comments.Count();
+            ViewBag.Comments = comments;
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
             
@@ -78,7 +81,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
             var createdVote = playlistManager.CreateVote(vote, user.Id, id);
-            if (createdVote == null ) return new HttpStatusCodeResult(400, "You have reached your vote limit for this playlist");
+            if (createdVote == null) return new HttpStatusCodeResult(400, "You have reached your vote limit for this playlist");
             return new HttpStatusCodeResult(200);
         }
 
@@ -121,7 +124,7 @@ namespace BB.UI.Web.MVC.Controllers
         public JsonResult SearchTrack(string q)
         {
             var youtubeProvider = new YouTubeTrackProvider();
-            var searchResult = youtubeProvider.Search(q, maxResults:3);
+            var searchResult = youtubeProvider.Search(q, maxResults: 3);
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }

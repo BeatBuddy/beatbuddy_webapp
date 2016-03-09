@@ -1,4 +1,6 @@
-﻿@using BB.BL.Domain.Users
+﻿@using BB.BL.Domain.Playlists
+@using BB.BL.Domain.Users
+@using Microsoft.AspNet.Identity
 @model BB.BL.Domain.Playlists.Playlist
 @{
     ViewBag.Title = "View";
@@ -19,13 +21,13 @@
         <h1>@Model.Name</h1>
         <h2>Share your playlist: @Model.Key</h2>
         <h3 id="listenerCount"></h3>
-        <span class="row" style="float: left; margin-left: 0.1em; margin-top: 0em">
+        <div class="row" style="float: left; margin-left: 0.1em; margin-top: 0em">
                 <div id="listenerImg" class="co-organiser" style="float:left;">
                     
-                </div>
-            
-        </span>
     </div>
+            
+        </div>
+</div>    
 </div>    
 }
 
@@ -34,7 +36,7 @@
 </div>
 
 <div id="nowPlayingRow" style="margin-top: 5em">
-    @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
         {
             if (Model.PlaylistTracks.Count != 0)
             {
@@ -55,6 +57,14 @@
         <i class="material-icons">playlist_add</i> add track
     </a>
 </div>
+
+@if (Request.IsAuthenticated)
+{
+    <div class="title more-margin-top">
+        @Html.Partial("Chat")
+    </div>
+}
+   
 
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
@@ -113,34 +123,65 @@
 @section Scripts{
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script>
-        var chat = $.connection.playlistHub;
-        $.connection.hub.start({jsonp: true}).done(function() {
 
+    <script>
+    var play = $.connection.playlistHub;
+    var chat = $.connection.chatHub;
+    $(function () {
+           chat.client.broadcastMessage = function (name, message) {
+               var encodedName = $('<div />').text(name).html();
+               var encodedMsg = $('<div />').text(message).html();
+               $('#discussion').append('<li><strong>' + encodedName
+                   + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+           };
+           $('#displayname').val('@User.Identity.GetUserName()');
+           $('#message').focus();
+           $.connection.hub.start().done(
+               function () {
+               play.server.joinGroup("@Model.Id");
+               chat.server.joinGroup("@Model.Id");
+               $('#sendmessage').click(function () {
+                   chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
+                   $('#message').val('').focus();
         });
-        chat.client.addNewMessageToPage = function() {
+
+           });
+       });
+
+       $.connection.hub.start().done()
+
+        play.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
-        chat.client.startMusicPlaying = function(data) {
+        play.client.startMusicPlaying = function(data) {
             player.cueVideoById(data.TrackId);
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
             $(function() {
                 setInterval(updateTime, 50);
             });
             openFooter();
+
+            if (data.CoverArtUrl != null) {
             $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+            } else {
+                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            }
             updatePlaylist();
             player.playVideo();
         }
-
-        chat.client.pauseMusicPlaying = function() {
+            
+        play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
-        chat.client.resumeMusicPlaying = function(data) {
+        play.client.resumeMusicPlaying = function(data) {
             player.seekTo(data);
             player.playVideo();
         }
-        chat.client.modifyListeners = function(data, users) {
+        play.client.modifyListeners = function(data, users) {
             console.log(users.length);
             var src = document.getElementById('listenerImg');
             var i;
@@ -175,8 +216,8 @@
             }
             document.getElementById('listenerCount').innerHTML = data+"";
         }
-        chat.client.joinGroup = function() {
-            chat.server.joinGroup("@Model.Id");
+        play.client.joinGroup = function() {
+            play.server.joinGroup("@Model.Id");
         }
         
 
@@ -266,7 +307,7 @@
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
-                chat.server.addTrack("@Model.Id");
+                play.server.addTrack("@Model.Id");
             }).fail(function() {
             notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
         });
@@ -317,7 +358,7 @@
         function onPlayerReady(event) {
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
-
+                
             var nextButton = document.getElementById("nextBtn");
             if(nextButton != null) nextButton.addEventListener("click", function() {
                     getNextTrack();
@@ -332,7 +373,7 @@
             }).done(function() {
                 updatePlaylist();
             }).fail(function() {
-
+                
             });
         }
 
@@ -371,7 +412,7 @@
                 playing = true;
                 playButton.addEventListener("click", function() {
                     player.pauseVideo();
-                    chat.server.pausePlaying("@Model.Id");
+                    play.server.pausePlaying("@Model.Id");
                 });
                 icon.innerHTML = 'pause';
             }
@@ -379,7 +420,7 @@
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
                     player.playVideo();
-                    chat.server.resumePlaying(player.getCurrentTime(),"@Model.Id");
+                    play.server.resumePlaying(player.getCurrentTime(),"@Model.Id");
                 });
             }
 
@@ -430,7 +471,7 @@
                     $('#thumbnail').attr("src", data.CoverArtUrl);
 
                     player.playVideo();
-                    chat.server.startPlaying(data, "@Model.Id");
+                play.server.startPlaying(data, "@Model.Id");
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn disabled';
@@ -462,6 +503,7 @@
                 var playButton = document.getElementById("playBtn");
                 playButton.className = 'btn disabled';
                 var icon = document.getElementById("icon");
+
                 icon.innerHTML = 'play_arrow';
             });
         }
@@ -503,7 +545,7 @@
         window.onunload = window.onbeforeunload = (function() {
             assignPlaylistMaster(@null);
         });
-
+            
 
 
 

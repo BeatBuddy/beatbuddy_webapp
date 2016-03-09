@@ -3,29 +3,32 @@ using System.Collections.Generic;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
-using BB.BL.Domain;
 using BB.DAL.EFPlaylist;
 using System.Linq;
+using BB.DAL.EFUser;
 
 namespace BB.BL
 {
     public class PlaylistManager : IPlaylistManager
     {
         private readonly IPlaylistRepository repo;
+        private readonly IUserRepository userRepo;
 
-        public PlaylistManager(IPlaylistRepository playlistRepository)
+        public PlaylistManager(IPlaylistRepository playlistRepository, IUserRepository userRepo)
         {
             this.repo = playlistRepository;
+            this.userRepo = userRepo;
         }
-        public Comment CreateComment(string text, User user)
+
+        public Comment CreateComment(long playlistId, string text, string userEmail)
         {
             var comment = new Comment
             {
                 Text = text,
-                User = user,
+                User = userRepo.ReadUser(userEmail),
                 TimeStamp = DateTime.Now
             };
-            return repo.CreateComment(comment);
+            return repo.CreateComment(playlistId, comment);
         }
 
         public Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy)
@@ -103,7 +106,8 @@ namespace BB.BL
                 if (existingVote.Score == score)
                 {
                     DeleteVote(existingVote);
-                    return null;
+                    existingVote.Score = 0;
+                    return existingVote;
                 }
                 else {
                     vote = existingVote;
