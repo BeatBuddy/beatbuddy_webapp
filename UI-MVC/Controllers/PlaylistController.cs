@@ -177,7 +177,7 @@ namespace BB.UI.Web.MVC.Controllers
             playlistManager.MarkTrackAsPlayed(
                 playlistManager.ReadPlaylist(id).PlaylistTracks
                 //.OrderByDescending(t => t.Score)
-                .First(t => t.PlayedAt == null).Id);
+                .First(t => t.PlayedAt == null).Id, id);
 
                 return new HttpStatusCodeResult(200);
             }

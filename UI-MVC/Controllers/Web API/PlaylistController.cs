@@ -214,7 +214,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     Url = originalPlayListTrack.Track.Url
                 };
                 
-                var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id);
+                var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id, playlistId);
                 if (success)
                 {
                     return Ok(newTrack);

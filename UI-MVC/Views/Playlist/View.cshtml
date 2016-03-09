@@ -10,14 +10,21 @@
     <div class="content">
         @if (Model.ImageUrl != null)
         {
-           <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
+           <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 200px; height: 200px" />
         }
         else
         {
-           <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 170px; height: 170px" />
+           <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 200px; height: 200px" />
         }
         <h1>@Model.Name</h1>
         <h2>Share your playlist: @Model.Key</h2>
+        <h3 id="listenerCount"></h3>
+        <span class="row" style="float: left; margin-left: 0.1em; margin-top: 0em">
+                <div id="listenerImg" class="co-organiser" style="float:left;">
+                    
+                </div>
+            
+        </span>
     </div>
 </div>    
 }
@@ -108,8 +115,8 @@
     <script src="~/signalr/hubs"></script>
     <script>
         var chat = $.connection.playlistHub;
-        $.connection.hub.start().done(function() {
-            chat.server.joinGroup("@Model.Id");
+        $.connection.hub.start({jsonp: true}).done(function() {
+
         });
         chat.client.addNewMessageToPage = function() {
             updatePlaylist();
@@ -125,14 +132,55 @@
             updatePlaylist();
             player.playVideo();
         }
-            
+
         chat.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
         chat.client.resumeMusicPlaying = function(data) {
-            console.log(data);
+            player.seekTo(data);
             player.playVideo();
         }
+        chat.client.modifyListeners = function(data, users) {
+            console.log(users.length);
+            var src = document.getElementById('listenerImg');
+            var i;
+            var unknownUserCounter = 0;
+            while (src.firstChild) {
+                src.removeChild(src.firstChild);
+            }
+            var img;
+            for (i = 0; i < users.length; i++) {
+                console.log(users[i]);
+                img = document.createElement("img");
+                if (users[i] != null) {
+                    if (users[i].ImageUrl != null) {
+                        img.src = "/Content/img/Users/" + users[i].ImageUrl;    
+                    } else {
+                        img.src = "/Content/img/default-avatar.png";    
+                    }
+                    img.className = 'round';
+                    img.title = users[i].Email;
+                    src.appendChild(img);    
+                } else {
+                    unknownUserCounter++;
+                       
+                }
+            }
+            if (unknownUserCounter > 0) {
+                img = document.createElement("img");
+                img.src = "/Content/img/default-avatar.png";
+                img.className = 'round';
+                img.title = unknownUserCounter + " sneaky listener(s)";
+                src.appendChild(img); 
+            }
+            document.getElementById('listenerCount').innerHTML = data+"";
+        }
+        chat.client.joinGroup = function() {
+            chat.server.joinGroup("@Model.Id");
+        }
+        
+
+
 
 
 
@@ -269,7 +317,7 @@
         function onPlayerReady(event) {
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
-                
+
             var nextButton = document.getElementById("nextBtn");
             if(nextButton != null) nextButton.addEventListener("click", function() {
                     getNextTrack();
@@ -284,7 +332,7 @@
             }).done(function() {
                 updatePlaylist();
             }).fail(function() {
-                
+
             });
         }
 
@@ -452,9 +500,12 @@
         }
         });
 
-        window.onbeforeunload = function(){
+        window.onunload = window.onbeforeunload = (function() {
             assignPlaylistMaster(@null);
-            
-        }
+        });
+
+
+
+
     </script>
 }

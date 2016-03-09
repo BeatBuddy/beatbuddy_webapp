@@ -32,6 +32,7 @@ namespace BB.DAL.EFPlaylist
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
+        bool MarkTrackAsPlayed(long playlistTrackId, long playlistId);
 
         //Track
         Track CreateTrack(long playlistId, Track track);

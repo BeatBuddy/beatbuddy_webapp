@@ -148,16 +148,9 @@ namespace BB.BL
             repo.DeletePlaylistTrack(playlistTrackId);
         }
 
-        public bool MarkTrackAsPlayed(long playlistTrackId)
+        public bool MarkTrackAsPlayed(long playlistTrackId, long playlistId)
         {
-            var track = repo.ReadPlaylistTrack(playlistTrackId);
-
-            if (track == null) return false;
-
-            track.PlayedAt = DateTime.Now;
-            repo.UpdatePlayListTrack(track);
-
-            return true;
+            return repo.MarkTrackAsPlayed(playlistTrackId, playlistId);
         }
 
         public Playlist UpdatePlaylist(Playlist playlist, string email)
