@@ -26,13 +26,13 @@ namespace BB.DAL.EFPlaylist
         Playlist DeletePlaylist(long playlistId);
         IEnumerable<Playlist> ReadPlaylistsForUser(long userId);
 
-        //PlaylistTracks
+            //PlaylistTracks
         PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack);
         PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack);
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
-        bool SetPlaylistTrackPlayedAtTimestamp(long playlistTrackId);
+        bool MarkTrackAsPlayed(long playlistTrackId, long playlistId);
 
         //Track
         Track CreateTrack(long playlistId, Track track);

@@ -176,18 +176,18 @@ header {
 
 #playlistbanner {
     width: 100%;
-    min-height: 250px;
+    min-height: 280px;
     z-index: 0;
     position: relative;
     overflow: hidden;
     margin-bottom: 1em;
-    height: 250px;
+    height: 280px;
     background-image: url('/Content/img/playlistheader.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 
     .content {
-        padding: 2.4% $sidemargin 3em $sidemargin;
+        padding: 2.2% $sidemargin 3em $sidemargin;
         margin: 0 auto;
         max-width: $maxpagewidth;
         color: white;
@@ -198,7 +198,7 @@ header {
             font-weight: 100;
             color: white;
             font-size: 3.4em;
-            margin-top: 0.5em;
+            margin-top: 0.1%;
             margin-bottom: 0;
             top: 0;
             text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
@@ -212,7 +212,7 @@ header {
 
         h2 {
             margin-top: 0;
-            margin-bottom: 1em;
+            margin-bottom: 0.4em;
             font-weight: 200;
             font-size: 2em;
             text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
@@ -297,7 +297,7 @@ header {
         display: block;
         width: 50px;
         height: 50px;
-        padding-left: .5em;
+        
 
         @media screen and (max-width: $mobile-breakpoint) {
             max-width: 10px;

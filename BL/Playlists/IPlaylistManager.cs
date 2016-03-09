@@ -34,7 +34,7 @@ namespace BB.BL
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
-        bool MarkTrackAsPlayed(long playlistTrackId);
+        bool MarkTrackAsPlayed(long playlistTrackId, long playlistId);
         Playlist UpdatePlaylist(Playlist playlist, string email);
         //Track
         Track AddTrackToPlaylist(long playlistId, Track track);

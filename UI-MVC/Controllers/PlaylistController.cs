@@ -21,7 +21,7 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IAlbumArtProvider albumArtProvider;
         private readonly IUserManager userManager;
         private readonly IOrganisationManager organisationManager;
-
+        
         private const string testName = "jonah@gmail.com";
 
         User user = new User()
@@ -38,7 +38,7 @@ namespace BB.UI.Web.MVC.Controllers
             this.organisationManager = organisationManager;
             this.albumArtProvider = albumArtProvider;
         }
-
+        
 
         public ActionResult View(long id)
         {
@@ -66,12 +66,12 @@ namespace BB.UI.Web.MVC.Controllers
             ViewBag.Organisers = playlistOwners;
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
-
+            
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
-
+            
             return View(playlist);
         }
-
+        
 
         [HttpPost]
         public ActionResult AddVote(int vote, long id)
@@ -113,7 +113,7 @@ namespace BB.UI.Web.MVC.Controllers
             );
 
             if (track == null) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list");
-
+            
 
             return new HttpStatusCodeResult(200);
         }
@@ -156,7 +156,7 @@ namespace BB.UI.Web.MVC.Controllers
                 NextTracks = playlistTracks.Count(),
                 CoverArtUrl = track.Track.CoverArtUrl
             };
-            return Json(playingViewModel, JsonRequestBehavior.AllowGet);
+                return Json(playingViewModel, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -164,7 +164,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var playlist = playlistManager.ReadPlaylist(id);
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
-
+        
             return PartialView("PlaylistTable", playlist);
         }
 
@@ -174,14 +174,13 @@ namespace BB.UI.Web.MVC.Controllers
             var tracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
             if (tracks.Count == 0) return new HttpStatusCodeResult(400);
 
-            var trackId = playlistManager.ReadPlaylist(id).PlaylistTracks
-                .OrderByDescending(t => t.Votes.Sum(v => v.Score))
-                .First(t => t.PlayedAt == null).Id;
+            playlistManager.MarkTrackAsPlayed(
+                playlistManager.ReadPlaylist(id).PlaylistTracks
+                //.OrderByDescending(t => t.Score)
+                .First(t => t.PlayedAt == null).Id, id);
 
-            playlistManager.MarkTrackAsPlayed(trackId);
-
-            return new HttpStatusCodeResult(200);
-        }
+                return new HttpStatusCodeResult(200);
+            }
 
         public ActionResult IsNameAvailable(string email)
         {
@@ -290,8 +289,8 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
             }
-
-
+            
+            
 
             return RedirectToAction("View/" + playlist.Id);
 

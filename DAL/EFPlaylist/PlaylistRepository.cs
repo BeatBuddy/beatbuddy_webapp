@@ -92,6 +92,17 @@ namespace BB.DAL.EFPlaylist
             context.SaveChanges();
         }
 
+        public bool MarkTrackAsPlayed(long id, long playlistId)
+        {
+            var playlist = context.Playlists.Single(p => p.Id == playlistId);
+            var track = playlist.PlaylistTracks.Single(t => t.Id == id);
+            if (track == null) return false;
+            track.PlayedAt = DateTime.Now;
+            context.Entry(track).State = EntityState.Modified;
+            context.SaveChanges();
+            return true;
+        }
+
         public Track CreateTrack(long playlistId, Track track)
         {
             var playlist = ReadPlaylist(playlistId);
