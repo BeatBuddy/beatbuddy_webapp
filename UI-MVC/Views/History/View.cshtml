@@ -1,11 +1,10 @@
 ﻿@using System.Web.Http
+@using BB.BL.Domain.Playlists
 @model BB.BL.Domain.Playlists.Playlist
-
 @{
     ViewBag.Title = "History";
     ViewBag.NoFooter = true;
 }
-
 @section escape_padding {
     <div id="playlistbanner">
         <div class="content">
@@ -39,9 +38,30 @@
     <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
 </div>
 
+<div class="title">
+    <h1>Discussion</h1> @ViewBag.CommentCount comments
+</div>
+<div id="comments">
+    @Html.Partial("../Comment/_CommentsPartial", ViewBag.Comments as IEnumerable<Comment>)
+</div>
+@if (Request.IsAuthenticated)
+{
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="text" id="comment-input" name="comment-input" class="form-control"/>
+        </div>
+    </div>
+    <a id="sendcomment" class="btn btn-default">
+        <i class="material-icons">send</i> Send
+    </a>
+}
+
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
-        <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter"><i id="footerIcon" class="material-icons">keyboard_arrow_up</i></div>
+        <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter">
+            <i id="footerIcon" class="material-icons">keyboard_arrow_up</i>
+        </div>
+        <i id="fullscreenbutton" class="material-icons">fullscreen</i>
         <table style="width: 100%; margin-top: -15px">
             <tr>
                 <td style="width: 5%">
@@ -62,21 +82,35 @@
 
     </div>
 </div>
+
 <div id="player" style="display: none">
+</div>
+
+<div id="fullscreenplayer" style="display: none">
+    <div id="darkoverlay">
+        <img id="nowPlayingLogo" src="~/Content/img/logo_header_white.png" alt="beatbuddy logo" />
+    </div>
+    <div id="nowPlayingAlbumArt"></div>
+    <span id="nowPlayingArtist">Nothing</span>
+    <span id="nowPlayingTitle">Is playing right now</span>
+    <div id="nowPlayingProgress">
+        <div id="nowPlayingProgressBar"></div>
+    </div>
+    <i id="fullscreenexitbutton" class="material-icons">fullscreen_exit</i>
 </div>
 
 @section Scripts{
     <script>
         var footerOpen = false;
         jQuery(function($) {
-            
+
             $('#footertop').click(function () {
                 if(footerOpen === false) {
                     openFooter();
                 } else {
                     closeFooter();
                 }
-            });		
+            });
         });
         function clickFooter() {
             if (footerOpen) {
@@ -103,7 +137,7 @@
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';
         }
-        
+
         var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
             '<img class="thumbnail" src="${CoverArtUrl}"/>' +
             '<span class="artist">${Artist}</span>' +
@@ -134,7 +168,7 @@
         function onPlayerReady(event) {
             var playButton = document.getElementById("playBtn");
             playButton.addEventListener("click", getNextTrack);
-            
+
             var nextButton = document.getElementById("nextBtn");
             nextButton.addEventListener("click", getNextTrack);
         }
@@ -145,8 +179,12 @@
             var duration = secondsToTime(player.getDuration());
             time.innerHTML = currentTime +' | ' + duration;
             var percentageTime = (player.getCurrentTime() / player.getDuration()) * 100;
+
             var bar = document.getElementById("myBar");
             bar.style.width = percentageTime + '%';
+
+            var barFullscreen = document.getElementById("nowPlayingProgressBar");
+            barFullscreen.style.width = percentageTime + '%';
         }
         function secondsToTime(secs)
         {
@@ -154,7 +192,7 @@
             var h = Math.floor(d / 3600);
             var m = Math.floor(d % 3600 / 60);
             var s = Math.floor(d % 3600 % 60);
-            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);    
+            return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
         }
         function onPlayerStateChange(event) {
             var playButton = document.getElementById("playBtn");
@@ -168,7 +206,7 @@
             }
             if (event.data == YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
-                
+
                 playButton.addEventListener("click", function() {
                     player.playVideo();
                 });
@@ -198,21 +236,75 @@
             if (currentTrack === currentTrackItem.length - 1) {
                 nextButton.className = 'btn disabled';
             } else {
-                nextButton.className = 'btn';     
+                nextButton.className = 'btn';
             }
 
             openFooter();
 
-            $('#thumbnail').attr("src", trackThumbnail);
+            $('#nowPlayingTitle').html(trackTitle);
+            $('#nowPlayingArtist').html(trackArtist);
+
+            if (trackThumbnail !== '') {
+                $('#thumbnail').attr("src", trackThumbnail);
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + trackThumbnail + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + trackThumbnail + ")");
+            } else {
+                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            }
+
             currentTrack++;
         }
-        
+
         function stopVideo() {
             player.stopVideo();
         }
 
         function updatePlaylist() {
             $('#playlist-view').load('/api/Playlist/GetHistory/',{id: @ViewContext.RouteData.Values["id"]});
+        }
+
+        var fullscreenEnabled = false;
+        function fullscreenToggle() {
+            $('#fullscreenplayer').fadeToggle(200);
+            fullscreenEnabled = !fullscreenEnabled;
+        }
+
+        $('#fullscreenbutton').on('click', function() {
+            fullscreenToggle();
+        });
+
+        $('#fullscreenexitbutton').on('click', function() {
+            fullscreenToggle();
+        });
+
+        $(document).keyup(function(e) {
+            if (e.which === 27) {
+                $('#fullscreenplayer').fadeOut(200);
+                fullscreenEnabled = false;
+            }
+        });
+
+        $('#sendcomment').on('click', sendComment);
+        $('#comment-input').keypress(function(e) {
+            if (e.which === 13) sendComment();
+        });
+
+        function sendComment() {
+            var text = $('#comment-input').val();
+
+            $.post('@Url.Action(
+                   "Create", "Comment")/@ViewContext.RouteData.Values["id"]',
+            {text: text}
+                )
+            .done(function(data) {
+                $("#comments").load('@Url.Action("GetComments", "Comment")/@ViewContext.RouteData.Values["id"]');
+                $('#comment-input').val("");
+            })
+            .fail(function() {
+                alert("error");
+            });
         }
 
     </script>

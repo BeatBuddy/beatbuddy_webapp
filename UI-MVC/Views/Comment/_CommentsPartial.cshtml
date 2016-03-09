@@ -1,0 +1,19 @@
+﻿@using BB.BL.Domain.Playlists
+@model IEnumerable<Comment>
+
+<ul>
+    @{
+        Comment previousComment = null;
+        foreach (Comment comment in Model)
+        {
+            var currentCommentUsername = comment.User.Nickname;
+            if (previousComment?.User.Nickname == currentCommentUsername) { currentCommentUsername = ""; } else { currentCommentUsername = "@" + currentCommentUsername; }
+
+            <li class="comment">
+                <span class="comment-user">@currentCommentUsername</span>
+                <span class="comment-text">@comment.Text</span>
+            </li>
+            previousComment = comment;
+        }
+    }
+</ul>

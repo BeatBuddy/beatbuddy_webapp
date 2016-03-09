@@ -8,25 +8,25 @@
 }
 
 @section escape_padding {
-<div id="playlistbanner">
-    <div class="content">
-        @if (Model.ImageUrl != null)
-        {
+    <div id="playlistbanner">
+        <div class="content">
+            @if (Model.ImageUrl != null)
+            {
            <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 200px; height: 200px" />
-        }
-        else
-        {
+            }
+            else
+            {
            <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 200px; height: 200px" />
-        }
-        <h1>@Model.Name</h1>
-        <h2>Share your playlist: @Model.Key</h2>
+            }
+            <h1>@Model.Name</h1>
+            <h2>Share your playlist: @Model.Key</h2>
         <h3 id="listenerCount"></h3>
         <div class="row" style="float: left; margin-left: 0.1em; margin-top: 0em">
                 <div id="listenerImg" class="co-organiser" style="float:left;">
                     
-    </div>
-            
         </div>
+            
+    </div>
 </div>    
 </div>    
 }
@@ -37,25 +37,29 @@
 
 <div id="nowPlayingRow" style="margin-top: 5em">
     @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    {
+        if (Model.PlaylistTracks.Count != 0)
         {
-            if (Model.PlaylistTracks.Count != 0)
-            {
-                <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-                <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
-            }
-            else
-            {
-                <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-            }
+            <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
         }
         else
         {
-            <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
-            <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
         }
+    }
+    else
+    {
+        <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
+        <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+    }
+    @if (Request.IsAuthenticated)
+    {
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>
+    }
+
 </div>
 
 @if (Request.IsAuthenticated)
@@ -95,12 +99,12 @@
                     <span id="time"></span>
                     <div id="myProgress" class="progress" style="margin-top: 0.2em">
                         <div id="myBar" class="bar"></div>
-                    </div>    
+                    </div>
                 </td>
             </tr>
-            
+
         </table>
-        
+
     </div>
 </div>
 
@@ -124,7 +128,7 @@
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
 
-    <script>
+<script>
     var play = $.connection.playlistHub;
     var chat = $.connection.chatHub;
     $(function () {
@@ -143,7 +147,7 @@
                $('#sendmessage').click(function () {
                    chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
                    $('#message').val('').focus();
-        });
+               });
 
            });
        });
@@ -173,7 +177,7 @@
             updatePlaylist();
             player.playVideo();
         }
-            
+
         play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
@@ -205,7 +209,7 @@
                     src.appendChild(img);    
                 } else {
                     unknownUserCounter++;
-                       
+
                 }
             }
             if (unknownUserCounter > 0) {
@@ -310,9 +314,9 @@
                 playBtn.addEventListener("click", getNextTrack);
                 play.server.addTrack("@Model.Id");
             }).fail(function() {
-            notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
-        });
-    }
+                notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
+            });
+        }
 
         function debounce(func, wait, immediate) {
             var timeout;
@@ -359,12 +363,12 @@
         function onPlayerReady(event) {
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
-                
+
             var nextButton = document.getElementById("nextBtn");
             if(nextButton != null) nextButton.addEventListener("click", function() {
-                    getNextTrack();
-                });
-            }
+                getNextTrack();
+            });
+        }
 
         function assignPlaylistMaster(userData) {
             $.ajax('/Playlist/AssignPlaylistMaster/', {
@@ -374,7 +378,7 @@
             }).done(function() {
                 updatePlaylist();
             }).fail(function() {
-                
+
             });
         }
 
@@ -454,8 +458,8 @@
                         }
                     }
                 }
-                    openFooter();
-                    moveTrackToHistory();
+                openFooter();
+                moveTrackToHistory();
 
                 if (data.CoverArtUrl != null) {
                     $('#thumbnail').attr("src", data.CoverArtUrl);
@@ -469,9 +473,9 @@
 
                 $('#nowPlayingTitle').html(data.Title);
                 $('#nowPlayingArtist').html(data.Artist);
-                    $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#thumbnail').attr("src", data.CoverArtUrl);
 
-                    player.playVideo();
+                player.playVideo();
                 play.server.startPlaying(data, "@Model.Id");
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
@@ -540,13 +544,13 @@
             if (e.which === 27) {
                 $('#fullscreenplayer').fadeOut(200);
                 fullscreenEnabled = false;
-        }
+            }
         });
 
         window.onunload = window.onbeforeunload = (function() {
             assignPlaylistMaster(@null);
         });
-            
+
 
 
 
