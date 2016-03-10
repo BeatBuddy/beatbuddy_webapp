@@ -10,24 +10,32 @@
 @section escape_padding {
     <div id="playlistbanner">
         <div class="content">
-            @if (Model.ImageUrl != null)
-            {
-           <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 200px; height: 200px" />
+            @{
+                var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
+                <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
             }
-            else
-            {
-           <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 200px; height: 200px" />
-            }
-            <h1>@Model.Name</h1>
-            <h2>Share your playlist: @Model.Key</h2>
-        <h3 id="listenerCount"></h3>
-        <div class="row" style="float: left; margin-left: 0.1em; margin-top: 0em">
-                <div id="listenerImg" class="co-organiser" style="float:left;">
-                    
-        </div>
-            
-    </div>
-</div>    
+
+            <div class="fill">
+                <div class="title">
+                    <h1>Playlist</h1>@Model.Name
+                </div>
+
+                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
+                    <i class="material-icons">history</i> History
+                </a>
+
+                <a class="btn btn-right">
+                    <i class="material-icons">link</i> Share
+                </a>
+            </div>
+            <p class="nomargintop textshadow">@Model.Description</p>
+
+            <div>
+                <h3 id="listenerCount"></h3>
+                <div id="listenerImg" class="co-organiser" style="float: left;">
+                </div>
+            </div>
+        </div>    
 </div>    
 }
 
@@ -551,7 +559,26 @@
         });
 
 
-
+        function setClickableTooltip(target, content){
+            $( target ).tooltip({
+                show: null,
+                position: { my: "center top", at: "center bottom" },
+                content: content,
+                hide: { effect: "" },
+                close: function(event, ui){
+                    ui.tooltip.hover(
+                        function () {
+                            $(this).stop(true).fadeTo(400, 1); 
+                        },
+                        function () {
+                            $(this).fadeOut("400", function() {
+                                $(this).remove();
+                            });
+                        }
+                    );
+                }  
+            });
+        }
 
     </script>
 }
