@@ -56,7 +56,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public override Task OnConnected()
         {
-            Clients.All.joinGroup();
+            Clients.Caller.joinGroup();
             return base.OnConnected();
         }
 

@@ -200,7 +200,7 @@
                 console.log(users[i]);
                 img = document.createElement("img");
                 if (users[i].User != null) {
-                    if (users[i].ImageUrl != null) {
+                    if (users[i].User.ImageUrl != null) {
                         img.src = "/Content/img/Users/" + users[i].User.ImageUrl;    
                     } else {
                         img.src = "/Content/img/default-avatar.png";    
