@@ -317,21 +317,8 @@ header {
   padding: 0;
   width: 100%; }
 
-#player {
-  margin-top: 2em;
-  display: inline-block;
-  height: 64px;
-  border-top: 1px solid black;
-  width: 100%;
-  padding-top: .5em; }
-  #player h1 {
-    display: inline-block;
-    font-family: Roboto;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 1.3em;
-    margin-top: 0;
-    margin-bottom: 0; }
+#bottommargin {
+  margin-bottom: 3em; }
 
 #fullscreenplayer {
   position: absolute;

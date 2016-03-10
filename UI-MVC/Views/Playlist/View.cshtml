@@ -1,7 +1,7 @@
 ﻿@using BB.BL.Domain.Playlists
 @using BB.BL.Domain.Users
 @using Microsoft.AspNet.Identity
-@model BB.BL.Domain.Playlists.Playlist
+@model Playlist
 @{
     ViewBag.Title = "View";
     ViewBag.NoFooter = true;
@@ -108,8 +108,7 @@
     </div>
 </div>
 
-<div id="player" style="display: none">
-</div>
+<div id="bottommargin"></div>
 
 <div id="fullscreenplayer" style="display: none">
     <div id="darkoverlay">
@@ -157,6 +156,7 @@
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
+
         play.client.startMusicPlaying = function(data) {
             player.cueVideoById(data.TrackId);
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
@@ -181,10 +181,12 @@
         play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
+
         play.client.resumeMusicPlaying = function(data) {
             player.seekTo(data);
             player.playVideo();
         }
+
         play.client.modifyListeners = function(data, users) {
             console.log(users.length);
             var src = document.getElementById('listenerImg');
@@ -221,14 +223,10 @@
             }
             document.getElementById('listenerCount').innerHTML = data+"";
         }
+
         play.client.joinGroup = function() {
             play.server.joinGroup("@Model.Id");
         }
-        
-
-
-
-
 
         var playing = false;
         var footerOpen = false;
@@ -253,7 +251,7 @@
         function openFooter() {
             $('#footerSlideContent').animate({ height: '125px' });
             $(this).css('backgroundPosition', 'bottom left');
-            $('#nowPlayingRow').animate({ marginBottom: '9em' }, 500, null);
+            $('#bottommargin').animate({ marginBottom: '9em' }, 500, null);
             footerOpen = true;
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_down';
@@ -262,7 +260,7 @@
         function closeFooter() {
             $('#footerSlideContent').animate({ height: '20px' });
             $(this).css('backgroundPosition', 'top left');
-            $('#nowPlayingRow').animate({ marginBottom: '3em' }, 500, null);
+            $('#bottommargin').animate({ marginBottom: '3em' }, 500, null);
             footerOpen = false;
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';
