@@ -27,7 +27,7 @@ namespace BB.UI.Web.MVC.Tests.IT
             AccountController _acountController = new AccountController(userManager);
         }
 
-        
+        /*
         [TestMethod]
         public void LoginTest()
         {
@@ -68,7 +68,7 @@ namespace BB.UI.Web.MVC.Tests.IT
             Assert.IsTrue(login.Displayed);
             Assert.AreEqual("login", login.Text);
             
-        }
+        }*/
 
         [TestMethod]
         public void LoginFailedTest() {
