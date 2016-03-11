@@ -537,6 +537,12 @@
         function fullscreenToggle() {
             $('#fullscreenplayer').fadeToggle(200);
             fullscreenEnabled = !fullscreenEnabled;
+
+            if (fullscreenEnabled) {
+                $("html").css("overflow", "hidden");
+            } else {
+                $("html").css("overflow", "auto");
+            }
         }
 
         $('#fullscreenbutton').on('click', function() {
@@ -551,6 +557,7 @@
             if (e.which === 27) {
                 $('#fullscreenplayer').fadeOut(200);
                 fullscreenEnabled = false;
+                $("html").css("overflow", "auto");
             }
         });
 
