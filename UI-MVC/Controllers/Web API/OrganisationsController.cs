@@ -85,11 +85,16 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             }
 
             Organisation organisation = organisationManager.CreateOrganisation(name, imagePath, color, user);
-
             return Ok(organisation);
-
         }
 
-       
+
+        [HttpGet]
+        [Route("organisations/{id}")]
+        public IHttpActionResult Get([FromUri] long id)
+        {
+            var organisation = organisationManager.ReadOrganisation(id);
+            return Ok(organisation);
+        }
     }
 }
