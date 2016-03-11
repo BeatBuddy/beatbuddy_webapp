@@ -128,31 +128,30 @@
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
 
-<script>
-    var play = $.connection.playlistHub;
-    var chat = $.connection.chatHub;
-    $(function () {
-           chat.client.broadcastMessage = function (name, message) {
-               var encodedName = $('<div />').text(name).html();
-               var encodedMsg = $('<div />').text(message).html();
-               $('#discussion').append('<li><strong>' + encodedName
-                   + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
-           };
-           $('#displayname').val('@User.Identity.GetUserName()');
-           $('#message').focus();
-           $.connection.hub.start().done(
-               function () {
-               
-               chat.server.joinGroup("@Model.Id");
-               $('#sendmessage').click(function () {
-                   chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
-                   $('#message').val('').focus();
-               });
+    <script>
+        var play = $.connection.playlistHub;
+        var chat = $.connection.chatHub;
+        $(function () {
+            chat.client.broadcastMessage = function (name, message) {
+                var encodedName = $('<div />').text(name).html();
+                var encodedMsg = $('<div />').text(message).html();
+                $('#discussion').append('<li><strong>' + encodedName
+                    + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            };
+            $('#displayname').val('@User.Identity.GetUserName()');
+            $('#message').focus();
+            $.connection.hub.start().done(
+                function () {
+                    chat.server.joinGroup("@Model.Id");
+                    $('#sendmessage').click(function () {
+                        chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
+                        $('#message').val('').focus();
+                    });
 
-           });
-       });
+                });
+        });
 
-        $.connection.hub.start().done();
+
 
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
@@ -166,7 +165,7 @@
             openFooter();
 
             if (data.CoverArtUrl != null) {
-            $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#thumbnail').attr("src", data.CoverArtUrl);
                 $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
                 $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
             } else {
@@ -199,14 +198,14 @@
                 img = document.createElement("img");
                 if (users[i].User != null) {
                     if (users[i].User.ImageUrl != null) {
-                        img.src = "/Content/img/Users/" + users[i].User.ImageUrl;    
+                        img.src = "/Content/img/Users/" + users[i].User.ImageUrl;
                     } else {
-                        img.src = "/Content/img/default-avatar.png";    
+                        img.src = "/Content/img/default-avatar.png";
                     }
                     img.className = 'round';
                     img.style.marginRight = "10px";
                     img.title = users[i].User.Email;
-                    src.appendChild(img);    
+                    src.appendChild(img);
                 } else {
                     unknownUserCounter++;
 
@@ -217,19 +216,29 @@
                 img.src = "/Content/img/default-avatar.png";
                 img.className = 'round';
                 img.title = unknownUserCounter + " sneaky listener(s)";
-                src.appendChild(img); 
+                src.appendChild(img);
             }
             document.getElementById('listenerCount').innerHTML = data+"";
         }
-        play.client.joinGroup = function() {
-            play.server.joinGroup("@Model.Id");
+
+        play.client.syncLive = function() {
+            play.server.syncLive("@Model.Id", player.getVideoUrl(), player.getCurrentTime());
         }
-        
+        play.client.playLive = function(url, startSeconds) {
+            openFooter();
+            console.log(startSeconds);
+            player.loadVideoById(youtube_parser(url), startSeconds + 4, "small");
+            
 
+        }
+        play.client.joinGroup = function() {
 
-
-
-
+        }
+        function youtube_parser(url){
+            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+            var match = url.match(regExp);
+            return (match&&match[7].length===11)? match[7] : false;
+        }
         var playing = false;
         var footerOpen = false;
         jQuery(function($) {
@@ -340,7 +349,6 @@
         $("#query").on('keydown', function() {
             debouncedFetch();
         });
-
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -349,6 +357,7 @@
         var player;
 
         function onYouTubeIframeAPIReady() {
+
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
@@ -357,10 +366,16 @@
                     'onStateChange': onPlayerStateChange
                 }
             });
+
+
+
         }
+
         var firstPlay = false;
 
         function onPlayerReady(event) {
+            
+
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
 
@@ -368,6 +383,10 @@
             if(nextButton != null) nextButton.addEventListener("click", function() {
                 getNextTrack();
             });
+            $.connection.hub.start().done(function() {
+                play.server.joinGroup("@Model.Id");
+            });
+
         }
 
         function assignPlaylistMaster(userData) {
@@ -407,6 +426,7 @@
         var startedPlaying = false;
 
         function onPlayerStateChange(event) {
+
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
             var icon = document.getElementById("icon");
@@ -550,8 +570,6 @@
         window.onunload = window.onbeforeunload = (function() {
             assignPlaylistMaster(@null);
         });
-
-
 
 
     </script>
