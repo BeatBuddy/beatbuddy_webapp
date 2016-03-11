@@ -87,8 +87,7 @@
         <input type="text" class="custom-input" id="message" style="margin-top: 10px"/>
         <input type="button" id="sendmessage" value="Send" class="btn-chat"/>
         <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname"/>
-        <input type="hidden" id="image" value="@ViewBag.CurrentUser.ImageUrl" />
-        @ViewBag.CurrentUser.ImageUrl
+        <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl" />
         <ul id="discussion" style="list-style:none; padding-left:0"></ul>
 </div>
 
@@ -147,7 +146,7 @@
            chat.client.broadcastMessage = function (name, message, image) {
                var encodedName = $('<div />').text(name).html();
                var encodedMsg = $('<div />').text(message).html();
-               $('#discussion').append('<li><div class="col-md-2" style="padding-right:0"> <img src="' + image + '" id="thumbnail" class="round" style="height: 30px; width: 30px;" /></div><div class="col-md-10"><strong>' + encodedName
+               $('#discussion').append('<li style="min-height:60px; margin-top:5px; margin-bottom:5px"><div class="col-md-2" style="padding-right:0;"> <img src="' + image + '" id="thumbnail" class="round" style="height:50px; width: 50px;" /></div><div class="col-md-10"><strong>' + encodedName
                    + '</strong><br />' + encodedMsg + '</div></li>');
            };
            $('#message').focus();
