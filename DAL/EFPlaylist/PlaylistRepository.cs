@@ -94,10 +94,11 @@ namespace BB.DAL.EFPlaylist
 
         public bool MarkTrackAsPlayed(long id, long playlistId)
         {
-            var playlist = context.Playlists.Single(p => p.Id == playlistId);
+            var playlist = context.Playlists.Include(p=>p.PlaylistTracks).Single(p => p.Id == playlistId);
             var track = playlist.PlaylistTracks.Single(t => t.Id == id);
             if (track == null) return false;
             track.PlayedAt = DateTime.Now;
+          
             context.Entry(track).State = EntityState.Modified;
             context.SaveChanges();
             return true;
