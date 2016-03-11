@@ -362,6 +362,7 @@
     <Content Include="Content\img\playlist.png" />
     <Content Include="Content\img\playlistavatar.png" />
     <Content Include="Content\img\playlistheader.jpg" />
+    <Content Include="Content\img\Playlists\playlist_default.png" />
     <Content Include="Content\img\registerbanner.jpg" />
     <Content Include="Content\img\round_shape_loader.gif" />
     <Content Include="Content\modal.css" />
@@ -482,7 +483,6 @@
     <Folder Include="App_Data\Img\Playlists\" />
     <Folder Include="App_Data\Img\Users\" />
     <Folder Include="Content\img\Organisations\" />
-    <Folder Include="Content\img\Playlists\" />
     <Folder Include="Content\img\Users\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>

@@ -52,17 +52,22 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.albumArtProvider = albumArtProvider;
         }
 
+        public PlaylistController(IPlaylistManager playlistManager)
+        {
+            this.playlistManager = playlistManager;
+        }
+
 
         [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
         [ResponseType(typeof(Playlist))]
-        public HttpResponseMessage getPlaylist(long id)
+        public IHttpActionResult getPlaylist(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
-            if(playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if(playlist == null) return NotFound();
 
-            return Request.CreateResponse(HttpStatusCode.OK, playlist);
+            return Ok(playlist);
         }
 
         [HttpGet]

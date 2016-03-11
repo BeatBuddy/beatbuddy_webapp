@@ -132,14 +132,15 @@ header {
 
 #playlistbanner {
   width: 100%;
-  min-height: 280px;
+  min-height: 220px;
   z-index: 0;
   position: relative;
   overflow: hidden;
   margin-bottom: 1em;
-  height: 280px;
+  /*height: 220px;*/
   background-image: url("/Content/img/playlistheader.jpg");
   background-repeat: no-repeat;
+  background-position-y: 25%;
   background-size: cover; }
   #playlistbanner .content {
     padding: 2.2% 5em 3em 5em;
@@ -147,14 +148,25 @@ header {
     max-width: 1500px;
     color: white;
     top: 0; }
-    #playlistbanner .content h1 {
-      font-weight: 100;
-      color: white;
-      font-size: 3.4em;
-      margin-top: 0.1%;
-      margin-bottom: 0;
-      top: 0;
-      text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4); }
+    #playlistbanner .content .fill {
+      display: block;
+      overflow: hidden; }
+    #playlistbanner .content .title {
+      display: inline-block;
+      text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4);
+      font-size: 2em;
+      float: left; }
+      #playlistbanner .content .title > h1:after {
+        margin-right: .27em; }
+      #playlistbanner .content .title h1 {
+        display: inline-block;
+        color: white;
+        font-size: 1em;
+        margin-top: 0.1%;
+        margin-bottom: 0;
+        top: 0; }
+    #playlistbanner .content .textshadow {
+      text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.6); }
     #playlistbanner .content img {
       float: left;
       margin-right: 30px;
@@ -163,8 +175,12 @@ header {
       margin-top: 0;
       margin-bottom: 0.4em;
       font-weight: 200;
-      font-size: 2em;
+      font-size: 1.5em;
       text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5); }
+    #playlistbanner .content #listenerCount {
+      margin-bottom: 5px; }
+    #playlistbanner .content #listenerImg {
+      margin-bottom: 1.5em; }
     @media screen and (max-width: 600px) {
       #playlistbanner .content {
         padding: 4% 1em 3em 1em; }
@@ -241,6 +257,22 @@ header {
   margin-bottom: 20px;
   padding-bottom: 20px; }
 
+.title {
+  font-weight: 300;
+  font-size: 1.4em;
+  margin-bottom: .3em; }
+  .title h1 {
+    display: inline-block;
+    font-family: Roboto;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1em;
+    margin-top: 0;
+    margin-bottom: 0; }
+    .title h1:after {
+      content: ' |';
+      font-weight: 200; }
+
 .body-content {
   padding: 1em 5em;
   max-width: 1500px;
@@ -248,21 +280,6 @@ header {
   @media screen and (max-width: 600px) {
     .body-content {
       padding: 0 1em; } }
-  .body-content .title {
-    font-weight: 300;
-    font-size: 1.4em;
-    margin-bottom: .3em; }
-    .body-content .title h1 {
-      display: inline-block;
-      font-family: Roboto;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 1em;
-      margin-top: 0;
-      margin-bottom: 0; }
-      .body-content .title h1:after {
-        content: ' |';
-        font-weight: 200; }
   .body-content .extramargin {
     margin-bottom: 1em; }
   .body-content .form-group {
@@ -297,6 +314,9 @@ header {
     .body-content table th {
       padding: .62em; }
 
+.nomargintop {
+  margin-top: 0; }
+
 #playlist-tracks {
   padding: 0;
   width: 100%; }
@@ -317,21 +337,8 @@ header {
   padding: 0;
   width: 100%; }
 
-#player {
-  margin-top: 2em;
-  display: inline-block;
-  height: 64px;
-  border-top: 1px solid black;
-  width: 100%;
-  padding-top: .5em; }
-  #player h1 {
-    display: inline-block;
-    font-family: Roboto;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 1.3em;
-    margin-top: 0;
-    margin-bottom: 0; }
+#bottommargin {
+  margin-bottom: 3em; }
 
 #fullscreenplayer {
   position: absolute;
@@ -514,12 +521,7 @@ header {
 
 .borderround {
   border-radius: 50%;
-  border-color: lightgray;
-  border: 2px solid; }
-
-.borderround:hover {
-  border-color: black;
-  cursor: pointer; }
+  border: 2px solid lightgray; }
 
 .custom-validation {
   color: red;

@@ -19,7 +19,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 {
     public class PlaylistHub : Hub
     {
-        private static Dictionary<string, CurrentListenerModel> connectedGroupUsers = new Dictionary<string, CurrentListenerModel>();
+        private static Dictionary<string, CurrentListenerModel> connectedGroupUsers = new Dictionary<string, CurrentListenerModel>(); 
         private static Dictionary<string, string> playlistMasters = new Dictionary<string, string>();
         private static Dictionary<string, string> lastJoiner = new Dictionary<string, string>();
         private static UserManager userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
@@ -55,19 +55,19 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             {
                 connectedGroupUsers.Remove(Context.ConnectionId);
             }
-            connectedGroupUsers.Add(Context.ConnectionId, model);
+                connectedGroupUsers.Add(Context.ConnectionId, model);
 
             Clients.Caller.modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             if (playlistMasters.ContainsKey(groupName))
             {
                 Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
-            }
+        }
         }
 
-        public void SyncLive(string groupName, string videoUrl, float duration)
+        public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
         {
-            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(videoUrl, (int)duration);
+            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(track, (int)duration);
         }
         public override Task OnConnected()
         {

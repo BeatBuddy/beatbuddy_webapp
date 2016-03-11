@@ -176,14 +176,15 @@ header {
 
 #playlistbanner {
     width: 100%;
-    min-height: 280px;
+    min-height: 220px;
     z-index: 0;
     position: relative;
     overflow: hidden;
     margin-bottom: 1em;
-    height: 280px;
+    /*height: 220px;*/
     background-image: url('/Content/img/playlistheader.jpg');
     background-repeat: no-repeat;
+    background-position-y: 25%;
     background-size: cover;
 
     .content {
@@ -193,15 +194,33 @@ header {
         color: white;
         top: 0;
 
+        .fill{
+            display: block;
+            overflow: hidden;
+        }
 
-        h1 {
-            font-weight: 100;
-            color: white;
-            font-size: 3.4em;
-            margin-top: 0.1%;
-            margin-bottom: 0;
-            top: 0;
+        .title {
+            display: inline-block;
             text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+            font-size: 2em;
+            float: left;
+
+            & > h1:after {
+                margin-right: .27em;
+            }
+
+            h1{
+                display: inline-block;
+                color: white;
+                font-size: 1em;
+                margin-top: 0.1%;
+                margin-bottom: 0;
+                top: 0;
+            }
+        }
+
+        .textshadow{
+            text-shadow: 0px 3px 5px rgba(0,0,0,0.6);
         }
 
         img {
@@ -214,8 +233,16 @@ header {
             margin-top: 0;
             margin-bottom: 0.4em;
             font-weight: 200;
-            font-size: 2em;
+            font-size: 1.5em;
             text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+        }
+
+        #listenerCount{
+            margin-bottom: 5px;
+        }
+
+        #listenerImg{
+            margin-bottom: 1.5em;
         }
 
 
@@ -297,7 +324,6 @@ header {
         display: block;
         width: 50px;
         height: 50px;
-        
 
         @media screen and (max-width: $mobile-breakpoint) {
             max-width: 10px;
@@ -322,6 +348,27 @@ header {
     padding-bottom: 20px;
 }
 
+.title {
+    font-weight: 300;
+    font-size: 1.4em;
+    margin-bottom: .3em;
+
+    h1 {
+        display: inline-block;
+        font-family: Roboto;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 1em;
+        margin-top: 0;
+        margin-bottom: 0;
+
+        &:after {
+            content: ' |';
+            font-weight: 200;
+        }
+    }
+}
+
 .body-content {
     padding: 1em $sidemargin;
     max-width: $maxpagewidth;
@@ -329,27 +376,6 @@ header {
 
     @media screen and (max-width: $mobile-breakpoint) {
         padding: 0 $sidemargin-mobile;
-    }
-
-    .title {
-        font-weight: 300;
-        font-size: 1.4em;
-        margin-bottom: .3em;
-
-        h1 {
-            display: inline-block;
-            font-family: Roboto;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 1em;
-            margin-top: 0;
-            margin-bottom: 0;
-
-            &:after {
-                content: ' |';
-                font-weight: 200;
-            }
-        }
     }
 
     .extramargin {
@@ -406,6 +432,10 @@ header {
     }
 }
 
+.nomargintop{
+    margin-top: 0;
+}
+
 #playlist-tracks {
     padding: 0;
     width: 100%;
@@ -436,24 +466,8 @@ header {
     width: 100%;
 }
 
-#player {
-    margin-top: 2em;
-    display: inline-block;
-    height: 64px;
-    border-top: 1px solid black;
-    width: 100%;
-    padding-top: .5em;
-
-
-    h1 {
-        display: inline-block;
-        font-family: Roboto;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 1.3em;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
+#bottommargin {
+    margin-bottom: 3em;
 }
 
 #fullscreenplayer {
@@ -490,7 +504,7 @@ header {
         left: 10%;
         bottom: 10%;
         background-size: contain;
-        background-image: url(img/default_cover.png)
+        background-image: url(img/default_cover.png);
     }
 
     #nowPlayingArtist {
@@ -513,7 +527,7 @@ header {
         font-weight: 300;
     }
 
-    #fullscreenexitbutton{
+    #fullscreenexitbutton {
         position: absolute;
         color: white;
         top: 10%;
@@ -522,8 +536,8 @@ header {
         cursor: pointer;
     }
 
-    #nowPlayingProgress{
-        display:block;
+    #nowPlayingProgress {
+        display: block;
         position: absolute;
         bottom: 10%;
         left: 10%;
@@ -534,7 +548,7 @@ header {
         margin-bottom: .5em;
         padding: 2px;
 
-        #nowPlayingProgressBar{
+        #nowPlayingProgressBar {
             background-color: black;
             display: block;
             left: 0;
@@ -684,13 +698,7 @@ header {
 
 .borderround {
     border-radius: 50%;
-    border-color: lightgray;
-    border: 2px solid;
-}
-
-.borderround:hover {
-    border-color: black;
-    cursor: pointer;
+    border: 2px solid lightgray;
 }
 
 .custom-validation {
@@ -827,7 +835,7 @@ footer {
     border: none;
     position: relative;
 
-    #fullscreenbutton{
+    #fullscreenbutton {
         color: white;
         right: 0;
         top: 1em;
@@ -836,25 +844,24 @@ footer {
     }
 }
 
-#comments{
-    ul{
+#comments {
+    ul {
         padding-left: 0;
     }
 
-    li.comment{
+    li.comment {
         list-style-type: none;
         min-height: 2em;
 
-        .comment-user{
+        .comment-user {
             display: inline-block;
             font-weight: 500;
             text-decoration: underline;
             min-width: 150px;
             font-size: 1.1em;
         }
-        .comment-text{
 
+        .comment-text {
         }
     }
-
 }

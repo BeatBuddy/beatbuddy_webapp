@@ -1,7 +1,7 @@
 ﻿@using BB.BL.Domain.Playlists
 @using BB.BL.Domain.Users
 @using Microsoft.AspNet.Identity
-@model BB.BL.Domain.Playlists.Playlist
+@model Playlist
 @{
     ViewBag.Title = "View";
     ViewBag.NoFooter = true;
@@ -10,24 +10,32 @@
 @section escape_padding {
     <div id="playlistbanner">
         <div class="content">
-            @if (Model.ImageUrl != null)
-            {
-           <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 200px; height: 200px" />
+            @{
+                var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
+                <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
             }
-            else
-            {
-           <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 200px; height: 200px" />
-            }
-            <h1>@Model.Name</h1>
-            <h2>Share your playlist: @Model.Key</h2>
-        <h3 id="listenerCount"></h3>
-        <div class="row" style="float: left; margin-left: 0.1em; margin-top: 0em">
-                <div id="listenerImg" class="co-organiser" style="float:left;">
                     
+            <div class="fill">
+                <div class="title">
+                    <h1>Playlist</h1>@Model.Name
         </div>
             
+                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
+                    <i class="material-icons">history</i> History
+                </a>
+
+                <a class="btn btn-right">
+                    <i class="material-icons">link</i> Share
+                </a>
     </div>
+            <p class="nomargintop textshadow">@Model.Description</p>
+
+            <div>
+                <h3 id="listenerCount"></h3>
+                <div id="listenerImg" class="co-organiser" style="float: left;">
 </div>    
+</div>    
+        </div>    
 </div>    
 }
 
@@ -108,8 +116,8 @@
     </div>
 </div>
 
-<div id="player" style="display: none">
-</div>
+<div id="bottommargin"></div>
+<div id="player" style="display: none"></div>
 
 <div id="fullscreenplayer" style="display: none">
     <div id="darkoverlay">
@@ -129,6 +137,7 @@
     <script src="~/signalr/hubs"></script>
 
     <script>
+        var currentTrack = null;
         var play = $.connection.playlistHub;
         var chat = $.connection.chatHub;
         $(function () {
@@ -156,34 +165,20 @@
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
-        play.client.startMusicPlaying = function(data) {
-            player.cueVideoById(data.TrackId);
-            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
-            $(function() {
-                setInterval(updateTime, 50);
-            });
-            openFooter();
 
-            if (data.CoverArtUrl != null) {
-                $('#thumbnail').attr("src", data.CoverArtUrl);
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
-            } else {
-                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-            }
-            updatePlaylist();
-            player.playVideo();
+        play.client.startMusicPlaying = function(data) {
+            cue_and_play(data, 0);
         }
 
         play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
+
         play.client.resumeMusicPlaying = function(data) {
             player.seekTo(data);
             player.playVideo();
         }
+
         play.client.modifyListeners = function(data, users) {
             console.log(users.length);
             var src = document.getElementById('listenerImg');
@@ -222,22 +217,39 @@
         }
 
         play.client.syncLive = function() {
-            play.server.syncLive("@Model.Id", player.getVideoUrl(), player.getCurrentTime());
+            play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
         }
-        play.client.playLive = function(url, startSeconds) {
+        play.client.playLive = function(data, startSeconds) {
             openFooter();
             console.log(startSeconds);
-            player.loadVideoById(youtube_parser(url), startSeconds + 4, "small");
-            
+            if (data != null) {
+                cue_and_play(data, startSeconds+2);
+            }
+
 
         }
         play.client.joinGroup = function() {
 
         }
-        function youtube_parser(url){
-            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-            var match = url.match(regExp);
-            return (match&&match[7].length===11)? match[7] : false;
+        function cue_and_play(data, seconds){
+            player.cueVideoById(data.TrackId, seconds, "small");
+            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+            $(function() {
+                setInterval(updateTime, 50);
+            });
+            openFooter();
+
+            if (data.CoverArtUrl != null) {
+                $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+            } else {
+                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            }
+            updatePlaylist();
+            player.playVideo();
         }
         var playing = false;
         var footerOpen = false;
@@ -262,7 +274,7 @@
         function openFooter() {
             $('#footerSlideContent').animate({ height: '125px' });
             $(this).css('backgroundPosition', 'bottom left');
-            $('#nowPlayingRow').animate({ marginBottom: '9em' }, 500, null);
+            $('#bottommargin').animate({ marginBottom: '9em' }, 500, null);
             footerOpen = true;
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_down';
@@ -271,7 +283,7 @@
         function closeFooter() {
             $('#footerSlideContent').animate({ height: '20px' });
             $(this).css('backgroundPosition', 'top left');
-            $('#nowPlayingRow').animate({ marginBottom: '3em' }, 500, null);
+            $('#bottommargin').animate({ marginBottom: '3em' }, 500, null);
             footerOpen = false;
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';
@@ -374,7 +386,7 @@
         var firstPlay = false;
 
         function onPlayerReady(event) {
-            
+
 
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
@@ -496,6 +508,7 @@
                 $('#thumbnail').attr("src", data.CoverArtUrl);
 
                 player.playVideo();
+                currentTrack = data;
                 play.server.startPlaying(data, "@Model.Id");
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
@@ -571,6 +584,27 @@
             assignPlaylistMaster(@null);
         });
 
+
+        function setClickableTooltip(target, content){
+            $( target ).tooltip({
+                show: null,
+                position: { my: "center top", at: "center bottom" },
+                content: content,
+                hide: { effect: "" },
+                close: function(event, ui){
+                    ui.tooltip.hover(
+                        function () {
+                            $(this).stop(true).fadeTo(400, 1);
+                        },
+                        function () {
+                            $(this).fadeOut("400", function() {
+                                $(this).remove();
+                            });
+                        }
+                    );
+                }
+            });
+        }
 
     </script>
 }

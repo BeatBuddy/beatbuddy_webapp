@@ -83,8 +83,8 @@
     </div>
 </div>
 
-<div id="player" style="display: none">
-</div>
+<div id="bottommargin"></div>
+<div id="player" style="display: none"></div>
 
 <div id="fullscreenplayer" style="display: none">
     <div id="darkoverlay">
@@ -123,7 +123,7 @@
         function openFooter() {
             $('#footerSlideContent').animate({ height: '125px' });
             $(this).css('backgroundPosition', 'bottom left');
-            $('#nowPlayingRow').animate({ marginBottom: '9em' }, 500, null);
+            $('#bottommargin').animate({ marginBottom: '9em' }, 500, null);
             footerOpen = true;
             var footerIcon = document.getElementById("footerIcon");
 
@@ -132,7 +132,7 @@
         function closeFooter() {
             $('#footerSlideContent').animate({ height: '20px' });
             $(this).css('backgroundPosition', 'top left');
-            $('#nowPlayingRow').animate({ marginBottom: '3em' }, 500, null);
+            $('#bottommargin').animate({ marginBottom: '3em' }, 500, null);
             footerOpen = false;
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';
