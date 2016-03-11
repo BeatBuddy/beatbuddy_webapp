@@ -25,10 +25,12 @@ namespace BB.DAL.EFPlaylist
                 .Include(p => p.Comments)
                 .First(p => p.Id == playlistId);
 
-            var user = context.User.First(u => u.Id == comment.User.Id);
+            var user = context.User.Single(u => u.Id == comment.User.Id);
             comment.User = user;
 
-            playlist.Comments.Add(comment);
+            var createdComment = context.Comments.Add(comment);
+            playlist.Comments.Add(createdComment);
+
             context.SaveChanges();
             return comment;
         }

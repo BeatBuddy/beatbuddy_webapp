@@ -10,6 +10,6 @@ namespace BB.BL.Domain.Playlists
         public virtual ICollection<Vote> Votes { get; set; }
         public Track Track { get; set; }
         public virtual Playlist Playlist { get; set; }
-        public long PlaylistId { get; set; }
+        public long? PlaylistId { get; set; }
     }
 }
