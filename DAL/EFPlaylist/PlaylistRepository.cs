@@ -25,6 +25,9 @@ namespace BB.DAL.EFPlaylist
                 .Include(p => p.Comments)
                 .First(p => p.Id == playlistId);
 
+            var user = context.User.First(u => u.Id == comment.User.Id);
+            comment.User = user;
+
             playlist.Comments.Add(comment);
             context.SaveChanges();
             return comment;
@@ -185,12 +188,25 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist ReadPlaylist(long playlistId)
         {
-            return context.Playlists
+            var playlist = context.Playlists
                 .Include(p => p.PlaylistTracks)
-                .Include("PlaylistTracks.Track")
-                .Include("PlaylistTracks.Track.TrackSource")
-                .Include("PlaylistTracks.Votes.User")
-                .FirstOrDefault(p => p.Id == playlistId);
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Track))
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Track.TrackSource))
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Votes))
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Votes.Select(v => v.User)))
+                .ToList()
+                //.Include("PlaylistTracks")
+                //.Include("PlaylistTracks.Track")
+                //.Include("PlaylistTracks.Track.TrackSource")
+                //.Include("PlaylistTracks.Votes.User")
+                .SingleOrDefault(p => p.Id == playlistId);
+
+            if (playlist == null) return null;
+
+            var tracks = context.PlaylistTracks.Where(p => p.PlaylistId == playlistId).ToList();
+            playlist.PlaylistTracks = tracks;
+
+            return playlist;
         }
 
         public IEnumerable<Playlist> ReadPlaylists()

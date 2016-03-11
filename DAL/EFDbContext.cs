@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
@@ -42,6 +37,10 @@ namespace BB.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Organisation>().Property(p => p.Name).IsRequired();
+            modelBuilder.Entity<PlaylistTrack>()
+                .HasRequired(p => p.Playlist)
+                .WithMany(p => p.PlaylistTracks)
+                .HasForeignKey(p => p.PlaylistId);
         }
     }
 }
