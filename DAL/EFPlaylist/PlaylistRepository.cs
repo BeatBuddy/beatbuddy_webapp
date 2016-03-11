@@ -163,7 +163,6 @@ namespace BB.DAL.EFPlaylist
 
         }
 
-
         public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {
             throw new NotImplementedException();
@@ -187,6 +186,7 @@ namespace BB.DAL.EFPlaylist
         {
             return context.Playlists
                 .Include(p => p.PlaylistTracks)
+                .Include("PlaylistTracks.Track")
                 .Include("PlaylistTracks.Track.TrackSource")
                 .Include("PlaylistTracks.Votes.User")
                 .FirstOrDefault(p => p.Id == playlistId);
