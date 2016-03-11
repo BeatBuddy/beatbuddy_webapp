@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+using System.Data.Entity;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
@@ -77,7 +79,9 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation ReadOrganisation(long organisationId)
         {
-            return context.Organisations.Find(organisationId);
+            return context.Organisations
+                .Include(o => o.Playlists)
+                .First(o => o.Id == organisationId);
         }
 
         public IEnumerable<Organisation> ReadOrganisations()
