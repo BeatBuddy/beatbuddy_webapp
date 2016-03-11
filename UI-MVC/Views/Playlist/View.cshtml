@@ -36,10 +36,10 @@
                 </div>
             </div>
         </div>    
-</div>    
-}
+</div>}    
 
-<div id="playlist-view" style="margin-top: 1em">
+<div class="col-md-9">
+<div id="playlist-view" style="margin-top: 1em;">
     @Html.Partial("PlaylistTable", @Model)
 </div>
 
@@ -69,24 +69,27 @@
     }
 
 </div>
-
-@if (Request.IsAuthenticated)
-{
-    <div class="title more-margin-top">
-        @Html.Partial("Chat")
-    </div>
-}
    
 
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
         <a href="#close" id="close-modal" title="Close" class="close">X</a>
-        <div class="modal-body" style="height: 100%; width: 100%">
+        <div class="modal-body" style="height: 100%; width: 100%;">
             @{
                 Html.RenderPartial("AddTrack");
             }
         </div>
     </div>
+</div>
+</div>
+
+<div class="container col-md-3" style="background-color:#262626 ; color:white; margin-top: -32px; height:100%; position:absolute; right:0">
+        <input type="text" class="custom-input" id="message" style="margin-top: 10px"/>
+        <input type="button" id="sendmessage" value="Send" class="btn-chat"/>
+        <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname"/>
+        <input type="hidden" id="image" value="@ViewBag.CurrentUser.ImageUrl" />
+        @ViewBag.CurrentUser.ImageUrl
+        <ul id="discussion" style="list-style:none; padding-left:0"></ul>
 </div>
 
 <div id="footerSlideContainer">
@@ -116,6 +119,7 @@
     </div>
 </div>
 
+
 <div id="bottommargin"></div>
 <div id="player" style="display: none"></div>
 
@@ -140,23 +144,22 @@
     var play = $.connection.playlistHub;
     var chat = $.connection.chatHub;
     $(function () {
-           chat.client.broadcastMessage = function (name, message) {
+           chat.client.broadcastMessage = function (name, message, image) {
                var encodedName = $('<div />').text(name).html();
                var encodedMsg = $('<div />').text(message).html();
-               $('#discussion').append('<li><strong>' + encodedName
-                   + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+               $('#discussion').append('<li><div class="col-md-2" style="padding-right:0"> <img src="' + image + '" id="thumbnail" class="round" style="height: 30px; width: 30px;" /></div><div class="col-md-10"><strong>' + encodedName
+                   + '</strong><br />' + encodedMsg + '</div></li>');
            };
-           $('#displayname').val('@User.Identity.GetUserName()');
            $('#message').focus();
            $.connection.hub.start().done(
                function () {
                
                chat.server.joinGroup("@Model.Id");
                $('#sendmessage').click(function () {
-                   chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
+                   chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
                    $('#message').val('').focus();
+                   alert($('#image').val())
                });
-
            });
        });
 
