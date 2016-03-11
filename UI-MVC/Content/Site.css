@@ -341,7 +341,7 @@ header {
   margin-bottom: 3em; }
 
 #fullscreenplayer {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;

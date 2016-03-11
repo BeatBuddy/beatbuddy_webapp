@@ -68,7 +68,7 @@
     </a>
     }
 
-</div>
+    </div>
    
 
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
@@ -140,6 +140,7 @@
     <script src="~/signalr/hubs"></script>
 
 <script>
+        var currentTrack = null;
     var play = $.connection.playlistHub;
     var chat = $.connection.chatHub;
     $(function () {
@@ -152,7 +153,6 @@
            $('#message').focus();
            $.connection.hub.start().done(
                function () {
-               
                chat.server.joinGroup("@Model.Id");
                $('#sendmessage').click(function () {
                    chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
@@ -162,32 +162,15 @@
            });
        });
 
-        $.connection.hub.start().done();
+
 
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
 
         play.client.startMusicPlaying = function(data) {
-            player.cueVideoById(data.TrackId);
-            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
-            $(function() {
-                setInterval(updateTime, 50);
-            });
-            openFooter();
-
-            if (data.CoverArtUrl != null) {
-            $('#thumbnail').attr("src", data.CoverArtUrl);
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
-            } else {
-                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            cue_and_play(data, 0);
             }
-            updatePlaylist();
-            player.playVideo();
-        }
 
         play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
@@ -235,10 +218,41 @@
             document.getElementById('listenerCount').innerHTML = data+"";
         }
 
-        play.client.joinGroup = function() {
-            play.server.joinGroup("@Model.Id");
+        play.client.syncLive = function() {
+            play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
         }
+        play.client.playLive = function(data, startSeconds) {
+            openFooter();
+            console.log(startSeconds);
+            if (data != null) {
+                cue_and_play(data, startSeconds+2);
+            }
 
+
+        }
+        play.client.joinGroup = function() {
+
+        }
+        function cue_and_play(data, seconds){
+            player.cueVideoById(data.TrackId, seconds, "small");
+            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+            $(function() {
+                setInterval(updateTime, 50);
+            });
+            openFooter();
+
+            if (data.CoverArtUrl != null) {
+                $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+            } else {
+                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            }
+            updatePlaylist();
+            player.playVideo();
+        }
         var playing = false;
         var footerOpen = false;
         jQuery(function($) {
@@ -349,7 +363,6 @@
         $("#query").on('keydown', function() {
             debouncedFetch();
         });
-
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -358,6 +371,7 @@
         var player;
 
         function onYouTubeIframeAPIReady() {
+
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
@@ -366,10 +380,16 @@
                     'onStateChange': onPlayerStateChange
                 }
             });
+
+
+
         }
+
         var firstPlay = false;
 
         function onPlayerReady(event) {
+
+
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
 
@@ -377,6 +397,10 @@
             if(nextButton != null) nextButton.addEventListener("click", function() {
                 getNextTrack();
             });
+            $.connection.hub.start().done(function() {
+                play.server.joinGroup("@Model.Id");
+            });
+
         }
 
         function assignPlaylistMaster(userData) {
@@ -416,6 +440,7 @@
         var startedPlaying = false;
 
         function onPlayerStateChange(event) {
+
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
             var icon = document.getElementById("icon");
@@ -485,6 +510,7 @@
                 $('#thumbnail').attr("src", data.CoverArtUrl);
 
                 player.playVideo();
+                currentTrack = data;
                 play.server.startPlaying(data, "@Model.Id");
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
@@ -539,6 +565,12 @@
         function fullscreenToggle() {
             $('#fullscreenplayer').fadeToggle(200);
             fullscreenEnabled = !fullscreenEnabled;
+
+            if (fullscreenEnabled) {
+                $("html").css("overflow", "hidden");
+            } else {
+                $("html").css("overflow", "auto");
+            }
         }
 
         $('#fullscreenbutton').on('click', function() {
@@ -553,6 +585,7 @@
             if (e.which === 27) {
                 $('#fullscreenplayer').fadeOut(200);
                 fullscreenEnabled = false;
+                $("html").css("overflow", "auto");
             }
         });
 
