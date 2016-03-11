@@ -72,16 +72,7 @@ namespace BB.UI.Web.MVC
             //    ClientId = "",
             //    ClientSecret = ""
             //});
-            app.Map("/signalr", map =>
-            {
-                map.UseCors(CorsOptions.AllowAll);
-                var hubConfig = new HubConfiguration()
-                {
-                    EnableJSONP = true
-                };
-                map.RunSignalR(hubConfig);
-
-            });
+            
 
         }
     }

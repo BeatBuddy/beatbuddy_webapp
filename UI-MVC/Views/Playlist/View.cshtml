@@ -14,12 +14,12 @@
                 var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
                 <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
             }
-
+                    
             <div class="fill">
                 <div class="title">
                     <h1>Playlist</h1>@Model.Name
-                </div>
-
+        </div>
+            
                 <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
                     <i class="material-icons">history</i> History
                 </a>
@@ -27,14 +27,14 @@
                 <a class="btn btn-right">
                     <i class="material-icons">link</i> Share
                 </a>
-            </div>
+    </div>
             <p class="nomargintop textshadow">@Model.Description</p>
 
             <div>
                 <h3 id="listenerCount"></h3>
                 <div id="listenerImg" class="co-organiser" style="float: left;">
-                </div>
-            </div>
+</div>    
+</div>    
         </div>    
 </div>    
 }
@@ -136,55 +136,38 @@
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
 
-<script>
-    var play = $.connection.playlistHub;
-    var chat = $.connection.chatHub;
-    $(function () {
-           chat.client.broadcastMessage = function (name, message) {
-               var encodedName = $('<div />').text(name).html();
-               var encodedMsg = $('<div />').text(message).html();
-               $('#discussion').append('<li><strong>' + encodedName
-                   + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
-           };
-           $('#displayname').val('@User.Identity.GetUserName()');
-           $('#message').focus();
-           $.connection.hub.start().done(
-               function () {
-               
-               chat.server.joinGroup("@Model.Id");
-               $('#sendmessage').click(function () {
-                   chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
-                   $('#message').val('').focus();
-               });
+    <script>
+        var currentTrack = null;
+        var play = $.connection.playlistHub;
+        var chat = $.connection.chatHub;
+        $(function () {
+            chat.client.broadcastMessage = function (name, message) {
+                var encodedName = $('<div />').text(name).html();
+                var encodedMsg = $('<div />').text(message).html();
+                $('#discussion').append('<li><strong>' + encodedName
+                    + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            };
+            $('#displayname').val('@User.Identity.GetUserName()');
+            $('#message').focus();
+            $.connection.hub.start().done(
+                function () {
+                    chat.server.joinGroup("@Model.Id");
+                    $('#sendmessage').click(function () {
+                        chat.server.send($('#displayname').val(), $('#message').val(), @Model.Id);
+                        $('#message').val('').focus();
+                    });
 
-           });
-       });
+                });
+        });
 
-        $.connection.hub.start().done();
+
 
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
         }
 
         play.client.startMusicPlaying = function(data) {
-            player.cueVideoById(data.TrackId);
-            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
-            $(function() {
-                setInterval(updateTime, 50);
-            });
-            openFooter();
-
-            if (data.CoverArtUrl != null) {
-            $('#thumbnail').attr("src", data.CoverArtUrl);
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
-            } else {
-                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-            }
-            updatePlaylist();
-            player.playVideo();
+            cue_and_play(data, 0);
         }
 
         play.client.pauseMusicPlaying = function() {
@@ -210,14 +193,14 @@
                 img = document.createElement("img");
                 if (users[i].User != null) {
                     if (users[i].User.ImageUrl != null) {
-                        img.src = "/Content/img/Users/" + users[i].User.ImageUrl;    
+                        img.src = "/Content/img/Users/" + users[i].User.ImageUrl;
                     } else {
-                        img.src = "/Content/img/default-avatar.png";    
+                        img.src = "/Content/img/default-avatar.png";
                     }
                     img.className = 'round';
                     img.style.marginRight = "10px";
                     img.title = users[i].User.Email;
-                    src.appendChild(img);    
+                    src.appendChild(img);
                 } else {
                     unknownUserCounter++;
 
@@ -228,15 +211,46 @@
                 img.src = "/Content/img/default-avatar.png";
                 img.className = 'round';
                 img.title = unknownUserCounter + " sneaky listener(s)";
-                src.appendChild(img); 
+                src.appendChild(img);
             }
             document.getElementById('listenerCount').innerHTML = data+"";
         }
 
-        play.client.joinGroup = function() {
-            play.server.joinGroup("@Model.Id");
+        play.client.syncLive = function() {
+            play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
         }
+        play.client.playLive = function(data, startSeconds) {
+            openFooter();
+            console.log(startSeconds);
+            if (data != null) {
+                cue_and_play(data, startSeconds+2);
+            }
 
+
+        }
+        play.client.joinGroup = function() {
+
+        }
+        function cue_and_play(data, seconds){
+            player.cueVideoById(data.TrackId, seconds, "small");
+            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+            $(function() {
+                setInterval(updateTime, 50);
+            });
+            openFooter();
+
+            if (data.CoverArtUrl != null) {
+                $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+            } else {
+                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            }
+            updatePlaylist();
+            player.playVideo();
+        }
         var playing = false;
         var footerOpen = false;
         jQuery(function($) {
@@ -347,7 +361,6 @@
         $("#query").on('keydown', function() {
             debouncedFetch();
         });
-
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -356,6 +369,7 @@
         var player;
 
         function onYouTubeIframeAPIReady() {
+
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
@@ -364,10 +378,16 @@
                     'onStateChange': onPlayerStateChange
                 }
             });
+
+
+
         }
+
         var firstPlay = false;
 
         function onPlayerReady(event) {
+
+
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
 
@@ -375,6 +395,10 @@
             if(nextButton != null) nextButton.addEventListener("click", function() {
                 getNextTrack();
             });
+            $.connection.hub.start().done(function() {
+                play.server.joinGroup("@Model.Id");
+            });
+
         }
 
         function assignPlaylistMaster(userData) {
@@ -414,6 +438,7 @@
         var startedPlaying = false;
 
         function onPlayerStateChange(event) {
+
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
             var icon = document.getElementById("icon");
@@ -483,6 +508,7 @@
                 $('#thumbnail').attr("src", data.CoverArtUrl);
 
                 player.playVideo();
+                currentTrack = data;
                 play.server.startPlaying(data, "@Model.Id");
             }).fail(function() {
                 var playBtn = document.getElementById('playBtn');
@@ -575,7 +601,7 @@
                 close: function(event, ui){
                     ui.tooltip.hover(
                         function () {
-                            $(this).stop(true).fadeTo(400, 1); 
+                            $(this).stop(true).fadeTo(400, 1);
                         },
                         function () {
                             $(this).fadeOut("400", function() {
@@ -583,7 +609,7 @@
                             });
                         }
                     );
-                }  
+                }
             });
         }
 
