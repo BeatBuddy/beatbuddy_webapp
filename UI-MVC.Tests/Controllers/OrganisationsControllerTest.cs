@@ -19,14 +19,16 @@ namespace BB.UI.Web.MVC.Tests.Controllers
     {
         private OrganisationsController _organisationsController;
         private IUserManager userManager;
+        private IPlaylistManager playlistManager;
         
 
         [TestInitialize]
         public void TestInitialize()
         {
             userManager = DbInitializer.CreateUserManager();
+            playlistManager = DbInitializer.CreatePlaylistManager();
 
-            _organisationsController = new OrganisationsController(DbInitializer.CreateOrganisationManager(), userManager);
+            _organisationsController = new OrganisationsController(DbInitializer.CreateOrganisationManager(), userManager, playlistManager);
             DbInitializer.Initialize();
         }
 

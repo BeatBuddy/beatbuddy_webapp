@@ -303,5 +303,32 @@ namespace BB.UI.Web.MVC.Controllers
             if (playlist == null) return new HttpStatusCodeResult(400);
             return new HttpStatusCodeResult(200);
         }
+
+        public ActionResult AddPlaylist(long playlistId, string id)
+        {
+            var youtubeProvider = new YouTubeTrackProvider();
+
+            var tracks = youtubeProvider.LookUpPlaylist(id);
+
+            /*var user = userManager.ReadUser("lennart.boeckx@gmail.com");
+            var organisation = organisationManager.ReadOrganisation("lenni's party");
+
+            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation);*/
+
+            foreach (Track track in tracks)
+            {
+                playlistManager.AddTrackToPlaylist(playlistId, track);
+            }
+
+            return null;
+        }
+
+        public JsonResult SearchPlaylist(string q)
+        {
+            var youtubeProvider = new YouTubeTrackProvider();
+            var searchResult = youtubeProvider.SearchPlaylist(q);
+
+            return Json(searchResult, JsonRequestBehavior.AllowGet);
+        }
     }
 }

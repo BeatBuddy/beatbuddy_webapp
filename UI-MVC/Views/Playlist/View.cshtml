@@ -47,6 +47,11 @@
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>
+    <div class="add-playlist">
+        <a href="#addPlaylistModal" class="btn btn-right">
+            <i class="material-icons">playlist_add</i> import playlist
+        </a>
+    </div>
 </div>
 
 
@@ -60,7 +65,16 @@
         </div>
     </div>
 </div>
-
+<div id="addPlaylistModal" class="modal" style="margin-top: -150px">
+    <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+        <a href="#close" id="close-modal" title="Close" class="close">X</a>
+        <div class="modal-body" style="height: 100%; width: 100%">
+            @{
+                Html.RenderPartial("AddPlaylist");
+            }
+        </div>
+    </div>
+</div>
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
         <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter"><i id="footerIcon"class="material-icons">keyboard_arrow_up</i></div>
@@ -90,7 +104,9 @@
 @section Scripts{
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script>
+<script>
+       
+
         var chat = $.connection.playlistHub;
         $.connection.hub.start();
         chat.client.addNewMessageToPage = function() {
@@ -381,5 +397,60 @@
             assignPlaylistMaster(@null);
             
         }
+    var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
+           '<img class="thumbnail" src="${ImageUrl}"/>' +
+           '<span class="artist">${Name}</span>' +
+           '</li>';
+    $.template("playlistTemplate", markupPlaylist);
+
+    function fetchQueryResultsPlaylist() {
+        $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
+            .done(function (result) {
+                $("#results").empty();
+                $.tmpl("playlistTemplate", result).appendTo("#results");
+                $("#results li").on("click", function () {
+                    addPlaylist($(this).attr('data-id'));
+                });
+            })
+            .fail(function () {
+                alert("error");
+            });
+    }
+
+    function addPlaylist(id) {
+        $.ajax({
+            url: '@Url.Action("AddPlaylist")',
+            method: 'POST',
+            data: { playlistId: @ViewBag.PlaylistId, id: id}
+        }).done(function () {
+            window.location.href = '@Url.Action("Details", new { id = ViewBag.Id })';
+        })
+        .fail(function (data) {
+            alert(data);
+        });
+    }
+
+    function debouncePlaylist(func, wait, immediate) {
+        var timeout;
+        return function () {
+            var context = this, args = arguments;
+            var later = function () {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
+
+    var debouncedFetchPlaylist = debouncePlaylist(function () {
+        fetchQueryResultsPlaylist();
+    }, 500);
+
+    $("#playlistAdd").on('keydown', function () {
+        debouncedFetchPlaylist();
+    });
     </script>
 }
