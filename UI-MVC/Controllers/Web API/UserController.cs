@@ -30,7 +30,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         {
             this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             this.organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
         }
 
         public UserController(IUserManager userManager, IOrganisationManager organisationManager, IPlaylistManager playlistManager)

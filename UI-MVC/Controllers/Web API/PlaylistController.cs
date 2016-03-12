@@ -37,7 +37,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         public PlaylistController()
         {
-            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
             this.trackProvider = new YouTubeTrackProvider();
             this.albumArtProvider = new BingAlbumArtProvider();
@@ -52,17 +52,22 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.albumArtProvider = albumArtProvider;
         }
 
+        public PlaylistController(IPlaylistManager playlistManager)
+        {
+            this.playlistManager = playlistManager;
+        }
+
 
         [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
         [ResponseType(typeof(Playlist))]
-        public HttpResponseMessage getPlaylist(long id)
+        public IHttpActionResult getPlaylist(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
-            if(playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if(playlist == null) return NotFound();
 
-            return Request.CreateResponse(HttpStatusCode.OK, playlist);
+            return Ok(playlist);
         }
 
         [HttpGet]
@@ -86,7 +91,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
                 {
                     Track = playlistTrack.Track,
-                    AlreadyPlayed = false,
                     Score = playlistTrack.Votes.Sum(v => v.Score),
                     PersonalScore = score ?? 0
                 });
@@ -198,7 +202,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             var youTube = YouTube.Default; // starting point for YouTube actions
                 var video = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
-
+                var boolean = video.IsEncrypted;
                 Track newTrack = new Track()
                 {
                     Id = originalPlayListTrack.Track.Id,
@@ -215,7 +219,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     Url = originalPlayListTrack.Track.Url
                 };
                 
-                var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id);
+                var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id, playlistId);
                 if (success)
                 {
                     return Ok(newTrack);
@@ -297,5 +301,40 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     p.Description
                 }));
         }
+
+        [HttpPost]
+        [Route("{id}/track/{trackId}/upvote")]
+        public IHttpActionResult Upvote(long id, long trackId) {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            var user = getUser(userIdentity);
+            var createVote = playlistManager.CreateVote(1, user.Id, trackId);
+            return Ok(createVote);
+        }
+
+        [HttpPost]
+        [Route("{id}/track/{trackId}/downvote")]
+        public IHttpActionResult Downvote(long id, long trackId)
+        {
+            var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
+            var user = getUser(userIdentity);
+            var createVote = playlistManager.CreateVote(-1, user.Id, trackId);
+            return Ok(createVote);
+        }
+
+        private User getUser(ClaimsIdentity claimsIdentity)
+        {
+            if (claimsIdentity == null) return null;
+
+            var email = claimsIdentity.Claims.First(c => c.Type == "sub").Value;
+            if (email == null) return null;
+
+            var user = userManager.ReadUser(email);
+            if (user == null) return null;
+
+            return user;
+        }
+
+
+
     }
 }

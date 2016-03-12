@@ -20,7 +20,6 @@
         <th></th>
         <th>Duration</th>
         <th>Artist</th>
-        <th>Album</th>
     </tr>
     @foreach (PlaylistTrack track in Model.PlaylistTracks)
     {
@@ -42,9 +41,6 @@
             </td>
             <td class="artist">
                 @track.Track.Artist
-            </td>
-            <td>
-                album
             </td>
         </tr>
     }

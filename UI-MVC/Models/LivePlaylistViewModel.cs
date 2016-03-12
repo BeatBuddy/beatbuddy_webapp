@@ -28,7 +28,6 @@ namespace BB.UI.Web.MVC.Models
     public class LivePlaylistTrackViewModel
     {
         public Track Track { get; set; }
-        public bool AlreadyPlayed { get; set; }
         public int Score { get; set; }
         public int PersonalScore { get; set; }
     }

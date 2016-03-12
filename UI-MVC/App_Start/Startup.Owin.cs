@@ -5,6 +5,8 @@ using Owin;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using BB.UI.Web.MVC.Controllers.Web_API;
+using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Cors;
 
 namespace BB.UI.Web.MVC
 {
@@ -34,6 +36,7 @@ namespace BB.UI.Web.MVC
             app.UseOAuthAuthorizationServer(OAuthServerOptions);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
             //app.UseOAuthBearerTokens(OAuthServerOptions);
+            
         }
     }
 }

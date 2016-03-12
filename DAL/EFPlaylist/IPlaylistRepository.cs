@@ -8,7 +8,7 @@ namespace BB.DAL.EFPlaylist
     public interface IPlaylistRepository
     {
         //Comments
-        Comment CreateComment(Comment comment);
+        Comment CreateComment(long playlistId, Comment comment);
         Comment UpdateComment(Comment comment);
         IEnumerable<Comment> ReadChatComments(Playlist playlist);
         IEnumerable<Comment> ReadComments(Playlist playlist);
@@ -32,6 +32,7 @@ namespace BB.DAL.EFPlaylist
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
+        bool MarkTrackAsPlayed(long playlistTrackId, long playlistId);
 
         //Track
         Track CreateTrack(long playlistId, Track track);
@@ -54,6 +55,10 @@ namespace BB.DAL.EFPlaylist
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
         IEnumerable<Vote> ReadVotesUser(User user);
         void DeleteVote(long voteId);
+        void DeleteVote(Vote vote);
         Playlist UpdatePlaylist(Playlist playlist, string email);
+        int ReadNumberOfVotesOfUserForPlaylist(long userId, long trackId);
+        int ReadMaximumVotesPerUser(long trackId);
+        Vote ReadVoteOfUserFromPlaylistTrack(long userId, long trackId);
     }
 }

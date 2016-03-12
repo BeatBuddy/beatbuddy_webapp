@@ -9,7 +9,7 @@ namespace BB.BL
     public interface IPlaylistManager
     {
         //Comments
-        Comment CreateComment(string text, User user);
+        Comment CreateComment(long playlistId, string text, string userEmail);
         Comment UpdateComment(Comment comment);
         IEnumerable<Comment> ReadChatComments(Playlist playlist);
         IEnumerable<Comment> ReadComments(Playlist playlist);
@@ -34,7 +34,7 @@ namespace BB.BL
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
-        bool MarkTrackAsPlayed(long playlistTrackId);
+        bool MarkTrackAsPlayed(long playlistTrackId, long playlistId);
         Playlist UpdatePlaylist(Playlist playlist, string email);
         //Track
         Track AddTrackToPlaylist(long playlistId, Track track);
@@ -51,12 +51,13 @@ namespace BB.BL
         void DeleteTrackSource(long trackSourceId);
 
         //Vote
-        Vote CreateVote(int score, long id, long trackId);
+        Vote CreateVote(int score, long userId, long trackId);
         Vote UpdateVote(Vote vote);
         Vote ReadVote(long voteId);
         IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
         IEnumerable<Vote> ReadVotesForUser(User user);
         void DeleteVote(long playlistTrackId, long userId);
+
 
 
     }

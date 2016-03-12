@@ -80,14 +80,21 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var user = userManager.ReadUser(email);
             if (user == null) return InternalServerError();
 
-            if (organisationManager.ReadOrganisation(name) == null) { return Content(HttpStatusCode.InternalServerError,"Organisation name already exists"); }
+            if (organisationManager.ReadOrganisation(name) != null) {
+                return Content(HttpStatusCode.InternalServerError,"Organisation name already exists");
+            }
 
             Organisation organisation = organisationManager.CreateOrganisation(name, imagePath, color, user);
-
             return Ok(organisation);
-
         }
 
-       
+
+        [HttpGet]
+        [Route("organisations/{id}")]
+        public IHttpActionResult Get([FromUri] long id)
+        {
+            var organisation = organisationManager.ReadOrganisation(id);
+            return Ok(organisation);
+        }
     }
 }

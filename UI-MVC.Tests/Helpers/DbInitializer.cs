@@ -33,7 +33,7 @@ namespace BB.UI.Web.MVC.Tests.Helpers
         }
         public static IPlaylistManager CreatePlaylistManager()
         {
-            return new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
+            return new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddyTest)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
         }
     }
 }

@@ -19,11 +19,13 @@ body {
     margin-left: -.1em;
 }
 
-.material-icons.grey400 {color:#BDBDBD;}
+.material-icons.grey400 {
+    color: #BDBDBD;
+}
 
 a.disabled {
-   pointer-events: none;
-   cursor: default;
+    pointer-events: none;
+    cursor: default;
 }
 
 header {
@@ -133,7 +135,7 @@ header {
             font-weight: 200;
             font-size: 2em;
             text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
-            }
+        }
 
         .button {
             display: inline-block;
@@ -174,32 +176,51 @@ header {
 
 #playlistbanner {
     width: 100%;
-    min-height: 250px;
+    min-height: 220px;
     z-index: 0;
     position: relative;
     overflow: hidden;
     margin-bottom: 1em;
-    height: 250px;
-    background-image: url('/Content/img/playlistheader.jpg'); 
-    background-repeat: no-repeat; 
+    /*height: 220px;*/
+    background-image: url('/Content/img/playlistheader.jpg');
+    background-repeat: no-repeat;
+    background-position-y: 25%;
     background-size: cover;
 
     .content {
-        padding: 2.4% $sidemargin 3em $sidemargin;
+        padding: 2.2% $sidemargin 3em $sidemargin;
         margin: 0 auto;
         max-width: $maxpagewidth;
         color: white;
         top: 0;
-        
 
-        h1 {
-            font-weight: 100;
-            color: white;
-            font-size: 3.4em;
-            margin-top: 0.5em;
-            margin-bottom: 0;
-            top: 0;
+        .fill{
+            display: block;
+            overflow: hidden;
+        }
+
+        .title {
+            display: inline-block;
             text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+            font-size: 2em;
+            float: left;
+
+            & > h1:after {
+                margin-right: .27em;
+            }
+
+            h1{
+                display: inline-block;
+                color: white;
+                font-size: 1em;
+                margin-top: 0.1%;
+                margin-bottom: 0;
+                top: 0;
+            }
+        }
+
+        .textshadow{
+            text-shadow: 0px 3px 5px rgba(0,0,0,0.6);
         }
 
         img {
@@ -210,12 +231,20 @@ header {
 
         h2 {
             margin-top: 0;
-            margin-bottom: 1em;
+            margin-bottom: 0.4em;
             font-weight: 200;
-            font-size: 2em;
+            font-size: 1.5em;
             text-shadow: 0px 3px 5px rgba(0,0,0,0.5);
-            }
-        
+        }
+
+        #listenerCount{
+            margin-bottom: 5px;
+        }
+
+        #listenerImg{
+            margin-bottom: 1.5em;
+        }
+
 
         @media screen and (max-width: $mobile-breakpoint) {
             padding: 4% $sidemargin-mobile 3em $sidemargin-mobile;
@@ -252,7 +281,7 @@ header {
         margin-bottom: .6em;
         vertical-align: top;
     }
-        }
+}
 
 .about-user {
     display: inline-block;
@@ -273,8 +302,8 @@ header {
             max-width: 64px;
             max-height: 64px;
             margin-right: .5em;
+        }
     }
-}
 
     @media screen and (max-width: $mobile-breakpoint) {
         display: block;
@@ -291,20 +320,19 @@ header {
     display: inline-block;
     text-align: center;
 
-   img {
+    img {
         display: block;
         width: 50px;
         height: 50px;
-        padding-left: .5em;
 
         @media screen and (max-width: $mobile-breakpoint) {
             max-width: 10px;
             max-height: 10px;
             margin-right: .5em;
+        }
     }
-}
 
-        @media screen and (max-width: $mobile-breakpoint) {
+    @media screen and (max-width: $mobile-breakpoint) {
         display: block;
         text-align: left;
 
@@ -314,9 +342,31 @@ header {
         }
     }
 }
+
 .add-playlist {
     margin-bottom: 20px;
     padding-bottom: 20px;
+}
+
+.title {
+    font-weight: 300;
+    font-size: 1.4em;
+    margin-bottom: .3em;
+
+    h1 {
+        display: inline-block;
+        font-family: Roboto;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 1em;
+        margin-top: 0;
+        margin-bottom: 0;
+
+        &:after {
+            content: ' |';
+            font-weight: 200;
+        }
+    }
 }
 
 .body-content {
@@ -326,27 +376,6 @@ header {
 
     @media screen and (max-width: $mobile-breakpoint) {
         padding: 0 $sidemargin-mobile;
-    }
-
-    .title {
-        font-weight: 300;
-        font-size: 1.4em;
-        margin-bottom: .3em;
-
-        h1 {
-            display: inline-block;
-            font-family: Roboto;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 1em;
-            margin-top: 0;
-            margin-bottom: 0;
-
-            &:after {
-                content: ' |';
-                font-weight: 200;
-            }
-        }
     }
 
     .extramargin {
@@ -403,6 +432,10 @@ header {
     }
 }
 
+.nomargintop{
+    margin-top: 0;
+}
+
 #playlist-tracks {
     padding: 0;
     width: 100%;
@@ -433,23 +466,96 @@ header {
     width: 100%;
 }
 
-#player {
-    margin-top: 2em;
-    display: inline-block;
-    height: 64px;
-    border-top: 1px solid black;
+#bottommargin {
+    margin-bottom: 3em;
+}
+
+#fullscreenplayer {
+    position: fixed;
+    left: 0;
+    top: 0;
     width: 100%;
-    padding-top: .5em;
+    height: 100%;
+    color: white;
+    background-color: black;
+    background-size: cover;
+    background-position: center center;
 
+    #darkoverlay {
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.55);
 
-    h1 {
-        display: inline-block;
-        font-family: Roboto;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 1.3em;
-        margin-top: 0;
-        margin-bottom: 0;
+        #nowPlayingLogo {
+            position: absolute;
+            right: 10%;
+            bottom: 10%;
+            margin-bottom: 3em;
+        }
+    }
+
+    #nowPlayingAlbumArt {
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        left: 10%;
+        bottom: 10%;
+        background-size: contain;
+        background-image: url(img/default_cover.png);
+    }
+
+    #nowPlayingArtist {
+        position: absolute;
+        left: 10%;
+        bottom: 10%;
+        margin-left: 250px;
+        margin-bottom: 1.5em;
+        font-size: 3em;
+        font-weight: 500;
+    }
+
+    #nowPlayingTitle {
+        position: absolute;
+        left: 10%;
+        bottom: 10%;
+        margin-left: 250px;
+        margin-bottom: 1.8em;
+        font-size: 1.5em;
+        font-weight: 300;
+    }
+
+    #fullscreenexitbutton {
+        position: absolute;
+        color: white;
+        top: 10%;
+        right: 10%;
+        font-size: 4em;
+        cursor: pointer;
+    }
+
+    #nowPlayingProgress {
+        display: block;
+        position: absolute;
+        bottom: 10%;
+        left: 10%;
+        margin-left: 250px;
+        right: 10%;
+        height: 13px;
+        background-color: white;
+        margin-bottom: .5em;
+        padding: 2px;
+
+        #nowPlayingProgressBar {
+            background-color: black;
+            display: block;
+            left: 0;
+            right: 0;
+            width: 0%;
+            height: 9px;
+        }
     }
 }
 
@@ -464,7 +570,7 @@ header {
 }
 
 #custom-inputform-registration {
-    border-right: 1px solid #d3d3d3; 
+    border-right: 1px solid #d3d3d3;
     display: block;
 
     .container-form {
@@ -472,14 +578,14 @@ header {
         float: right;
 
         .div-image-form {
-            margin-top: 22px; 
-            margin-bottom: 22px; 
+            margin-top: 22px;
+            margin-bottom: 22px;
             text-align: center;
 
             .image-form {
                 width: 150px;
-                   height: 150px; 
-                   cursor: pointer;  
+                height: 150px;
+                cursor: pointer;
             }
         }
 
@@ -488,17 +594,17 @@ header {
         }
 
         .column-right-form {
-            float: right; 
+            float: right;
             overflow: hidden;
         }
 
         .form-groups {
-                margin-top: 7px;
+            margin-top: 7px;
         }
 
         .create {
             margin-top: 20px;
-                margin-right: 13px;
+            margin-right: 13px;
         }
     }
 }
@@ -571,17 +677,17 @@ header {
     background-color: black;
     border: 0.2px solid;
 }
-    
+
 .form-label {
     width: 90%;
-            vertical-align: middle; 
-            word-wrap: break-word; 
-            float: left;
+    vertical-align: middle;
+    word-wrap: break-word;
+    float: left;
 }
 
 .form-img-icon {
-    cursor: pointer; 
-    float: right; 
+    cursor: pointer;
+    float: right;
     vertical-align: middle;
 }
 
@@ -592,13 +698,7 @@ header {
 
 .borderround {
     border-radius: 50%;
-    border-color: lightgray;
-    border: 2px solid;
-}
-
-.borderround:hover {
-    border-color: black;
-    cursor: pointer;
+    border: 2px solid lightgray;
 }
 
 .custom-validation {
@@ -670,17 +770,19 @@ header {
 .btn-right {
     float: right;
 }
+
 .btn-portal {
     width: 175px;
 }
+
 .btn-left {
     float: left;
 }
 
 .btn-login {
-width: 270px; 
-height: 3em; 
-margin-top: 1em;
+    width: 270px;
+    height: 3em;
+    margin-top: 1em;
 }
 
 .min-margin-top {
@@ -714,9 +816,9 @@ footer {
 }
 
 #footerSlideContainer {
-	position: fixed;
+    position: fixed;
     bottom: 0;
-	width: 100%;
+    width: 100%;
     min-width: 100%;
     left: 0;
     right: 0;
@@ -724,11 +826,42 @@ footer {
 }
 
 #footerSlideContent {
-	width: 70%;
-	height: 20px;
-	margin: auto;
+    width: 70%;
+    height: 20px;
+    margin: auto;
     margin-top: 0.2em;
     vertical-align: middle;
-	color: white;
-	border: none;
+    color: white;
+    border: none;
+    position: relative;
+
+    #fullscreenbutton {
+        color: white;
+        right: 0;
+        top: 1em;
+        position: absolute;
+        cursor: pointer;
+    }
+}
+
+#comments {
+    ul {
+        padding-left: 0;
+    }
+
+    li.comment {
+        list-style-type: none;
+        min-height: 2em;
+
+        .comment-user {
+            display: inline-block;
+            font-weight: 500;
+            text-decoration: underline;
+            min-width: 150px;
+            font-size: 1.1em;
+        }
+
+        .comment-text {
+        }
+    }
 }

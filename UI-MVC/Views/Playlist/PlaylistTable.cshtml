@@ -20,7 +20,6 @@
         <th colspan="2">Votes</th>
         <th>Duration</th>
         <th>Artist</th>
-        <th>Album</th>
     </tr>
     @foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(p=>p.Votes.Sum(v=>v.Score)))
     {
@@ -29,7 +28,14 @@
                 @track.Votes.Sum(s => s.Score)
             </td>
             <td>
+                @if (track.Track.CoverArtUrl != null)
+                {
                 <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
+                }
+                else
+                {
+                    <img class="albumart" src="~/Content/img/default_cover.png" alt="album art" />
+                }
             </td>
             <td class="tracktitle">
                 @track.Track.Title
@@ -62,9 +68,6 @@
             </td>
             <td class="artist">
                 @track.Track.Artist
-            </td>
-            <td>
-                album
             </td>
         </tr>
     }

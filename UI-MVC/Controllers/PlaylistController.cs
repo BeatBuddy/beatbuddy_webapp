@@ -49,7 +49,8 @@ namespace BB.UI.Web.MVC.Controllers
             var playlist = playlistManager.ReadPlaylist(id);
             var votesUser = playlistManager.ReadVotesForUser(user);
             var organisation = organisationManager.ReadOrganisationForPlaylist(id);
-            List<User> playlistOwners = new List<User>();
+
+            var playlistOwners = new List<User>();
             if (organisation != null)
             {
                 playlistOwners = userManager.ReadCoOrganiserFromOrganisation(organisation).ToList();
@@ -63,7 +64,6 @@ namespace BB.UI.Web.MVC.Controllers
                 }
             }
             ViewBag.Organisers = playlistOwners;
-      
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
             
@@ -78,7 +78,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
             var createdVote = playlistManager.CreateVote(vote, user.Id, id);
-            if (createdVote == null ) return new HttpStatusCodeResult(400, "You have reached your vote limit for this playlist");
+            if (createdVote == null) return new HttpStatusCodeResult(400, "You have reached your vote limit for this playlist");
             return new HttpStatusCodeResult(200);
         }
 
@@ -121,7 +121,7 @@ namespace BB.UI.Web.MVC.Controllers
         public JsonResult SearchTrack(string q)
         {
             var youtubeProvider = new YouTubeTrackProvider();
-            var searchResult = youtubeProvider.Search(q, maxResults:3);
+            var searchResult = youtubeProvider.Search(q, maxResults: 3);
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
@@ -142,21 +142,21 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult GetNextTrack(long id)
         {
-            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks
+            var playlistTracks = playlistManager.ReadPlaylist(id).PlaylistTracks.OrderByDescending(p => p.Votes.Sum(v => v.Score))
                 .Where(t => t.PlayedAt == null);
 
             if (!playlistTracks.Any()) return Json(null, JsonRequestBehavior.DenyGet);
 
             var track = playlistTracks.First(t => t.PlayedAt == null);
-
-                return Json(new
-                {
-                trackId = track.Track.TrackSource.TrackId,
-                trackName = track.Track.Title,
-                artist = track.Track.Artist,
-                nextTracks = playlistTracks.Count(),
-                thumbnail = track.Track.CoverArtUrl
-                }, JsonRequestBehavior.AllowGet);
+            var playingViewModel = new CurrentPlayingViewModel()
+            {
+                TrackId = track.Track.TrackSource.TrackId,
+                Title = track.Track.Title,
+                Artist = track.Track.Artist,
+                NextTracks = playlistTracks.Count(),
+                CoverArtUrl = track.Track.CoverArtUrl
+            };
+                return Json(playingViewModel, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -177,7 +177,7 @@ namespace BB.UI.Web.MVC.Controllers
             playlistManager.MarkTrackAsPlayed(
                 playlistManager.ReadPlaylist(id).PlaylistTracks
                 //.OrderByDescending(t => t.Score)
-                .First(t => t.PlayedAt == null).Id);
+                .First(t => t.PlayedAt == null).Id, id);
 
                 return new HttpStatusCodeResult(200);
             }
@@ -213,6 +213,7 @@ namespace BB.UI.Web.MVC.Controllers
                 playlist.Description = model.Description;
                 playlist.Key = model.Key;
                 playlist.ImageUrl = model.ImageUrl;
+                playlist.MaximumVotesPerUser = model.MaximumVotesPerUser;
                 string path = null;
 
                 if (avatarImage != null && avatarImage.ContentLength > 0)

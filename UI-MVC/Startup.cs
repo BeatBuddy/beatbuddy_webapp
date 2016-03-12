@@ -6,6 +6,8 @@ using System;
 using System.Web.Http;
 using BB.UI.Web.MVC.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Cors;
 namespace BB.UI.Web.MVC
 {
     public partial class Startup
@@ -14,7 +16,16 @@ namespace BB.UI.Web.MVC
         {
             
             ConfigureAuth(app);
+            app.Map("/signalr", map =>
+            {
+                map.UseCors(CorsOptions.AllowAll);
+                var hubConfig = new HubConfiguration()
+                {
+                    EnableJSONP = true
+                };
+                map.RunSignalR(hubConfig);
 
+            });
             app.Map("/api", inner =>
         {
             HttpConfiguration config = new HttpConfiguration();

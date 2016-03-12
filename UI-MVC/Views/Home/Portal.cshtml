@@ -31,7 +31,7 @@
     </div>
 </div>
 <div id="playlistModal" class="modal" style="margin-top: -90px">
-    <div class="modal-content" style="width: 850px; height: 530px; overflow: hidden">
+    <div class="modal-content" style="width: 850px; height: 625px; overflow: hidden">
         <a href="#close" title="Close" class="close">X</a>
         <div class="modal-body" style="margin-left: 60px; width: 100%">
             @Html.Partial("~/Views/Playlist/Create.cshtml", new PlaylistViewModel())
@@ -95,7 +95,7 @@
     <div class="clearfix">&nbsp;</div>
 </section>
 
-<section>
+<section id="myplaylists">
     <div class="title">
             <h1>My playlists</h1>
         <div id="playlistCount" style="display: inline">@ViewBag.MyPlaylists.Count</div>
@@ -104,7 +104,7 @@
         </a>
     </div>
     
-    <div class="container row more-margin-top" id="myplaylists">
+    <div class="container row more-margin-top">
         @foreach (Playlist playlist in ViewBag.MyPlaylists)
         {
             

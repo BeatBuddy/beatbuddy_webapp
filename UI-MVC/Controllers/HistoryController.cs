@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -14,7 +13,6 @@ namespace BB.UI.Web.MVC.Controllers
             this.playlistManager = playlistManager;
         }
 
-
         // GET: History/View/1
         public ActionResult View(long id)
         {
@@ -23,6 +21,10 @@ namespace BB.UI.Web.MVC.Controllers
                 .Where(pt => pt.PlayedAt != null)
                 .OrderBy(pt => pt.PlayedAt)
                 .ToList();
+
+            var comments = playlistManager.ReadComments(playlist);
+            ViewBag.CommentCount = comments.Count();
+            ViewBag.Comments = comments;
             
             return View(playlist);
         }

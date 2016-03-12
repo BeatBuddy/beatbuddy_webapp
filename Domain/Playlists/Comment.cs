@@ -9,6 +9,7 @@ namespace BB.BL.Domain.Playlists
         public string Text { get; set; }
         public DateTime TimeStamp { get; set; }
         public User User { get; set; }
-       
+        public virtual Playlist Playlist { get; set; }
+        public long? PlaylistId { get; set; }
     }
 }
