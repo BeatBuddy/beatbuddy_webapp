@@ -7,7 +7,6 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 
-
 namespace BB.DAL.EFPlaylist
 {
     public class PlaylistRepository : IPlaylistRepository
@@ -42,12 +41,10 @@ namespace BB.DAL.EFPlaylist
             return playlist;
         }
 
-        public Playlist CreatePlaylist(Playlist playlist, Organisation organisation)
+        public Playlist CreatePlaylist(Playlist playlist, long organisationId)
         {
-            var playlist1 = playlist;
-            var organisation1 = context.Organisations.Find(organisation.Id);
-            organisation1.Playlists.Add(playlist1);
-            context.Playlists.Add(playlist1);
+            var organisation = context.Organisations.Find(organisationId);
+            organisation.Playlists.Add(playlist);
             context.SaveChanges();
             return playlist;
         }

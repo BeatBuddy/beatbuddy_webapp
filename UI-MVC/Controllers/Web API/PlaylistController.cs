@@ -156,10 +156,19 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 }
             }
 
-            var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
-            if (playlist != null)
-                return Request.CreateResponse(HttpStatusCode.OK, playlist);
-            
+            if (formData["organisationId"] != null)
+            {
+                var playlist = playlistManager.CreatePlaylistForOrganisation(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user, long.Parse(formData["organisationId"]));
+                if (playlist != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, playlist);
+            }
+            else
+            {
+                var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
+                if (playlist != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, playlist);
+            }
+
             return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
 

@@ -49,7 +49,7 @@ namespace BB.BL
             return repo.CreatePlaylist(playlist);
         }
 
-        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy, Organisation organisation)
+        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy, long organisationId)
         {
             Playlist playlist = new Playlist()
             {
@@ -64,7 +64,7 @@ namespace BB.BL
                 Comments = new List<Comment>(),
                 PlaylistTracks = new List<PlaylistTrack>()
             };
-            return repo.CreatePlaylist(playlist, organisation);
+            return repo.CreatePlaylist(playlist, organisationId);
         }
 
 
