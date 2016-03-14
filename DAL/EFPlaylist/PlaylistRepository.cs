@@ -7,7 +7,6 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 
-
 namespace BB.DAL.EFPlaylist
 {
     public class PlaylistRepository : IPlaylistRepository
@@ -25,7 +24,12 @@ namespace BB.DAL.EFPlaylist
                 .Include(p => p.Comments)
                 .First(p => p.Id == playlistId);
 
-            playlist.Comments.Add(comment);
+            var user = context.User.Single(u => u.Id == comment.User.Id);
+            comment.User = user;
+
+            var createdComment = context.Comments.Add(comment);
+            playlist.Comments.Add(createdComment);
+
             context.SaveChanges();
             return comment;
         }
@@ -37,12 +41,10 @@ namespace BB.DAL.EFPlaylist
             return playlist;
         }
 
-        public Playlist CreatePlaylist(Playlist playlist, Organisation organisation)
+        public Playlist CreatePlaylist(Playlist playlist, long organisationId)
         {
-            var playlist1 = playlist;
-            var organisation1 = context.Organisations.Find(organisation.Id);
-            organisation1.Playlists.Add(playlist1);
-            context.Playlists.Add(playlist1);
+            var organisation = context.Organisations.Find(organisationId);
+            organisation.Playlists.Add(playlist);
             context.SaveChanges();
             return playlist;
         }
@@ -90,10 +92,11 @@ namespace BB.DAL.EFPlaylist
 
         public bool MarkTrackAsPlayed(long id, long playlistId)
         {
-            var playlist = context.Playlists.Single(p => p.Id == playlistId);
+            var playlist = context.Playlists.Include(p=>p.PlaylistTracks).Single(p => p.Id == playlistId);
             var track = playlist.PlaylistTracks.Single(t => t.Id == id);
             if (track == null) return false;
             track.PlayedAt = DateTime.Now;
+          
             context.Entry(track).State = EntityState.Modified;
             context.SaveChanges();
             return true;
@@ -159,7 +162,6 @@ namespace BB.DAL.EFPlaylist
 
         }
 
-
         public IEnumerable<Comment> ReadChatComments(Playlist playlist)
         {
             throw new NotImplementedException();
@@ -181,11 +183,25 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist ReadPlaylist(long playlistId)
         {
-            return context.Playlists
+            var playlist = context.Playlists
                 .Include(p => p.PlaylistTracks)
-                .Include("PlaylistTracks.Track.TrackSource")
-                .Include("PlaylistTracks.Votes.User")
-                .FirstOrDefault(p => p.Id == playlistId);
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Track))
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Track.TrackSource))
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Votes))
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Votes.Select(v => v.User)))
+                .ToList()
+                //.Include("PlaylistTracks")
+                //.Include("PlaylistTracks.Track")
+                //.Include("PlaylistTracks.Track.TrackSource")
+                //.Include("PlaylistTracks.Votes.User")
+                .SingleOrDefault(p => p.Id == playlistId);
+
+            if (playlist == null) return null;
+
+            var tracks = context.PlaylistTracks.Where(p => p.PlaylistId == playlistId).ToList();
+            playlist.PlaylistTracks = tracks;
+
+            return playlist;
         }
 
         public IEnumerable<Playlist> ReadPlaylists()

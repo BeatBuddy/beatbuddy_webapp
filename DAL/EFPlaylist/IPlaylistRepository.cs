@@ -16,7 +16,7 @@ namespace BB.DAL.EFPlaylist
 
         //Playlists
         Playlist CreatePlaylist(Playlist playlist);
-        Playlist CreatePlaylist(Playlist playlist, Organisation organisation);
+        Playlist CreatePlaylist(Playlist playlist, long organisationid);
         Playlist UpdatePlaylist(Playlist playlist);
         Playlist ReadPlaylist(long playlistId);
         Playlist ReadPlaylist(string name);

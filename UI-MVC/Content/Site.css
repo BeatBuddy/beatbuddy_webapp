@@ -647,3 +647,12 @@ footer {
     min-width: 150px;
     font-size: 1.1em; }
 
+#sharedialog {
+  display: block; }
+  #sharedialog #facebook img {
+    display: initial !important; }
+  #sharedialog #twitter img {
+    display: initial !important; }
+  #sharedialog #gplus img {
+    display: initial !important; }
+

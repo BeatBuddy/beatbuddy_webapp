@@ -46,13 +46,13 @@ namespace BB.UI.Web.MVC
             // container.LoadConfiguration();
             // TODO: Register your types here
             // container.RegisterType<IProductRepository, ProductRepository>();
-            EFDbContext efDbContext = new EFDbContext(ContextEnum.BeatBuddy);
-            container.RegisterType<IOrganisationManager, OrganisationManager>(new InjectionConstructor(new OrganisationRepository(efDbContext)));
-            container.RegisterType<IUserManager, UserManager>(new InjectionConstructor(new UserRepository(efDbContext)));
-            container.RegisterType<IPlaylistManager, PlaylistManager>(new InjectionConstructor(new PlaylistRepository(efDbContext), new UserRepository(efDbContext)));
+            
+            container.RegisterType<IOrganisationManager, OrganisationManager>(new InjectionConstructor(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy))));
+            container.RegisterType<IUserManager, UserManager>(new InjectionConstructor(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy))));
+            container.RegisterType<IPlaylistManager, PlaylistManager>(new InjectionConstructor(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy))));
             container.RegisterType<ITrackProvider, YouTubeTrackProvider>();
             container.RegisterType<IAlbumArtProvider, BingAlbumArtProvider>();
-            container.RegisterType<AccountController>(new InjectionConstructor(new UserManager(new UserRepository(efDbContext))));
+            container.RegisterType<AccountController>(new InjectionConstructor(new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)))));
             container.RegisterType<ManageController>(new InjectionConstructor());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);

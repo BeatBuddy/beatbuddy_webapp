@@ -157,10 +157,19 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 }
             }
 
+            if (formData["organisationId"] != null)
+            {
+                var playlist = playlistManager.CreatePlaylistForOrganisation(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user, long.Parse(formData["organisationId"]));
+                if (playlist != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, playlist);
+            }
+            else
+            {
             var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
             if (playlist != null)
                 return Request.CreateResponse(HttpStatusCode.OK, playlist);
-
+            }
+            
             return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
 
@@ -193,10 +202,10 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (AssignPlaylistMaster(playlistId, user.Id))
             {
 
-                var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
-                     .Where(t => t.PlayedAt == null);
+            var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
+                 .Where(t => t.PlayedAt == null);
 
-                if (!playlistTracks.Any()) return NotFound();
+            if (!playlistTracks.Any()) return NotFound();
 
                 var originalPlayListTrack = playlistTracks.First(t => t.PlayedAt == null);
 
@@ -230,7 +239,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 }
                 if (timeTrackRequested.AddHours(6) >= DateTime.UtcNow)
                 {
-                    var youTube = YouTube.Default; // starting point for YouTube actions
+            var youTube = YouTube.Default; // starting point for YouTube actions
                     youTubeVideo = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url).Uri; // gets a Video object with info about the video
                 }
                 else {
@@ -253,7 +262,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     Title = originalPlayListTrack.Track.Title,
                     Url = youTubeVideo
                 };
-
+                
                 var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id, playlistId);
                 if (success)
                 {
@@ -273,7 +282,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public bool AssignPlaylistMaster(long playlistId, long userId)
         {
             if (playlistManager.CheckIfUserCreatedPlaylist(playlistId, userId))
-            {
+        {
                 var playlist = playlistManager.ReadPlaylist(playlistId);
                 playlist.PlaylistMasterId = userId;
                 playlist = playlistManager.UpdatePlaylist(playlist);

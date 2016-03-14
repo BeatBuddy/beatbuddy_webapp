@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BB.BL.Domain;
+using System.Data.Entity;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 
@@ -77,7 +77,9 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation ReadOrganisation(long organisationId)
         {
-            return context.Organisations.Find(organisationId);
+            return context.Organisations
+                .Include(o => o.Playlists)
+                .FirstOrDefault(o => o.Id == organisationId);
         }
 
         public IEnumerable<Organisation> ReadOrganisations()
@@ -92,7 +94,7 @@ namespace BB.DAL.EFOrganisation
 
         public Organisation UpdateOrganisation(Organisation organisation)
         {
-            context.Entry(organisation).State = System.Data.Entity.EntityState.Modified;
+            context.Entry(organisation).State = EntityState.Modified;
             context.SaveChanges();
             return organisation;
         }
