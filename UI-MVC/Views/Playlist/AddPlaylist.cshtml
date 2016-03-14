@@ -1,0 +1,84 @@
+﻿<div class="title">
+    <h1>Add</h1> a playlist
+</div>
+<div class="first-form-group">
+    @Html.Label("Search your playlist here: ", new { @class = "control-label", style = "margin-top: 1em" })
+</div>
+<div>
+    @Html.TextBox("playlistAdd", null, new {  @class = "custom-input-organisations", style = "margin-top: 0.6em; width: 90%" })
+</div>
+
+<img id="loadingPlaylist" src="~/Content/img/round_shape_loader.gif" alt="loading" hidden />
+<p id="waitPlaylist" hidden>Adding Playlist... This may take a while. Please Wait</p>
+<ul id="resultsPlaylist" class="row"></ul>
+@section scripts{
+    <script>
+        var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
+            '<img class="thumbnail" src="${ImageUrl}"/>' +
+            '<span class="artist">${Name}</span>' +
+            '</li>';
+        $.template("playlistTemplate", markupPlaylist);
+
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("#loadingPlaylist").show();
+            },
+            complete: function () {
+                $("#loadingPlaylist").hide();
+            }
+        });
+        $("#loadingPlaylist").hide();
+
+        function fetchQueryResultsPlaylist() {
+            $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
+                .done(function (result) {
+                    $("#results").empty();
+                    $.tmpl("playlistTemplate", result).appendTo("#results");
+                    $("#results li").on("click", function () {
+                        addPlaylist($(this).attr('data-id'));
+                    });
+                })
+                .fail(function () {
+                    alert("error");
+                });
+        }
+
+        function addPlaylist(id) {
+            $.ajax({
+                url: '@Url.Action("AddPlaylist")',
+                method: 'POST',
+                data: { playlistId: @ViewBag.PlaylistId, id: id}
+            }).done(function () {
+                window.location.href = '@Url.Action("Details", new { id = ViewBag.Id })';
+            })
+            .fail(function (data) {
+                alert(data);
+            });
+        }
+
+        function debouncePlaylist(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
+        var debouncedFetchPlaylist = debouncePlaylist(function () {
+            fetchQueryResultsPlaylist();
+        }, 500);
+
+        $("#playlistAdd").on('keydown', function () {
+            debouncedFetchPlaylist();
+        });
+    </script>
+}
+
+

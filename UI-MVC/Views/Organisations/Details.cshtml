@@ -19,7 +19,7 @@
         {
             organisationSource = FileHelper.GetImagePath("OrganisationsImgPath", @Model.BannerUrl);
         }
-    }
+        }
     <div class="title organisation-full-banner" style="background-image: url('@organisationSource');">
         &nbsp;
     </div>
@@ -28,18 +28,18 @@
         <h1>@Model.Name</h1>
         @if (ViewBag.Following.Equals("None"))
         {
-            <a href='javascript:Follow()' class="btn" style="margin-top: 1em;">
-                <i class="material-icons">follow_organisation</i> Follow
+            <a href='javascript:Follow()' class="btn">
+                <i class="material-icons">playlist_add</i> Follow
             </a>
         } else if(ViewBag.Following.Equals("Following")) {
-            <a href='javascript:UnFollow()' class="btn" style="margin-top: 1em;">
-                <i class="material-icons">follow_organisation</i> Un follow
+            <a href='javascript:UnFollow()' class="btn" style="width: 200px;">
+                <i class="material-icons">playlist_add</i> Un follow
             </a>
         }
         else if (ViewBag.Following.Equals("Co-Organiser"))
         {
-            <a href='javascript:Leave()' class="btn" style="margin-top: 1em;">
-                <i class="material-icons">follow_organisation</i> Leave organisation
+            <a href='javascript:Leave()' class="btn" style="width: 200px;">
+                <i class="material-icons">playlist_add</i> Leave organisation
             </a>
         }else if (ViewBag.Following.Equals("Organiser"))
         {
@@ -154,6 +154,13 @@
             <i class="material-icons">playlist_add</i> add playlist
         </a>
     </div>
+
+    <div class="add-playlist">
+        <a href="#addPlaylistModal" class="btn btn-right">
+            <i class="material-icons">playlist_add</i> import from youtube
+        </a>
+    </div>
+
 }
 else
 {
@@ -171,7 +178,9 @@ else
     }
 }
 
+
     @section scripts{
+
         <script>
             function Leave() {
                 $.ajax({

@@ -98,8 +98,12 @@ namespace BB.DAL.EFPlaylist
                 //if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
             }
             playlist.PlaylistTracks.Add(playlistTrack);
-
-            context.SaveChanges();
+            try {
+                context.SaveChanges();
+            }
+            catch
+            {
+            }
             return playlistTrack.Track;
         }
 
