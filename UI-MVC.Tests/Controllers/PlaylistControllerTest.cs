@@ -52,6 +52,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.AreEqual(2, playlist.PlaylistTracks.Count);
         }
 
+        /*
         [TestMethod]
         public void TestSearchAndAddDuplicate()
         {
@@ -61,6 +62,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.AreEqual(400, addTrackResult.StatusCode);
             Assert.AreEqual("You can not add a song that is already in the list", addTrackResult.StatusDescription);
         }
+        */
 
         [TestMethod]
         public void ViewPlaylist()

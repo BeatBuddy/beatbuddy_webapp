@@ -46,9 +46,10 @@ namespace BB.DAL.EFUser
             return userRole;
         }
 
-        public void DeleteUser(long userId)
+        public void DeleteUser(User user)
         {
-            throw new NotImplementedException();
+            context.User.Remove(user);
+            context.SaveChanges();
         }
 
         public void DeleteUserRole(UserRole userRole)
@@ -92,11 +93,6 @@ namespace BB.DAL.EFUser
         public User ReadUser(long userId)
         {
             return context.User.FirstOrDefault(u => u.Id == userId);
-        }
-
-        public User ReadUser(string lastname, string firstname)
-        {
-            throw new NotImplementedException();
         }
 
         public UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId)

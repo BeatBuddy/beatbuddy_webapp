@@ -2,6 +2,7 @@
 @using BB.UI.Web.MVC.Models
 @using BB.BL.Domain.Users
 @using BB.BL.Domain.Organisations
+@using BB.UI.Web.MVC.Controllers.Utils
 @using PagedList.Mvc
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @model OrganisationViewWithPlaylist
@@ -12,15 +13,15 @@
     
 }
 
-    <div class="title" style="background-color: black; width: 100%;">
-        @if (Model.BannerUrl != null)
+    @{
+        var organisationSource = "/Content/img/playlistheader.jpg";
+        if (@Model.BannerUrl != null)
         {
-            <img src="~/Content/img/Organisations/@Model.BannerUrl" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
+            organisationSource = FileHelper.GetImagePath("OrganisationsImgPath", @Model.BannerUrl);
         }
-        else
-        {
-            <img src="~/Content/img/playlistheader.jpg" style="display: block; margin-left: auto; margin-right: auto; height: 250px;" />
-        }
+    }
+    <div class="title organisation-full-banner" style="background-image: url('@organisationSource');">
+        &nbsp;
     </div>
 
     <div> 

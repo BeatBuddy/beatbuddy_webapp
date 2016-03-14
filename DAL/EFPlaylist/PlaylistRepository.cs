@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
-using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 
@@ -54,26 +53,6 @@ namespace BB.DAL.EFPlaylist
            return context.Playlists.ToList().FindAll(p => p.CreatedById == userId);
         }
 
-        public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Track CreateTrack(Track track)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TrackSource CreateTrackSource(TrackSource trackSource)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteComment(long commentId)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Playlist> ReadPlaylists(long userId)
         {
             return context.Playlists.Where(p => p.CreatedById == userId);
@@ -115,22 +94,13 @@ namespace BB.DAL.EFPlaylist
             if(playlist.PlaylistTracks == null) playlist.PlaylistTracks = new Collection<PlaylistTrack>();
             else
             {
-                if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
+                //WHY OH WHY?
+                //if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
             }
             playlist.PlaylistTracks.Add(playlistTrack);
 
             context.SaveChanges();
             return playlistTrack.Track;
-        }
-
-        public void DeleteTrack(long trackId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteTrackSource(long trackSourceId)
-        {
-            throw new NotImplementedException();
         }
 
         public void DeleteVote(long voteId)
@@ -164,11 +134,6 @@ namespace BB.DAL.EFPlaylist
 
             return playlist;
 
-        }
-
-        public IEnumerable<Comment> ReadChatComments(Playlist playlist)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<Comment> ReadComments(Playlist playlist)
@@ -213,49 +178,14 @@ namespace BB.DAL.EFPlaylist
             return context.Playlists.ToList();
         }
 
-        public IEnumerable<Playlist> ReadPlaylists(Organisation organisation)
-        {
-            throw new NotImplementedException();
-        }
-
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
         {
             return context.PlaylistTracks.Include(p => p.Votes).Include("Votes.User").FirstOrDefault(p => p.Id == playlistTrackId);
         }
 
-        public IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Track ReadTrack(long trackId)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Track> ReadTracks()
         {
-            throw new NotImplementedException();
-        }
-
-        public TrackSource ReadTrackSource(long trackSourceId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<TrackSource> ReadTrackSources()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Vote ReadVote(long voteId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist)
-        {
-            throw new NotImplementedException();
+            return context.Tracks;
         }
 
         public IEnumerable<Vote> ReadVotesUser(User user)
@@ -295,11 +225,6 @@ namespace BB.DAL.EFPlaylist
             return vote;
         }
 
-        public Comment UpdateComment(Comment comment)
-        {
-            throw new NotImplementedException();
-        }
-
         public Playlist UpdatePlaylist(Playlist playlist)
         {
             var originalPlaylist = context.Playlists.Find(playlist.Id);
@@ -331,16 +256,6 @@ namespace BB.DAL.EFPlaylist
             track.PlayedAt = DateTime.Now;
 
             return context.SaveChanges() > 0;
-        }
-
-        public Track UpdateTrack(Track track)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TrackSource UpdateTracksource(TrackSource trackSource)
-        {
-            throw new NotImplementedException();
         }
 
         public Vote UpdateVote(Vote vote)

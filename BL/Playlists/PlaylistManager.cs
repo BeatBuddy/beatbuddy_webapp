@@ -73,27 +73,6 @@ namespace BB.BL
             return repo.ReadPlaylistsForUser(userId);
         }
 
-        public PlaylistTrack CreatePlaylistTrack(Track track)
-        {
-            PlaylistTrack playlistTrack = new PlaylistTrack()
-            {
-                Track = track,
-                PlayedAt = null,
-                Votes = new List<Vote>()
-            };
-            return repo.CreatePlaylistTrack(playlistTrack);
-        }
-
-        public TrackSource CreateTrackSource(SourceType sourceType, string url)
-        {
-            TrackSource trackSource = new TrackSource()
-            {
-                SourceType = sourceType,
-                Url = url
-            };
-            return repo.CreateTrackSource(trackSource);
-        }
-
         public bool CheckIfReachedMaximumVotes(long userId, long trackId) {
             return repo.ReadNumberOfVotesOfUserForPlaylist(userId, trackId) >= repo.ReadMaximumVotesPerUser(trackId);
         }
@@ -132,11 +111,6 @@ namespace BB.BL
             repo.DeleteVote(vote);
         }
 
-        public void DeleteComment(long commentId)
-        {
-            repo.DeleteComment(commentId);
-        }
-
         public IEnumerable<Playlist> ReadPlaylists(long userId)
         {
             return repo.ReadPlaylists(userId);
@@ -164,17 +138,8 @@ namespace BB.BL
 
         public Track AddTrackToPlaylist(long playlistId, Track track)
         {
+            
             return repo.CreateTrack(playlistId, track);
-        }
-
-        public void DeleteTrack(long trackId)
-        {
-            repo.DeleteTrack(trackId);
-        }
-
-        public void DeleteTrackSource(long trackSourceId)
-        {
-            repo.DeleteTrackSource(trackSourceId);
         }
 
         public void DeleteVote(long playlistTrackId, long userId)
@@ -183,11 +148,6 @@ namespace BB.BL
 
             var vote = repo.ReadPlaylistTrack(playlistTrackId).Votes.First(v => v.User.Id == userId);
             repo.DeleteVote(vote.Id);
-        }
-
-        public IEnumerable<Comment> ReadChatComments(Playlist playlist)
-        {
-            return repo.ReadChatComments(playlist);
         }
 
         public IEnumerable<Comment> ReadComments(Playlist playlist)
@@ -210,11 +170,6 @@ namespace BB.BL
             return repo.ReadPlaylists();
         }
 
-        public IEnumerable<Playlist> ReadPlaylists(Organisation organisation)
-        {
-            return repo.ReadPlaylists(organisation);
-        }
-
         public bool CheckIfUserCreatedPlaylist(long playlistId, long userId)
         {
             Playlist playlist = ReadPlaylist(playlistId);
@@ -227,48 +182,14 @@ namespace BB.BL
             return repo.ReadPlaylistTrack(playlistTrackId);
         }
 
-        public IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist)
-        {
-            return repo.ReadPlaylistTracks(playlist);
-        }
-
-        public Track ReadTrack(long trackId)
-        {
-            return repo.ReadTrack(trackId);
-        }
-
         public IEnumerable<Track> ReadTracks()
         {
             return repo.ReadTracks();
         }
 
-        public TrackSource ReadTrackSource(long trackSourceId)
+        public IEnumerable<Vote> ReadVotesForUser(User user)
         {
-            return repo.ReadTrackSource(trackSourceId);
-        }
-
-        public IEnumerable<TrackSource> ReadTrackSources()
-        {
-            return repo.ReadTrackSources();
-        }
-
-        public Vote ReadVote(long voteId)
-        {
-            return repo.ReadVote(voteId);
-        }
-
-        public IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist)
-        {
-            return repo.ReadVotesForPlaylist(playlist);
-        }
-
-        public IEnumerable<Vote> ReadVotesForUser(User user) {
             return repo.ReadVotesUser(user);
-        }
-
-        public Comment UpdateComment(Comment comment)
-        {
-            return repo.UpdateComment(comment);
         }
 
         public Playlist UpdatePlaylist(Playlist playlist)
@@ -279,16 +200,6 @@ namespace BB.BL
         public PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack)
         {
             return repo.UpdatePlayListTrack(playlistTrack);
-        }
-
-        public Track UpdateTrack(Track track)
-        {
-            return repo.UpdateTrack(track);
-        }
-
-        public TrackSource UpdateTracksource(TrackSource trackSource)
-        {
-            return repo.UpdateTracksource(trackSource);
         }
 
         public Vote UpdateVote(Vote vote)

@@ -49,7 +49,7 @@ namespace BB.BL
 
         public void DeleteUser(long userId)
         {
-            repo.DeleteUser(userId);
+            repo.DeleteUser(ReadUser(userId));
         }
 
         public IEnumerable<UserRole> ReadOrganisationsForUser(long userId)
@@ -70,11 +70,6 @@ namespace BB.BL
         public User ReadUser(long userId)
         {
             return repo.ReadUser(userId);
-        }
-
-        public User ReadUser(string lastname, string firstname)
-        {
-            return repo.ReadUser(lastname, firstname);
         }
 
         public IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
@@ -105,6 +100,11 @@ namespace BB.BL
         public void DeleteUserRole(UserRole userRole)
         {
             repo.DeleteUserRole(userRole);
+        }
+
+        public void DeleteUser(string email)
+        {
+            repo.DeleteUser(ReadUser(email));
         }
     }
 }
