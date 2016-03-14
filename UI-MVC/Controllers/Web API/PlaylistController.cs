@@ -235,9 +235,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
                     }
 
-
                 }
-                if (timeTrackRequested.AddHours(6) >= DateTime.UtcNow)
+                if (timeTrackRequested.AddHours(6) >= DateTime.UtcNow || trackWithLatestYoutubeUrl == null)
                 {
             var youTube = YouTube.Default; // starting point for YouTube actions
                     youTubeVideo = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url).Uri; // gets a Video object with info about the video
