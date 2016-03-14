@@ -73,17 +73,6 @@ namespace BB.BL
             return repo.ReadPlaylistsForUser(userId);
         }
 
-        public PlaylistTrack CreatePlaylistTrack(Track track)
-        {
-            PlaylistTrack playlistTrack = new PlaylistTrack()
-            {
-                Track = track,
-                PlayedAt = null,
-                Votes = new List<Vote>()
-            };
-            return repo.CreatePlaylistTrack(playlistTrack);
-        }
-
         public TrackSource CreateTrackSource(SourceType sourceType, string url)
         {
             TrackSource trackSource = new TrackSource()
@@ -164,6 +153,7 @@ namespace BB.BL
 
         public Track AddTrackToPlaylist(long playlistId, Track track)
         {
+            
             return repo.CreateTrack(playlistId, track);
         }
 

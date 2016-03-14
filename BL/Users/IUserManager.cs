@@ -16,6 +16,8 @@ namespace BB.BL
         IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation);
         IEnumerable<User> ReadUsers();
         void DeleteUser(long userId);
+        void DeleteUser(string email);
+
 
         //UserRole
         UserRole CreateUserRole(long userId, long organisationId, Role role);

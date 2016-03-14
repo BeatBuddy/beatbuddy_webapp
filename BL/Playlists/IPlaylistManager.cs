@@ -29,7 +29,6 @@ namespace BB.BL
         bool CheckIfUserCreatedPlaylist(long playlistId, long userId);
 
         //PlaylistTracks
-        PlaylistTrack CreatePlaylistTrack(Track track);
         PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack);
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);

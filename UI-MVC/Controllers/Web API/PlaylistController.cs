@@ -22,6 +22,7 @@ using BB.DAL;
 using BB.DAL.EFPlaylist;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Models;
+using System.Text.RegularExpressions;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -65,7 +66,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult getPlaylist(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
-            if(playlist == null) return NotFound();
+            if (playlist == null) return NotFound();
 
             return Ok(playlist);
         }
@@ -125,7 +126,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (userIdentity == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
 
             var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
-            if(email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+            if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
 
             var user = userManager.ReadUser(email);
             if (user == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
@@ -159,7 +160,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
             if (playlist != null)
                 return Request.CreateResponse(HttpStatusCode.OK, playlist);
-            
+
             return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
 
@@ -192,33 +193,67 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (AssignPlaylistMaster(playlistId, user.Id))
             {
 
-            var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
-                 .Where(t => t.PlayedAt == null);
+                var playlistTracks = playlistManager.ReadPlaylist(playlistId).PlaylistTracks
+                     .Where(t => t.PlayedAt == null);
 
-            if (!playlistTracks.Any()) return NotFound();
+                if (!playlistTracks.Any()) return NotFound();
 
                 var originalPlayListTrack = playlistTracks.First(t => t.PlayedAt == null);
 
+                IEnumerable<Track> tracks = playlistManager.ReadTracks().Where(t => t.Artist == originalPlayListTrack.Track.Artist && t.Title == originalPlayListTrack.Track.Title);
 
-            var youTube = YouTube.Default; // starting point for YouTube actions
-                var video = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url); // gets a Video object with info about the video
-                var boolean = video.IsEncrypted;
+                DateTime timeTrackRequested = new DateTime(1970,1,1,0,0,0);
+                Track trackWithLatestYoutubeUrl = null;
+                string youTubeVideo = null;
+
+                foreach (Track track in tracks) {
+                    //var timestamp = Regex.Replace(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)", ; 
+                    if (track.Url != null)
+                    {
+                        Match match = Regex.Match(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)");
+                        string timestamp;
+                        if (match.Success)
+                        {
+                            timestamp = match.Groups[1].Value;
+                            timestamp.Replace("lmt=", "");
+                            DateTime datetime = new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(timestamp));
+                            if (datetime > timeTrackRequested)
+                            {
+                                timeTrackRequested = datetime;
+                                trackWithLatestYoutubeUrl = track;
+                            }
+                        }
+
+                    }
+
+
+                }
+                if (timeTrackRequested.AddHours(6) >= DateTime.UtcNow)
+                {
+                    var youTube = YouTube.Default; // starting point for YouTube actions
+                    youTubeVideo = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url).Uri; // gets a Video object with info about the video
+                }
+                else {
+                    youTubeVideo = trackWithLatestYoutubeUrl.Url;
+                }
+
                 Track newTrack = new Track()
                 {
                     Id = originalPlayListTrack.Track.Id,
                     Artist = originalPlayListTrack.Track.Artist,
                     CoverArtUrl = originalPlayListTrack.Track.CoverArtUrl,
                     Duration = originalPlayListTrack.Track.Duration,
-                    TrackSource = new TrackSource() {
+                    TrackSource = new TrackSource()
+                    {
                         Id = originalPlayListTrack.Track.TrackSource.Id,
                         SourceType = originalPlayListTrack.Track.TrackSource.SourceType,
                         TrackId = originalPlayListTrack.Track.TrackSource.TrackId,
-                        Url = video.Uri
+                        Url = originalPlayListTrack.Track.TrackSource.Url
                     },
                     Title = originalPlayListTrack.Track.Title,
-                    Url = originalPlayListTrack.Track.Url
+                    Url = youTubeVideo
                 };
-                
+
                 var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id, playlistId);
                 if (success)
                 {
@@ -235,9 +270,10 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         }
 
-        public bool AssignPlaylistMaster(long playlistId,long userId)
+        public bool AssignPlaylistMaster(long playlistId, long userId)
         {
-            if (playlistManager.CheckIfUserCreatedPlaylist(playlistId,userId)) {
+            if (playlistManager.CheckIfUserCreatedPlaylist(playlistId, userId))
+            {
                 var playlist = playlistManager.ReadPlaylist(playlistId);
                 playlist.PlaylistMasterId = userId;
                 playlist = playlistManager.UpdatePlaylist(playlist);
@@ -283,7 +319,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [AllowAnonymous]
         [HttpGet]
         [Route("recommendations")]
-        [ResponseType(typeof (IEnumerable<Track>))]
+        [ResponseType(typeof(IEnumerable<Track>))]
         public HttpResponseMessage GetRecommendations(int count)
         {
             return Request.CreateResponse(HttpStatusCode.OK, playlistManager.ReadPlaylists()
@@ -304,7 +340,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         [HttpPost]
         [Route("{id}/track/{trackId}/upvote")]
-        public IHttpActionResult Upvote(long id, long trackId) {
+        public IHttpActionResult Upvote(long id, long trackId)
+        {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
             var user = getUser(userIdentity);
             var createVote = playlistManager.CreateVote(1, user.Id, trackId);

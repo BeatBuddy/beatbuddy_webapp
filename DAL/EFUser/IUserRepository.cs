@@ -15,7 +15,7 @@ namespace BB.DAL.EFUser
         IEnumerable<User> ReadUsers();
         User ReadOrganiserFromOrganisation(Organisation organisation);
         IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation);
-        void DeleteUser(long userId);
+        void DeleteUser(User user);
 
         //UserRole
         IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation);

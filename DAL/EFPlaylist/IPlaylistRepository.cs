@@ -27,7 +27,6 @@ namespace BB.DAL.EFPlaylist
         IEnumerable<Playlist> ReadPlaylistsForUser(long userId);
 
             //PlaylistTracks
-        PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack);
         PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack);
         IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);

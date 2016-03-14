@@ -52,10 +52,6 @@ namespace BB.DAL.EFPlaylist
            return context.Playlists.ToList().FindAll(p => p.CreatedById == userId);
         }
 
-        public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
-        {
-            throw new NotImplementedException();
-        }
 
         public Track CreateTrack(Track track)
         {
@@ -219,7 +215,7 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Track> ReadTracks()
         {
-            throw new NotImplementedException();
+            return context.Tracks;
         }
 
         public TrackSource ReadTrackSource(long trackSourceId)
