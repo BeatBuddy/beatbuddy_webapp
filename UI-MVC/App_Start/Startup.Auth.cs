@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using BB.UI.Web.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -6,6 +8,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Owin;
 
@@ -21,9 +24,8 @@ namespace BB.UI.Web.MVC
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
-            var config = new HubConfiguration();
-
             
+
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
@@ -63,16 +65,30 @@ namespace BB.UI.Web.MVC
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+           
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
-            
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "105060965186-qk180318bsduk698je2sm8b7ns00as1l.apps.googleusercontent.com",
+                ClientSecret = "FG66eRcX8e0CO4BIT5kcaPiZ"
+            });
+
+            app.UseFacebookAuthentication(new FacebookAuthenticationOptions()
+            {
+                AppId = "218561371831127",
+                AppSecret = "46fd5f91414cbdf88e5a194512b965ed",
+                Scope = { "email, public_profile"},
+                 
+                Provider = new FacebookAuthenticationProvider()
+                {
+                    OnAuthenticated = context =>
+                    {
+                        context.Identity.AddClaim(new System.Security.Claims.Claim("FacebookAccessToken", context.AccessToken));
+                        
+                        return Task.FromResult(true);
+                    }
+                }
+            });
 
         }
     }

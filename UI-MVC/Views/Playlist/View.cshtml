@@ -367,7 +367,6 @@
         var player;
 
         function onYouTubeIframeAPIReady() {
-
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
@@ -376,16 +375,11 @@
                     'onStateChange': onPlayerStateChange
                 }
             });
-
-
-
         }
 
         var firstPlay = false;
 
         function onPlayerReady(event) {
-
-
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
 

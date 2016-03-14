@@ -14,5 +14,9 @@
   {
     "outputFile": "Content/Portal.css",
     "inputFile": "Content/Portal.scss"
+  },
+  {
+    "outputFile": "Content/socialButtons.css",
+    "inputFile": "Content/socialButtons.scss"
   }
 ]

@@ -152,7 +152,6 @@ namespace BB.DAL.EFPlaylist
         public Playlist UpdatePlaylist(Playlist playlist, string email)
         {
             var pl = context.Playlists.ToList().Single(p => p.Id == playlist.Id);
-
             if (email == null)
             {
                 pl.PlaylistMasterId = null;
