@@ -20,7 +20,10 @@ namespace BB.DAL
             context.Organisations.Add(organisation);
             var user = new User()
             {
-                Email = "jonah@gmail.com"
+                Email = "jonah@gmail.com",
+                FirstName = "Jonah",
+                LastName = "Jordan",
+                Nickname = "Jonahtje123xoxo"
             };
             context.User.Add(user);
 

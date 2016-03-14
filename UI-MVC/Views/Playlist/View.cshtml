@@ -8,26 +8,26 @@
 }
 
 @section escape_padding {
-<div id="playlistbanner">
-    <div class="content">
+    <div id="playlistbanner">
+        <div class="content">
             @{
                 var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
                 <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
-        }
+            }
                     
             <div class="fill">
                 <div class="title">
                     <h1>Playlist</h1>@Model.Name
-    </div>
+        </div>
             
                 <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
                     <i class="material-icons">history</i> History
                 </a>
 
-                <a class="btn btn-right">
+                <a class="btn btn-right" href="#sharedialog">
                     <i class="material-icons">link</i> Share
                 </a>
-</div>    
+    </div>
             <p class="nomargintop textshadow">@Model.Description</p>
 
             <div>
@@ -44,23 +44,23 @@
 </div>
 
 <div id="nowPlayingRow" style="margin-top: 5em">
-        @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    {
+        if (Model.PlaylistTracks.Count != 0)
         {
-            if (Model.PlaylistTracks.Count != 0)
-            {
-                <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-                <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
-            }
-            else
-            {
-                <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-            }
+            <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
         }
         else
         {
-            <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
-            <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
         }
+    }
+    else
+    {
+        <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
+        <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+    }
     @if (Request.IsAuthenticated)
     {
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
@@ -81,7 +81,7 @@
         @Html.Partial("Chat")
     </div>
 }
-
+   
 
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
@@ -121,12 +121,12 @@
                     <span id="time"></span>
                     <div id="myProgress" class="progress" style="margin-top: 0.2em">
                         <div id="myBar" class="bar"></div>
-                    </div>    
+                    </div>
                 </td>
             </tr>
-            
+
         </table>
-        
+
     </div>
 </div>
 
@@ -136,7 +136,7 @@
 <div id="fullscreenplayer" style="display: none">
     <div id="darkoverlay">
         <img id="nowPlayingLogo" src="~/Content/img/logo_header_white.png" alt="beatbuddy logo" />
-</div>
+    </div>
     <div id="nowPlayingAlbumArt"></div>
     <span id="nowPlayingArtist">Nothing</span>
     <span id="nowPlayingTitle">Is playing right now</span>
@@ -347,9 +347,9 @@
                 playBtn.addEventListener("click", getNextTrack);
                 play.server.addTrack("@Model.Id");
             }).fail(function() {
-            notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
-        });
-    }
+                notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
+            });
+        }
 
         function debounce(func, wait, immediate) {
             var timeout;
@@ -402,11 +402,11 @@
 
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
-                
+
             var nextButton = document.getElementById("nextBtn");
             if(nextButton != null) nextButton.addEventListener("click", function() {
-                    getNextTrack();
-                });
+                getNextTrack();
+            });
             $.connection.hub.start().done(function() {
                 play.server.joinGroup("@Model.Id");
             });
@@ -421,7 +421,7 @@
             }).done(function() {
                 updatePlaylist();
             }).fail(function() {
-                
+
             });
         }
 
@@ -502,8 +502,8 @@
                         }
                     }
                 }
-                    openFooter();
-                    moveTrackToHistory();
+                openFooter();
+                moveTrackToHistory();
 
                 if (data.CoverArtUrl != null) {
                     $('#thumbnail').attr("src", data.CoverArtUrl);
@@ -596,14 +596,14 @@
                 $('#fullscreenplayer').fadeOut(200);
                 fullscreenEnabled = false;
                 $("html").css("overflow", "auto");
-        }
+            }
         });
 
         window.onunload = window.onbeforeunload = (function() {
             //assignPlaylistMaster(@null);
         });
 
-            
+
         function setClickableTooltip(target, content){
             $( target ).tooltip({
                 show: null,
@@ -654,8 +654,8 @@
         })
         .fail(function (data) {
             alert(data);
-        });
-    }
+            });
+        }
 
     function debouncePlaylist(func, wait, immediate) {
         var timeout;

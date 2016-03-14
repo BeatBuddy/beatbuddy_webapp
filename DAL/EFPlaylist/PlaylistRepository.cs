@@ -7,7 +7,6 @@ using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 
-
 namespace BB.DAL.EFPlaylist
 {
     public class PlaylistRepository : IPlaylistRepository
@@ -42,12 +41,10 @@ namespace BB.DAL.EFPlaylist
             return playlist;
         }
 
-        public Playlist CreatePlaylist(Playlist playlist, Organisation organisation)
+        public Playlist CreatePlaylist(Playlist playlist, long organisationId)
         {
-            var playlist1 = playlist;
-            var organisation1 = context.Organisations.Find(organisation.Id);
-            organisation1.Playlists.Add(playlist1);
-            context.Playlists.Add(playlist1);
+            var organisation = context.Organisations.Find(organisationId);
+            organisation.Playlists.Add(playlist);
             context.SaveChanges();
             return playlist;
         }
@@ -57,10 +54,6 @@ namespace BB.DAL.EFPlaylist
            return context.Playlists.ToList().FindAll(p => p.CreatedById == userId);
         }
 
-        public PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack)
-        {
-            throw new NotImplementedException();
-        }
 
         public Track CreateTrack(Track track)
         {
@@ -118,7 +111,8 @@ namespace BB.DAL.EFPlaylist
             if(playlist.PlaylistTracks == null) playlist.PlaylistTracks = new Collection<PlaylistTrack>();
             else
             {
-                if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
+                //WHY OH WHY?
+                //if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
             }
             playlist.PlaylistTracks.Add(playlistTrack);
 
@@ -238,7 +232,7 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Track> ReadTracks()
         {
-            throw new NotImplementedException();
+            return context.Tracks;
         }
 
         public TrackSource ReadTrackSource(long trackSourceId)

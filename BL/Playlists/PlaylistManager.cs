@@ -49,7 +49,7 @@ namespace BB.BL
             return repo.CreatePlaylist(playlist);
         }
 
-        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy, Organisation organisation)
+        public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy, long organisationId)
         {
             Playlist playlist = new Playlist()
             {
@@ -64,24 +64,13 @@ namespace BB.BL
                 Comments = new List<Comment>(),
                 PlaylistTracks = new List<PlaylistTrack>()
             };
-            return repo.CreatePlaylist(playlist, organisation);
+            return repo.CreatePlaylist(playlist, organisationId);
         }
 
 
         public IEnumerable<Playlist> ReadPlaylistsForUser(long userId)
         {
             return repo.ReadPlaylistsForUser(userId);
-        }
-
-        public PlaylistTrack CreatePlaylistTrack(Track track)
-        {
-            PlaylistTrack playlistTrack = new PlaylistTrack()
-            {
-                Track = track,
-                PlayedAt = null,
-                Votes = new List<Vote>()
-            };
-            return repo.CreatePlaylistTrack(playlistTrack);
         }
 
         public TrackSource CreateTrackSource(SourceType sourceType, string url)
@@ -164,6 +153,7 @@ namespace BB.BL
 
         public Track AddTrackToPlaylist(long playlistId, Track track)
         {
+            
             return repo.CreateTrack(playlistId, track);
         }
 

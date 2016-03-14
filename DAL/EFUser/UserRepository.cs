@@ -46,9 +46,10 @@ namespace BB.DAL.EFUser
             return userRole;
         }
 
-        public void DeleteUser(long userId)
+        public void DeleteUser(User user)
         {
-            throw new NotImplementedException();
+            context.User.Remove(user);
+            context.SaveChanges();
         }
 
         public void DeleteUserRole(UserRole userRole)

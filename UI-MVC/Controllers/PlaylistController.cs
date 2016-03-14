@@ -261,18 +261,6 @@ namespace BB.UI.Web.MVC.Controllers
 
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
 
-            if (viewModel.OrganisationId != 0)
-            {
-                try
-                {
-                    org = organisationManager.ReadOrganisation(viewModel.OrganisationId);
-                }
-                catch
-                {
-                    ModelState.AddModelError("OrganisationFault", "The organisation could not be found or you have insufficient rights");
-                    return View("Create");
-                }
-            }
             if (avatarImage != null && avatarImage.ContentLength > 0)
             {
                 var bannerFileName = Path.GetFileName(avatarImage.FileName);
@@ -281,17 +269,15 @@ namespace BB.UI.Web.MVC.Controllers
                 path = Path.GetFileName(path);
             }
 
-            if (org != null)
+            if (viewModel.OrganisationId != 0)
             {
-                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, org);
+                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, viewModel.OrganisationId);
             }
             else
             {
                 playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
             }
             
-            
-
             return RedirectToAction("View/" + playlist.Id);
 
         }
