@@ -8,11 +8,6 @@ using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers.Web_API;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyTested.WebApi;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 {
@@ -103,7 +98,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         public void Cleanup() {
             userManager.DeleteUser(user.Id);
         }
-
-
+        
+        
     }
 }

@@ -2,31 +2,32 @@
 @{
     ViewBag.Title = "Register";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>Associate your @ViewBag.LoginProvider account.</h3>
+<div class="title more-margin-top">
+    <h1>Register</h1> One more question
+</div>
+
 
 @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 
-    <h4>Association Form</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <p class="text-info">
+    <p>
         You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
-        Please enter a user name for this site below and click the Register button to finish
-        logging in.
+        We only ask you to give an original nickname to use BeatBuddy.
+        Be Original!
     </p>
     <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.NickName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(m => m.NickName, new { @class = "custom-input-organisations" })
+            @Html.ValidationMessageFor(m => m.NickName, "", new { @class = "custom-validation" })
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <input type="submit" class="btn" value="Start your musical adventure" />
         </div>
     </div>
 }

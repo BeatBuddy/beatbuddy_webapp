@@ -12,6 +12,11 @@ using BB.UI.Web.MVC.Controllers.Utils;
 using BB.UI.Web.MVC.Models;
 using System;
 using PagedList;
+using Google.GData.Client;
+using Google.GData.Extensions;
+using Google.GData.YouTube;
+using System.Net;
+using BB.BL.Domain.Playlists;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -19,16 +24,19 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private readonly IOrganisationManager organisationManager;
         private readonly IUserManager userManager;
+        private readonly IPlaylistManager playlistManager;
+        private readonly YouTubeTrackProvider youtube = new YouTubeTrackProvider();
 
         User user = new User()
         {
             FirstName = "Jonah"
         };
 
-        public OrganisationsController(IOrganisationManager organisationManager, IUserManager userManager)
+        public OrganisationsController(IOrganisationManager organisationManager, IUserManager userManager, IPlaylistManager playlistManager)
         {
             this.organisationManager = organisationManager;
             this.userManager = userManager;
+            this.playlistManager = playlistManager;
         }
 
         // GET: Organisations
@@ -50,6 +58,7 @@ namespace BB.UI.Web.MVC.Controllers
         }
         
         // GET: Organisations/Details/5
+
         public ActionResult Details(long id, int? page)
         {
             Organisation organisation = organisationManager.ReadOrganisation(id);
@@ -86,6 +95,10 @@ namespace BB.UI.Web.MVC.Controllers
                 
                 int pageNumber = (page ?? 1);
                 organisationView.Playlists = playlists.ToPagedList(pageNumber, pageSize);
+
+
+                ViewBag.Id = id;
+
                 return View("Details", organisationView);
 
             }else
@@ -216,6 +229,34 @@ namespace BB.UI.Web.MVC.Controllers
             if (organisation == null) return new HttpStatusCodeResult(400);
             return new HttpStatusCodeResult(200);
         }
-       
+
+
+        public ActionResult AddPlaylist(string id)
+        {
+            var youtubeProvider = new YouTubeTrackProvider();
+
+            var tracks = youtubeProvider.LookUpPlaylist(id);
+
+            var user = userManager.ReadUser("lennart.boeckx@gmail.com");
+            var organisation = organisationManager.ReadOrganisation("lenni's party");
+
+            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation.Id);
+
+            foreach(Track track in tracks)
+            {
+                playlistManager.AddTrackToPlaylist(playlist.Id, track);
+            }
+
+            return null;
+        }
+
+        public JsonResult SearchPlaylist(string q)
+        {
+            var youtubeProvider = new YouTubeTrackProvider();
+            var searchResult = youtubeProvider.SearchPlaylist(q);
+
+            return Json(searchResult, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -550,6 +550,23 @@ header {
     #results li.track .tracktitle {
       display: block; }
 
+#resultsPlaylist {
+  padding: 0; }
+  #resultsPlaylist li.playlist {
+    margin: 1em;
+    display: block;
+    min-height: 128px;
+    clear: both; }
+    #resultsPlaylist li.playlist img {
+      height: 128px;
+      display: inline-block;
+      float: left;
+      margin-right: .7em; }
+    #resultsPlaylist li.playlist .artist {
+      padding-top: .4em;
+      display: block;
+      font-weight: 700; }
+
 .input-validation-error {
   border: 1px solid #ff0000;
   background-color: #ffeeee; }

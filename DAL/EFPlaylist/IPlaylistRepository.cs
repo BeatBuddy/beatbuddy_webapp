@@ -31,6 +31,7 @@ namespace BB.DAL.EFPlaylist
         //Track
         Track CreateTrack(long playlistId, Track track);
         IEnumerable<Track> ReadTracks();
+        Track ReadTrack(long trackId);
 
         //TrackSource
 
@@ -44,5 +45,6 @@ namespace BB.DAL.EFPlaylist
         int ReadNumberOfVotesOfUserForPlaylist(long userId, long trackId);
         int ReadMaximumVotesPerUser(long trackId);
         Vote ReadVoteOfUserFromPlaylistTrack(long userId, long trackId);
+        
     }
 }

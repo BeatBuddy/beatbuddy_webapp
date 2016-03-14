@@ -117,6 +117,20 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Request.CreateResponse(HttpStatusCode.OK, livePlaylist);
         }
 
+        [HttpGet]
+        [Route("{id}/history")]
+        [ResponseType(typeof(LivePlaylistViewModel))]
+        public HttpResponseMessage getHistory(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            return Request.CreateResponse(
+                HttpStatusCode.OK,
+                playlist.PlaylistTracks.Where(p => p.PlayedAt != null)
+            );
+        }
+
         [HttpPost]
         [Route("createPlaylist")]
         [ResponseType(typeof(Playlist))]
@@ -165,11 +179,11 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             }
             else
             {
-            var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
-            if (playlist != null)
-                return Request.CreateResponse(HttpStatusCode.OK, playlist);
+                var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
+                if (playlist != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, playlist);
             }
-            
+
             return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
 
@@ -208,59 +222,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (!playlistTracks.Any()) return NotFound();
 
                 var originalPlayListTrack = playlistTracks.First(t => t.PlayedAt == null);
-
-                IEnumerable<Track> tracks = playlistManager.ReadTracks().Where(t => t.Artist == originalPlayListTrack.Track.Artist && t.Title == originalPlayListTrack.Track.Title);
-
-                DateTime timeTrackRequested = new DateTime(1970,1,1,0,0,0);
-                Track trackWithLatestYoutubeUrl = null;
-                string youTubeVideo = null;
-
-                foreach (Track track in tracks) {
-                    //var timestamp = Regex.Replace(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)", ; 
-                    if (track.Url != null)
-                    {
-                        Match match = Regex.Match(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)");
-                        string timestamp;
-                        if (match.Success)
-                        {
-                            timestamp = match.Groups[1].Value;
-                            timestamp.Replace("lmt=", "");
-                            DateTime datetime = new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(timestamp));
-                            if (datetime > timeTrackRequested)
-                            {
-                                timeTrackRequested = datetime;
-                                trackWithLatestYoutubeUrl = track;
-                            }
-                        }
-
-                    }
-
-                }
-                if (timeTrackRequested.AddHours(6) >= DateTime.UtcNow || trackWithLatestYoutubeUrl == null)
-                {
-            var youTube = YouTube.Default; // starting point for YouTube actions
-                    youTubeVideo = youTube.GetVideo(originalPlayListTrack.Track.TrackSource.Url).Uri; // gets a Video object with info about the video
-                }
-                else {
-                    youTubeVideo = trackWithLatestYoutubeUrl.Url;
-                }
-
-                Track newTrack = new Track()
-                {
-                    Id = originalPlayListTrack.Track.Id,
-                    Artist = originalPlayListTrack.Track.Artist,
-                    CoverArtUrl = originalPlayListTrack.Track.CoverArtUrl,
-                    Duration = originalPlayListTrack.Track.Duration,
-                    TrackSource = new TrackSource()
-                    {
-                        Id = originalPlayListTrack.Track.TrackSource.Id,
-                        SourceType = originalPlayListTrack.Track.TrackSource.SourceType,
-                        TrackId = originalPlayListTrack.Track.TrackSource.TrackId,
-                        Url = originalPlayListTrack.Track.TrackSource.Url
-                    },
-                    Title = originalPlayListTrack.Track.Title,
-                    Url = youTubeVideo
-                };
+                var newTrack = GetTrackWithFreshYoutubeUrl(originalPlayListTrack.Track);
                 
                 var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id, playlistId);
                 if (success)
@@ -274,8 +236,80 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             else {
                 return BadRequest("Playlistmaster already set or you are not the organiser or co-organiser.");
             }
+        }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("getYoutubePlaybackUrl/{id}")]
+        [ResponseType(typeof(LivePlaylistViewModel))]
+        public HttpResponseMessage getYoutubePlaybackTrack(long id)
+        {
+            var track = playlistManager.ReadTrack(id);
+            var playbackTrack = GetTrackWithFreshYoutubeUrl(track);
 
+            return Request.CreateResponse(
+                HttpStatusCode.OK,
+                playbackTrack
+            );
+        }
+
+        private Track GetTrackWithFreshYoutubeUrl(Track originalTrack)
+        {
+            IEnumerable<Track> tracks = playlistManager.ReadTracks().Where(t => t.Artist == originalTrack.Artist && t.Title == originalTrack.Title);
+
+            DateTime timeTrackRequested = new DateTime(1970, 1, 1, 0, 0, 0);
+            Track trackWithLatestYoutubeUrl = null;
+            string youTubeVideo = null;
+
+            foreach (Track track in tracks)
+            {
+                //var timestamp = Regex.Replace(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)", ; 
+                if (track.Url != null)
+                {
+                    Match match = Regex.Match(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)");
+                    string timestamp;
+                    if (match.Success)
+                    {
+                        timestamp = match.Groups[1].Value;
+                        timestamp.Replace("lmt=", "");
+                        DateTime datetime = new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(timestamp));
+                        if (datetime > timeTrackRequested)
+                        {
+                            timeTrackRequested = datetime;
+                            trackWithLatestYoutubeUrl = track;
+                        }
+                    }
+
+                }
+
+            }
+            if (timeTrackRequested.AddHours(6) >= DateTime.UtcNow || trackWithLatestYoutubeUrl == null)
+            {
+                var youTube = YouTube.Default; // starting point for YouTube actions
+                youTubeVideo = youTube.GetVideo(originalTrack.TrackSource.Url).Uri; // gets a Video object with info about the video
+            }
+            else {
+                youTubeVideo = trackWithLatestYoutubeUrl.Url;
+            }
+
+            Track newTrack = new Track()
+            {
+                Id = originalTrack.Id,
+                Artist = originalTrack.Artist,
+                CoverArtUrl = originalTrack.CoverArtUrl,
+                Duration = originalTrack.Duration,
+                TrackSource = new TrackSource()
+                {
+                    Id = originalTrack.TrackSource.Id,
+                    SourceType = originalTrack.TrackSource.SourceType,
+                    TrackId = originalTrack.TrackSource.TrackId,
+                    Url = originalTrack.TrackSource.Url
+                },
+                Title = originalTrack.Title,
+                Url = youTubeVideo
+            };
+
+            return newTrack;
         }
 
         public bool AssignPlaylistMaster(long playlistId, long userId)
