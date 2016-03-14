@@ -31,7 +31,7 @@
             <div class="center-block">
                 <input type="submit" value="Login" class="btn btn-default btn-login"/>
             </div>
-            <p></p>
+            
         <div class="center-block">
             <input type="button" value="Register" onclick="window.location='/Account/Register'" class="btn btn-default btn-login"/>
         </div>
@@ -43,9 +43,9 @@
             </p>*@
     }
 
-    @*<div>
+    <div>
         <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            @Html.Partial("~/Views/Account/_ExternalLoginsListPartial.cshtml", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
-    </div>*@
+    </div>
 </div>

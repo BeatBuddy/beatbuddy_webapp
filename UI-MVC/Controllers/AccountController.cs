@@ -1,6 +1,9 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +14,7 @@ using Microsoft.Owin.Security;
 using BB.BL;
 using BB.BL.Domain;
 using BB.UI.Web.MVC.Controllers.Utils;
+using Facebook;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -351,7 +355,7 @@ namespace BB.UI.Web.MVC.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Portal", "Home");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -360,8 +364,9 @@ namespace BB.UI.Web.MVC.Controllers
                 default:
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
+                    ViewBag.NoFooter = true;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { NickName = loginInfo.Email });
             }
         }
 
@@ -379,26 +384,57 @@ namespace BB.UI.Web.MVC.Controllers
 
             if (ModelState.IsValid)
             {
+                
                 // Get the information about the user from the external login provider
                 var info = await AuthenticationManager.GetExternalLoginInfoAsync();
                 if (info == null)
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                if (info.Login.LoginProvider == "Google")
+                {
+                    var externalIdentity = AuthenticationManager.GetExternalIdentityAsync(DefaultAuthenticationTypes.ExternalCookie);
+                    var emailClaim = externalIdentity.Result.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+                    var lastNameClaim = externalIdentity.Result.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname);
+                    var givenNameClaim = externalIdentity.Result.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName);
+
+                    var email = emailClaim.Value;
+                    var firstName = givenNameClaim.Value;
+                    var lastname = lastNameClaim.Value;
+                    info.Email = email;
+                    userMgr.CreateUser(info.Email, lastname, firstName, model.NickName, null);
+                }
+
+                if (info.Login.LoginProvider == "Facebook")
+                {
+                    var identity = AuthenticationManager.GetExternalIdentity(DefaultAuthenticationTypes.ExternalCookie);
+                    var access_token = identity.FindFirstValue("FacebookAccessToken");
+                    var fbClient = new FacebookClient(access_token);
+                    WebClient  webClient = new WebClient();
+                    dynamic myInfo = fbClient.Get("/me", new { fields = new[] { "id","email", "first_name","last_name" } });
+                    var fileName = Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["UsersImgPath"]), myInfo.id + ".jpg");
+                    if (!System.IO.File.Exists(fileName))
+                    {
+                        webClient.DownloadFile(new Uri("http://graph.facebook.com/"+myInfo.id+"/picture?type=large"), fileName);
+                    }
+                    fileName = Path.GetFileName(fileName);
+                    info.Email = myInfo.email;
+                    userMgr.CreateUser(info.Email, myInfo.last_name, myInfo.first_name, model.NickName, fileName);
+                }
+                var user = new ApplicationUser { UserName = info.Email, Email = info.Email };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    UserManager.AddToRole(user.Id, "User");
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+                        return RedirectToAction("Portal", "Home");
                     }
                 }
                 AddErrors(result);
             }
-
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }

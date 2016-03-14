@@ -6,9 +6,9 @@ namespace BB.UI.Web.MVC.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "Nickname")]
 
-        public string Email { get; set; }
+        public string NickName { get; set; }
     }
 
     public class ExternalLoginListViewModel

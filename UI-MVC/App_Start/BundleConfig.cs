@@ -19,6 +19,7 @@ namespace BB.UI.Web.MVC
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-grid.min.css",
+                     "~/Content/socialButtons.css",
                       "~/Content/Site.min.css"));
         }
     }

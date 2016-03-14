@@ -117,6 +117,20 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Request.CreateResponse(HttpStatusCode.OK, livePlaylist);
         }
 
+        [HttpGet]
+        [Route("{id}/history")]
+        [ResponseType(typeof(LivePlaylistViewModel))]
+        public HttpResponseMessage getHistory(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            return Request.CreateResponse(
+                HttpStatusCode.OK,
+                playlist.PlaylistTracks.Where(p => p.PlayedAt != null)
+            );
+        }
+
         [HttpPost]
         [Route("createPlaylist")]
         [ResponseType(typeof(Playlist))]
@@ -165,11 +179,11 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             }
             else
             {
-            var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
-            if (playlist != null)
-                return Request.CreateResponse(HttpStatusCode.OK, playlist);
+                var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
+                if (playlist != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, playlist);
             }
-            
+
             return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
 
