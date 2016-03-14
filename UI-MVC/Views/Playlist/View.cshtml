@@ -14,29 +14,29 @@
                 var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
                 <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
             }
-                    
+
             <div class="fill">
                 <div class="title">
                     <h1>Playlist</h1>@Model.Name
-        </div>
-            
+                </div>
+
                 <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
                     <i class="material-icons">history</i> History
                 </a>
 
-                <a class="btn btn-right">
+                <a class="btn btn-right" href="#sharedialog">
                     <i class="material-icons">link</i> Share
                 </a>
-    </div>
+            </div>
             <p class="nomargintop textshadow">@Model.Description</p>
 
             <div>
                 <h3 id="listenerCount"></h3>
                 <div id="listenerImg" class="co-organiser" style="float: left;">
-</div>    
-</div>    
-        </div>    
-</div>    
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 <div id="playlist-view" style="margin-top: 1em">
@@ -44,7 +44,7 @@
 </div>
 
 <div id="nowPlayingRow" style="margin-top: 5em">
-    @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+    @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
     {
         if (Model.PlaylistTracks.Count != 0)
         {
@@ -63,9 +63,9 @@
     }
     @if (Request.IsAuthenticated)
     {
-    <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
-        <i class="material-icons">playlist_add</i> add track
-    </a>
+        <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
+            <i class="material-icons">playlist_add</i> add track
+        </a>
     }
 
 </div>
@@ -76,7 +76,7 @@
         @Html.Partial("Chat")
     </div>
 }
-   
+
 
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">

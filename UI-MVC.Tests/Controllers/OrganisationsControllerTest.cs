@@ -2,11 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 using BB.BL.Domain.Users;
-using BB.DAL;
-using BB.DAL.EFOrganisation;
-using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers;
 using BB.UI.Web.MVC.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

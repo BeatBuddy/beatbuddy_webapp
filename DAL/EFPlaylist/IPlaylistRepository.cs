@@ -9,50 +9,34 @@ namespace BB.DAL.EFPlaylist
     {
         //Comments
         Comment CreateComment(long playlistId, Comment comment);
-        Comment UpdateComment(Comment comment);
-        IEnumerable<Comment> ReadChatComments(Playlist playlist);
         IEnumerable<Comment> ReadComments(Playlist playlist);
-        void DeleteComment(long commentId);
 
         //Playlists
         Playlist CreatePlaylist(Playlist playlist);
-        Playlist CreatePlaylist(Playlist playlist, Organisation organisation);
+        Playlist CreatePlaylist(Playlist playlist, long organisationid);
         Playlist UpdatePlaylist(Playlist playlist);
         Playlist ReadPlaylist(long playlistId);
         Playlist ReadPlaylist(string name);
         IEnumerable<Playlist> ReadPlaylists();
-        IEnumerable<Playlist> ReadPlaylists(Organisation organisation);
         IEnumerable<Playlist> ReadPlaylists(long userId);
         Playlist DeletePlaylist(long playlistId);
         IEnumerable<Playlist> ReadPlaylistsForUser(long userId);
 
             //PlaylistTracks
-        PlaylistTrack CreatePlaylistTrack(PlaylistTrack playlistTrack);
         PlaylistTrack UpdatePlayListTrack(PlaylistTrack playlistTrack);
-        IEnumerable<PlaylistTrack> ReadPlaylistTracks(Playlist playlist);
         PlaylistTrack ReadPlaylistTrack(long playlistTrackId);
         void DeletePlaylistTrack(long playlistTrackId);
         bool MarkTrackAsPlayed(long playlistTrackId, long playlistId);
 
         //Track
         Track CreateTrack(long playlistId, Track track);
-        Track UpdateTrack(Track track);
-        Track ReadTrack(long trackId);
         IEnumerable<Track> ReadTracks();
-        void DeleteTrack(long trackId);
 
         //TrackSource
-        TrackSource CreateTrackSource(TrackSource trackSource);
-        TrackSource UpdateTracksource(TrackSource trackSource);
-        TrackSource ReadTrackSource(long trackSourceId);
-        IEnumerable<TrackSource> ReadTrackSources();
-        void DeleteTrackSource(long trackSourceId);
 
         //Vote
         Vote CreateVote(Vote vote, long userId, long trackId);
         Vote UpdateVote(Vote vote);
-        Vote ReadVote(long voteId);
-        IEnumerable<Vote> ReadVotesForPlaylist(Playlist playlist);
         IEnumerable<Vote> ReadVotesUser(User user);
         void DeleteVote(long voteId);
         void DeleteVote(Vote vote);

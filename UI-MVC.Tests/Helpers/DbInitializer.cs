@@ -1,11 +1,6 @@
 ﻿using BB.BL.Domain;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BB.BL;
 using BB.DAL;
 using BB.DAL.EFOrganisation;
@@ -33,7 +28,7 @@ namespace BB.UI.Web.MVC.Tests.Helpers
         }
         public static IPlaylistManager CreatePlaylistManager()
         {
-            return new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddyTest)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            return new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddyTest)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
         }
     }
 }

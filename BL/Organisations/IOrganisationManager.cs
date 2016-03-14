@@ -18,9 +18,6 @@ namespace BB.BL
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
 
         //DashboardBlock
-        DashboardBlock CreateDashboardBlock(string blockName, int sequence);
-        DashboardBlock UpdateDashboardBlock(DashboardBlock block);
-        IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation);
-        void DeleteDashboardBlock(long blockId);
+        
     }
 }

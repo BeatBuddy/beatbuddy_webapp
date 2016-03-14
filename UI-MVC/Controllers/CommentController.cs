@@ -19,6 +19,8 @@ namespace BB.UI.Web.MVC.Controllers
         [Authorize]
         public ActionResult Create(Comment comment, long id)
         {
+            var username = User.Identity.Name;
+
             var createdComment = playlistManager.CreateComment(id, comment.Text, User.Identity.Name);
 
             if(createdComment != null)
@@ -29,7 +31,7 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult GetComments(long id)
         {
-            var comments = playlistManager.ReadComments(new Playlist { Id = id }).OrderBy(c => c.TimeStamp);
+            var comments = playlistManager.ReadComments(new Playlist { Id = id }).OrderBy(c => c.TimeStamp).ToList();
             return PartialView("_CommentsPartial", comments);
         }
     }
