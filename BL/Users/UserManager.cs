@@ -72,11 +72,6 @@ namespace BB.BL
             return repo.ReadUser(userId);
         }
 
-        public User ReadUser(string lastname, string firstname)
-        {
-            return repo.ReadUser(lastname, firstname);
-        }
-
         public IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation)
         {
             return repo.ReadUserRolesForOrganisation(organisation);

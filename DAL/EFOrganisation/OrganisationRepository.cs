@@ -21,11 +21,6 @@ namespace BB.DAL.EFOrganisation
             return context.Organisations.SingleOrDefault(o => o.Playlists.FirstOrDefault(p => p.Id == playlistId).Id == playlistId);
         }
 
-        public DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock)
-        {
-            throw new NotImplementedException();
-        }
-
         public Organisation CreateOrganisation(Organisation organisation, User user)
         {
             organisation = context.Organisations.Add(organisation);
@@ -41,11 +36,6 @@ namespace BB.DAL.EFOrganisation
             context.UserRole.Add(userRole);
             context.SaveChanges();
             return organisation;
-        }
-
-        public void DeleteDashboardBlock(long blockId)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<Organisation> ReadOrganisationsForUser(long userId)
@@ -65,11 +55,6 @@ namespace BB.DAL.EFOrganisation
             return org;
         }
 
-        public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
-        {
-            throw new NotImplementedException();
-        }
-
         public Organisation ReadOrganisation(string organisationName)
         {
             return context.Organisations.FirstOrDefault(o => o.Name.Equals(organisationName));
@@ -85,11 +70,6 @@ namespace BB.DAL.EFOrganisation
         public IEnumerable<Organisation> ReadOrganisations()
         {
             return context.Organisations;
-        }
-
-        public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
-        {
-            throw new NotImplementedException();
         }
 
         public Organisation UpdateOrganisation(Organisation organisation)

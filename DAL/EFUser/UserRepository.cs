@@ -95,11 +95,6 @@ namespace BB.DAL.EFUser
             return context.User.FirstOrDefault(u => u.Id == userId);
         }
 
-        public User ReadUser(string lastname, string firstname)
-        {
-            throw new NotImplementedException();
-        }
-
         public UserRole ReadUserRoleForUserAndOrganisation(long userId, long organisationId)
         {
             IEnumerable<UserRole> userRoles = context.UserRole.Include("Organisation").Include("User").Where(u => u.User.Id == userId);

@@ -11,7 +11,6 @@ namespace BB.BL
         User UpdateUser(User user);
         User ReadUser(long userId);
         User ReadUser(string email);
-        User ReadUser(string lastname, string firstname);
         User ReadOrganiserFromOrganisation(Organisation organisation);
         IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation);
         IEnumerable<User> ReadUsers();
