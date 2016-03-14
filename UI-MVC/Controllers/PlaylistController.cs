@@ -282,6 +282,21 @@ namespace BB.UI.Web.MVC.Controllers
 
         }
 
+        public ActionResult Dashboard(long playlistId)
+        {
+            if (User != null)
+            {
+                user = userManager.ReadUser(User.Identity.Name);
+            }
+            var playlist = playlistManager.ReadPlaylist(playlistId);
+            
+            /*
+            ViewBag.Organisers = playlistOwners;
+            ViewBag.VotesUser = votesUser;
+          */
+            return View(playlist);
+        }
+
         [HttpPost]
         [Authorize(Roles = "User, Admin")]
         public ActionResult Delete(long id)

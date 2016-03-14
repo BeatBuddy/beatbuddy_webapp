@@ -31,9 +31,6 @@ namespace BB.UI.Web.MVC.Controllers
             this.userManager = userManager;
         }
 
-        
-
-
         // GET: Organisations
         public ActionResult Index()
         {
@@ -144,11 +141,7 @@ namespace BB.UI.Web.MVC.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-        // GET: Organisations/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        
 
         public ActionResult IsNameAvailable(string name)
         {
@@ -156,8 +149,16 @@ namespace BB.UI.Web.MVC.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
+        // GET: Organisations/Create
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
         // POST: Organisations/Create
         [HttpPost]
+        [Authorize(Roles = "User, Admin")]
         public ActionResult Create(OrganisationViewModel organisation, HttpPostedFileBase bannerImage)
         {
             try
