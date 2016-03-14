@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace BB.BL.Domain.Playlists
 {
@@ -9,7 +10,11 @@ namespace BB.BL.Domain.Playlists
         public DateTime? PlayedAt { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
         public Track Track { get; set; }
+
+        [JsonIgnore]
         public virtual Playlist Playlist { get; set; }
+
+        [JsonIgnore]
         public long? PlaylistId { get; set; }
     }
 }
