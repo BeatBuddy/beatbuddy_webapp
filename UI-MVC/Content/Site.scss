@@ -738,6 +738,31 @@ header {
     }
 }
 
+#resultsPlaylist {
+    padding: 0;
+
+    li.playlist {
+        margin: 1em;
+        display: block;
+        min-height: 128px;
+        clear: both;
+
+        img {
+            height: 128px;
+            display: inline-block;
+            float: left;
+            margin-right: .7em;
+        }
+
+        .artist {
+            padding-top: .4em;
+            display: block;
+            font-weight: 700;
+        }
+
+    }
+}
+
 .input-validation-error {
     border: 1px solid #ff0000;
     background-color: #ffeeee;

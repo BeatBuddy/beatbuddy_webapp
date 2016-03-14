@@ -8,8 +8,9 @@
     @Html.TextBox("playlistAdd", null, new {  @class = "custom-input-organisations", style = "margin-top: 0.6em; width: 90%" })
 </div>
 
-<img id="loading" src="~/Content/img/round_shape_loader.gif" alt="loading" hidden />
-<ul id="results" class="row"></ul>
+<img id="loadingPlaylist" src="~/Content/img/round_shape_loader.gif" alt="loading" hidden />
+<p id="waitPlaylist" hidden>Adding Playlist... This may take a while. Please Wait</p>
+<ul id="resultsPlaylist" class="row"></ul>
 @section scripts{
     <script>
         var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
@@ -20,13 +21,13 @@
 
         $.ajaxSetup({
             beforeSend: function () {
-                $("#loading").show();
+                $("#loadingPlaylist").show();
             },
             complete: function () {
-                $("#loading").hide();
+                $("#loadingPlaylist").hide();
             }
         });
-        $("#loading").hide();
+        $("#loadingPlaylist").hide();
 
         function fetchQueryResultsPlaylist() {
             $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())

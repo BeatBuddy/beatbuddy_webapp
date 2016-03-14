@@ -75,9 +75,13 @@ namespace BB.BL
                 {
                     Description = video.Id.PlaylistId,
                     Name = video.Snippet.Title + " - " + video.Snippet.ChannelTitle,
-                    
+
                 };
-                Thumbnail[] thumbnails = { video.Snippet.Thumbnails.Maxres, video.Snippet.Thumbnails.High, video.Snippet.Thumbnails.Medium, video.Snippet.Thumbnails.Default__ };
+
+                    Thumbnail[] thumbnails = { video.Snippet.Thumbnails.Maxres, video.Snippet.Thumbnails.High, video.Snippet.Thumbnails.Medium, video.Snippet.Thumbnails.Default__ };
+
+      
+                
                 playlist.ImageUrl = thumbnails.First(t => t != null).Url;
                 lijstje.Add(playlist);
             }

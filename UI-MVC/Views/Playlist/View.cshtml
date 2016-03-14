@@ -63,16 +63,15 @@
     }
     @if (Request.IsAuthenticated)
     {
-    <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
-        <i class="material-icons">playlist_add</i> add track
-    </a>
-    <div class="add-playlist">
-        <a href="#addPlaylistModal" class="btn btn-right">
-            <i class="material-icons">playlist_add</i> import playlist
-        </a>
-    }
 
-</div>
+        <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
+            <i class="material-icons">playlist_add</i> add track
+        </a>
+
+            <a href="#addPlaylistModal" class="btn btn-right" style="margin-right: 20px">
+                <i class="material-icons">playlist_add</i> import playlist
+            </a>
+    }
 </div>
 
 @if (Request.IsAuthenticated)
@@ -95,7 +94,7 @@
 </div>
 <div id="addPlaylistModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
-        <a href="#close" id="close-modal" title="Close" class="close">X</a>
+        <a href="#closePlaylist" id="close-modal-playlist" title="Close" class="close">X</a>
         <div class="modal-body" style="height: 100%; width: 100%">
             @{
                 Html.RenderPartial("AddPlaylist");
@@ -630,12 +629,23 @@
            '</li>';
     $.template("playlistTemplate", markupPlaylist);
 
+
+    $.ajaxSetup({
+        beforeSend: function () {
+            $("#loadingPlaylist").show();
+        },
+        complete: function () {
+            $("#loadingPlaylist").hide();
+        }
+    });
+    $("#loadingPlaylist").hide();
+
     function fetchQueryResultsPlaylist() {
         $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
             .done(function (result) {
-                $("#results").empty();
-                $.tmpl("playlistTemplate", result).appendTo("#results");
-                $("#results li").on("click", function () {
+                $("#resultsPlaylist").empty();
+                $.tmpl("playlistTemplate", result).appendTo("#resultsPlaylist");
+                $("#resultsPlaylist li").on("click", function () {
                     addPlaylist($(this).attr('data-id'));
                 });
             })
@@ -644,17 +654,24 @@
             });
     }
 
-    function addPlaylist(id) {
-        $.ajax({
-            url: '@Url.Action("AddPlaylist")',
-            method: 'POST',
-            data: { playlistId: @ViewBag.PlaylistId, id: id}
-        }).done(function () {
-            window.location.href = '@Url.Action("Details", new { id = ViewBag.Id })';
+        function addPlaylist(id) {
+            $("#loadingPlaylist").show();
+            notie.alert(1, 'Playlist is being added. This could take a while. Please wait...', 15);
+            $("#close-modal-playlist").hide();
+            $.ajax({
+                    url: '@Url.Action("AddPlaylist")',
+                    method: 'POST',
+                    data: { playlistId: @ViewBag.PlaylistId, id: id}
+            }).done(function () {
+                $("#loadingPlaylist").hide();
+                $("waitPlaylist").hide();
+            window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
+            updatePlaylist();
+            var playBtn = document.getElementById('playBtn');
+            playBtn.className = 'btn';
+            playBtn.addEventListener("click", getNextTrack);
+
         })
-        .fail(function (data) {
-            alert(data);
-            });
         }
 
     function debouncePlaylist(func, wait, immediate) {
