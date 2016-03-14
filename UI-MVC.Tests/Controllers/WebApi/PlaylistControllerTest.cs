@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyTested.WebApi;
 
 namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 {
