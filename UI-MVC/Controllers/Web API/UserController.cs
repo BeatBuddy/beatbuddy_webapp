@@ -68,6 +68,17 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("gplusRegister")]
+        public async Task<IHttpActionResult> GplusRegister([FromUri] string firstName, [FromUri] string lastName, [FromUri] string nickname, [FromUri] string email, [FromUri] string password)
+        {
+            var user = userManager.ReadUser(email);
+            if (user != null) return Ok(user);
+
+            return await Register(firstName, lastName, nickname, email, password);
+        }
+
 
         // GET: api/users/heylenmatthias@gmail.com
         [Authorize]
