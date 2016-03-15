@@ -105,7 +105,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 Title = "Toplied",
                 TrackSource = new TrackSource {
                     SourceType = SourceType.YouTube,
-                    TrackId = "oyEuk8j8imI",
+                    TrackId = "oyEuk8j8imI",playlist.Id))
+                .ShouldReturn()
                     Url = "https://www.youtube.com/watch?v=oyEuk8j8imI"
                 }
             });
@@ -119,8 +120,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                        .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
                        .InRoles("Admin", "User")
                 )
-                .Calling(c => c.getNextTrack(playlist.Id))
-                .ShouldReturn()
+                .Calling(c => c.getNextTrack(
                 .Ok()
                 .WithResponseModelOfType<Track>();
         }*/

@@ -33,7 +33,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
             playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddyTest)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
             userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
             organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
-            user = userManager.CreateUser("testemail@gmail.com", "matthias", "test", "acidshards", "");
+            user = userManager.CreateUser("werknu@gmail.com", "matthias", "test", "acidshards", "");
+           
             playlist = playlistManager.CreatePlaylistForUser("testplaylist", "gekke playlist om te testen", "125", 5, true, "", user);
 
             Track track = new Track()
@@ -80,21 +81,20 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                        .WithUsername(user.Email)
                        .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email))
                        .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
-                       .InRoles("Admin", "User")
                 )
                 .Calling(c => c.GetUserOrganisations())
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>();
-                
             ;
         }
 
         [TestCleanup]
         public void Cleanup() {
-            //userManager.DeleteUser(user.Id);
             organisationManager.DeleteOrganisation(organisation.Id);
             playlistManager.DeletePlaylist(playlist.Id);
+            userManager.DeleteUser(user.Email);
+           
 
         }
     }
