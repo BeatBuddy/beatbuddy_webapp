@@ -337,7 +337,9 @@ header {
     min-height: 128px;
     clear: both; }
     #playlist-tracks .track .albumart {
+      width: 48px;
       height: 48px;
+      background-image: url(img/img/default_cover.png);
       display: inline-block;
       float: left;
       margin-right: .7em; }
@@ -360,9 +362,20 @@ header {
   width: 100%;
   height: 100%;
   color: white;
-  background-color: black;
-  background-size: cover;
-  background-position: center center; }
+  background-color: black; }
+  #fullscreenplayer #backgroundcover {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    filter: blur(15px);
+    -webkit-filter: blur(15px);
+    -moz-filter: blur(15px);
+    -o-filter: blur(15px);
+    -ms-filter: blur(15px); }
   #fullscreenplayer #darkoverlay {
     position: relative;
     left: 0;
@@ -424,6 +437,48 @@ header {
       right: 0;
       width: 0%;
       height: 9px; }
+  #fullscreenplayer #fullscreenComingUp {
+    position: absolute;
+    top: 10%;
+    left: 10%; }
+    #fullscreenplayer #fullscreenComingUp p {
+      font-size: 3em;
+      font-weight: 500;
+      margin-bottom: 0;
+      margin-top: 0; }
+    #fullscreenplayer #fullscreenComingUp ul {
+      padding: 0; }
+      #fullscreenplayer #fullscreenComingUp ul li {
+        list-style-type: none;
+        padding: .5em 0; }
+        #fullscreenplayer #fullscreenComingUp ul li .counter {
+          font-size: 1.8em;
+          font-weight: 300;
+          vertical-align: middle;
+          margin-right: .8em; }
+        #fullscreenplayer #fullscreenComingUp ul li .albumart {
+          width: 64px;
+          height: 64px;
+          background-image: url(img/img/default_cover.png);
+          vertical-align: middle; }
+        #fullscreenplayer #fullscreenComingUp ul li .trackartist {
+          margin-left: .8em;
+          font-size: 1.8em;
+          font-weight: 500;
+          vertical-align: middle; }
+        #fullscreenplayer #fullscreenComingUp ul li .tracktitle {
+          font-size: 1.8em;
+          font-weight: 300;
+          vertical-align: middle; }
+        #fullscreenplayer #fullscreenComingUp ul li i {
+          margin-left: 1em;
+          margin-right: .5em; }
+        #fullscreenplayer #fullscreenComingUp ul li.first {
+          opacity: 1; }
+        #fullscreenplayer #fullscreenComingUp ul li.second {
+          opacity: 0.7; }
+        #fullscreenplayer #fullscreenComingUp ul li.third {
+          opacity: 0.4; }
 
 #custom-inputform-organisations .first-form-group, #custom-inputform-organisations .create, #custom-inputform-playlists .first-form-group, #custom-inputform-playlists .create {
   margin-top: 25px; }
@@ -677,7 +732,7 @@ footer {
   position: relative; }
   #footerSlideContent #fullscreenbutton {
     color: white;
-    right: -10px;
+    right: 2px;
     top: 1.2em;
     position: absolute;
     cursor: pointer; }
