@@ -1,7 +1,7 @@
 ﻿@using BB.BL.Domain.Playlists
 @using BB.BL.Domain.Users
 @using BB.BL.Domain.Organisations
-@using Microsoft.AspNet.Identity
+
 @model Playlist
 @{
     ViewBag.Title = "View";
@@ -18,18 +18,15 @@
 
             <div class="fill">
                 <div class="title">
-                    @{ 
-                     Organisation organisation = ViewBag.Organisation;
-                    <h1>Playlist</h1>@Model.Name
-                        
-                        }
-                        
+                    @{
+                        Organisation organisation = ViewBag.Organisation;
+                        <h1>Playlist</h1>@Model.Name
+                    }
                 </div>
 
                 <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new { id = Model.Id})">
                     <i class="material-icons">history</i> History
                 </a>
-
                 <a class="btn btn-right" href="#sharedialog">
                     <i class="material-icons">link</i> Share
                 </a>
@@ -44,55 +41,55 @@
                 </div>
             </div>
         </div>
-</div>}    
+    </div>}
 
 <div class="col-md-9" id="playlistTable">
-<div id="playlist-view" style="margin-top: 1em;">
-    @Html.Partial("PlaylistTable", @Model)
-</div>
+    <div id="playlist-view" style="margin-top: 1em;">
+        @Html.Partial("PlaylistTable", @Model)
+    </div>
 
-<div id="nowPlayingRow" style="margin-top: 5em">
-    @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
-    {
-        if (Model.PlaylistTracks.Count != 0)
+    <div id="nowPlayingRow" style="margin-top: 5em">
+        @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
         {
-            <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-            <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            if (Model.PlaylistTracks.Count != 0)
+            {
+                <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+                <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            }
+            else
+            {
+                <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+            }
         }
         else
         {
-            <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
         }
-    }
-    else
-    {
-        <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
-        <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
-    }
-    @if (Request.IsAuthenticated)
-    {
 
-        <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
-            <i class="material-icons">playlist_add</i> add track
-        </a>
+        @if (Request.IsAuthenticated)
+        {
+            <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
+                <i class="material-icons">playlist_add</i> add track
+            </a>
 
             <a href="#addPlaylistModal" class="btn btn-right" style="margin-right: 20px">
                 <i class="material-icons">playlist_add</i> import playlist
             </a>
-    }
-</div>
+        }
+    </div>
 
-
-<div id="addTrackModal" class="modal" style="margin-top: -150px">
-    <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
-        <a href="#close" id="close-modal" title="Close" class="close">X</a>
-        <div class="modal-body" style="height: 100%; width: 100%;">
-            @{
-                Html.RenderPartial("AddTrack");
-            }
+    <div id="addTrackModal" class="modal" style="margin-top: -150px">
+        <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+            <a href="#close" id="close-modal" title="Close" class="close">X</a>
+            <div class="modal-body" style="height: 100%; width: 100%;">
+                @{
+                    Html.RenderPartial("AddTrack");
+                }
+            </div>
         </div>
     </div>
-</div>
+
     <div id="addPlaylistModal" class="modal" style="margin-top: -150px">
         <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
             <a href="#closePlaylist" id="close-modal-playlist" title="Close" class="close">X</a>
@@ -104,40 +101,37 @@
         </div>
     </div>
 </div>
+
 <div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; margin-top: -32px; height:70%; position:absolute; right:0;">
-  <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">
-          <i id="chatIcon" class="material-icons" style="margin-left:-27px">keyboard_arrow_right</i>
-        </div>
-  <div class="col-xs-11" id="chatContent" style="height:100%; padding-right:0px">    
+    <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">
+        <i id="chatIcon" class="material-icons" style="margin-left:-27px">keyboard_arrow_right</i>
+    </div>
+    <div class="col-xs-11" id="chatContent" style="height:100%; padding-right:0px">
         @{
             if (Request.IsAuthenticated)
             {
-        <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname"/>
-                <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl"/>
+                <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname" />
+                <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl" />
                 <ul id="discussion" style="list-style: none; padding-left: 0"></ul>
 
-
                 <div id="sendChat" style="position: absolute; bottom: 0; margin-bottom: 20px;">
-                    <input type="text" class="custom-input" id="message" style="width: 247px"/>
-                    <input type="button" id="sendmessage" value="Send" class="btn-chat" style="margin-left: 10px"/>
-    </div>
+                    <input type="text" class="custom-input" id="message" style="width: 247px" />
+                    <input type="button" id="sendmessage" value="Send" class="btn-chat" style="margin-left: 10px" />
+                </div>
             }
         }
+    </div>
 </div>
-</div>
-
 
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
         <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter">
             <i id="footerIcon" class="material-icons">keyboard_arrow_up</i>
         </div>
-        
-                <i id="tuneinbutton" style="display: none"  class="material-icons">volume_up</i>    
-            <i id="fullscreenbutton"  class="material-icons">fullscreen</i>
-        
-        
-        
+
+        <i id="tuneinbutton" style="display: none" class="material-icons">volume_up</i>
+        <i id="fullscreenbutton" class="material-icons">fullscreen</i>
+
         <table style="width: 100%; margin-top: -15px">
             <tr>
                 <td style="width: 5%">
@@ -159,7 +153,6 @@
     </div>
 </div>
 
-
 <div id="bottommargin"></div>
 <div id="player" style="display: none"></div>
 
@@ -167,6 +160,7 @@
     <div id="darkoverlay">
         <img id="nowPlayingLogo" src="~/Content/img/logo_header_white.png" alt="beatbuddy logo" />
     </div>
+    <div id="fullscreenComingUp"></div>
     <div id="nowPlayingAlbumArt"></div>
     <span id="nowPlayingArtist">Nothing</span>
     <span id="nowPlayingTitle">Is playing right now</span>
@@ -179,35 +173,33 @@
 @section Scripts{
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-
     <script>
         var playing = false;
         var listening = false;
         var currentTrack = null;
         var play = $.connection.playlistHub;
         var chat = $.connection.chatHub;
+
         $(function () {
-           chat.client.broadcastMessage = function (name, message, image) {
+            chat.client.broadcastMessage = function (name, message, image) {
                 var encodedName = $('<div />').text(name).html();
                 var encodedMsg = $('<div />').text(message).html();
-               if (image == "/Content/img/Users/") {
-                   image = "/Content/img/default-avatar.png";
-               }
-               $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" id="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" id="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
-                   + '</strong><br />' + encodedMsg + '</div></li>');
+                if (image == "/Content/img/Users/") {
+                    image = "/Content/img/default-avatar.png";
+                }
+                $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" id="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" id="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
+                    + '</strong><br />' + encodedMsg + '</div></li>');
             };
             $('#message').focus();
             $.connection.hub.start().done(
                 function () {
                     chat.server.joinGroup("@Model.Id");
                     $('#sendmessage').click(function () {
-                   chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
+                        chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
                         $('#message').val('').focus();
                     });
                 });
         });
-
-
 
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
@@ -217,8 +209,6 @@
             cue_and_play(data, 0);
             var playBtn = document.getElementById("playBtn");
             playBtn.style.display = "none";
-            //var nextBtn = document.getElementById("nextBtn");
-            //nextBtn.style.display = "none";
         }
 
         play.client.pauseMusicPlaying = function() {
@@ -233,11 +223,10 @@
             $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
             var time = document.getElementById("time");
             time.innerHTML = "";
-            
+
             player.stopVideo();
         }
 
-        
         play.client.resumeMusicPlaying = function(data) {
             player.seekTo(data);
             player.playVideo();
@@ -284,33 +273,34 @@
             play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
         }
 
-
         play.client.playLive = function(data, startSeconds) {
             openFooter();
             if (listening) {
                 if (data != null) {
-                    cue_and_play(data, startSeconds+1);
-        }
+                    cue_and_play(data, startSeconds + 1);
+                }
             } else {
-            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
-            document.getElementById("tuneinbutton").style.display = "inline";
+                document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+                document.getElementById("tuneinbutton").style.display = "inline";
 
-            if (data.CoverArtUrl != null) {
-                $('#thumbnail').attr("src", data.CoverArtUrl);
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
-            } else {
-                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-            }
+                if (data.CoverArtUrl != null) {
+                    $('#thumbnail').attr("src", data.CoverArtUrl);
+                    $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                    $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+                } else {
+                    $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                    $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                    $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                }
             }
             updatePlaylist();
         }
+
         $('#tuneinbutton').click(function () {
             listening = true;
             play.server.playLive("@Model.Id");
         });
+
         function cue_and_play(data, seconds){
             player.cueVideoById(data.TrackId, seconds, "small");
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
@@ -334,19 +324,18 @@
         var footerOpen = false;
         var chatOpen = true;
 
-        jQuery(function($){
-            $('#chatArrow').click(function(){
-                if(chatOpen ===false){
+        jQuery(function($) {
+            $('#chatArrow').click(function() {
+                if (chatOpen === false) {
                     openChat();
                     chatOpen = true;
-                } 
-                else{
-                closeChat()
-                chatOpen = false;
+                } else {
+                    closeChat()
+                    chatOpen = false;
                 };
-            })
+            });
         });
-        
+
         function openChat(){
             $("#chatContainer").animate({width: $('#chatContainer').data('width')});
             $("#chatContent").show();
@@ -362,7 +351,7 @@
             $('#playlistTable').removeClass('col-lg-9');
             $('#playlistTable').addClass('col-lg-12');
             chatIcon.innerHTML = 'keyboard_arrow_left';
-        }   
+        }
 
         jQuery(function($) {
             $('#footertop').click(function () {
@@ -384,7 +373,7 @@
 
         function openFooter() {
             $('#footerSlideContent').animate({ height: '125px' });
-            $('#sendChat').animate({ marginBottom: '145px' });    
+            $('#sendChat').animate({ marginBottom: '145px' });
             $(this).css('backgroundPosition', 'bottom left');
             $('#bottommargin').animate({ marginBottom: '9em' }, 500, null);
             footerOpen = true;
@@ -394,14 +383,13 @@
 
         function closeFooter() {
             $('#footerSlideContent').animate({ height: '20px' });
-            $('#sendChat').animate({ marginBottom: '20px' }); 
+            $('#sendChat').animate({ marginBottom: '20px' });
             $(this).css('backgroundPosition', 'top left');
             $('#bottommargin').animate({ marginBottom: '3em' }, 500, null);
             footerOpen = false;
             var footerIcon = document.getElementById("footerIcon");
             footerIcon.innerHTML = 'keyboard_arrow_up';
         }
-
 
         var markup = '<li class="track" data-id="${TrackSource.TrackId}">' +
             '<img class="thumbnail" src="${CoverArtUrl}"/>' +
@@ -418,6 +406,7 @@
                 $("#loading").hide();
             }
         });
+
         $("#loading").hide();
 
         function fetchQueryResults() {
@@ -534,7 +523,7 @@
         }
 
         var counter = 0;
-    
+
 
         function secondsToTime(secs)
         {
@@ -547,15 +536,15 @@
         var startedPlaying = false;
 
         function onPlayerStateChange(event) {
-
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
             var icon = document.getElementById("icon");
+            
             if (event.data === -1 && firstPlay) {
-                
                 player.playVideo();
                 firstPlay = false;
             }
+
             if (event.data === YT.PlayerState.PLAYING) {
                 playing = true;
                 playButton.addEventListener("click", function() {
@@ -564,6 +553,7 @@
                 });
                 icon.innerHTML = 'pause';
             }
+
             if (event.data === YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
@@ -573,7 +563,6 @@
             }
 
             if (startedPlaying && event.data === YT.PlayerState.ENDED) {
-                
                 playing = false;
                 getNextTrack();
             }
@@ -602,6 +591,7 @@
                         }
                     }
                 }
+
                 openFooter();
                 moveTrackToHistory();
 
@@ -642,20 +632,16 @@
                 data: { id: @ViewBag.PlaylistId },
                 async: false
             }).done(function() {
-               
-                    updatePlaylist();
-                
+                updatePlaylist();
             }).fail(function() {
                 var nextButton = document.getElementById("nextBtn");
                 nextButton.className = 'btn disabled';
                 var playButton = document.getElementById("playBtn");
                 playButton.className = 'btn disabled';
                 var icon = document.getElementById("icon");
-
                 icon.innerHTML = 'play_arrow';
             });
         }
-
 
         function updatePlaylist() {
             $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
@@ -673,8 +659,22 @@
 
             if (fullscreenEnabled) {
                 $("html").css("overflow", "hidden");
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                }
             } else {
                 $("html").css("overflow", "auto");
+                if (document.cancelFullScreen) {
+                    document.cancelFullScreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                }
             }
         }
 
@@ -693,9 +693,6 @@
                 $("html").css("overflow", "auto");
             }
         });
-
-
-
 
         function setClickableTooltip(target, content){
             $( target ).tooltip({
@@ -717,78 +714,78 @@
                 }
             });
         }
-    var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
-           '<img class="thumbnail" src="${ImageUrl}"/>' +
-           '<span class="artist">${Name}</span>' +
-           '</li>';
-    $.template("playlistTemplate", markupPlaylist);
 
+        var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
+               '<img class="thumbnail" src="${ImageUrl}"/>' +
+               '<span class="artist">${Name}</span>' +
+               '</li>';
+        $.template("playlistTemplate", markupPlaylist);
+        
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("#loadingPlaylist").show();
+            },
+            complete: function () {
+                $("#loadingPlaylist").hide();
+            }
+        });
+        $("#loadingPlaylist").hide();
 
-    $.ajaxSetup({
-        beforeSend: function () {
-            $("#loadingPlaylist").show();
-        },
-        complete: function () {
-            $("#loadingPlaylist").hide();
-        }
-    });
-    $("#loadingPlaylist").hide();
-
-    function fetchQueryResultsPlaylist() {
-        $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
-            .done(function (result) {
-                $("#resultsPlaylist").empty();
-                $.tmpl("playlistTemplate", result).appendTo("#resultsPlaylist");
-                $("#resultsPlaylist li").on("click", function () {
-                    addPlaylist($(this).attr('data-id'));
+        function fetchQueryResultsPlaylist() {
+            $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
+                .done(function (result) {
+                    $("#resultsPlaylist").empty();
+                    $.tmpl("playlistTemplate", result).appendTo("#resultsPlaylist");
+                    $("#resultsPlaylist li").on("click", function () {
+                        addPlaylist($(this).attr('data-id'));
+                    });
+                })
+                .fail(function () {
+                    alert("error");
                 });
-            })
-            .fail(function () {
-                alert("error");
-            });
-    }
+        }
 
         function addPlaylist(id) {
             $("#loadingPlaylist").show();
             notie.alert(1, 'Playlist is being added. This could take a while. Please wait...', 15);
             $("#close-modal-playlist").hide();
             $.ajax({
-                    url: '@Url.Action("AddPlaylist")',
-                    method: 'POST',
+                url: '@Url.Action("AddPlaylist")',
+                method: 'POST',
                 data: { playlistId: @ViewBag.PlaylistId, id: id }
             }).done(function() {
                 $("#loadingPlaylist").hide();
                 $("waitPlaylist").hide();
-            window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
-            updatePlaylist();
-            var playBtn = document.getElementById('playBtn');
-            playBtn.className = 'btn';
-            playBtn.addEventListener("click", getNextTrack);
+                window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
+                updatePlaylist();
+                var playBtn = document.getElementById('playBtn');
+                playBtn.className = 'btn';
+                playBtn.addEventListener("click", getNextTrack);
 
             });
         }
 
-    function debouncePlaylist(func, wait, immediate) {
-        var timeout;
-        return function () {
-            var context = this, args = arguments;
-            var later = function () {
-                timeout = null;
-                if (!immediate) func.apply(context, args);
+        function debouncePlaylist(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
             };
-            var callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            if (callNow) func.apply(context, args);
         };
-    };
 
-    var debouncedFetchPlaylist = debouncePlaylist(function () {
-        fetchQueryResultsPlaylist();
-    }, 500);
+        var debouncedFetchPlaylist = debouncePlaylist(function () {
+            fetchQueryResultsPlaylist();
+        }, 500);
 
-    $("#playlistAdd").on('keydown', function () {
-        debouncedFetchPlaylist();
-    });
+        $("#playlistAdd").on('keydown', function () {
+            debouncedFetchPlaylist();
+        });
     </script>
 }
