@@ -17,7 +17,7 @@ namespace BB.BL
         public PlaylistManager(IPlaylistRepository playlistRepository, IUserRepository userRepo)
         {
             this.repo = playlistRepository;
-            this.userRepo = userRepo;
+            this.userRepo = userRepo; 
         }
 
         public Comment CreateComment(long playlistId, string text, string userEmail)
