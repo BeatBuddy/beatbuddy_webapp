@@ -187,7 +187,11 @@ else
 
 <div class="flex-container" style="background-color:lightgray">
     <div class="card">
-        <div class="chart" data-percent="@Model.Playlists.Count"><div class="chart-text"><span>@Model.Playlists.Count</span>playlists</div></div>
+        <div class="chart" data-percent="@Model.Playlists.Count">
+            <div class="material-icons" style="font-size:3em;">playlist</div>
+        <div class="chart-text">
+            <span class="material-icons" style="font-size:3em;">playlist</span>
+            <span>@Model.Playlists.Count</span>playlists</div></div>
     </div>
     <div class="card">
         <div class="chart" data-percent="@Model.CoOrganiser.Count()">
