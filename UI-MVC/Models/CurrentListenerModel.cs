@@ -10,5 +10,8 @@ namespace BB.UI.Web.MVC.Models
     {
         public string GroupName { get; set; }
         public User User { get; set; }
+       
     }
+
+    
 }

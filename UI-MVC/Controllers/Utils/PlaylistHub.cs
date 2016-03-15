@@ -15,6 +15,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using VideoLibrary;
 
+
 namespace BB.UI.Web.MVC.Controllers.Utils
 {
     public class PlaylistHub : Hub
@@ -61,29 +62,20 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             if (playlistMasters.ContainsKey(groupName))
             {
-                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive(false);
+                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
             }
         }
 
-        public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration, bool playing)
+        public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
         {
-            if (playing)
-            {
-                Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value)
-                    .playLive(track, (int)duration);
-            }
-            else
-            {
-                Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value)
-                    .fakeLive(track);
-            }
+            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(track, (int)duration);
         }
 
         public void PlayLive(string groupName)
         {
             if (playlistMasters.ContainsKey(groupName))
             {
-                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive(true);
+                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
             }
         }
         public override Task OnConnected()
@@ -116,7 +108,8 @@ namespace BB.UI.Web.MVC.Controllers.Utils
                 playlistMasters.Remove(groupName);
             }
             playlistMasters.Add(groupName, Context.ConnectionId);
-            Clients.OthersInGroup(groupName).fakeLive(track);
+
+            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(track, 0);
             var youTube = YouTube.Default; // starting point for YouTube actions
             var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId); // gets a Video object with info about the video
             Clients.OthersInGroup(groupName).onPlaylinkGenerated(video.Uri);

@@ -21,13 +21,7 @@
                     @{ 
                      Organisation organisation = ViewBag.Organisation;
                     <h1>Playlist</h1>@Model.Name
-                        if (organisation != null)
-                        {
-                            <a href="@Url.Action(organisation.Id.ToString(), "Organisations/Details")" style="text-decoration:none; color:white">by #@organisation.Name</a>}
-                        else
-                        {
-                           <span>by &#64;@ViewBag.CurrentUser.Nickname</span>
-                        }
+                        
                         }
                         
                 </div>
@@ -82,9 +76,9 @@
             <i class="material-icons">playlist_add</i> add track
         </a>
 
-            <a href="#addPlaylistModal" class="btn btn-right" style="margin-right: 20px">
-                <i class="material-icons">playlist_add</i> import playlist
-            </a>
+        <a href="#addPlaylistModal" class="btn btn-right" style="margin-right: 20px">
+            <i class="material-icons">playlist_add</i> import playlist
+        </a>
     }
 </div>
 
@@ -100,22 +94,28 @@
     </div>
 </div>
 </div>
-
 <div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; margin-top: -32px; height:70%; position:absolute; right:0;">
-  <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">
-          <i id="chatIcon" class="material-icons" style="margin-left:-27px">keyboard_arrow_right</i>
-        </div>
-  <div class="col-xs-11" id="chatContent" style="height:100%; padding-right:0px">    
-        <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname"/>
-        <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl" />
-        <ul id="discussion" style="list-style:none; padding-left:0"></ul>
-    @{if(Request.IsAuthenticated){
-      <div id ="sendChat" style="position:absolute; bottom:0; margin-bottom:20px;">
-        <input type="text" class="custom-input" id="message" style="width:247px"/>
-        <input type="button" id="sendmessage" value="Send" class="btn-chat" style="margin-left:10px"/>
-    </div>} }
+    <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">
+        <i id="chatIcon" class="material-icons" style="margin-left:-27px">keyboard_arrow_right</i>
+    </div>
+    <div class="col-xs-11" id="chatContent" style="height:100%; padding-right:0px">
+        @{
+            if (Request.IsAuthenticated)
+            {
+                <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname"/>
+                <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl"/>
+                <ul id="discussion" style="list-style: none; padding-left: 0"></ul>
+
+
+                <div id="sendChat" style="position: absolute; bottom: 0; margin-bottom: 20px;">
+                    <input type="text" class="custom-input" id="message" style="width: 247px"/>
+                    <input type="button" id="sendmessage" value="Send" class="btn-chat" style="margin-left: 10px"/>
+                </div>
+            }
+        }
     </div>
 </div>
+
 
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
@@ -124,7 +124,7 @@
         </div>
         
                 <i id="tuneinbutton" style="display: none"  class="material-icons">volume_up</i>    
-            <i id="fullscreenbutton"  class="material-icons">fullscreen</i>
+                <i id="fullscreenbutton"  class="material-icons">fullscreen</i>
         
         
         
@@ -172,6 +172,7 @@
 
     <script>
         var playing = false;
+        var listening = false;
         var currentTrack = null;
         var play = $.connection.playlistHub;
         var chat = $.connection.chatHub;
@@ -179,8 +180,8 @@
            chat.client.broadcastMessage = function (name, message, image) {
                 var encodedName = $('<div />').text(name).html();
                 var encodedMsg = $('<div />').text(message).html();
-               if (image == "/Content/img/Users/"){
-                   image = "/Content/img/default-avatar.png"
+               if (image == "/Content/img/Users/") {
+                   image = "/Content/img/default-avatar.png";
                }
                $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" id="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" id="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
                    + '</strong><br />' + encodedMsg + '</div></li>');
@@ -269,35 +270,35 @@
             document.getElementById('listenerCount').innerHTML = data+"";
         }
 
-        play.client.syncLive = function(data) {
-            play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime(), data);
+        play.client.syncLive = function() {
+            play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
         }
-        play.client.fakeLive = function(data) {
-            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
-            document.getElementById("tuneinbutton").style.display = "inline";
-
-            if (data.CoverArtUrl != null) {
-                $('#thumbnail').attr("src", data.CoverArtUrl);
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
-            } else {
-                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
-                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
-            }
-            openFooter();
-            updatePlaylist();
-
-        }
+        
 
         play.client.playLive = function(data, startSeconds) {
             openFooter();
-            console.log(startSeconds);
-            if (data != null) {
-                cue_and_play(data, startSeconds+1);
+            if (listening) {
+                if (data != null) {
+                    cue_and_play(data, startSeconds+1);
+                }    
+            } else {
+                document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+                document.getElementById("tuneinbutton").style.display = "inline";
+
+                if (data.CoverArtUrl != null) {
+                    $('#thumbnail').attr("src", data.CoverArtUrl);
+                    $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                    $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+                } else {
+                    $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                    $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                    $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                }
             }
+            updatePlaylist();
         }
         $('#tuneinbutton').click(function () {
+            listening = true;
             play.server.playLive("@Model.Id");
         });
         function cue_and_play(data, seconds){
@@ -317,7 +318,6 @@
                 $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
                 $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
             }
-            updatePlaylist();
             player.playVideo();
         }
 
@@ -524,7 +524,7 @@
         }
 
         var counter = 0;
-        var begin = true;
+    
 
         function secondsToTime(secs)
         {
