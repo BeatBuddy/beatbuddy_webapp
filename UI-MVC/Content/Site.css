@@ -116,7 +116,8 @@ header {
       text-decoration: none;
       border-radius: 5px;
       font-weight: 100;
-      margin-right: .3em; }
+      margin-right: .3em;
+      margin-bottom: 0.5em; }
       #banner .content .button:hover {
         background: rgba(255, 255, 255, 0.2); }
     @media screen and (max-width: 600px) {
@@ -669,4 +670,48 @@ footer {
   height: 200px;
   background-size: cover;
   background-position: center center; }
+
+.card {
+  background-color: white;
+  padding: 25px 50px;
+  margin: 25px; }
+
+.chart {
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+  position: relative;
+  text-align: center; }
+  .chart span {
+    display: block;
+    font-size: 2em;
+    font-weight: normal;
+    vertical-align: middle; }
+  .chart .chart-text {
+    padding-top: 60%; }
+  .chart canvas {
+    position: absolute;
+    left: 0;
+    top: 0; }
+
+.flex-container {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 20px; }
 
