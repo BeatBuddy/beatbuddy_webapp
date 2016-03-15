@@ -61,13 +61,30 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             if (playlistMasters.ContainsKey(groupName))
             {
-                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
-        }
+                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive(false);
+            }
         }
 
-        public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
+        public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration, bool playing)
         {
-            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(track, (int)duration);
+            if (playing)
+            {
+                Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value)
+                    .playLive(track, (int)duration);
+            }
+            else
+            {
+                Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value)
+                    .fakeLive(track, (int)duration);
+            }
+        }
+
+        public void PlayLive(string groupName)
+        {
+            if (playlistMasters.ContainsKey(groupName))
+            {
+                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive(true);
+            }
         }
         public override Task OnConnected()
         {
@@ -92,6 +109,10 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void StartPlaying(CurrentPlayingViewModel track, string groupName)
         {
+            if (playlistMasters.ContainsKey(groupName))
+            {
+                playlistMasters.Remove(groupName);
+            }
             playlistMasters.Add(groupName, Context.ConnectionId);
             Clients.OthersInGroup(groupName).startMusicPlaying(track);
             var youTube = YouTube.Default; // starting point for YouTube actions

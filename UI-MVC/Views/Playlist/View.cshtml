@@ -30,7 +30,7 @@
 
             </div>
             <div>
-                <a class="btn btn-right"  href="@Url.Action("View", "History", new {id = Model.Id})">
+                <a class="btn btn-right"  id="tuneIn">
                     <i class="material-icons">audiotrack</i>    Tune in live    
                 </a>
 
@@ -146,6 +146,7 @@
     <script src="~/signalr/hubs"></script>
 
     <script>
+        var playing = false;
         var currentTrack = null;
         var play = $.connection.playlistHub;
         var chat = $.connection.chatHub;
@@ -177,6 +178,10 @@
 
         play.client.startMusicPlaying = function(data) {
             cue_and_play(data, 0);
+            var playBtn = document.getElementById("playBtn");
+            playBtn.style.display = "none";
+            var nextBtn = document.getElementById("nextBtn");
+            nextBtn.style.display = "none";
         }
 
         play.client.pauseMusicPlaying = function() {
@@ -225,17 +230,34 @@
             document.getElementById('listenerCount').innerHTML = data+"";
         }
 
-        play.client.syncLive = function() {
-            play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
+        play.client.syncLive = function(data) {
+            play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime(), data);
         }
+        play.client.fakeLive = function(data, startSeconds) {
+            document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+
+            if (data.CoverArtUrl != null) {
+                $('#thumbnail').attr("src", data.CoverArtUrl);
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + data.CoverArtUrl + ")");
+            } else {
+                $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+                $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+                $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            }
+            openFooter();
+        }
+
         play.client.playLive = function(data, startSeconds) {
             openFooter();
             console.log(startSeconds);
             if (data != null) {
-                cue_and_play(data, startSeconds+2);
+                cue_and_play(data, startSeconds+1);
             }
         }
-       
+        $('#tuneIn').click(function () {
+            play.server.playLive("@Model.Id");
+        });
         function cue_and_play(data, seconds){
             player.cueVideoById(data.TrackId, seconds, "small");
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
@@ -256,7 +278,7 @@
             updatePlaylist();
             player.playVideo();
         }
-        var playing = false;
+        
         var footerOpen = false;
         jQuery(function($) {
             $('#footertop').click(function () {
@@ -426,6 +448,9 @@
             barFullscreen.style.width = percentageTime + '%';
         }
 
+        var counter = 0;
+        var begin = true;
+
         function secondsToTime(secs)
         {
             d = Number(secs);
@@ -586,9 +611,7 @@
             }
         });
 
-        window.onunload = window.onbeforeunload = (function() {
-            //assignPlaylistMaster(@null);
-        });
+       
 
 
         function setClickableTooltip(target, content){
