@@ -760,6 +760,7 @@ header {
         display: block;
         min-height: 128px;
         clear: both;
+        cursor: pointer;
 
         img {
             height: 128px;
@@ -831,7 +832,9 @@ header {
 .btn-left {
     float: left;
 }
-
+.btn-social{
+    width: 133px;
+}
 .btn-login {
     width: 270px;
     height: 3em;
@@ -890,8 +893,15 @@ footer {
 
     #fullscreenbutton {
         color: white;
-        right: 0;
-        top: 1em;
+        right: -10px;
+        top: 1.2em;
+        position: absolute;
+        cursor: pointer;
+    }
+    #tuneinbutton {
+        color: white;
+        right: 15px;
+        top: 1.2em;
         position: absolute;
         cursor: pointer;
     }

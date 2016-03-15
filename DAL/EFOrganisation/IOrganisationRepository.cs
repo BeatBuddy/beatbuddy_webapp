@@ -13,6 +13,7 @@ namespace BB.DAL.EFOrganisation
         Organisation ReadOrganisation(long organisationId);
         Organisation ReadOrganisation(string organisationName);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
+        IEnumerable<Organisation> SearchOrganisations(string prefix);
         Organisation DeleteOrganisation(long organisationId);
         Organisation ReadOrganisationForPlaylist(long playlistId);
         //DashboardBlock

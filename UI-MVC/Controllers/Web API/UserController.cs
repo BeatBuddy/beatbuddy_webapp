@@ -1,28 +1,28 @@
-﻿using BB.BL;
-using BB.BL.Domain;
-using BB.UI.Web.MVC.Models;
-using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using System.Web;
-using System.Threading.Tasks;
-using BB.BL.Domain.Users;
-using System;
+﻿using System;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
-using System.Web.Mvc;
-using BB.DAL.EFUser;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Hosting;
+using System.Web.Http;
+using BB.BL;
+using BB.BL.Domain;
+using BB.BL.Domain.Users;
 using BB.DAL;
 using BB.DAL.EFOrganisation;
 using BB.DAL.EFPlaylist;
+using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers.Utils;
+using BB.UI.Web.MVC.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
-    [System.Web.Http.RoutePrefix("api/users")]
+    [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
         private readonly IUserManager userManager;
@@ -32,9 +32,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         public UserController()
         {
-            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
         }
 
         public UserController(IUserManager userManager, IOrganisationManager organisationManager, IPlaylistManager playlistManager)
@@ -45,9 +45,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         }
         
 
-        [System.Web.Http.AllowAnonymous]
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("register")]
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("register")]
         public async Task<IHttpActionResult> Register([FromUri] string firstName, [FromUri] string lastName, [FromUri] string nickname, [FromUri] string email, [FromUri] string password, [FromUri] string imageUrl)
         {
             User user;
@@ -62,7 +62,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 }
 
                 var imageFileName = Path.GetFileName(imageUrl);
-                var imagePath = FileHelper.NextAvailableFilename(Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath(ConfigurationManager.AppSettings["UsersImgPath"]), imageFileName));
+                var imagePath = FileHelper.NextAvailableFilename(Path.Combine(HostingEnvironment.MapPath(ConfigurationManager.AppSettings["UsersImgPath"]), imageFileName));
 
                 var webClient = new WebClient();
                 webClient.DownloadFile(imageUrl, imagePath);
@@ -84,15 +84,14 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (resultUser.Succeeded){
                 UserManager.AddToRole(applicationUser.Id, "User");
                 return Ok(user);
-            } else {
+            }
                 userManager.DeleteUser(user.Id);
                 return Content(HttpStatusCode.InternalServerError, "ASP.NET Identity Usermanager could not create user");
             }
-        }
 
-        [System.Web.Http.AllowAnonymous]
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.Route("gplusRegister")]
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("gplusRegister")]
         public async Task<IHttpActionResult> GplusRegister([FromUri] string firstName, [FromUri] string lastName, [FromUri] string nickname, [FromUri] string email, [FromUri] string password, [FromUri] string imageUrl)
         {
             var user = userManager.ReadUser(email);
@@ -103,9 +102,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
 
         // GET: api/users/heylenmatthias@gmail.com
-        [System.Web.Http.Authorize]
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("{email}")]
+        [Authorize]
+        [HttpGet]
+        [Route("{email}")]
         public IHttpActionResult GetUser(string email)
         {
             var user = userManager.ReadUser(email);
@@ -117,9 +116,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         }
 
         // GET: api/users/organisations
-        [System.Web.Http.Authorize]
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("userOrganisations")]
+        [Authorize]
+        [HttpGet]
+        [Route("userOrganisations")]
         public IHttpActionResult GetUserOrganisations()
         {
             var currentUser = (User.Identity as ClaimsIdentity)?.Claims.First(c => c.Type == "sub").Value;
@@ -142,9 +141,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         }
 
         // GET: api/users/userPlaylists
-        [System.Web.Http.Authorize]
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("userPlaylists")]
+        [Authorize]
+        [HttpGet]
+        [Route("userPlaylists")]
         public IHttpActionResult GetUserPlaylists()
         {
             var currentUser = (User.Identity as ClaimsIdentity)?.Claims.First(c => c.Type == "sub").Value;

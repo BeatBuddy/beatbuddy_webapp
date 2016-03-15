@@ -7,6 +7,11 @@ using BB.UI.Web.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using BB.BL;
+using System.IO;
+using BB.UI.Web.MVC.Controllers.Utils;
+using System.Configuration;
+using BB.BL.Domain.Users;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -15,9 +20,11 @@ namespace BB.UI.Web.MVC.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IUserManager userMgr;
 
-        public ManageController()
+        public ManageController(UserManager userMgr)
         {
+            this.userMgr = userMgr;
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -72,6 +79,10 @@ namespace BB.UI.Web.MVC.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+
+            var user = userMgr.ReadUser(User.Identity.Name);
+            ViewBag.user = user;
+
             return View(model);
         }
 
@@ -329,6 +340,26 @@ namespace BB.UI.Web.MVC.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        [HttpPost]
+        public ActionResult Save(long userId, HttpPostedFileBase profileImage)
+        {
+            string imagePath = null;
+            if (profileImage != null && profileImage.ContentLength > 0)
+            {
+                var imageFileName = Path.GetFileName(profileImage.FileName);
+                imagePath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["UsersImgPath"]), imageFileName));
+                profileImage.SaveAs(imagePath);
+                imagePath = Path.GetFileName(imagePath);
+            }
+
+            var user = userMgr.ReadUser(userId);
+
+            user.ImageUrl = imagePath;
+            userMgr.UpdateUser(user);
+
+            return RedirectToAction("Index", "Home");
         }
 
 #region Helpers

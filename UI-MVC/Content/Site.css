@@ -568,7 +568,8 @@ header {
     margin: 1em;
     display: block;
     min-height: 128px;
-    clear: both; }
+    clear: both;
+    cursor: pointer; }
     #resultsPlaylist li.playlist img {
       height: 128px;
       display: inline-block;
@@ -625,6 +626,9 @@ header {
 .btn-left {
   float: left; }
 
+.btn-social {
+  width: 133px; }
+
 .btn-login {
   width: 270px;
   height: 3em;
@@ -673,8 +677,14 @@ footer {
   position: relative; }
   #footerSlideContent #fullscreenbutton {
     color: white;
-    right: 0;
-    top: 1em;
+    right: -10px;
+    top: 1.2em;
+    position: absolute;
+    cursor: pointer; }
+  #footerSlideContent #tuneinbutton {
+    color: white;
+    right: 15px;
+    top: 1.2em;
     position: absolute;
     cursor: pointer; }
 

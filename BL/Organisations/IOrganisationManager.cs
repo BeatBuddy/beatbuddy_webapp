@@ -15,6 +15,7 @@ namespace BB.BL
         Organisation ReadOrganisation(string organisationName);
         Organisation DeleteOrganisation(long organisationId);
         Organisation ReadOrganisationForPlaylist(long playlistId);
+        IEnumerable<Organisation> SearchOrganisations(string prefix);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
 
         //DashboardBlock

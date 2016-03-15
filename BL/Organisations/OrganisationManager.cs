@@ -6,6 +6,7 @@ using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.DAL.EFOrganisation;
 using BB.DAL.EFUser;
+using System;
 
 namespace BB.BL
 {
@@ -65,6 +66,11 @@ namespace BB.BL
         public Organisation UpdateOrganisation(Organisation organisation)
         {
             return organisationsRepository.UpdateOrganisation(organisation);
+        }
+
+        public IEnumerable<Organisation> SearchOrganisations(string prefix)
+        {
+            return organisationsRepository.SearchOrganisations(prefix);
         }
     }
 }
