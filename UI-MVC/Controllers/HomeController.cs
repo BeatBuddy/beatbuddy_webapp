@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
+using Newtonsoft.Json;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -11,7 +12,6 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IPlaylistManager playlistManager;
         private readonly IOrganisationManager organisationManager;
 
-
         public HomeController(IUserManager userManager, IPlaylistManager playlistManager,
             IOrganisationManager organisationManager)
         {
@@ -19,9 +19,6 @@ namespace BB.UI.Web.MVC.Controllers
             this.playlistManager = playlistManager;
             this.organisationManager = organisationManager;
         }
-        
-
-        
 
         public ActionResult Index()
         {
@@ -39,5 +36,17 @@ namespace BB.UI.Web.MVC.Controllers
             ViewBag.RecommendedPlaylists = playlistManager.ReadPlaylists().Reverse().Take(3).ToList();
             return View();
         }
+
+        public ActionResult SearchOrganisation(string q)
+        {
+           var searchResult = organisationManager.SearchOrganisations(q);
+            string json =  JsonConvert.SerializeObject(searchResult, Formatting.Indented,
+                            new JsonSerializerSettings
+                            {
+                                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            });
+            return new ContentResult { Content = json, ContentType = "application/json" };
+        }
+
     }
 }

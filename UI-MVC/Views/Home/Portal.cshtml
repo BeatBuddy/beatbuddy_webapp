@@ -91,6 +91,21 @@
         {
             <p style="padding-left: 15px">You are not a member of any organisation... </p>
         }
+        <div id="searchOrganisations">
+            <a href="#searchOrganisationbtn" class="btn btn-left btn-portal" style="font-size: 0.6em">
+                <i class="material-icons">playlist_add</i> search organisation
+            </a>
+        </div>
+        <div id="searchOrganisationbtn" class="modal" style="margin-top: -150px">
+            <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+                <a href="#close" id="close-modal" title="Close" class="close">X</a>
+                <div class="modal-body" style="height: 100%; width: 100%">
+                    @{
+                        Html.RenderPartial("SearchOrganisation");
+                    }
+                </div>
+            </div>
+        </div>
     </div>
     <div class="clearfix">&nbsp;</div>
 </section>
@@ -218,6 +233,63 @@
             window.location.href = '#editPlaylistModal';
         }
 
+        var markupOrganisation = '<li class="organisation" data-id="${Id}">' +
+            '<span class="artist">${Name}</span>' +
+            '</li>';
+        $.template("organisationTemplate", markupOrganisation);
+
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("#loadingOrganisation").show();
+            },
+            complete: function () {
+                $("#loadingOrganisation").hide();
+            }
+        });
+        $("#loadingOrganisation").hide();
+
+        function fetchQueryResultsOrganisation() {
+            $.ajax('@Url.Action("SearchOrganisation")/?q=' + $('#searchOrganisation').val())
+                .done(function (result) {
+                    $("#resultsOrganisation").empty();
+                    $.tmpl("organisationTemplate", result).appendTo("#resultsOrganisation");
+                    $("#resultsOrganisation li").on("click", function () {
+                        lookUpOrganisation($(this).attr('data-id'));
+                    });
+                })
+                .fail(function (data) {
+                    alert(data);
+                });
+        }
+
+
+            function lookUpOrganisation(id) {
+                window.location.href = '/Organisations/Details/' + id;
+            }
+        
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
+        var debouncedFetchOrganisation = debounce(function () {
+            fetchQueryResultsOrganisation();
+        }, 500);
+
+        $("#searchOrganisation").on('keydown', function () {
+            debouncedFetchOrganisation();
+        });
+
         document.getElementById('avatar_click2').onclick = function () {
             document.getElementById('avatarImage2').click();
         };
@@ -229,5 +301,7 @@
             }
             document.getElementById("avatarLabel2").innerText = filename;
         };
+
+
     </script>    
 }

@@ -78,5 +78,10 @@ namespace BB.DAL.EFOrganisation
             context.SaveChanges();
             return organisation;
         }
+
+        public IEnumerable<Organisation> SearchOrganisations(string prefix)
+        {
+            return context.Organisations.Where(p => p.Name.Contains(prefix));
+        }
     }
 }

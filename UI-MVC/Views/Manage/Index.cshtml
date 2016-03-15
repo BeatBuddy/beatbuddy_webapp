@@ -1,10 +1,12 @@
 ﻿@model BB.UI.Web.MVC.Models.IndexViewModel
 @{
     ViewBag.Title = "Manage";
+    ViewBag.Id = ViewBag.user.Id;
 }
 
 <h2>@ViewBag.Title.</h2>
-
+@using (Html.BeginForm("Save", "Manage", new { userId = ViewBag.user.Id }, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
+{
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
     <h4>Change your account settings</h4>
@@ -12,7 +14,7 @@
     <dl class="dl-horizontal">
         <dt>Password:</dt>
         <dd>
-            [
+            
             @if (Model.HasPassword)
             {
                 @Html.ActionLink("Change your password", "ChangePassword")
@@ -21,64 +23,46 @@
             {
                 @Html.ActionLink("Create", "SetPassword")
             }
-            ]
+            
         </dd>
-        <dt>External Logins:</dt>
+
+        <dt>Change avatar:</dt>
         <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
-        </dd>
-        @*
-            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-             
-             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-             
-             Uncomment the following block after you have set up two-factor authentication
-        *@
-        @*  
-            <dt>Phone Number:</dt>
-            <dd>
-                @(Model.PhoneNumber ?? "None") [
-                @if (Model.PhoneNumber != null)
-                {
-                    @Html.ActionLink("Change", "AddPhoneNumber")
-                    @: &nbsp;|&nbsp;
-                    @Html.ActionLink("Remove", "RemovePhoneNumber")
-                }
-                else
-                {
-                    @Html.ActionLink("Add", "AddPhoneNumber")
-                }
-                ]
-            </dd>
-        *@
-        <dt>Two-Factor Authentication:</dt>
-        <dd>
-            <p>
-                There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication.
-            </p>
-            @*@if (Model.TwoFactor)
-                {
-                    using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            <input type="file" id="profileImage" name="profileImage" style="display: none" />
+            <div>
+                <div class="div-image-form" style="">
+                    @if (ViewBag.user.ImageUrl != null)
                     {
-                        @Html.AntiForgeryToken()
-                        <text>Enabled
-                        <input type="submit" value="Disable" class="btn btn-link" />
-                        </text>
+                        <img class="borderround" id="profile_click" src="~/Content/img/Users/@ViewBag.user.ImageUrl" style="width: 150px;" />
                     }
-                }
-                else
-                {
-                    using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    else
                     {
-                        @Html.AntiForgeryToken()
-                        <text>Disabled
-                        <input type="submit" value="Enable" class="btn btn-link" />
-                        </text>
+                        <img class="borderround" id="profile_click" src="~/Content/img/avatar.png" style="width: 150px;"/>
                     }
-                }*@
+                </div>
+            </div>
         </dd>
     </dl>
+    <div>
+        <input type="submit" value="Save changes" class="btn btn-default create" />
+    </div>
 </div>
+}
+@section scripts{
+    <script>
+    document.getElementById('profile_click').onclick = function () {
+        document.getElementById('profileImage').click();
+    };
+    document.getElementById("profileImage").onchange = function () {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            document.getElementById("profile_click").src = e.target.result;
+        };
+
+        reader.readAsDataURL(this.files[0]);
+
+    };
+
+</script>
+    }
