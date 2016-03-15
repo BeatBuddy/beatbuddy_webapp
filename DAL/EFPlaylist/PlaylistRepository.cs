@@ -98,8 +98,12 @@ namespace BB.DAL.EFPlaylist
                 //if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
             }
             playlist.PlaylistTracks.Add(playlistTrack);
-
-            context.SaveChanges();
+            try {
+                context.SaveChanges();
+            }
+            catch
+            {
+            }
             return playlistTrack.Track;
         }
 
@@ -179,12 +183,24 @@ namespace BB.DAL.EFPlaylist
 
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
         {
-            return context.PlaylistTracks.Include(p => p.Votes).Include("Votes.User").FirstOrDefault(p => p.Id == playlistTrackId);
+            return context.PlaylistTracks
+                .Include(p => p.Votes)
+                .Include(p => p.Votes.Select(v => v.User))
+                .Include(p => p.Track)
+                .Include(p => p.Track.TrackSource)
+                .FirstOrDefault(p => p.Id == playlistTrackId);
         }
 
         public IEnumerable<Track> ReadTracks()
         {
             return context.Tracks;
+        }
+
+        public Track ReadTrack(long trackId)
+        {
+            return context.Tracks
+                .Include(t => t.TrackSource)
+                .Single(t => t.Id == trackId);
         }
 
         public IEnumerable<Vote> ReadVotesUser(User user)

@@ -77,6 +77,11 @@ namespace BB.BL
             return repo.ReadNumberOfVotesOfUserForPlaylist(userId, trackId) >= repo.ReadMaximumVotesPerUser(trackId);
         }
 
+        public Track ReadTrack(long trackId)
+        {
+            return repo.ReadTrack(trackId);
+        }
+
         public Vote CreateVote(int score, long userId, long trackId)
         {
             Vote vote;

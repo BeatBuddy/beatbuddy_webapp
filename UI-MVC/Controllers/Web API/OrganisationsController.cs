@@ -20,7 +20,8 @@ using System.Web.Http;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
-
+    [RoutePrefix("api/organisations")]
+    [Authorize]
     public class OrganisationsController : ApiController
     {
         private readonly IOrganisationManager organisationManager;
@@ -41,8 +42,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         // POST: api/organisations
         [HttpPost]
-        [Authorize]
-        [Route("organisations")]
+        [Route("")]
         public IHttpActionResult Post([FromUri] string name, [FromUri] string description, [FromUri] string color, FormDataCollection formData)
         {
             string imagePath = "";
@@ -90,7 +90,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
 
         [HttpGet]
-        [Route("organisations/{id}")]
+        [Route("{id}")]
         public IHttpActionResult Get([FromUri] long id)
         {
             var organisation = organisationManager.ReadOrganisation(id);

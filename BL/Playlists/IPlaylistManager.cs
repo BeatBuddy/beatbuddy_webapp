@@ -1,6 +1,4 @@
-﻿using System;
-using BB.BL.Domain.Organisations;
-using BB.BL.Domain.Playlists;
+﻿using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 using System.Collections.Generic;
 
@@ -34,6 +32,7 @@ namespace BB.BL
         //Track
         Track AddTrackToPlaylist(long playlistId, Track track);
         IEnumerable<Track> ReadTracks();
+        Track ReadTrack(long trackId);
 
         //TrackSource
 
@@ -42,8 +41,5 @@ namespace BB.BL
         Vote UpdateVote(Vote vote);
         IEnumerable<Vote> ReadVotesForUser(User user);
         void DeleteVote(long playlistTrackId, long userId);
-
-
-
     }
 }

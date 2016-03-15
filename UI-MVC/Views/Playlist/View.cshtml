@@ -29,13 +29,7 @@
                 </a>
 
             </div>
-            <div>
-                <a class="btn btn-right"  id="tuneIn">
-                    <i class="material-icons">audiotrack</i>    Tune in live    
-                </a>
-
-                
-            </div>
+            
             <p class="nomargintop textshadow">@Model.Description</p>
 
             <div>
@@ -71,11 +65,15 @@
     }
     @if (Request.IsAuthenticated)
     {
+
         <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
             <i class="material-icons">playlist_add</i> add track
         </a>
-    }
 
+            <a href="#addPlaylistModal" class="btn btn-right" style="margin-right: 20px">
+                <i class="material-icons">playlist_add</i> import playlist
+            </a>
+    }
 </div>
 
 @if (Request.IsAuthenticated)
@@ -96,13 +94,26 @@
         </div>
     </div>
 </div>
-
+<div id="addPlaylistModal" class="modal" style="margin-top: -150px">
+    <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+        <a href="#closePlaylist" id="close-modal-playlist" title="Close" class="close">X</a>
+        <div class="modal-body" style="height: 100%; width: 100%">
+            @{
+                Html.RenderPartial("AddPlaylist");
+            }
+        </div>
+    </div>
+</div>
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
         <div id="footertop" style="text-align: center; cursor: pointer" click="clickFooter">
             <i id="footerIcon" class="material-icons">keyboard_arrow_up</i>
         </div>
-        <i id="fullscreenbutton" class="material-icons">fullscreen</i>
+        
+                <i id="tuneinbutton" style="display: none"  class="material-icons">volume_up</i>    
+            <i id="fullscreenbutton"  class="material-icons">fullscreen</i>
+        
+        
         
         <table style="width: 100%; margin-top: -15px">
             <tr>
@@ -180,14 +191,27 @@
             cue_and_play(data, 0);
             var playBtn = document.getElementById("playBtn");
             playBtn.style.display = "none";
-            var nextBtn = document.getElementById("nextBtn");
-            nextBtn.style.display = "none";
+            //var nextBtn = document.getElementById("nextBtn");
+            //nextBtn.style.display = "none";
         }
 
         play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
         }
 
+        play.client.stopMusicPlaying = function() {
+            closeFooter();
+            document.getElementById("nowPlaying").innerHTML = "";
+            $('#thumbnail').attr("src", '@Url.Content("~/Content/img/default_cover.png")');
+            $('#nowPlayingAlbumArt').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
+            var time = document.getElementById("time");
+            time.innerHTML = "";
+            
+            player.stopVideo();
+        }
+
+        
         play.client.resumeMusicPlaying = function(data) {
             player.seekTo(data);
             player.playVideo();
@@ -233,8 +257,9 @@
         play.client.syncLive = function(data) {
             play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime(), data);
         }
-        play.client.fakeLive = function(data, startSeconds) {
+        play.client.fakeLive = function(data) {
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
+            document.getElementById("tuneinbutton").style.display = "inline";
 
             if (data.CoverArtUrl != null) {
                 $('#thumbnail').attr("src", data.CoverArtUrl);
@@ -246,6 +271,8 @@
                 $('#fullscreenplayer').css('background-image', "url(" + '@Url.Content("~/Content/img/default_cover.png")' + ")");
             }
             openFooter();
+            updatePlaylist();
+
         }
 
         play.client.playLive = function(data, startSeconds) {
@@ -255,7 +282,7 @@
                 cue_and_play(data, startSeconds+1);
             }
         }
-        $('#tuneIn').click(function () {
+        $('#tuneinbutton').click(function () {
             play.server.playLive("@Model.Id");
         });
         function cue_and_play(data, seconds){
@@ -278,7 +305,7 @@
             updatePlaylist();
             player.playVideo();
         }
-        
+
         var footerOpen = false;
         jQuery(function($) {
             $('#footertop').click(function () {
@@ -406,7 +433,7 @@
             });
         }
 
-        var firstPlay = false;
+        var firstPlay = true;
 
         function onPlayerReady(event) {
             var playButton = document.getElementById("playBtn");
@@ -419,7 +446,6 @@
             $.connection.hub.start().done(function() {
                 play.server.joinGroup("@Model.Id");
             });
-
         }
 
         function assignPlaylistMaster(userData) {
@@ -462,12 +488,14 @@
         var startedPlaying = false;
 
         function onPlayerStateChange(event) {
-
+            
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
             var icon = document.getElementById("icon");
-            if (event.data === -1) {
+            if (event.data === -1 && firstPlay) {
+                
                 player.playVideo();
+                firstPlay = false;
             }
             if (event.data === YT.PlayerState.PLAYING) {
                 playing = true;
@@ -486,6 +514,7 @@
             }
 
             if (startedPlaying && event.data === YT.PlayerState.ENDED) {
+                
                 playing = false;
                 getNextTrack();
             }
@@ -544,6 +573,7 @@
                 playBtn.addEventListener("click", getNextTrack);
                 var time = document.getElementById("time");
                 time.innerHTML = '';
+                currentTrack = null;
             });
         }
 
@@ -553,12 +583,9 @@
                 data: { id: @ViewBag.PlaylistId },
                 async: false
             }).done(function() {
-                if (!firstPlay) {
-                    assignPlaylistMaster('@User.Identity.Name');
-                    firstPlay = true;
-                } else {
+               
                     updatePlaylist();
-                }
+                
             }).fail(function() {
                 var nextButton = document.getElementById("nextBtn");
                 nextButton.className = 'btn disabled';
@@ -570,9 +597,6 @@
             });
         }
 
-        function stopVideo() {
-            player.stopVideo();
-        }
 
         function updatePlaylist() {
             $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
@@ -611,7 +635,7 @@
             }
         });
 
-       
+
 
 
         function setClickableTooltip(target, content){
@@ -634,6 +658,78 @@
                 }
             });
         }
+    var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
+           '<img class="thumbnail" src="${ImageUrl}"/>' +
+           '<span class="artist">${Name}</span>' +
+           '</li>';
+    $.template("playlistTemplate", markupPlaylist);
 
+
+    $.ajaxSetup({
+        beforeSend: function () {
+            $("#loadingPlaylist").show();
+        },
+        complete: function () {
+            $("#loadingPlaylist").hide();
+        }
+    });
+    $("#loadingPlaylist").hide();
+
+    function fetchQueryResultsPlaylist() {
+        $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
+            .done(function (result) {
+                $("#resultsPlaylist").empty();
+                $.tmpl("playlistTemplate", result).appendTo("#resultsPlaylist");
+                $("#resultsPlaylist li").on("click", function () {
+                    addPlaylist($(this).attr('data-id'));
+                });
+            })
+            .fail(function () {
+                alert("error");
+            });
+    }
+
+        function addPlaylist(id) {
+            $("#loadingPlaylist").show();
+            notie.alert(1, 'Playlist is being added. This could take a while. Please wait...', 15);
+            $("#close-modal-playlist").hide();
+            $.ajax({
+                url: '@Url.Action("AddPlaylist")',
+                method: 'POST',
+                data: { playlistId: @ViewBag.PlaylistId, id: id }
+            }).done(function() {
+                $("#loadingPlaylist").hide();
+                $("waitPlaylist").hide();
+                window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
+                updatePlaylist();
+                var playBtn = document.getElementById('playBtn');
+                playBtn.className = 'btn';
+                playBtn.addEventListener("click", getNextTrack);
+
+            });
+        }
+
+    function debouncePlaylist(func, wait, immediate) {
+        var timeout;
+        return function () {
+            var context = this, args = arguments;
+            var later = function () {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
+
+    var debouncedFetchPlaylist = debouncePlaylist(function () {
+        fetchQueryResultsPlaylist();
+    }, 500);
+
+    $("#playlistAdd").on('keydown', function () {
+        debouncedFetchPlaylist();
+    });
     </script>
 }
