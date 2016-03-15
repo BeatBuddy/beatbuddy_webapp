@@ -43,16 +43,7 @@
         }
 
         function lookUpOrganisation(id) {
-            $.ajax({
-                url: '@Url.Action("GoToOrganisation")',
-                method: 'POST',
-                data: { id: id}
-            }).done(function () {
-                
-            })
-            .fail(function (data) {
-                alert(data);
-            });
+                window.location.href = 'Organisations/Details/' + id;
         }
 
         function debounce(func, wait, immediate) {

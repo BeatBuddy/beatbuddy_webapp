@@ -53,7 +53,7 @@ namespace BB.UI.Web.MVC
             container.RegisterType<ITrackProvider, YouTubeTrackProvider>();
             container.RegisterType<IAlbumArtProvider, BingAlbumArtProvider>();
             container.RegisterType<AccountController>(new InjectionConstructor(new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)))));
-            container.RegisterType<ManageController>(new InjectionConstructor());
+            container.RegisterType<ManageController>(new InjectionConstructor(new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)))));
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
         }

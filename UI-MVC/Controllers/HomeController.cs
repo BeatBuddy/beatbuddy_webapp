@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
+using Newtonsoft.Json;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -41,17 +42,17 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
 
-        public JsonResult SearchOrganisation(string q)
+        public ActionResult SearchOrganisation(string q)
         {
            var searchResult = organisationManager.SearchOrganisations(q);
-
-            return Json(searchResult, JsonRequestBehavior.AllowGet);
+            string json =  JsonConvert.SerializeObject(searchResult, Formatting.Indented,
+                            new JsonSerializerSettings
+                            {
+                                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            });
+            return new ContentResult { Content = json, ContentType = "application/json" };
         }
 
-        public ActionResult GoToOrganisation(long id)
-        {
-            return View("Organisations/Details/" + id);
-        }
 
 
     }

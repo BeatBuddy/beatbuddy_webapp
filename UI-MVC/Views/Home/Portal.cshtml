@@ -233,7 +233,7 @@
             window.location.href = '#editPlaylistModal';
         }
 
-          var markupOrganisation = '<li class="organisation" data-id="${Id}">' +
+        var markupOrganisation = '<li class="organisation" data-id="${Id}">' +
             '<span class="artist">${Name}</span>' +
             '</li>';
         $.template("organisationTemplate", markupOrganisation);
@@ -262,19 +262,11 @@
                 });
         }
 
-        function lookUpOrganisation(id) {
-            $.ajax({
-                url: '@Url.Action("GoToOrganisation")',
-                method: 'POST',
-                data: { id: id}
-            }).done(function () {
 
-            })
-            .fail(function (data) {
-                alert(data);
-            });
-        }
-
+            function lookUpOrganisation(id) {
+                window.location.href = '/Organisations/Details/' + id;
+            }
+        
         function debounce(func, wait, immediate) {
             var timeout;
             return function () {
