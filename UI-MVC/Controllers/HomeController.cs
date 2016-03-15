@@ -39,5 +39,20 @@ namespace BB.UI.Web.MVC.Controllers
             ViewBag.RecommendedPlaylists = playlistManager.ReadPlaylists().Reverse().Take(3).ToList();
             return View();
         }
+
+
+        public JsonResult SearchOrganisation(string q)
+        {
+           var searchResult = organisationManager.SearchOrganisations(q);
+
+            return Json(searchResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GoToOrganisation(long id)
+        {
+            return View("Organisations/Details/" + id);
+        }
+
+
     }
 }

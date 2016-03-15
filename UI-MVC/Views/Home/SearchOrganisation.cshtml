@@ -1,0 +1,85 @@
+﻿<div class="title">
+    <h1>Search</h1> a organisation
+</div>
+<div class="first-form-group">
+    @Html.Label("Search your organisation here: ", new { @class = "control-label", style = "margin-top: 1em" })
+</div>
+<div>
+    @Html.TextBox("searchOrganisation", null, new { @class = "custom-input-organisations", style = "margin-top: 0.6em; width: 90%" })
+</div>
+
+<img id="loadingOrganisation" src="~/Content/img/round_shape_loader.gif" alt="loading" hidden />
+
+<ul id="resultsOrganisation" class="row"></ul>
+@section scripts{
+    <script>
+        var markupOrganisation = '<li class="organisation" data-id="${Id}">' +
+            '<span class="artist">${Name}</span>' +
+            '</li>';
+        $.template("organisationTemplate", markupOrganisation);
+
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("#loadingOrganisation").show();
+            },
+            complete: function () {
+                $("#loadingOrganisation").hide();
+            }
+        });
+        $("#loadingOrganisation").hide();
+
+        function fetchQueryResultsOrganisation() {
+            $.ajax('@Url.Action("SearchOrganisation")/?q=' + $('#searchOrganisation').val())
+                .done(function (result) {
+                    $("#resultsOrganisation").empty();
+                    $.tmpl("organisationTemplate", result).appendTo("#resultsOrganisation");
+                    $("#resultsOrganisation li").on("click", function () {
+                        lookUpOrganisation($(this).attr('data-id'));
+                    });
+                })
+                .fail(function (data) {
+                    alert(data);
+                });
+        }
+
+        function lookUpOrganisation(id) {
+            $.ajax({
+                url: '@Url.Action("GoToOrganisation")',
+                method: 'POST',
+                data: { id: id}
+            }).done(function () {
+                
+            })
+            .fail(function (data) {
+                alert(data);
+            });
+        }
+
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
+        var debouncedFetchOrganisation = debounce(function () {
+            fetchQueryResultsOrganisation();
+        }, 500);
+
+        $("#searchOrganisation").on('keydown', function () {
+            debouncedFetchOrganisation();
+        });
+    </script>
+}
+
+
+
+
