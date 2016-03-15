@@ -156,6 +156,20 @@ header {
             }
         }
 
+        .btn-chat{
+                display: inline-block;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.8em;
+    padding: .2em 1em;
+    text-transform: lowercase;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 100;
+        }
+
         @media screen and (max-width: $mobile-breakpoint) {
             padding: 4% $sidemargin-mobile 3em $sidemargin-mobile;
 
