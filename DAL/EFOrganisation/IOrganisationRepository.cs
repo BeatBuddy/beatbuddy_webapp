@@ -16,10 +16,6 @@ namespace BB.DAL.EFOrganisation
         Organisation DeleteOrganisation(long organisationId);
         Organisation ReadOrganisationForPlaylist(long playlistId);
         //DashboardBlock
-        DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock);
-        DashboardBlock UpdateDashboardBlock(DashboardBlock block);
-        IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation);
-        void DeleteDashboardBlock(long blockId);
         
     }
 }

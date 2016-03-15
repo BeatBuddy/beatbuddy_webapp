@@ -11,11 +11,10 @@ namespace BB.DAL.EFUser
         User UpdateUser(User user);
         User ReadUser(long userId);
         User ReadUser(string email);
-        User ReadUser(string lastname, string firstname);
         IEnumerable<User> ReadUsers();
         User ReadOrganiserFromOrganisation(Organisation organisation);
         IEnumerable<User> ReadCoOrganiserFromOrganisation(Organisation organisation);
-        void DeleteUser(long userId);
+        void DeleteUser(User user);
 
         //UserRole
         IEnumerable<UserRole> ReadUserRolesForOrganisation(Organisation organisation);

@@ -4,6 +4,17 @@
     ViewBag.Title = "Create";
 }
 
+@if (!ViewData.ModelState.IsValid)
+{
+    var validationErrors = string.Join(",",
+                    ViewData.ModelState.Values.Where(E => E.Errors.Count > 0)
+                    .SelectMany(E => E.Errors)
+                    .Select(E => E.ErrorMessage)
+                    .ToArray());
+
+    <p class="field-validation-error">@validationErrors</p>
+}
+
 <div class="title">
     <h1>Create</h1>
     a new organisation

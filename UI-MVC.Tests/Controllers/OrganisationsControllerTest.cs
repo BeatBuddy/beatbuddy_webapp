@@ -2,11 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 using BB.BL.Domain.Users;
-using BB.DAL;
-using BB.DAL.EFOrganisation;
-using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers;
 using BB.UI.Web.MVC.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,14 +15,16 @@ namespace BB.UI.Web.MVC.Tests.Controllers
     {
         private OrganisationsController _organisationsController;
         private IUserManager userManager;
+        private IPlaylistManager playlistManager;
         
 
         [TestInitialize]
         public void TestInitialize()
         {
             userManager = DbInitializer.CreateUserManager();
+            playlistManager = DbInitializer.CreatePlaylistManager();
 
-            _organisationsController = new OrganisationsController(DbInitializer.CreateOrganisationManager(), userManager);
+            _organisationsController = new OrganisationsController(DbInitializer.CreateOrganisationManager(), userManager, playlistManager);
             DbInitializer.Initialize();
         }
 

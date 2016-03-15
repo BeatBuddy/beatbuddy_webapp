@@ -14,27 +14,35 @@
                 var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
                 <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
             }
-
+                    
             <div class="fill">
                 <div class="title">
                     <h1>Playlist</h1>@Model.Name
-                </div>
-
+        </div>
+            
                 <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new { id = Model.Id })">
                     <i class="material-icons">history</i> History
                 </a>
 
-                <a class="btn btn-right">
+                <a class="btn btn-right" href="#sharedialog">
                     <i class="material-icons">link</i> Share
                 </a>
+
+    </div>
+            <div>
+                <a class="btn btn-right"  href="@Url.Action("View", "History", new {id = Model.Id})">
+                    <i class="material-icons">audiotrack</i>    Tune in live    
+                </a>
+
+                
             </div>
             <p class="nomargintop textshadow">@Model.Description</p>
 
             <div>
                 <h3 id="listenerCount"></h3>
                 <div id="listenerImg" class="co-organiser" style="float: left;">
-                </div>
-            </div>
+</div>    
+</div>    
         </div>    
 </div>}    
 
@@ -63,14 +71,18 @@
     }
     @if (Request.IsAuthenticated)
     {
+
     <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
         <i class="material-icons">playlist_add</i> add track
     </a>
+
+            <a href="#addPlaylistModal" class="btn btn-right" style="margin-right: 20px">
+                <i class="material-icons">playlist_add</i> import playlist
+            </a>
     }
+</div>
 
-    </div>
    
-
 <div id="addTrackModal" class="modal" style="margin-top: -150px">
     <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
         <a href="#close" id="close-modal" title="Close" class="close">X</a>
@@ -105,6 +117,7 @@
             <i id="footerIcon" class="material-icons">keyboard_arrow_up</i>
         </div>
         <i id="fullscreenbutton" class="material-icons">fullscreen</i>
+        
         <table style="width: 100%; margin-top: -15px">
             <tr>
                 <td style="width: 5%">
@@ -147,30 +160,30 @@
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
 
-<script>
+    <script>
         var currentTrack = null;
-    var play = $.connection.playlistHub;
-    var chat = $.connection.chatHub;
-    $(function () {
+        var play = $.connection.playlistHub;
+        var chat = $.connection.chatHub;
+        $(function () {
            chat.client.broadcastMessage = function (name, message, image) {
-               var encodedName = $('<div />').text(name).html();
-               var encodedMsg = $('<div />').text(message).html();
+                var encodedName = $('<div />').text(name).html();
+                var encodedMsg = $('<div />').text(message).html();
                if (image == "/Content/img/Users/"){
                    image = "/Content/img/default-avatar.png"
                }
                $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" id="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" id="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
                    + '</strong><br />' + encodedMsg + '</div></li>');
-           };
-           $('#message').focus();
-           $.connection.hub.start().done(
-               function () {
-               chat.server.joinGroup("@Model.Id");
-               $('#sendmessage').click(function () {
+            };
+            $('#message').focus();
+            $.connection.hub.start().done(
+                function () {
+                    chat.server.joinGroup("@Model.Id");
+                    $('#sendmessage').click(function () {
                    chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
-                   $('#message').val('').focus();
-               });
-           });
-       });
+                        $('#message').val('').focus();
+                    });
+                });
+        });
 
 
 
@@ -180,7 +193,7 @@
 
         play.client.startMusicPlaying = function(data) {
             cue_and_play(data, 0);
-            }
+        }
 
         play.client.pauseMusicPlaying = function() {
             player.pauseVideo();
@@ -205,14 +218,14 @@
                 img = document.createElement("img");
                 if (users[i].User != null) {
                     if (users[i].User.ImageUrl != null) {
-                        img.src = "/Content/img/Users/" + users[i].User.ImageUrl;    
+                        img.src = "/Content/img/Users/" + users[i].User.ImageUrl;
                     } else {
-                        img.src = "/Content/img/default-avatar.png";    
+                        img.src = "/Content/img/default-avatar.png";
                     }
                     img.className = 'round';
                     img.style.marginRight = "10px";
                     img.title = users[i].User.Email;
-                    src.appendChild(img);    
+                    src.appendChild(img);
                 } else {
                     unknownUserCounter++;
 
@@ -223,7 +236,7 @@
                 img.src = "/Content/img/default-avatar.png";
                 img.className = 'round';
                 img.title = unknownUserCounter + " sneaky listener(s)";
-                src.appendChild(img); 
+                src.appendChild(img);
             }
             document.getElementById('listenerCount').innerHTML = data+"";
         }
@@ -237,12 +250,8 @@
             if (data != null) {
                 cue_and_play(data, startSeconds+2);
             }
-
-
         }
-        play.client.joinGroup = function() {
 
-        }
         function cue_and_play(data, seconds){
             player.cueVideoById(data.TrackId, seconds, "small");
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
@@ -415,7 +424,6 @@
         var player;
 
         function onYouTubeIframeAPIReady() {
-
             player = new YT.Player('player', {
                 height: '390',
                 width: '640',
@@ -424,16 +432,11 @@
                     'onStateChange': onPlayerStateChange
                 }
             });
-
-
-
         }
 
         var firstPlay = false;
 
         function onPlayerReady(event) {
-
-
             var playButton = document.getElementById("playBtn");
             if(playButton != null) playButton.addEventListener("click", getNextTrack);
 
@@ -634,7 +637,7 @@
         });
 
         window.onunload = window.onbeforeunload = (function() {
-            assignPlaylistMaster(@null);
+            //assignPlaylistMaster(@null);
         });
 
 
@@ -647,7 +650,7 @@
                 close: function(event, ui){
                     ui.tooltip.hover(
                         function () {
-                            $(this).stop(true).fadeTo(400, 1); 
+                            $(this).stop(true).fadeTo(400, 1);
                         },
                         function () {
                             $(this).fadeOut("400", function() {
@@ -655,9 +658,81 @@
                             });
                         }
                     );
-                }  
+                }
+            });
+        }
+    var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
+           '<img class="thumbnail" src="${ImageUrl}"/>' +
+           '<span class="artist">${Name}</span>' +
+           '</li>';
+    $.template("playlistTemplate", markupPlaylist);
+
+
+    $.ajaxSetup({
+        beforeSend: function () {
+            $("#loadingPlaylist").show();
+        },
+        complete: function () {
+            $("#loadingPlaylist").hide();
+        }
+            });
+    $("#loadingPlaylist").hide();
+
+    function fetchQueryResultsPlaylist() {
+        $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
+            .done(function (result) {
+                $("#resultsPlaylist").empty();
+                $.tmpl("playlistTemplate", result).appendTo("#resultsPlaylist");
+                $("#resultsPlaylist li").on("click", function () {
+                    addPlaylist($(this).attr('data-id'));
+                });
+            })
+            .fail(function () {
+                alert("error");
             });
         }
 
+        function addPlaylist(id) {
+            $("#loadingPlaylist").show();
+            notie.alert(1, 'Playlist is being added. This could take a while. Please wait...', 15);
+            $("#close-modal-playlist").hide();
+            $.ajax({
+                    url: '@Url.Action("AddPlaylist")',
+                    method: 'POST',
+                    data: { playlistId: @ViewBag.PlaylistId, id: id}
+            }).done(function () {
+                $("#loadingPlaylist").hide();
+                $("waitPlaylist").hide();
+            window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
+            updatePlaylist();
+            var playBtn = document.getElementById('playBtn');
+            playBtn.className = 'btn';
+            playBtn.addEventListener("click", getNextTrack);
+
+        })
+        }
+
+    function debouncePlaylist(func, wait, immediate) {
+        var timeout;
+        return function () {
+            var context = this, args = arguments;
+            var later = function () {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
+
+    var debouncedFetchPlaylist = debouncePlaylist(function () {
+        fetchQueryResultsPlaylist();
+    }, 500);
+
+    $("#playlistAdd").on('keydown', function () {
+        debouncedFetchPlaylist();
+    });
     </script>
 }

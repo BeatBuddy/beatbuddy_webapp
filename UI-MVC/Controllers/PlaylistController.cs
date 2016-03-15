@@ -262,18 +262,6 @@ namespace BB.UI.Web.MVC.Controllers
 
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
 
-            if (viewModel.OrganisationId != 0)
-            {
-                try
-                {
-                    org = organisationManager.ReadOrganisation(viewModel.OrganisationId);
-                }
-                catch
-                {
-                    ModelState.AddModelError("OrganisationFault", "The organisation could not be found or you have insufficient rights");
-                    return View("Create");
-                }
-            }
             if (avatarImage != null && avatarImage.ContentLength > 0)
             {
                 var bannerFileName = Path.GetFileName(avatarImage.FileName);
@@ -282,19 +270,32 @@ namespace BB.UI.Web.MVC.Controllers
                 path = Path.GetFileName(path);
             }
 
-            if (org != null)
+            if (viewModel.OrganisationId != 0)
             {
-                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, org);
+                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, viewModel.OrganisationId);
             }
             else
             {
                 playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
             }
             
-            
-
             return RedirectToAction("View/" + playlist.Id);
 
+        }
+
+        public ActionResult Dashboard(long playlistId)
+        {
+            if (User != null)
+            {
+                user = userManager.ReadUser(User.Identity.Name);
+            }
+            var playlist = playlistManager.ReadPlaylist(playlistId);
+            
+            /*
+            ViewBag.Organisers = playlistOwners;
+            ViewBag.VotesUser = votesUser;
+          */
+            return View(playlist);
         }
 
         [HttpPost]
@@ -304,6 +305,33 @@ namespace BB.UI.Web.MVC.Controllers
             var playlist = playlistManager.DeletePlaylist(id);
             if (playlist == null) return new HttpStatusCodeResult(400);
             return new HttpStatusCodeResult(200);
+        }
+
+        public ActionResult AddPlaylist(long playlistId, string id)
+        {
+            var youtubeProvider = new YouTubeTrackProvider();
+
+            var tracks = youtubeProvider.LookUpPlaylist(id);
+
+            /*var user = userManager.ReadUser("lennart.boeckx@gmail.com");
+            var organisation = organisationManager.ReadOrganisation("lenni's party");
+
+            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation);*/
+
+            foreach (Track track in tracks)
+            {
+                playlistManager.AddTrackToPlaylist(playlistId, track);
+            }
+
+            return null;
+        }
+
+        public JsonResult SearchPlaylist(string q)
+        {
+            var youtubeProvider = new YouTubeTrackProvider();
+            var searchResult = youtubeProvider.SearchPlaylist(q);
+
+            return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
     }
 }

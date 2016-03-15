@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
 using System.Data.Entity;
-using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 
@@ -23,11 +21,6 @@ namespace BB.DAL.EFOrganisation
             return context.Organisations.SingleOrDefault(o => o.Playlists.FirstOrDefault(p => p.Id == playlistId).Id == playlistId);
         }
 
-        public DashboardBlock CreateDashboardBlock(DashboardBlock dashboardBlock)
-        {
-            throw new NotImplementedException();
-        }
-
         public Organisation CreateOrganisation(Organisation organisation, User user)
         {
             organisation = context.Organisations.Add(organisation);
@@ -43,11 +36,6 @@ namespace BB.DAL.EFOrganisation
             context.UserRole.Add(userRole);
             context.SaveChanges();
             return organisation;
-        }
-
-        public void DeleteDashboardBlock(long blockId)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<Organisation> ReadOrganisationsForUser(long userId)
@@ -67,11 +55,6 @@ namespace BB.DAL.EFOrganisation
             return org;
         }
 
-        public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
-        {
-            throw new NotImplementedException();
-        }
-
         public Organisation ReadOrganisation(string organisationName)
         {
             return context.Organisations.FirstOrDefault(o => o.Name.Equals(organisationName));
@@ -81,7 +64,7 @@ namespace BB.DAL.EFOrganisation
         {
             return context.Organisations
                 .Include(o => o.Playlists)
-                .First(o => o.Id == organisationId);
+                .FirstOrDefault(o => o.Id == organisationId);
         }
 
         public IEnumerable<Organisation> ReadOrganisations()
@@ -89,14 +72,9 @@ namespace BB.DAL.EFOrganisation
             return context.Organisations;
         }
 
-        public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
-        {
-            throw new NotImplementedException();
-        }
-
         public Organisation UpdateOrganisation(Organisation organisation)
         {
-            context.Entry(organisation).State = System.Data.Entity.EntityState.Modified;
+            context.Entry(organisation).State = EntityState.Modified;
             context.SaveChanges();
             return organisation;
         }

@@ -29,16 +29,6 @@ namespace BB.BL
             return organisationsRepository.ReadOrganisationsForUser(userId);
         }
 
-        public DashboardBlock CreateDashboardBlock(string blockName, int sequence)
-        {
-            DashboardBlock block = new DashboardBlock
-            {
-                BlockName = blockName,
-                Sequence = sequence
-            };
-            return organisationsRepository.CreateDashboardBlock(block);
-        }
-
         public Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator)
         {
             Organisation organisation = new Organisation
@@ -52,19 +42,9 @@ namespace BB.BL
             return organisationsRepository.CreateOrganisation(organisation, organisator);
         }
 
-        public void DeleteDashboardBlock(long blockId)
-        {
-            organisationsRepository.DeleteDashboardBlock(blockId);
-        }
-
         public Organisation DeleteOrganisation(long organisationId)
         {
             return organisationsRepository.DeleteOrganisation(organisationId);
-        }
-
-        public IEnumerable<DashboardBlock> ReadDashboardBlocks(Organisation organisation)
-        {
-            return organisationsRepository.ReadDashboardBlocks(organisation);
         }
 
         public Organisation ReadOrganisation(string organisationName)
@@ -80,13 +60,6 @@ namespace BB.BL
         public IEnumerable<Organisation> ReadOrganisations()
         {
             return organisationsRepository.ReadOrganisations();
-        }
-
-        
-
-        public DashboardBlock UpdateDashboardBlock(DashboardBlock block)
-        {
-            return organisationsRepository.UpdateDashboardBlock(block);
         }
 
         public Organisation UpdateOrganisation(Organisation organisation)
