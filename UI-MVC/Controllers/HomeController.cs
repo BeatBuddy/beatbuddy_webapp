@@ -12,7 +12,6 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IPlaylistManager playlistManager;
         private readonly IOrganisationManager organisationManager;
 
-
         public HomeController(IUserManager userManager, IPlaylistManager playlistManager,
             IOrganisationManager organisationManager)
         {
@@ -20,9 +19,6 @@ namespace BB.UI.Web.MVC.Controllers
             this.playlistManager = playlistManager;
             this.organisationManager = organisationManager;
         }
-        
-
-        
 
         public ActionResult Index()
         {
@@ -41,7 +37,6 @@ namespace BB.UI.Web.MVC.Controllers
             return View();
         }
 
-
         public ActionResult SearchOrganisation(string q)
         {
            var searchResult = organisationManager.SearchOrganisations(q);
@@ -52,8 +47,6 @@ namespace BB.UI.Web.MVC.Controllers
                             });
             return new ContentResult { Content = json, ContentType = "application/json" };
         }
-
-
 
     }
 }
