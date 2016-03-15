@@ -334,17 +334,16 @@
         var footerOpen = false;
         var chatOpen = true;
 
-        jQuery(function($){
-            $('#chatArrow').click(function(){
-                if(chatOpen ===false){
+        jQuery(function($) {
+            $('#chatArrow').click(function() {
+                if (chatOpen === false) {
                     openChat();
                     chatOpen = true;
-                } 
-                else{
-                closeChat()
-                chatOpen = false;
+                } else {
+                    closeChat()
+                    chatOpen = false;
                 };
-            })
+            });
         });
         
         function openChat(){
