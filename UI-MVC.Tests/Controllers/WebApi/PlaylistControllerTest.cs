@@ -95,36 +95,37 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .NotFound();
         }
 
-        //[TestMethod]
-        //public void getHistoryTest() {
-        //    Track trackForHistory = playlistManager.AddTrackToPlaylist(playlist.Id, new Track {
-        //        Artist = "Matthias Heylen",
-        //        CoverArtUrl = "",
-        //        Duration = 312,
-        //        Title = "Toplied",
-        //        TrackSource = new TrackSource {
-        //            SourceType = SourceType.YouTube,
-        //            TrackId = "oyEuk8j8imI",
-        //            Url = "https://www.youtube.com/watch?v=oyEuk8j8imI"
-        //        }
-        //    });
-        //    MyWebApi.Controller<PlaylistController>()
-        //        .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
-        //        .WithResolvedDependencyFor<UserManager>(userManager)
-        //        .WithAuthenticatedUser(
-        //         u => u.WithIdentifier("NewId")
-        //               .WithUsername(user.Email)
-        //               .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email))
-        //               .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.WindowsSubAuthority, user.Email))
-        //               .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
-        //               .InRoles("Admin", "User")
-        //        )
-        //        .Calling(c => c.getNextTrack(playlist.Id))
-        //        .ShouldReturn()
-        //        .Ok()
-        //        .WithResponseModelOfType<Track>();
-        //}
-       
+        /*
+        [TestMethod]
+        public void getHistoryTest() {
+            Track trackForHistory = playlistManager.AddTrackToPlaylist(playlist.Id, new Track {
+                Artist = "Matthias Heylen",
+                CoverArtUrl = "",
+                Duration = 312,
+                Title = "Toplied",
+                TrackSource = new TrackSource {
+                    SourceType = SourceType.YouTube,
+                    TrackId = "oyEuk8j8imI",
+                    Url = "https://www.youtube.com/watch?v=oyEuk8j8imI"
+                }
+            });
+            MyWebApi.Controller<PlaylistController>()
+                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
+                .WithResolvedDependencyFor<UserManager>(userManager)
+                .WithAuthenticatedUser(
+                 u => u.WithIdentifier("NewId")
+                       .WithUsername(user.Email)
+                       .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email))
+                       .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
+                       .InRoles("Admin", "User")
+                )
+                .Calling(c => c.getNextTrack(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Track>();
+        }*/
+        
+        
 
         /*
         [TestMethod]

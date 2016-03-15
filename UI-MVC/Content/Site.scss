@@ -150,24 +150,25 @@ header {
             border-radius: 5px;
             font-weight: 100;
             margin-right: .3em;
-            margin-bottom:0.5em;
+            margin-bottom: 0.5em;
+
             &:hover {
                 background: rgba(255, 255, 255, 0.2);
             }
         }
 
-        .btn-chat{
-                display: inline-block;
-    border: 2px solid #fff;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1.8em;
-    padding: .2em 1em;
-    text-transform: lowercase;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 100;
+        .btn-chat {
+            display: inline-block;
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.8em;
+            padding: .2em 1em;
+            text-transform: lowercase;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 100;
         }
 
         @media screen and (max-width: $mobile-breakpoint) {
@@ -459,7 +460,9 @@ header {
         clear: both;
 
         .albumart {
+            width: 48px;
             height: 48px;
+            background-image: url(img/img/default_cover.png);
             display: inline-block;
             float: left;
             margin-right: .7em;
@@ -492,8 +495,21 @@ header {
     height: 100%;
     color: white;
     background-color: black;
-    background-size: cover;
-    background-position: center center;
+
+    #backgroundcover {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center center;
+        filter: blur(15px);
+        -webkit-filter: blur(15px);
+        -moz-filter: blur(15px);
+        -o-filter: blur(15px);
+        -ms-filter: blur(15px);
+    }
 
     #darkoverlay {
         position: relative;
@@ -569,6 +585,72 @@ header {
             right: 0;
             width: 0%;
             height: 9px;
+        }
+    }
+
+    #fullscreenComingUp {
+        position: absolute;
+        top: 10%;
+        left: 10%;
+
+        p {
+            font-size: 3em;
+            font-weight: 500;
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+        ul {
+            padding: 0;
+
+            li {
+                list-style-type: none;
+                padding: .5em 0;
+
+                .counter {
+                    font-size: 1.8em;
+                    font-weight: 300;
+                    vertical-align: middle;
+                    margin-right: .8em;
+                }
+
+                .albumart {
+                    width: 64px;
+                    height: 64px;
+                    background-image: url(img/img/default_cover.png);
+                    vertical-align: middle;
+                }
+
+                .trackartist {
+                    margin-left: .8em;
+                    font-size: 1.8em;
+                    font-weight: 500;
+                    vertical-align: middle;
+                }
+
+                .tracktitle {
+                    font-size: 1.8em;
+                    font-weight: 300;
+                    vertical-align: middle;
+                }
+
+                i {
+                    margin-left: 1em;
+                    margin-right: .5em;
+                }
+
+                &.first {
+                    opacity: 1;
+                }
+
+                &.second {
+                    opacity: 0.7;
+                }
+
+                &.third {
+                    opacity: 0.4;
+                }
+            }
         }
     }
 }
@@ -760,6 +842,7 @@ header {
         display: block;
         min-height: 128px;
         clear: both;
+        cursor: pointer;
 
         img {
             height: 128px;
@@ -773,7 +856,6 @@ header {
             display: block;
             font-weight: 700;
         }
-
     }
 }
 
@@ -797,7 +879,8 @@ header {
         background: #222;
     }
 }
-.btn-chat{
+
+.btn-chat {
     display: inline-block;
     border: 2px solid #fff;
     background: transparent;
@@ -830,6 +913,10 @@ header {
 
 .btn-left {
     float: left;
+}
+
+.btn-social {
+    width: 133px;
 }
 
 .btn-login {
@@ -890,8 +977,16 @@ footer {
 
     #fullscreenbutton {
         color: white;
-        right: 0;
-        top: 1em;
+        right: 2px;
+        top: 1.2em;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    #tuneinbutton {
+        color: white;
+        right: 15px;
+        top: 1.2em;
         position: absolute;
         cursor: pointer;
     }
@@ -919,43 +1014,39 @@ footer {
     }
 }
 
-.organisation-full-banner
-{
+.organisation-full-banner {
     width: 100%;
     height: 200px;
     background-size: cover;
     background-position: center center;
 }
 
-.card{
-      background-color:white;
-        padding:25px 50px;
-        margin:25px;
+.card {
+    background-color: white;
+    padding: 25px 50px;
+    margin: 25px;
 }
 
-.chart{
-  width: 200px;
-  height: 200px;
-  margin: 10px;
-  position: relative;
-  //box-sizing:border-box;
-  text-align:center;
-  span{
-      display:block;
-    font-size: 2em;
-    font-weight: normal;
-    vertical-align:middle;
-  }
+.chart {
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    position: relative;
+    //box-sizing:border-box;
+    text-align: center;
 
-.chart-text{
-     padding-top:60%;
-}
+    span {
+        display: block;
+        font-size: 2em;
+        font-weight: normal;
+        vertical-align: middle;
+    }
 
-  canvas{
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 }
 
 .flex-container {
@@ -970,13 +1061,13 @@ footer {
     flex-wrap: wrap;
     -webkit-justify-content: center;
     -ms-flex-pack: center;
-    justify-content: center;;
+    justify-content: center;
+    ;
     -webkit-align-content: stretch;
     -ms-flex-line-pack: stretch;
     align-content: stretch;
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
-    padding:20px;
-    }
-
+    padding: 20px;
+}

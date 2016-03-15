@@ -1,20 +1,24 @@
-﻿using BB.BL;
-using BB.BL.Domain;
-using BB.UI.Web.MVC.Models;
-using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using System.Web;
-using System.Threading.Tasks;
-using BB.BL.Domain.Users;
-using System;
+﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
-using BB.DAL.EFUser;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Hosting;
+using System.Web.Http;
+using BB.BL;
+using BB.BL.Domain;
+using BB.BL.Domain.Users;
 using BB.DAL;
 using BB.DAL.EFOrganisation;
 using BB.DAL.EFPlaylist;
+using BB.DAL.EFUser;
+using BB.UI.Web.MVC.Controllers.Utils;
+using BB.UI.Web.MVC.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -28,9 +32,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         public UserController()
         {
-            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
         }
 
         public UserController(IUserManager userManager, IOrganisationManager organisationManager, IPlaylistManager playlistManager)
@@ -44,12 +48,30 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [AllowAnonymous]
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register([FromUri] string firstName, [FromUri] string lastName, [FromUri] string nickname, [FromUri] string email, [FromUri] string password)
+        public async Task<IHttpActionResult> Register([FromUri] string firstName, [FromUri] string lastName, [FromUri] string nickname, [FromUri] string email, [FromUri] string password, [FromUri] string imageUrl)
         {
             User user;
+
+            if (imageUrl != null)
+            {
+                // TODO check for file extension / MIME types?
+
+                if(!(imageUrl.ToLower().EndsWith(".png") || imageUrl.ToLower().EndsWith(".jpg") || imageUrl.ToLower().EndsWith(".jpeg") || imageUrl.ToLower().EndsWith(".gif")))
+                {
+                    return Content(HttpStatusCode.BadRequest, "The supplied image URL is not an image");
+                }
+
+                var imageFileName = Path.GetFileName(imageUrl);
+                var imagePath = FileHelper.NextAvailableFilename(Path.Combine(HostingEnvironment.MapPath(ConfigurationManager.AppSettings["UsersImgPath"]), imageFileName));
+
+                var webClient = new WebClient();
+                webClient.DownloadFile(imageUrl, imagePath);
+                imageUrl = Path.GetFileName(imagePath);
+            }
+
             try
             {
-                user = userManager.CreateUser(email, lastName, firstName, nickname, "");
+                user = userManager.CreateUser(email, lastName, firstName, nickname, imageUrl ?? "");
             }
             catch (Exception ex)
             {
@@ -62,21 +84,20 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (resultUser.Succeeded){
                 UserManager.AddToRole(applicationUser.Id, "User");
                 return Ok(user);
-            } else {
+            }
                 userManager.DeleteUser(user.Id);
                 return Content(HttpStatusCode.InternalServerError, "ASP.NET Identity Usermanager could not create user");
             }
-        }
 
         [AllowAnonymous]
         [HttpPost]
         [Route("gplusRegister")]
-        public async Task<IHttpActionResult> GplusRegister([FromUri] string firstName, [FromUri] string lastName, [FromUri] string nickname, [FromUri] string email, [FromUri] string password)
+        public async Task<IHttpActionResult> GplusRegister([FromUri] string firstName, [FromUri] string lastName, [FromUri] string nickname, [FromUri] string email, [FromUri] string password, [FromUri] string imageUrl)
         {
             var user = userManager.ReadUser(email);
             if (user != null) return Ok(user);
 
-            return await Register(firstName, lastName, nickname, email, password);
+            return await Register(firstName, lastName, nickname, email, password, imageUrl);
         }
 
 
@@ -108,14 +129,14 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             }
 
             var organisations = organisationManager.ReadOrganisationsForUser(user.Id)
-                .Select(o => new
+                .Select(o => new SmallOrganisationViewModel 
                 {
-                    o.Id,
-                    o.Name,
-                    o.BannerUrl,
-                    o.ColorScheme
-                })
-                .AsEnumerable();
+                    Id = o.Id,
+                    Name = o.Name,
+                    BannerUrl = o.BannerUrl,
+                    ColorScheme = o.ColorScheme
+                });
+                
             return Ok(organisations);
         }
 

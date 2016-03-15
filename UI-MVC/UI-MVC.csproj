@@ -345,7 +345,7 @@
     <Compile Include="Models\CurrentPlayingViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Scripts\OrganisationViewModel.cs" />
+    <Compile Include="Models\OrganisationViewModel.cs" />
     <Compile Include="Models\LivePlaylistViewModel.cs" />
     <Compile Include="Models\PlaylistViewModel.cs" />
     <Compile Include="App_Start\Startup.Owin.cs" />
@@ -505,6 +505,7 @@
     <Content Include="Views\Playlist\Chat.cshtml" />
     <Content Include="Views\Comment\_CommentsPartial.cshtml" />
     <Content Include="Views\Playlist\AddPlaylist.cshtml" />
+    <Content Include="Views\Home\SearchOrganisation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />

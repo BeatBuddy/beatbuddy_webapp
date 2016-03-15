@@ -8,7 +8,7 @@
 @model OrganisationViewWithPlaylist
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
     
 }
@@ -158,12 +158,6 @@
         </a>
     </div>
 
-    <div class="add-playlist">
-        <a href="#addPlaylistModal" class="btn btn-right">
-            <i class="material-icons">playlist_add</i> import from youtube
-        </a>
-    </div>
-
 }
 else
 {
@@ -185,16 +179,19 @@ else
     Dashboard
 </h1>
 
-<div class="flex-container" style="background-color:lightgray">
+<div class="flex-container" >
     <div class="card">
+
         <div class="chart" data-percent="@Model.Playlists.Count">
-            <div class="material-icons" style="font-size:3em;">playlist</div>
+            <div class="material-icons" style="font-size:5em;padding-top:30%;left:-125%">playlist</div>
+
         <div class="chart-text">
-            <span class="material-icons" style="font-size:3em;">playlist</span>
             <span>@Model.Playlists.Count</span>playlists</div></div>
     </div>
     <div class="card">
         <div class="chart" data-percent="@Model.CoOrganiser.Count()">
+            <div class="material-icons" style="font-size:5em;padding-top:30%;left:5%;">people</div>
+
             <div class="chart-text">
                 <span>@Model.CoOrganiser.Count()</span>Co organisers
             </div></div>

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BB.BL.Domain.Playlists;
+using Newtonsoft.Json;
 
 namespace BB.BL.Domain.Organisations
 {
@@ -13,7 +14,9 @@ namespace BB.BL.Domain.Organisations
         public string Name { get; set; }
         public string BannerUrl { get; set; }
         public string ColorScheme { get; set; }
+        [JsonIgnoreAttribute]
         public virtual ICollection<DashboardBlock> DashboardBlocks { get; set; }
+        [JsonIgnoreAttribute]
         public virtual ICollection<Playlist> Playlists { get; set; }
     }
 }
