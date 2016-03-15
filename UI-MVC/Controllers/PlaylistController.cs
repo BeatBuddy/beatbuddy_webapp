@@ -63,6 +63,7 @@ namespace BB.UI.Web.MVC.Controllers
                     playlistOwners.Add(userManager.ReadUser((long)playlist.CreatedById));
                 }
             }
+            ViewBag.Organisation = organisationManager.ReadOrganisationForPlaylist(id);
             ViewBag.CurrentUser = user;
             ViewBag.Organisers = playlistOwners;
             ViewBag.VotesUser = votesUser;

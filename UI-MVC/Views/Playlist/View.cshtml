@@ -1,5 +1,6 @@
 ﻿@using BB.BL.Domain.Playlists
 @using BB.BL.Domain.Users
+@using BB.BL.Domain.Organisations
 @using Microsoft.AspNet.Identity
 @model Playlist
 @{
@@ -17,10 +18,21 @@
                     
             <div class="fill">
                 <div class="title">
+                    @{ 
+                     Organisation organisation = ViewBag.Organisation;
                     <h1>Playlist</h1>@Model.Name 
+                        if (organisation != null)
+                        {
+                            <a href="@Url.Action(organisation.Id.ToString(), "Organisations/Details")" style="text-decoration:none; color:white">by #@organisation.Name</a>}
+                        else
+                        {
+                           <span>by &#64;@ViewBag.CurrentUser.Nickname</span>
+                        }
+                        }
+                        
         </div>
             
-                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new { id = Model.Id })">
+                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new { id = Model.Id})">
                     <i class="material-icons">history</i> History
                 </a>
 
