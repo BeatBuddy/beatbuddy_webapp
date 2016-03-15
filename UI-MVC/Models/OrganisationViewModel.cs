@@ -29,6 +29,14 @@ namespace BB.UI.Web.MVC.Models
         public string ColorScheme { get; set; }
     }
 
+    public class SmallOrganisationViewModel
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string BannerUrl { get; set; }
+        public string ColorScheme { get; set; }
+    }
+
     public class OrganisationViewWithPlaylist
     {
         public long Id { get; set; }

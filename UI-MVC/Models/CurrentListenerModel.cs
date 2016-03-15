@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BB.BL.Domain.Users;
+﻿using BB.BL.Domain.Users;
 
 namespace BB.UI.Web.MVC.Models
 {

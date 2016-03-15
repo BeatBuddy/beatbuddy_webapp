@@ -713,8 +713,6 @@ footer {
     font-size: 2em;
     font-weight: normal;
     vertical-align: middle; }
-  .chart .chart-text {
-    padding-top: 60%; }
   .chart canvas {
     position: absolute;
     left: 0;

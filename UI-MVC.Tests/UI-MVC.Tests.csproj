@@ -195,7 +195,9 @@
     <Compile Include="Controllers\CommentControllerTest.cs" />
     <Compile Include="Controllers\PlaylistControllerTest.cs" />
     <Compile Include="Controllers\OrganisationsControllerTest.cs" />
+    <Compile Include="Controllers\WebApi\OrganisationsControllerTest.cs" />
     <Compile Include="Controllers\WebApi\PlaylistControllerTest.cs" />
+    <Compile Include="Controllers\WebApi\UserControllerTest.cs" />
     <Compile Include="Helpers\DbInitializer.cs" />
     <Compile Include="IT\ITLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

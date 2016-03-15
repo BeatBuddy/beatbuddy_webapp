@@ -19,7 +19,6 @@ using BB.DAL;
 using BB.DAL.EFOrganisation;
 using BB.DAL.EFPlaylist;
 using BB.UI.Web.MVC.Controllers.Utils;
-using Google.GData.Client;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
@@ -131,14 +130,14 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             }
 
             var organisations = organisationManager.ReadOrganisationsForUser(user.Id)
-                .Select(o => new
+                .Select(o => new SmallOrganisationViewModel 
                 {
-                    o.Id,
-                    o.Name,
-                    o.BannerUrl,
-                    o.ColorScheme
-                })
-                .AsEnumerable();
+                    Id = o.Id,
+                    Name = o.Name,
+                    BannerUrl = o.BannerUrl,
+                    ColorScheme = o.ColorScheme
+                });
+                
             return Ok(organisations);
         }
 
