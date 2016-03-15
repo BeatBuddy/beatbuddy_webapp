@@ -87,11 +87,12 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .Ok()
                 .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>();
             ;
+            organisationManager.DeleteOrganisation(organisation.Id);
+
         }
 
         [TestCleanup]
         public void Cleanup() {
-            organisationManager.DeleteOrganisation(organisation.Id);
             playlistManager.DeletePlaylist(playlist.Id);
             userManager.DeleteUser(user.Email);
            
