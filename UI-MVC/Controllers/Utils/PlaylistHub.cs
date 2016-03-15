@@ -61,13 +61,30 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             if (playlistMasters.ContainsKey(groupName))
             {
-                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
-        }
+                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive(false);
+            }
         }
 
-        public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
+        public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration, bool playing)
         {
-            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(track, (int)duration);
+            if (playing)
+            {
+                Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value)
+                    .playLive(track, (int)duration);
+            }
+            else
+            {
+                Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value)
+                    .fakeLive(track);
+            }
+        }
+
+        public void PlayLive(string groupName)
+        {
+            if (playlistMasters.ContainsKey(groupName))
+            {
+                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive(true);
+            }
         }
         public override Task OnConnected()
         {
@@ -77,12 +94,14 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            if (playlistMasters.ContainsValue(Context.ConnectionId))
-            {
-            playlistMasters.Remove(playlistMasters.First(p => p.Value == Context.ConnectionId).Key);
-            }
-            var model = connectedGroupUsers.FirstOrDefault(f => f.Key.Equals(Context.ConnectionId)).Value;
             var key = connectedGroupUsers.Keys.Single(p => p.Equals(Context.ConnectionId));
+            var model = connectedGroupUsers.FirstOrDefault(f => f.Key.Equals(Context.ConnectionId)).Value;
+            if (playlistMasters.Values.Any(p => p.Equals(Context.ConnectionId)))
+                {
+                    Clients.OthersInGroup(model.GroupName).stopMusicPlaying();
+                    playlistMasters.Remove(model.GroupName);
+                }
+            
             connectedGroupUsers.Remove(key);
             Clients.Group(model.GroupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             return base.OnDisconnected(stopCalled);
@@ -92,14 +111,19 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void StartPlaying(CurrentPlayingViewModel track, string groupName)
         {
+            if (playlistMasters.ContainsKey(groupName))
+            {
+                playlistMasters.Remove(groupName);
+            }
             playlistMasters.Add(groupName, Context.ConnectionId);
-            Clients.OthersInGroup(groupName).startMusicPlaying(track);
+            Clients.OthersInGroup(groupName).fakeLive(track);
             var youTube = YouTube.Default; // starting point for YouTube actions
             var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId); // gets a Video object with info about the video
             Clients.OthersInGroup(groupName).onPlaylinkGenerated(video.Uri);
         }
 
         
+
         public void PausePlaying(string groupName)
         {
             Clients.OthersInGroup(groupName).pauseMusicPlaying();

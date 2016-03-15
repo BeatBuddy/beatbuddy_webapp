@@ -63,6 +63,8 @@ namespace BB.UI.Web.MVC.Controllers
                     playlistOwners.Add(userManager.ReadUser((long)playlist.CreatedById));
                 }
             }
+            ViewBag.Organisation = organisationManager.ReadOrganisationForPlaylist(id);
+            ViewBag.CurrentUser = user;
             ViewBag.Organisers = playlistOwners;
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
@@ -147,7 +149,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             if (!playlistTracks.Any()) return Json(null, JsonRequestBehavior.DenyGet);
 
-            var track = playlistTracks.First(t => t.PlayedAt == null);
+            var track = playlistTracks.OrderByDescending(p=>p.Votes.Sum(v=>v.Score)).First(t => t.PlayedAt == null);
             var playingViewModel = new CurrentPlayingViewModel()
             {
                 TrackId = track.Track.TrackSource.TrackId,
@@ -156,7 +158,7 @@ namespace BB.UI.Web.MVC.Controllers
                 NextTracks = playlistTracks.Count(),
                 CoverArtUrl = track.Track.CoverArtUrl
             };
-                return Json(playingViewModel, JsonRequestBehavior.AllowGet);
+             return Json(playingViewModel, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -173,11 +175,8 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var tracks = playlistManager.ReadPlaylist(id).PlaylistTracks;
             if (tracks.Count == 0) return new HttpStatusCodeResult(400);
-
-            playlistManager.MarkTrackAsPlayed(
-                playlistManager.ReadPlaylist(id).PlaylistTracks
-                //.OrderByDescending(t => t.Score)
-                .First(t => t.PlayedAt == null).Id, id);
+            var track = tracks.OrderByDescending(p => p.Votes.Sum(v => v.Score)).First(t => t.PlayedAt == null);
+            playlistManager.MarkTrackAsPlayed(track.Id, id);
 
                 return new HttpStatusCodeResult(200);
             }

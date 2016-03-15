@@ -58,6 +58,11 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.playlistManager = playlistManager;
         }
 
+        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager)
+        {
+            this.playlistManager = playlistManager;
+            this.userManager = userManager;
+        }
 
         [AllowAnonymous]
         [HttpGet]
@@ -120,9 +125,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpGet]
         [Route("{id}/history")]
         [ResponseType(typeof(LivePlaylistViewModel))]
-        public HttpResponseMessage getHistory(long id)
+        public HttpResponseMessage getHistory(long playlistId)
         {
-            var playlist = playlistManager.ReadPlaylist(id);
+            var playlist = playlistManager.ReadPlaylist(playlistId);
             if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
             return Request.CreateResponse(
@@ -191,13 +196,14 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpGet]
         [Route("searchTrack")]
         [ResponseType(typeof(List<Track>))]
-        public HttpResponseMessage searchTrack(string query)
+        public IHttpActionResult searchTrack(string query)
         {
-            if (query == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if (query == null) return NotFound();
+            //TODO move instantation of new YouTubeTrackProvider here!
             var youtubeProvider = new YouTubeTrackProvider();
             var searchResult = youtubeProvider.Search(query);
 
-            return Request.CreateResponse(HttpStatusCode.OK, searchResult);
+            return Ok(searchResult);
         }
 
         [HttpGet]
@@ -358,6 +364,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Request.CreateResponse(HttpStatusCode.OK, track);
         }
 
+        //TODO: check why .Take(3) ??
         [AllowAnonymous]
         [HttpGet]
         [Route("recommendations")]

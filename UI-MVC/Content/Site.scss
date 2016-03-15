@@ -156,6 +156,20 @@ header {
             }
         }
 
+        .btn-chat{
+                display: inline-block;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.8em;
+    padding: .2em 1em;
+    text-transform: lowercase;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 100;
+        }
+
         @media screen and (max-width: $mobile-breakpoint) {
             padding: 4% $sidemargin-mobile 3em $sidemargin-mobile;
 
@@ -783,6 +797,20 @@ header {
         background: #222;
     }
 }
+.btn-chat{
+    display: inline-block;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.3em;
+    padding: .2em 1em;
+    text-transform: lowercase;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 100;
+    margin-right: .3em;
+}
 
 .btn:disabled {
     cursor: not-allowed;
@@ -803,7 +831,9 @@ header {
 .btn-left {
     float: left;
 }
-
+.btn-social{
+    width: 133px;
+}
 .btn-login {
     width: 270px;
     height: 3em;
@@ -862,8 +892,15 @@ footer {
 
     #fullscreenbutton {
         color: white;
-        right: 0;
-        top: 1em;
+        right: -10px;
+        top: 1.2em;
+        position: absolute;
+        cursor: pointer;
+    }
+    #tuneinbutton {
+        color: white;
+        right: 15px;
+        top: 1.2em;
         position: absolute;
         cursor: pointer;
     }
