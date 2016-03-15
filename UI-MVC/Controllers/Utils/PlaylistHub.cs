@@ -103,7 +103,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
             playlistMasters.Add(groupName, Context.ConnectionId);
 
-            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(track, 0);
+            Clients.OthersInGroup(groupName).playLive(track, 0);
             var youTube = YouTube.Default; // starting point for YouTube actions
             var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId); // gets a Video object with info about the video
             Clients.OthersInGroup(groupName).onPlaylinkGenerated(video.Uri);

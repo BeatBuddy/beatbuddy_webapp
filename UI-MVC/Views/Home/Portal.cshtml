@@ -91,24 +91,27 @@
         {
             <p style="padding-left: 15px">You are not a member of any organisation... </p>
         }
-        <div id="searchOrganisations">
-            <a href="#searchOrganisationbtn" class="btn btn-left btn-portal" style="font-size: 0.6em">
-                <i class="material-icons">playlist_add</i> search organisation
-            </a>
-        </div>
-        <div id="searchOrganisationbtn" class="modal" style="margin-top: -150px">
-            <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
-                <a href="#close" id="close-modal" title="Close" class="close">X</a>
-                <div class="modal-body" style="height: 100%; width: 100%">
-                    @{
-                        Html.RenderPartial("SearchOrganisation");
-                    }
-                </div>
+
+        
+    </div>
+    <div class="clearfix">&nbsp;</div>
+    <div id="searchOrganisations">
+        <a href="#searchOrganisationbtn" class="btn btn-left btn-portal" style="font-size: 0.6em">
+            <i class="material-icons">search</i> search organisation
+        </a>
+    </div>
+    <div id="searchOrganisationbtn" class="modal" style="margin-top: -150px">
+        <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+            <a href="#close" id="close-modal" title="Close" class="close">X</a>
+            <div class="modal-body" style="height: 100%; width: 100%">
+                @{
+                    Html.RenderPartial("SearchOrganisation");
+                }
             </div>
         </div>
     </div>
-    <div class="clearfix">&nbsp;</div>
 </section>
+
 
 <section id="myplaylists">
     <div class="title">

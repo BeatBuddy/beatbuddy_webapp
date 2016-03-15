@@ -568,7 +568,8 @@ header {
     margin: 1em;
     display: block;
     min-height: 128px;
-    clear: both; }
+    clear: both;
+    cursor: pointer; }
     #resultsPlaylist li.playlist img {
       height: 128px;
       display: inline-block;
