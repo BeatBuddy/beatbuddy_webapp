@@ -325,7 +325,7 @@
     <Compile Include="Models\CurrentPlayingViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\OrganisationViewModel.cs" />
+    <Compile Include="Scripts\OrganisationViewModel.cs" />
     <Compile Include="Models\LivePlaylistViewModel.cs" />
     <Compile Include="Models\PlaylistViewModel.cs" />
     <Compile Include="App_Start\Startup.Owin.cs" />
