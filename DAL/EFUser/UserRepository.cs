@@ -48,7 +48,11 @@ namespace BB.DAL.EFUser
 
         public void DeleteUser(User user)
         {
+            var userRoles = context.UserRole.Where(ur => ur.User.Id == user.Id);
+            context.UserRole.RemoveRange(userRoles);
+
             context.User.Remove(user);
+          
             context.SaveChanges();
         }
 

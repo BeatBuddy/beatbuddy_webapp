@@ -36,7 +36,7 @@ namespace BB.DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Organisation>().Property(p => p.Name).IsRequired();
+            modelBuilder.Entity<Organisation>().Property(p => p.Name).IsRequired() ;
 
             modelBuilder.Entity<PlaylistTrack>()
                 .HasOptional(p => p.Playlist)
