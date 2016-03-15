@@ -4,10 +4,9 @@
 
 @section escape_padding {
     <div id="banner">
-        <div class="content">
+        <div id="indexBannerContent" class="content">
             <h1>Create and share playlists</h1>
             <h2>With your friends, family and the world.</h2>
-
             @if (Request.IsAuthenticated)
             {
                 <a href="@Url.Action("Portal", "Home")" class="button">My portal</a>
@@ -15,8 +14,8 @@
             }
             else
             {
-                <a href="#" id="explore" class="button">Explore</a>
                 <a href="@Url.Action("Register", "Account")" class="button">Join us</a>
+                <div id="findPlaylist" class="button">Find playlist</div>
             }
         </div>
         <video autoplay="true" loop="true">
@@ -80,5 +79,11 @@
         $('#explore').click(function() {
             $('html, body').animate({ scrollTop: $('#intro').offset().top - 50 }, 'slow');
         });
+        $('#findPlaylist').click(function () {
+            $('#indexBannerContent').hide();
+            $('#banner').addClass('content');
+            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the keycode</h1></br><input type="text" class="custom-input" id="message" style="width:247px"/></div>');
+        });
+
     </script>
 }

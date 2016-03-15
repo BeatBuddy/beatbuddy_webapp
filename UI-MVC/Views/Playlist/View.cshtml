@@ -7,111 +7,116 @@
     ViewBag.Title = "View";
     ViewBag.NoFooter = true;
 }
-
-@section escape_padding {
-    <div id="playlistbanner">
-        <div class="content">
-            @{
-                var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
-                <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
-            }
-                    
-            <div class="fill">
-                <div class="title">
-                    @{ 
-                     Organisation organisation = ViewBag.Organisation;
-                    <h1>Playlist</h1>@Model.Name 
-                        if (organisation != null)
-                        {
-                            <a href="@Url.Action(organisation.Id.ToString(), "Organisations/Details")" style="text-decoration:none; color:white">by #@organisation.Name</a>}
-                        else
-                        {
-                           <span>by &#64;@ViewBag.CurrentUser.Nickname</span>
-                        }
-                        }
-                        
-        </div>
-            
-                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new { id = Model.Id})">
-                    <i class="material-icons">history</i> History
-                </a>
-
-                <a class="btn btn-right" href="#sharedialog">
-                    <i class="material-icons">link</i> Share
-                </a>
-
-    </div>
-            <div>
-                <a class="btn btn-right"  href="@Url.Action("View", "History", new {id = Model.Id})">
-                    <i class="material-icons">audiotrack</i>    Tune in live    
-                </a>
-
-                
-            </div>
-            <p class="nomargintop textshadow">@Model.Description</p>
-
-            <div>
-                <h3 id="listenerCount"></h3>
-                <div id="listenerImg" class="co-organiser" style="float: left;">
-</div>    
-</div>    
-        </div>    
-</div>}    
-
 <div class="col-md-9" id="playlistTable">
-<div id="playlist-view" style="margin-top: 1em;">
-    @Html.Partial("PlaylistTable", @Model)
-</div>
+    @section escape_padding {
+        <div id="playlistbanner">
+            <div class="content">
+                @{
+                    var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
+                    <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
+                }
 
-<div id="nowPlayingRow" style="margin-top: 5em">
-    @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
-    {
-        if (Model.PlaylistTracks.Count != 0)
+                <div class="fill">
+                    <div class="title">
+                        @{
+                            Organisation organisation = ViewBag.Organisation;
+                            <h1>Playlist</h1>@Model.Name
+                            if (organisation != null)
+                            {
+                                <a href="@Url.Action(organisation.Id.ToString(), "Organisations/Details")" style="text-decoration:none; color:white">by #@organisation.Name</a>}
+                            else
+                            {
+                                <span>
+                                    by &#64;
+                                    @foreach (User user in ViewBag.Organisers)
+                                    {
+                                        <span>@user.Nickname </span>
+                                    }
+                                </span>
+                            }
+                        }
+
+                    </div>
+
+                    <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new { id = Model.Id})">
+                        <i class="material-icons">history</i> History
+                    </a>
+
+                    <a class="btn btn-right" href="#sharedialog">
+                        <i class="material-icons">link</i> Share
+                    </a>
+
+                </div>
+                <div>
+                    <a class="btn btn-right" href="@Url.Action("View", "History", new {id = Model.Id})">
+                        <i class="material-icons">audiotrack</i>    Tune in live
+                    </a>
+
+
+                </div>
+                <p class="nomargintop textshadow">@Model.Description</p>
+
+                <div>
+                    <h3 id="listenerCount"></h3>
+                    <div id="listenerImg" class="co-organiser" style="float: left;">
+                    </div>
+                </div>
+            </div>
+        </div>}
+
+    <div id="playlist-view" style="margin-top: 1em;">
+        @Html.Partial("PlaylistTable", @Model)
+    </div>
+
+    <div id="nowPlayingRow" style="margin-top: 5em">
+        @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
         {
-            <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-            <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            if (Model.PlaylistTracks.Count != 0)
+            {
+                <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+                <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+            }
+            else
+            {
+                <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+            }
         }
         else
         {
-            <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
         }
-    }
-    else
-    {
-        <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
-        <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
-    }
-    @if (Request.IsAuthenticated)
-    {
+        @if (Request.IsAuthenticated)
+        {
 
-    <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
-        <i class="material-icons">playlist_add</i> add track
-    </a>
+            <a href="#addTrackModal" class="btn btn-right" style="display: inline-block">
+                <i class="material-icons">playlist_add</i> add track
+            </a>
 
             <a href="#addPlaylistModal" class="btn btn-right" style="margin-right: 20px">
                 <i class="material-icons">playlist_add</i> import playlist
             </a>
-    }
-</div>
+        }
+    </div>
 
-   
-<div id="addTrackModal" class="modal" style="margin-top: -150px">
-    <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
-        <a href="#close" id="close-modal" title="Close" class="close">X</a>
-        <div class="modal-body" style="height: 100%; width: 100%;">
-            @{
-                Html.RenderPartial("AddTrack");
-            }
+
+    <div id="addTrackModal" class="modal" style="margin-top: -150px">
+        <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+            <a href="#close" id="close-modal" title="Close" class="close">X</a>
+            <div class="modal-body" style="height: 100%; width: 100%;">
+                @{
+                    Html.RenderPartial("AddTrack");
+                }
+            </div>
         </div>
     </div>
 </div>
-</div>
 
-<div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; margin-top: -32px; height:70%; position:absolute; right:0;">
+<div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; height:100%; position:fixed; right:0; top:0;">
   <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">
           <i id="chatIcon" class="material-icons" style="margin-left:-27px">keyboard_arrow_right</i>
   </div>
-  <div class="col-xs-11" id="chatContent" style="height:100%; padding-right:0px">    
+  <div class="col-xs-11" id="chatContent" style="height:100%; padding-right:0px;">    
         <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname"/>
         <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl" />
         <ul id="discussion" style="list-style:none; padding-left:0"></ul>
@@ -183,7 +188,7 @@
                if (image == "/Content/img/Users/"){
                    image = "/Content/img/default-avatar.png"
                }
-               $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" id="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" id="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
+               $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" id="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '"class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
                    + '</strong><br />' + encodedMsg + '</div></li>');
             };
             $('#message').focus();
