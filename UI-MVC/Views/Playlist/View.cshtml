@@ -767,7 +767,7 @@
             var playBtn = document.getElementById('playBtn');
             playBtn.className = 'btn';
             playBtn.addEventListener("click", getNextTrack);
-
+            play.server.addTrack("@Model.Id");
             });
         }
 

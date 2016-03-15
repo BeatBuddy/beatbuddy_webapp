@@ -311,11 +311,6 @@ namespace BB.UI.Web.MVC.Controllers
 
             var tracks = youtubeProvider.LookUpPlaylist(id);
 
-            /*var user = userManager.ReadUser("lennart.boeckx@gmail.com");
-            var organisation = organisationManager.ReadOrganisation("lenni's party");
-
-            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation);*/
-
             foreach (Track track in tracks)
             {
                 playlistManager.AddTrackToPlaylist(playlistId, track);

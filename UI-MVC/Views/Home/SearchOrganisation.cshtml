@@ -5,12 +5,12 @@
     @Html.Label("Search your organisation here: ", new { @class = "control-label", style = "margin-top: 1em" })
 </div>
 <div>
-    @Html.TextBox("searchOrganisation", null, new { @class = "custom-input-organisations", style = "margin-top: 0.6em; width: 90%" })
+    @Html.TextBox("searchOrganisation", null, new { @class = "custom-input-organisations", style = "margin-top: 0.6em; width: 90%;" })
 </div>
 
-<img id="loadingOrganisation" src="~/Content/img/round_shape_loader.gif" alt="loading" hidden />
+<img id="loadingOrganisation" src="~/Content/img/round_shape_loader.gif" alt="loading" hidden  />
 
-<ul id="resultsOrganisation" class="row"></ul>
+<ul id="resultsOrganisation" class="row" style="cursor: pointer" ></ul>
 @section scripts{
     <script>
         var markupOrganisation = '<li class="organisation" data-id="${Id}">' +
