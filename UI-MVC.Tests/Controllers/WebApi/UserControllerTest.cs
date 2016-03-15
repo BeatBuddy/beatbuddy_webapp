@@ -89,5 +89,13 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 
             ;
         }
+
+        [TestCleanup]
+        public void Cleanup() {
+            //userManager.DeleteUser(user.Id);
+            organisationManager.DeleteOrganisation(organisation.Id);
+            playlistManager.DeletePlaylist(playlist.Id);
+
+        }
     }
 }
