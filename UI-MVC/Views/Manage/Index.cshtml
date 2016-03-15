@@ -1,10 +1,12 @@
 ﻿@model BB.UI.Web.MVC.Models.IndexViewModel
 @{
     ViewBag.Title = "Manage";
+    ViewBag.Id = ViewBag.user.Id;
 }
 
 <h2>@ViewBag.Title.</h2>
-
+@using (Html.BeginForm("Save", "Manage", new { userId = ViewBag.user.Id }, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
+{
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
     <h4>Change your account settings</h4>
@@ -12,7 +14,7 @@
     <dl class="dl-horizontal">
         <dt>Password:</dt>
         <dd>
-            [
+            
             @if (Model.HasPassword)
             {
                 @Html.ActionLink("Change your password", "ChangePassword")
@@ -21,8 +23,9 @@
             {
                 @Html.ActionLink("Create", "SetPassword")
             }
-            ]
+            
         </dd>
+
         <dt>Change avatar:</dt>
         <dd>
             <input type="file" id="profileImage" name="profileImage" style="display: none" />
@@ -40,10 +43,11 @@
             </div>
         </dd>
     </dl>
-    <a href='javascript:Save()' class="btn">
-        <i class="material-icons"></i> Save changes
-    </a>
+    <div>
+        <input type="submit" value="Save changes" class="btn btn-default create" />
+    </div>
 </div>
+}
 @section scripts{
     <script>
     document.getElementById('profile_click').onclick = function () {
@@ -60,31 +64,5 @@
 
     };
 
-
-    function Save() {
-        var xhr = new XMLHttpRequest();
-        var fd = new FormData();
-        fd.append("file", document.getElementById('profileImage').files[0]);
-        xhr.open("POST", "/Manage/Save/", true);
-        xhr.send(fd);
-        xhr.addEventListener("load", function(event) {
-            alert(event.target.response);
-        }, false);
-
-        @*
-        var file = document.getElementById("profileImage").files[0];
-
-
-        var image = document.getElementById("profileImage");
-
-        $.ajax({
-            url: "/Manage/Save",
-            type: "POST",
-            data: {
-                userId: @ViewBag.user.Id, profileImage: file
-            }
-        });
-            *@
-    }
 </script>
     }

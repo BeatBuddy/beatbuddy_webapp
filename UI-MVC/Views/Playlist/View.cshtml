@@ -99,7 +99,20 @@
         </div>
     </div>
 </div>
+    <div id="addPlaylistModal" class="modal" style="margin-top: -150px">
+        <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+            <a href="#closePlaylist" id="close-modal-playlist" title="Close" class="close">X</a>
+            <div class="modal-body" style="height: 100%; width: 100%;">
+                @{
+                    Html.RenderPartial("AddPlaylist");
+                }
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
 
 <div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; margin-top: -32px; height:70%; position:absolute; right:0;">
   <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">

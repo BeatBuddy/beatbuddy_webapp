@@ -343,7 +343,7 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(HttpPostedFileBase profileImage)
+        public ActionResult Save(long userId, HttpPostedFileBase profileImage)
         {
             string imagePath = null;
             if (profileImage != null && profileImage.ContentLength > 0)
@@ -354,7 +354,7 @@ namespace BB.UI.Web.MVC.Controllers
                 imagePath = Path.GetFileName(imagePath);
             }
 
-            var user = userMgr.ReadUser(16);
+            var user = userMgr.ReadUser(userId);
 
             user.ImageUrl = imagePath;
             userMgr.UpdateUser(user);
