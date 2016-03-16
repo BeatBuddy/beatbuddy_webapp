@@ -64,6 +64,14 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.userManager = userManager;
         }
 
+        public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, ITrackProvider trackProvider, IAlbumArtProvider albumArtProvider)
+        {
+            this.playlistManager = playlistManager;
+            this.userManager = userManager;
+            this.trackProvider = trackProvider;
+            this.albumArtProvider = albumArtProvider;
+        }
+
         [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
@@ -346,10 +354,10 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpPost]
         [Route("{playlistId}/addTrack")]
         [ResponseType(typeof(Track))]
-        public HttpResponseMessage AddTrack(long playlistId, string trackId)
+        public IHttpActionResult AddTrack(long playlistId, string trackId)
         {
             var track = trackProvider.LookupTrack(trackId);
-            if (track == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if (track == null) return NotFound();
 
             var albumArtUrl = albumArtProvider.Find(track.Artist + " " + track.Title);
             track.CoverArtUrl = albumArtUrl;
@@ -359,9 +367,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 track
             );
 
-            if (track == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if (track == null) return NotFound();
 
-            return Request.CreateResponse(HttpStatusCode.OK, track);
+            return Ok(track);
         }
 
         //TODO: check why .Take(3) ??
@@ -419,8 +427,5 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             return user;
         }
-
-
-
     }
 }

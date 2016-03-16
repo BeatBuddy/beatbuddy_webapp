@@ -63,6 +63,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             };
             
             RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation, null);
+
             Assert.AreEqual("Details/2", viewResult.RouteValues["action"]);
         }
 

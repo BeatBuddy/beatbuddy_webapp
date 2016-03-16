@@ -121,8 +121,11 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [Route("userOrganisations")]
         public IHttpActionResult GetUserOrganisations()
         {
-            var currentUser = (User.Identity as ClaimsIdentity)?.Claims.First(c => c.Type == "sub").Value;
-            var user = userManager.ReadUser(currentUser);
+            var currentUser = (User.Identity as ClaimsIdentity)?.Claims.FirstOrDefault(c => c.Type == "sub");
+            if (currentUser == null) {
+                return NotFound();
+            }
+            var user = userManager.ReadUser(currentUser.Value);
             if (user == null)
             {
                 return NotFound();

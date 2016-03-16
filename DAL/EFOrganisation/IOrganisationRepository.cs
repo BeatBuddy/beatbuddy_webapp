@@ -16,7 +16,8 @@ namespace BB.DAL.EFOrganisation
         IEnumerable<Organisation> SearchOrganisations(string prefix);
         Organisation DeleteOrganisation(long organisationId);
         Organisation ReadOrganisationForPlaylist(long playlistId);
+
         //DashboardBlock
-        
+
     }
 }

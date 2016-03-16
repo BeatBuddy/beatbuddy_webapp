@@ -97,6 +97,7 @@ namespace BB.UI.Web.MVC.Controllers
                 organisationView.Playlists = playlists.ToPagedList(pageNumber, pageSize);
 
                 ViewBag.Id = id;
+                //ViewBag.TotalMinutesOfPlaytime = organast
 
                 return View("Details", organisationView);
 
