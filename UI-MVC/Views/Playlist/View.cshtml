@@ -24,7 +24,7 @@
                     }
                 </div>
 
-                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new { id = Model.Id})">
+                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
                     <i class="material-icons">history</i> History
                 </a>
                 <a class="btn btn-right" href="#sharedialog">
@@ -42,15 +42,15 @@
             </div>
         </div>
     </div>
-        }
+}
 
-<div class="col-md-9" id="playlistTable">
+<div id="playlistTable">
     <div id="playlist-view" style="margin-top: 1em;">
         @Html.Partial("PlaylistTable", @Model)
     </div>
 
     <div id="nowPlayingRow" style="margin-top: 1em">
-        @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+        @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
         {
             if (Model.PlaylistTracks.Count != 0)
             {
@@ -105,27 +105,31 @@
     <div id="bottommargin"></div>
 </div>
 
-<div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; height:70%; margin-top:-32px; position: absolute;right:0;">
-    <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">
-        <i id="chatIcon" class="material-icons" style="margin-left:-27px">keyboard_arrow_right</i>
-    </div>
-    <div class="col-xs-11" id="chatContent" style="height:100%; padding-right:0px">
-        @{
-            if (Request.IsAuthenticated)
-            {
-                <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname" />
-                <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl" />
-                <div id="chatMessages"style="height:80%">
-                <ul id="discussion" style="list-style: none; padding-left: 0"></ul>
-                </div>
-                <div id="sendChat" style="position: absolute; bottom: 0; margin-bottom: 20px;">
-                    <input type="text" class="custom-input" id="message" style="width: 247px" />
-                    <input type="button" id="sendmessage" value="Send" class="btn-chat" style="margin-left: 10px" />
-                </div>
+@section sidebar{
+    <div id="chatContainer">
+        <i id="chatIcon" class="material-icons">keyboard_arrow_left</i>
+        <div id="chatContent">
+            <div class="title row top">
+                <h1>Chat</h1> along!
+            </div>
+
+            @{
+                if (Request.IsAuthenticated)
+                {
+                    <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname"/>
+                    <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl"/>
+                    
+                    <ul id="discussion" class="row content"></ul>
+
+                    <div id="sendChat" class="row bottom">
+                        <input type="text" class="custom-input" id="message" style="width: 247px"/>
+                        <input type="button" id="sendmessage" value="Send" class="btn-chat" style="margin-left: 10px"/>
+                    </div>
+                }
             }
-        }
+        </div>
     </div>
-</div>
+}
 
 <div id="footerSlideContainer">
     <div id="footerSlideContent" style="width: 80%">
@@ -139,7 +143,7 @@
         <table style="width: 100%; margin-top: -15px">
             <tr>
                 <td style="width: 5%">
-                    <img src="~/Content/img/default_cover.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em"/>
+                    <img src="~/Content/img/default_cover.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em" />
                 </td>
                 <td style="width: 95%">
                     <div class="title" style="margin-top: 0.5em">
@@ -161,7 +165,7 @@
 <div id="fullscreenplayer" style="display: none">
     <div id="backgroundcover"></div>
     <div id="darkoverlay">
-        <img id="nowPlayingLogo" src="~/Content/img/logo_header_white.png" alt="beatbuddy logo"/>
+        <img id="nowPlayingLogo" src="~/Content/img/logo_header_white.png" alt="beatbuddy logo" />
     </div>
     <div id="fullscreenComingUp">
         <p>Coming up next...</p>
@@ -184,11 +188,11 @@
                         <span class="counter">@counter</span>
                         @if (track.Track.CoverArtUrl != null)
                         {
-                            <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
+                            <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art" />
                         }
                         else
                         {
-                            <img class="albumart" src="~/Content/img/default_cover.png" alt="album art"/>
+                            <img class="albumart" src="~/Content/img/default_cover.png" alt="album art" />
                         }
                         <span class="trackartist">@track.Track.Artist</span>
                         <span class="tracktitle">- @track.Track.Title</span>
@@ -213,15 +217,6 @@
 @section Scripts{
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-    <!-- styles needed by jScrollPane -->
-    <link type="text/css" href="~/Content/jquery.jscrollpane.css" rel="stylesheet" media="all" />
-    <!-- latest jQuery direct from google's CDN -->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-    </script>
-    <!-- the mousewheel plugin - optional to provide mousewheel support -->
-    <script type="text/javascript" src="~/Scripts/jquery.mousewheel.js"></script>
-        <!-- the jScrollPane script -->
-    <script type="text/javascript" src="~/Scripts/jquery.jscrollpane.min.js"></script>
     <script>
         var playing = false;
         var listening = false;
@@ -236,10 +231,14 @@
                 if (image == "/Content/img/Users/") {
                     image = "/Content/img/default-avatar.png";
                 }
-                $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" id="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" id="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
+                $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" class="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" class="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
                     + '</strong><br />' + encodedMsg + '</div></li>');
+
+                updateScroll();
             };
+
             $('#message').focus();
+
             $.connection.hub.start().done(
                 function () {
                     chat.server.joinGroup("@Model.Id");
@@ -249,6 +248,11 @@
                     });
                 });
         });
+
+        function updateScroll(){
+            var element = document.getElementById("discussion");
+            element.scrollTop = element.scrollHeight;
+        }
 
         play.client.addNewMessageToPage = function() {
             updatePlaylist();
@@ -371,15 +375,10 @@
         }
 
         var footerOpen = false;
-        var chatOpen = true;
-
-        $( document ).ready(function() {
-             $('#chatMessages').jScrollPane();
-        });
+        var chatOpen = false;
 
         jQuery(function($) {
-            
-            $('#chatArrow').click(function() {
+            $('#chatIcon').click(function() {
                 if (chatOpen === false) {
                     openChat();
                     chatOpen = true;
@@ -390,24 +389,19 @@
             });
         });
 
-        function openChat(){
-            $("#chatContainer").animate({width: $('#chatContainer').data('width')});
-            $("#chatContent").show();
-            $('#playlistTable').removeClass('col-lg-12');
-            $('#playlistTable').addClass('col-lg-9');
+        function openChat() {
+            $('.body').animate({ marginRight: "400px" }, 300);
+            $('#chatContainer').animate({ width: "400px" }, 300);
+            $("#footerSlideContainer").animate({ paddingRight: "400px" }, 300);
             chatIcon.innerHTML = 'keyboard_arrow_right';
         }
 
         function closeChat(){
-            $('#chatContainer').data('width', $('#chatContainer').css('width'));
-            $("#chatContent").hide();
-            $('#chatContainer').animate({ width: '10px'});
-            $('#playlistTable').removeClass('col-lg-9');
-            $('#playlistTable').addClass('col-lg-12');
+            $('.body').animate({ marginRight: "28px" }, 300);
+            $('#chatContainer').animate({ width: "28px" }, 300);
+            $("#footerSlideContainer").animate({ paddingRight: "28px" }, 300);
             chatIcon.innerHTML = 'keyboard_arrow_left';
         }
-
-
 
         jQuery(function($) {
             $('#footertop').click(function () {
@@ -429,7 +423,6 @@
 
         function openFooter() {
             $('#footerSlideContent').animate({ height: '125px' });
-            $('#sendChat').animate({ marginBottom: '145px' });
             $(this).css('backgroundPosition', 'bottom left');
             $('#bottommargin').animate({ marginBottom: '9em' }, 500, null);
             footerOpen = true;
@@ -439,7 +432,6 @@
 
         function closeFooter() {
             $('#footerSlideContent').animate({ height: '20px' });
-            $('#sendChat').animate({ marginBottom: '20px' });
             $(this).css('backgroundPosition', 'top left');
             $('#bottommargin').animate({ marginBottom: '3em' }, 500, null);
             footerOpen = false;
@@ -595,7 +587,7 @@
             var playButton = document.getElementById("playBtn");
             playButton.removeEventListener("click", getNextTrack);
             var icon = document.getElementById("icon");
-            
+
             if (event.data === -1 && firstPlay) {
                 player.playVideo();
                 firstPlay = false;
@@ -776,7 +768,7 @@
                '<span class="artist">${Name}</span>' +
                '</li>';
         $.template("playlistTemplate", markupPlaylist);
-        
+
         $.ajaxSetup({
             beforeSend: function () {
                 $("#loadingPlaylist").show();

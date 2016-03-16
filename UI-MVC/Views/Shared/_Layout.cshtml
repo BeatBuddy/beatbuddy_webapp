@@ -13,28 +13,32 @@
     }
 </head>
 <body>
-    <header>
+
+    @RenderSection("sidebar", required: false)
+    <div class="body">
+        <header>
             <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a>
             <ul class="nav">
                 <li>@Html.Partial("_LoginPartial")</li>
-            </ul>  
-    </header>
+            </ul>
+        </header>
 
-    @RenderSection("escape_padding", required: false)
+        @RenderSection("escape_padding", required: false)
 
-    <div class="body-content">
-        @RenderBody()
+        <div class="body-content">
+            @RenderBody()
+        </div>
+        <div class="clearfix"></div>
+
+        @if (ViewBag.NoFooter == null)
+        {
+            <footer>
+                Copyright &copy; @DateTime.Today.Year Team D
+            </footer>
+        }
     </div>
-    <div class="clearfix"></div>
-
-    @if (ViewBag.NoFooter == null)
-    {
-        <footer>
-            Copyright &copy; @DateTime.Today.Year Team D
-        </footer>
-    }
 
     @Scripts.Render("~/bundles/jquery")
-@RenderSection("scripts", required: false)
+    @RenderSection("scripts", required: false)
 </body>
 </html>
