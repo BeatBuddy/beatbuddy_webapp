@@ -53,9 +53,9 @@
 <a id="viewGrid" style="cursor: pointer"><i class="material-icons btn-right" style="font-size: 2em; margin-right: 10px; margin-top: -5px">view_module</i></a>
 <a id="viewList" style="cursor: pointer"><i class="material-icons btn-right" style="font-size: 2em; margin-right: 10px; margin-top: -5px">view_headline</i></a>
 <div id="playlistTable">
-    
+
     <div id="playlist-view" style="margin-top: 0.8em">
-        @Html.Partial("PlaylistTable", @Model)
+    @Html.Partial("PlaylistTable", @Model)
     </div>
 
     <div id="nowPlayingRow" style="margin-top: 1em">
@@ -72,11 +72,11 @@
             if (Model.PlaylistTracks.Count > 1)
             {
                 <a class="btn" id="nextBtn"><i class="material-icons">skip_next</i> </a>
-            }
-            else
-            {
+        }
+        else
+        {
                 <a class="btn disabled" style="display: none" id="nextBtn"><i class="material-icons">skip_next</i> </a>
-            }
+        }
         }
         else
         {
@@ -387,7 +387,7 @@
             if (listening) {
                 listening = false;
             } else {
-                listening = true;
+            listening = true;
             }
             toggle(document.getElementById('tuneinbutton'));
             play.server.playLive("@Model.Id");
@@ -524,9 +524,8 @@
                 method: 'POST',
                 data: { playlistId: @ViewBag.PlaylistId, id: id },
                 async: false
-            }).done(function(data) {
-                
-                window.location.href = @ViewBag.PlaylistId + '#close';
+            }).done(function() {
+                window.location.href = '/Playlist/View?key=' + '@ViewBag.PlaylistKey' + '#close';
                 updatePlaylist();
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
@@ -591,8 +590,8 @@
             var nextButton = document.getElementById("nextBtn");
             if (nextButton != null)
                 nextButton.addEventListener("click", function() {
-                    getNextTrack();
-                });
+                getNextTrack();
+            });
             $.connection.hub.start().done(function() {
                 play.server.joinGroup("@Model.Id");
             });
@@ -838,9 +837,9 @@
         }
 
         var markupPlaylist = '<li class="playlist" data-id="${Description}">' +
-            '<img class="thumbnail" src="${ImageUrl}"/>' +
-            '<span class="artist">${Name}</span>' +
-            '</li>';
+               '<img class="thumbnail" src="${ImageUrl}"/>' +
+               '<span class="artist">${Name}</span>' +
+               '</li>';
         $.template("playlistTemplate", markupPlaylist);
 
         $.ajaxSetup({
@@ -878,7 +877,7 @@
             }).done(function() {
                 $("#loadingPlaylist").hide();
                 $("waitPlaylist").hide();
-                window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
+                window.location.href = '/Playlist/View?key=' + '@ViewBag.PlaylistKey' + '#closePlaylist';
                 updatePlaylist();
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
@@ -912,36 +911,36 @@
     </script>
 <script src="../../Scripts/modernizr.js"></script>
 <script>
-    $(function () {
+        $(function () {
 
-        var $container = $('#ib-container'),
-            $articles = $container.children('article'),
-            timeout;
+            var $container = $('#ib-container'),
+                $articles = $container.children('article'),
+                timeout;
 
-        $articles.on('mouseenter', function (event) {
+            $articles.on('mouseenter', function (event) {
 
-            var $article = $(this);
-            clearTimeout(timeout);
-            timeout = setTimeout(function () {
+                var $article = $(this);
+                clearTimeout(timeout);
+                timeout = setTimeout(function () {
 
-                if ($article.hasClass('active')) return false;
+                    if ($article.hasClass('active')) return false;
 
-                $articles.not($article.removeClass('blur').addClass('active'))
-                    .removeClass('active')
-                    .addClass('blur');
+                    $articles.not($article.removeClass('blur').addClass('active'))
+                             .removeClass('active')
+                             .addClass('blur');
 
-            }, 65);
+                }, 65);
+
+            });
+
+            $container.on('mouseleave', function (event) {
+
+                clearTimeout(timeout);
+                $articles.removeClass('active blur');
+
+            });
 
         });
-
-        $container.on('mouseleave', function (event) {
-
-            clearTimeout(timeout);
-            $articles.removeClass('active blur');
-
-        });
-
-    });
     function changeColor(element, color) {
         document.getElementById(element).style.color = color;
     }

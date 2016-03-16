@@ -220,5 +220,9 @@ namespace BB.BL
             return repo.UpdateVote(vote);
         }
 
+        public Playlist ReadPlaylistByKey(string key)
+        {
+            return repo.ReadPlaylistByKey(key);
+        }
     }
 }

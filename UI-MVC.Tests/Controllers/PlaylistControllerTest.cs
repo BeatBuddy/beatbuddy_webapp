@@ -48,7 +48,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsNotNull(addTrackResult);
             Assert.AreEqual(200, addTrackResult.StatusCode);
 
-            var playlistResult = controller.View(playlistje.Id) as ViewResult;
+            var playlistResult = controller.View(playlistje.Key) as ViewResult;
 
             Assert.IsNotNull(playlistResult);
 
@@ -73,7 +73,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void ViewPlaylist()
         {
-            var result = controller.View(1) as ViewResult;
+            var result = controller.View("ABC123456") as ViewResult;
 
             Assert.IsNotNull(result);
 
@@ -86,7 +86,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestMoveTrackToHistory()
         {
-            var playlistResult = controller.View(1) as ViewResult;
+            var playlistResult = controller.View("ABC123456") as ViewResult;
             var playlist = playlistResult?.Model as Playlist;
             var playlistTracks = playlist?.PlaylistTracks;
             var aantalTracks = playlistTracks?.Count ?? 0; // get the amount of tracks in the playlist
@@ -95,7 +95,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsNotNull(moveTrackResult);
             Assert.AreEqual(200, moveTrackResult.StatusCode);
 
-            playlistResult = controller.View(1) as ViewResult;
+            playlistResult = controller.View("ABC123456") as ViewResult;
             Assert.IsNotNull(playlistResult);
 
             playlist = playlistResult.Model as Playlist;
