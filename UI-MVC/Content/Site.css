@@ -831,6 +831,8 @@ footer {
   margin: 10px;
   position: relative;
   text-align: center; }
+  .chart .chart-text {
+    padding-top: 40%; }
   .chart span {
     display: block;
     font-size: 2em;

@@ -72,10 +72,23 @@ namespace BB.BL
             return organisationsRepository.SearchOrganisations(prefix);
         }
 
-        public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
+        public double ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
+        {
+            var playlists = ReadOrganisation(organisationId).Playlists;
+            List<PlaylistTrack> playlistTracks = new List<PlaylistTrack>();
+            foreach (var playlist in playlists)
+            {
+                playlistTracks.AddRange(playlist.PlaylistTracks);
+            }
+            double sum = playlistTracks.Sum(playlistTrack => playlistTrack.Track.Duration);
+            return Math.Round(sum/60,0);
+        }
+
+        public double ReadTotalVotesForOrganisation(long organisationId)
         {
             throw new NotImplementedException();
         }
+
         /*
 public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
 {
