@@ -68,6 +68,7 @@ namespace BB.UI.Web.MVC.Controllers
             ViewBag.Organisers = playlistOwners;
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = id;
+            ViewBag.CreatedBy = userManager.ReadUser((long)playlist.CreatedById);
             
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
             

@@ -20,7 +20,7 @@
                 <div class="title">
                     @{
                         Organisation organisation = ViewBag.Organisation;
-                        <h1>Playlist</h1>@Model.Name
+                        <p><h1>Playlist</h1>@Model.Name by @if(organisation != null) { @Html.ActionLink("#" + organisation.Name, "Details", "Organisations" , new { id = organisation.Id}, null)} else { @ViewBag.CreatedBy.FirstName @ViewBag.CreatedBy.LastName}</p>
                     }
                 </div>
 

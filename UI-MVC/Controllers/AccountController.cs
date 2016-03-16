@@ -178,19 +178,27 @@ namespace BB.UI.Web.MVC.Controllers
             }
             if (ModelState.IsValid)
             {
-                userMgr.CreateUser(model.Email, model.LastName, model.FirstName, model.NickName, imagePath);
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var checkUserEmail = userMgr.ReadUser(model.Email);
+                if(checkUserEmail != null)
+                {
+                    ModelState.AddModelError("Email", "Email is already in use");
+                    return View(model);
+                }
+                var user = userMgr.CreateUser(model.Email, model.LastName, model.FirstName, model.NickName, imagePath);
+                var appUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await UserManager.CreateAsync(appUser, model.Password);
                 if (result.Succeeded)
                 {
-                    UserManager.AddToRole(user.Id, "User");
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    UserManager.AddToRole(appUser.Id, "User");
+                    await SignInManager.SignInAsync(appUser, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
                 }
                 userMgr.DeleteUser(user.Id);
                 AddErrors(result);
+                ModelState.AddModelError("Password", "Password must contain a capital and a number");
             }
             // If we got this far, something failed, redisplay form
+            
             return View(model);
         }
 
