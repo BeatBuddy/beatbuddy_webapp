@@ -2,6 +2,49 @@
   margin: auto;
   padding: 0; }
 
+.body {
+  overflow: hidden; }
+
+#chatContainer {
+  background-color: #262626;
+  color: white;
+  margin-bottom: 20px;
+  height: 100%;
+  width: 28px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1; }
+  #chatContainer #chatIcon {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    color: white; }
+  #chatContainer #chatContent {
+    padding: 1em 1em 20px 15px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 100%;
+    margin-left: 28px;
+    display: flex;
+    flex-flow: column;
+    height: 100%; }
+    #chatContainer #chatContent .row {
+      flex: 0 1 30px; }
+    #chatContainer #chatContent .top {
+      flex: 0 1 auto; }
+    #chatContainer #chatContent .content {
+      flex: 1 1 auto;
+      overflow-y: scroll; }
+    #chatContainer #chatContent .bottom {
+      flex: 0 1 40px; }
+    #chatContainer #chatContent #discussion {
+      list-style: none;
+      padding-left: 0; }
+
 * {
   font-family: 'Roboto', sans-serif; }
 
@@ -362,7 +405,8 @@ header {
   width: 100%;
   height: 100%;
   color: white;
-  background-color: black; }
+  background-color: black;
+  z-index: 2; }
   #fullscreenplayer #backgroundcover {
     position: fixed;
     left: 0;
@@ -382,7 +426,7 @@ header {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.55); }
+    background-color: rgba(0, 0, 0, 0.3); }
     #fullscreenplayer #darkoverlay #nowPlayingLogo {
       position: absolute;
       right: 10%;
