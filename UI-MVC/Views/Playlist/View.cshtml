@@ -370,6 +370,7 @@
         play.client.scoreUpdated = function(id, playlistTrack) {
             $(".trackvotes[data-id='" + id + "']").html(playlistTrack.Score);
             updatePlaylist();
+            updateUpcomingTracks();
         }
 
         $('#tuneinbutton').click(function() {
@@ -772,6 +773,48 @@
         $('#fullscreenexitbutton').on('click', function() {
             fullscreenToggle();
         });
+
+        function updateUpcomingTracks() {
+            $.ajax({
+                url: '@Url.Action("GetUpcoming")',
+                method: 'GET',
+                data: { id: @ViewBag.PlaylistId },
+                async: false
+            }).done(function(data) {
+
+                $('#fullscreenComingUp > ul').empty();
+
+                var tracks = JSON.parse(data);
+                var scores = tracks[3];
+
+                for(var i=0; i<3; i++) {
+                    var playlistTrack = tracks[i];
+
+                    console.log(playlistTrack);
+
+                    var itemcls = "";
+                    if (i === 0) itemcls = "first";
+                    if (i === 1) itemcls = "second";
+                    if (i === 2) itemcls = "third";
+                    
+                    var itemHtml = '<li class="' + itemcls +  '">' + 
+	                                    '<span class="counter">' + (i + 1) + '</span>' + 
+	                                    '<img class="albumart" src="' + playlistTrack.Track.CoverArtUrl + '" alt="album art" />' + 
+	                                    '<span class="trackartist">' + playlistTrack.Track.Artist + '</span>' + 
+	                                    '<span class="tracktitle"> - ' + playlistTrack.Track.Title + '</span>' + 
+	                                    '<i class="material-icons">thumb_up</i>' + 
+	                                    '<span class="trackvotes">' + scores[i] + '</span>' + 
+                                    '</li>';
+
+                    $('#fullscreenComingUp > ul').append(itemHtml);
+                }
+
+                console.log(data);
+
+            }).fail(function() {
+                notie.alert(3, 'Error refreshing upcoming tracks', 2.5);
+            });
+        }
 
         $(document).keyup(function(e) {
             if (e.which === 27) {

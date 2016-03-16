@@ -4,8 +4,6 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using BB.UI.Web.MVC.App_Start;
-using Microsoft.Practices.Unity;
 
 namespace BB.UI.Web.MVC
 {
@@ -19,7 +17,8 @@ namespace BB.UI.Web.MVC
             AreaRegistration.RegisterAllAreas();
             
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            //WebApiConfig.Register(GlobalConfiguration.Configuration);
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

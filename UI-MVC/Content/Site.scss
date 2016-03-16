@@ -26,6 +26,9 @@ body {
     #chatIcon {
         cursor: pointer;
         position: absolute;
+        padding-top: 5em;
+        padding-bottom: 5em;
+        margin-top: -5em;
         top: 50%;
         left: 4px;
         color: white;
@@ -1052,7 +1055,7 @@ footer {
 
     #fullscreenbutton {
         color: white;
-        right: -10px;
+        right: 0;
         top: 1.2em;
         position: absolute;
         cursor: pointer;

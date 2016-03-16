@@ -8,7 +8,10 @@ namespace BB.BL.Domain.Playlists
     {
         public long Id { get; set; }
         public DateTime? PlayedAt { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Vote> Votes { get; set; }
+
         public Track Track { get; set; }
 
         [JsonIgnore]
