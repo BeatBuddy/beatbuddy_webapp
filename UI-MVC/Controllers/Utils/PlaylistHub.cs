@@ -64,8 +64,15 @@ namespace BB.UI.Web.MVC.Controllers.Utils
                 Clients.Client(key).playLive(track, (int) duration);
                 keys.Add(key);
             }
+
+            //Sending YouTube links after .playLive because it can take some time
+            var youTube = YouTube.Default;
+            var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId);
+            var youtubeLink = video.Uri;
             foreach (var key in keys)
             {
+                Clients.Client(key).onPlaylinkGeneratedSync(youtubeLink, (int) duration);
+
                 lastListener.Remove(key);
             }
         }
