@@ -240,6 +240,14 @@ namespace BB.UI.Web.MVC.Controllers
             return View(playlistManager.ReadPlaylists());
         }
 
+        [HttpPost]
+        public JsonResult Keycode(string key)
+        {
+            var playlists = playlistManager.ReadPlaylists();
+            Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
+            return Json(playlist.Id);
+        }
+
         // GET: Playlists/Create
         [Authorize(Roles = "User, Admin")]
         public ActionResult Create()
