@@ -94,6 +94,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult Get([FromUri] long id)
         {
             var organisation = organisationManager.ReadOrganisation(id);
+            if (organisation == null) { return NotFound(); }
             return Ok(organisation);
         }
     }

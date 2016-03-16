@@ -85,9 +85,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 UserManager.AddToRole(applicationUser.Id, "User");
                 return Ok(user);
             }
-            userManager.DeleteUser(user.Id);
-            return Content(HttpStatusCode.InternalServerError, "ASP.NET Identity Usermanager could not create user");
-        }
+                userManager.DeleteUser(user.Id);
+                return Content(HttpStatusCode.InternalServerError, "ASP.NET Identity Usermanager could not create user");
+            }
 
         [AllowAnonymous]
         [HttpPost]
@@ -121,22 +121,25 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [Route("userOrganisations")]
         public IHttpActionResult GetUserOrganisations()
         {
-            var currentUser = (User.Identity as ClaimsIdentity)?.Claims.First(c => c.Type == "sub").Value;
-            var user = userManager.ReadUser(currentUser);
+            var currentUser = (User.Identity as ClaimsIdentity)?.Claims.FirstOrDefault(c => c.Type == "sub");
+            if (currentUser == null) {
+                return NotFound();
+            }
+            var user = userManager.ReadUser(currentUser.Value);
             if (user == null)
             {
                 return NotFound();
             }
 
             var organisations = organisationManager.ReadOrganisationsForUser(user.Id)
-                .Select(o => new
+                .Select(o => new SmallOrganisationViewModel 
                 {
-                    o.Id,
-                    o.Name,
-                    o.BannerUrl,
-                    o.ColorScheme
-                })
-                .AsEnumerable();
+                    Id = o.Id,
+                    Name = o.Name,
+                    BannerUrl = o.BannerUrl,
+                    ColorScheme = o.ColorScheme
+                });
+                
             return Ok(organisations);
         }
 

@@ -345,7 +345,7 @@
     <Compile Include="Models\CurrentPlayingViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Scripts\OrganisationViewModel.cs" />
+    <Compile Include="Models\OrganisationViewModel.cs" />
     <Compile Include="Models\LivePlaylistViewModel.cs" />
     <Compile Include="Models\PlaylistViewModel.cs" />
     <Compile Include="App_Start\Startup.Owin.cs" />
@@ -386,6 +386,7 @@
     <Content Include="Content\img\Playlists\playlist_default.png" />
     <Content Include="Content\img\registerbanner.jpg" />
     <Content Include="Content\img\round_shape_loader.gif" />
+    <Content Include="Content\jquery.jscrollpane.css" />
     <Content Include="Content\modal.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\Portal.css">
@@ -439,6 +440,9 @@
     <Content Include="Scripts\dropit.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
+    <Content Include="Scripts\jquery.jscrollpane.js" />
+    <Content Include="Scripts\jquery.jscrollpane.min.js" />
+    <Content Include="Scripts\jquery.mousewheel.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
@@ -451,6 +455,7 @@
     <Content Include="Scripts\materialize.min.js" />
     <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\mwheelIntent.js" />
     <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\notie.js" />
     <Content Include="Scripts\respond.js" />

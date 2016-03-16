@@ -240,6 +240,14 @@ namespace BB.UI.Web.MVC.Controllers
             return View(playlistManager.ReadPlaylists());
         }
 
+        [HttpPost]
+        public JsonResult Keycode(string key)
+        {
+            var playlists = playlistManager.ReadPlaylists();
+            Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
+            return Json(playlist.Id);
+        }
+
         // GET: Playlists/Create
         [Authorize(Roles = "User, Admin")]
         public ActionResult Create()
@@ -310,11 +318,6 @@ namespace BB.UI.Web.MVC.Controllers
             var youtubeProvider = new YouTubeTrackProvider();
 
             var tracks = youtubeProvider.LookUpPlaylist(id);
-
-            /*var user = userManager.ReadUser("lennart.boeckx@gmail.com");
-            var organisation = organisationManager.ReadOrganisation("lenni's party");
-
-            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation);*/
 
             foreach (Track track in tracks)
             {

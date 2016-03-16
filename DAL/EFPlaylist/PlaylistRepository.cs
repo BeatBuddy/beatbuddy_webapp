@@ -162,10 +162,6 @@ namespace BB.DAL.EFPlaylist
                 .Include(p => p.PlaylistTracks.Select(pt => pt.Votes))
                 .Include(p => p.PlaylistTracks.Select(pt => pt.Votes.Select(v => v.User)))
                 .ToList()
-                //.Include("PlaylistTracks")
-                //.Include("PlaylistTracks.Track")
-                //.Include("PlaylistTracks.Track.TrackSource")
-                //.Include("PlaylistTracks.Votes.User")
                 .SingleOrDefault(p => p.Id == playlistId);
 
             if (playlist == null) return null;
@@ -215,6 +211,7 @@ namespace BB.DAL.EFPlaylist
             vote.User = user;
             var playlistTrack = context.PlaylistTracks.Find(trackId);
             vote = context.Votes.Add(vote);
+            if (playlistTrack.Votes == null) playlistTrack.Votes = new Collection<Vote>();
             playlistTrack.Votes.Add(vote);
             context.SaveChanges();
             return vote;
@@ -236,7 +233,7 @@ namespace BB.DAL.EFPlaylist
         public Vote ReadVoteOfUserFromPlaylistTrack(long userId, long trackId)
         {
             var track = context.PlaylistTracks.FirstOrDefault(pt => pt.Id == trackId);
-            var vote = track?.Votes.FirstOrDefault(v => v.User.Id == userId);
+            var vote = track?.Votes?.FirstOrDefault(v => v.User.Id == userId);
             return vote;
         }
 

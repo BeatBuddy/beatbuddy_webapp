@@ -72,5 +72,18 @@ namespace BB.BL
         {
             return organisationsRepository.SearchOrganisations(prefix);
         }
+
+        public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
+        {
+            throw new NotImplementedException();
+        }
+        /*
+public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
+{
+   var playlists = ReadOrganisation(organisationId).Playlists;
+   var playlistTracks = playlists.Any(p => p.);
+   var totalDuration = playlistTracks.Any(pt => pt.)
+   //return ;
+}*/
     }
 }
