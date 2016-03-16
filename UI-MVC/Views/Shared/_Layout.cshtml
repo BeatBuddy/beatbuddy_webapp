@@ -14,10 +14,10 @@
 </head>
 <body>
     <header>
-        <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a>
-        <ul class="nav">
-            <li>@Html.Partial("_LoginPartial")</li>
-        </ul>
+            <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/logo_header.png" alt="BeatBuddy logo" /></a>
+            <ul class="nav">
+                <li>@Html.Partial("_LoginPartial")</li>
+            </ul>  
     </header>
 
     @RenderSection("escape_padding", required: false)

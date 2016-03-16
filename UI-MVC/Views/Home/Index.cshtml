@@ -1,4 +1,7 @@
-﻿@{
+﻿@using BB.BL.Domain.Playlists
+
+@model List<Playlist>
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -82,8 +85,29 @@
         $('#findPlaylist').click(function () {
             $('#indexBannerContent').hide();
             $('#banner').addClass('content');
-            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the keycode</h1></br><input type="text" class="custom-input" id="message" style="width:247px"/></div>');
+            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the keycode</h1></br><input type="text" id="keyField" class="custom-input" style="width:247px"/></div>');
+            $("#keyField").keypress(function (e) {
+                if (e.which == 13) {
+                    var key = $('#keyField').val();
+                    alert(key)
+                    $.ajax({
+                        url: '@Url.Action("Keycode","Playlist")',
+                        method: 'POST',
+                        data: {key:key}
+                    })
+                .done(
+                function (data) {
+                    window.location.href ='@Url.Action("View","Playlist" )/' + data
+                }
+                )
+                .fail(function () {
+                    alert("error");
+                });
+                }
+            });
+
         });
+        
 
     </script>
 }

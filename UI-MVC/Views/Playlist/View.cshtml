@@ -41,7 +41,8 @@
                 </div>
             </div>
         </div>
-    </div>}
+    </div>
+        }
 
 <div class="col-md-9" id="playlistTable">
     <div id="playlist-view" style="margin-top: 1em;">
@@ -104,7 +105,7 @@
     <div id="bottommargin"></div>
 </div>
 
-<div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; margin-top: -32px; height:70%; position:absolute; right:0;">
+<div class="container col-md-3" id="chatContainer" style="background-color:#262626 ; color:white; height:70%; margin-top:-32px; position: absolute;right:0;">
     <div class="col-xs-1" id="chatArrow" style="position:absolute; top:50%; cursor:pointer; padding-right:0px">
         <i id="chatIcon" class="material-icons" style="margin-left:-27px">keyboard_arrow_right</i>
     </div>
@@ -114,8 +115,9 @@
             {
                 <input type="hidden" id="displayname" value="@ViewBag.CurrentUser.Nickname" />
                 <input type="hidden" id="image" value="/Content/img/Users/@ViewBag.CurrentUser.ImageUrl" />
+                <div id="chatMessages"style="height:80%">
                 <ul id="discussion" style="list-style: none; padding-left: 0"></ul>
-
+                </div>
                 <div id="sendChat" style="position: absolute; bottom: 0; margin-bottom: 20px;">
                     <input type="text" class="custom-input" id="message" style="width: 247px" />
                     <input type="button" id="sendmessage" value="Send" class="btn-chat" style="margin-left: 10px" />
@@ -211,6 +213,15 @@
 @section Scripts{
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
+    <!-- styles needed by jScrollPane -->
+    <link type="text/css" href="~/Content/jquery.jscrollpane.css" rel="stylesheet" media="all" />
+    <!-- latest jQuery direct from google's CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+    </script>
+    <!-- the mousewheel plugin - optional to provide mousewheel support -->
+    <script type="text/javascript" src="~/Scripts/jquery.mousewheel.js"></script>
+        <!-- the jScrollPane script -->
+    <script type="text/javascript" src="~/Scripts/jquery.jscrollpane.min.js"></script>
     <script>
         var playing = false;
         var listening = false;
@@ -362,7 +373,12 @@
         var footerOpen = false;
         var chatOpen = true;
 
+        $( document ).ready(function() {
+             $('#chatMessages').jScrollPane();
+        });
+
         jQuery(function($) {
+            
             $('#chatArrow').click(function() {
                 if (chatOpen === false) {
                     openChat();
@@ -390,6 +406,8 @@
             $('#playlistTable').addClass('col-lg-12');
             chatIcon.innerHTML = 'keyboard_arrow_left';
         }
+
+
 
         jQuery(function($) {
             $('#footertop').click(function () {
