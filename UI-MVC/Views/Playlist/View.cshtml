@@ -506,7 +506,7 @@
                 data: { playlistId: @ViewBag.PlaylistId, id: id },
                 async: false
             }).done(function() {
-                window.location.href = @ViewBag.PlaylistId + '#close';
+                window.location.href = '/Playlist/View?key=' + '@ViewBag.PlaylistKey' + '#close';
                 updatePlaylist();
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
@@ -843,7 +843,7 @@
             }).done(function() {
                 $("#loadingPlaylist").hide();
                 $("waitPlaylist").hide();
-                window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
+                window.location.href = '/Playlist/View?key=' + '@ViewBag.PlaylistKey' + '#closePlaylist';
                 updatePlaylist();
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';

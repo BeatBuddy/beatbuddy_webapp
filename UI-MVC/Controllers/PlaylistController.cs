@@ -41,15 +41,15 @@ namespace BB.UI.Web.MVC.Controllers
         }
         
 
-        public ActionResult View(long id)
+        public ActionResult View(string key)
         {
             if (User != null)
             {
                 user = userManager.ReadUser(User.Identity.Name);
             }
-            var playlist = playlistManager.ReadPlaylist(id);
+            var playlist = playlistManager.ReadPlaylistByKey(key);
             var votesUser = playlistManager.ReadVotesForUser(user);
-            var organisation = organisationManager.ReadOrganisationForPlaylist(id);
+            var organisation = organisationManager.ReadOrganisationForPlaylist(playlist.Id);
 
             var playlistOwners = new List<User>();
             if (organisation != null)
@@ -64,11 +64,12 @@ namespace BB.UI.Web.MVC.Controllers
                     playlistOwners.Add(userManager.ReadUser((long)playlist.CreatedById));
                 }
             }
-            ViewBag.Organisation = organisationManager.ReadOrganisationForPlaylist(id);
+            ViewBag.Organisation = organisationManager.ReadOrganisationForPlaylist(playlist.Id);
             ViewBag.CurrentUser = user;
             ViewBag.Organisers = playlistOwners;
             ViewBag.VotesUser = votesUser;
-            ViewBag.PlaylistId = id;
+            ViewBag.PlaylistId = playlist.Id;
+            ViewBag.PlaylistKey = playlist.Key;
 //            ViewBag.CreatedBy = userManager.ReadUser((long)playlist.CreatedById);
             
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
@@ -318,9 +319,9 @@ namespace BB.UI.Web.MVC.Controllers
                 {
                     playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
                 }
-                return RedirectToAction("View/" + playlist.Id);
+                return RedirectToAction("View", new { key = playlist.Key });
             }
-            catch
+            catch (System.Exception e)
             {
                 ModelState.AddModelError("Key", "The key value is already in use");
                 return View(viewModel);

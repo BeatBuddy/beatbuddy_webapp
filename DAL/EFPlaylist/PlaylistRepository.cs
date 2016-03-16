@@ -278,5 +278,11 @@ namespace BB.DAL.EFPlaylist
             context.SaveChanges();
             return vote;
         }
+
+        public Playlist ReadPlaylistByKey(string key)
+        {
+            var playlist = context.Playlists.FirstOrDefault(a => a.Key.Equals(key));
+            return ReadPlaylist(playlist.Id);
+        }
     }
 }
