@@ -137,7 +137,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     Id = o.Id,
                     Name = o.Name,
                     BannerUrl = o.BannerUrl,
-                    ColorScheme = o.ColorScheme
                 });
                 
             return Ok(organisations);

@@ -13,7 +13,6 @@ namespace BB.BL.Domain.Organisations
         [Index(IsUnique = true), MaxLength(100)]
         public string Name { get; set; }
         public string BannerUrl { get; set; }
-        public string ColorScheme { get; set; }
         [JsonIgnoreAttribute]
         public virtual ICollection<DashboardBlock> DashboardBlocks { get; set; }
         [JsonIgnoreAttribute]

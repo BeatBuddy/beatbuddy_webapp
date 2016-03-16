@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BB.BL.Domain.Playlists
 {
@@ -8,6 +9,7 @@ namespace BB.BL.Domain.Playlists
         [Key]
         public long Id { get; set; }
         public string Name { get; set; }
+        [Index(IsUnique = true), MaxLength(100)]
         public string Key { get; set; }
         public int MaximumVotesPerUser { get; set; }
         public bool Active { get; set; }

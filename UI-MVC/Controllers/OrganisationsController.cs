@@ -51,7 +51,6 @@ namespace BB.UI.Web.MVC.Controllers
                     Id = organisation.Id,
                     Name = organisation.Name,
                     BannerUrl = organisation.BannerUrl,
-                    ColorScheme = organisation.ColorScheme,
                 });
             }
             return View(organisationViewModels);
@@ -72,7 +71,6 @@ namespace BB.UI.Web.MVC.Controllers
                 {
                     Id = id,
                     BannerUrl = organisation.BannerUrl,
-                    ColorScheme = organisation.ColorScheme,
                     Name = organisation.Name,
                     Organiser = organiser,
                     CoOrganiser = coOrganisers
@@ -188,7 +186,7 @@ namespace BB.UI.Web.MVC.Controllers
                     bannerImage.SaveAs(bannerPath);
                     bannerPath = Path.GetFileName(bannerPath);
                 }
-                Organisation org = organisationManager.CreateOrganisation(organisation.Name, bannerPath, organisation.ColorScheme, user);
+                Organisation org = organisationManager.CreateOrganisation(organisation.Name, bannerPath, user);
                 return RedirectToAction("Details/" + org.Id);
             }
             catch
@@ -231,20 +229,20 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
 
-        public ActionResult AddPlaylist(string id)
+        public ActionResult AddPlaylist(long playlistId, string id)
         {
             var youtubeProvider = new YouTubeTrackProvider();
 
             var tracks = youtubeProvider.LookUpPlaylist(id);
 
-            var user = userManager.ReadUser("lennart.boeckx@gmail.com");
+            /*var user = userManager.ReadUser("lennart.boeckx@gmail.com");
             var organisation = organisationManager.ReadOrganisation("lenni's party");
 
-            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation.Id);
+            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation.Id);*/
 
             foreach(Track track in tracks)
             {
-                playlistManager.AddTrackToPlaylist(playlist.Id, track);
+                playlistManager.AddTrackToPlaylist(playlistId, track);
             }
 
             return null;

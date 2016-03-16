@@ -65,7 +65,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
             Track addedtrack = playlistManager.AddTrackToPlaylist(playlist.Id, track);
 
 
-            organisation = organisationManager.CreateOrganisation("gek organisatie test","","",user);
+            organisation = organisationManager.CreateOrganisation("gek organisatie test","",user);
         }
 
         /*

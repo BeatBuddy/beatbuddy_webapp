@@ -23,10 +23,6 @@ namespace BB.UI.Web.MVC.Models
         public string Name { get; set; }
         [DisplayName("Banner Image: ")]
         public string BannerUrl { get; set; }
-        [DisplayName("Avatar Image: ")]
-        public string ImageUrl { get; set; }
-        [Required, DisplayName("Accent color: ")]
-        public string ColorScheme { get; set; }
     }
 
     public class SmallOrganisationViewModel
@@ -34,7 +30,6 @@ namespace BB.UI.Web.MVC.Models
         public long Id { get; set; }
         public string Name { get; set; }
         public string BannerUrl { get; set; }
-        public string ColorScheme { get; set; }
     }
 
     public class OrganisationViewWithPlaylist
@@ -46,10 +41,6 @@ namespace BB.UI.Web.MVC.Models
         public string Name { get; set; }
         [DisplayName("Banner Image: ")]
         public string BannerUrl { get; set; }
-        [DisplayName("Avatar Image: ")]
-        public string ImageUrl { get; set; }
-        [Required, DisplayName("Accent color: ")]
-        public string ColorScheme { get; set; }
         public IPagedList<Playlist> Playlists { get; set; }
         public User Organiser { get; set; }
         public IEnumerable<User> CoOrganiser { get; set; }

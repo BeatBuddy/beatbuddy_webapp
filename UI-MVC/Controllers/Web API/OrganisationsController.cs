@@ -84,7 +84,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 return Content(HttpStatusCode.InternalServerError,"Organisation name already exists");
             }
 
-            Organisation organisation = organisationManager.CreateOrganisation(name, imagePath, color, user);
+            Organisation organisation = organisationManager.CreateOrganisation(name, imagePath, user);
             return Ok(organisation);
         }
 

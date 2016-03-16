@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BB.UI.Web.MVC.Tests.Helpers;
 using BB.UI.Web.MVC.Models;
 using BB.BL;
+using BB.BL.Domain.Users;
 using BB.DAL;
 using BB.DAL.EFOrganisation;
 using BB.DAL.EFPlaylist;
@@ -31,25 +32,30 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         [TestMethod]
         public void TestSearchAndAddTrack()
         {
+            UserManager userManager = (UserManager) DbInitializer.CreateUserManager();
+            PlaylistManager playlistManager = (PlaylistManager) DbInitializer.CreatePlaylistManager();
+            var user = userManager.ReadUser("jonah@gmail.com");
+
+            var playlistje = playlistManager.CreatePlaylistForUser("testPlaylist", "teste", "tesje", 2, true, null, user);
             var result = controller.SearchTrack("kshmr - bazaar");
             var tracks = result.Data as List<Track>;
 
             Assert.IsNotNull(tracks);
             Assert.IsTrue(tracks.Any(t => t.Title.ToString().ToLower().Contains("bazaar")));
 
-            var addTrackResult = controller.AddTrack(1, tracks.First().TrackSource.TrackId) as HttpStatusCodeResult;
+            var addTrackResult = controller.AddTrack(playlistje.Id, tracks.First().TrackSource.TrackId) as HttpStatusCodeResult;
 
             Assert.IsNotNull(addTrackResult);
             Assert.AreEqual(200, addTrackResult.StatusCode);
 
-            var playlistResult = controller.View(1) as ViewResult;
+            var playlistResult = controller.View(playlistje.Id) as ViewResult;
 
             Assert.IsNotNull(playlistResult);
 
-            var playlist = playlistResult.Model as Playlist;
+            playlistje = playlistResult.Model as Playlist;
 
-            Assert.IsNotNull(playlist);
-            Assert.AreEqual(2, playlist.PlaylistTracks.Count);
+            Assert.IsNotNull(playlistje);
+            Assert.AreEqual(1, playlistje.PlaylistTracks.Count);
         }
 
         /*

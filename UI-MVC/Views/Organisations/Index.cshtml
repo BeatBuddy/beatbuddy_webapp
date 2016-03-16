@@ -33,12 +33,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.BannerUrl)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ColorScheme)
-            </th>
             <th></th>
         </tr>
 
@@ -50,12 +44,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.BannerUrl)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImageUrl)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ColorScheme)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |

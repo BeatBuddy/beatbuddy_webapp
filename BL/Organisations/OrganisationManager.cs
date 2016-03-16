@@ -30,13 +30,12 @@ namespace BB.BL
             return organisationsRepository.ReadOrganisationsForUser(userId);
         }
 
-        public Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator)
+        public Organisation CreateOrganisation(string name, string bannerUrl, User organisator)
         {
             Organisation organisation = new Organisation
             {
                 Name = name,
                 BannerUrl = bannerUrl,
-                ColorScheme = colorScheme,
                 DashboardBlocks = new List<DashboardBlock>(),
                 Playlists = new List<Playlist>(),
             };
