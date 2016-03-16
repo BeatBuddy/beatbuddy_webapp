@@ -253,7 +253,7 @@
 
         function sendChatMessage() {
             if ($('#message').val() == null || $('#message').val() === "") return;
-           
+
             chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
             $('#message').val('').focus();
         }
@@ -818,7 +818,7 @@
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
-
+                play.server.addTrack("@Model.Id");
             });
         }
 

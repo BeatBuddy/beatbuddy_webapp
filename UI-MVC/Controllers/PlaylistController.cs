@@ -266,6 +266,11 @@ namespace BB.UI.Web.MVC.Controllers
             Organisation org = null;
             Playlist playlist;
             string path = null;
+            if(viewModel.Name == null || viewModel.Name == "" || viewModel.Name == " ")
+            {
+                ModelState.AddModelError("Name", "You need to fill in a name for your playlist");
+                return View(viewModel);
+            }
 
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
 
@@ -277,16 +282,23 @@ namespace BB.UI.Web.MVC.Controllers
                 path = Path.GetFileName(path);
             }
 
-            if (viewModel.OrganisationId != 0)
-            {
-                playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, viewModel.OrganisationId);
+            try {
+                if (viewModel.OrganisationId != 0)
+                {
+                    playlist = playlistManager.CreatePlaylistForOrganisation(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user, viewModel.OrganisationId);
+                }
+                else
+                {
+                    playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
+                }
+                return RedirectToAction("View/" + playlist.Id);
             }
-            else
+            catch
             {
-                playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
+                ModelState.AddModelError("Key", "The key value is already in use");
+                return View(viewModel);
             }
             
-            return RedirectToAction("View/" + playlist.Id);
 
         }
 

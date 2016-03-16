@@ -4,13 +4,14 @@
     ViewBag.Id = ViewBag.user.Id;
 }
 
-<h2>@ViewBag.Title.</h2>
+
 @using (Html.BeginForm("Save", "Manage", new { userId = ViewBag.user.Id }, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
 {
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Change your account settings</h4>
-    <hr />
+    <div class="title more-margin-top">
+        <h1>Manage </h1> your account 
+    </div>
     <dl class="dl-horizontal">
         <dt>Password:</dt>
         <dd>
