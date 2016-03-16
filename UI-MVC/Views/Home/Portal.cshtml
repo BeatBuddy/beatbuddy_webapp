@@ -50,9 +50,15 @@
     <div class="title">
         <h1>My Organisations</h1>
         <div id="organisationCount" style="display: inline">@ViewBag.MyOrganisations.Count</div>
-        <a href="#myModal" class="btn btn-right btn-portal" style="font-size: 0.6em">
-            <i class="material-icons">playlist_add</i> add organisation
-        </a>
+        <ul class="menu btn-right">
+            <li>
+                <a href="#"><i class="material-icons" style="color: black">apps</i></a>
+                <ul>
+                    <li style="cursor: pointer"><a href="#myModal">Create organisation</a></li>
+                    <li style="cursor: pointer"><a href="#searchOrganisationbtn">Search organisation</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
     
     <div class="container row" id="myOrganisations">
@@ -95,11 +101,6 @@
         
     </div>
     <div class="clearfix">&nbsp;</div>
-    <div id="searchOrganisations">
-        <a href="#searchOrganisationbtn" class="btn btn-left btn-portal" style="font-size: 0.6em">
-            <i class="material-icons">search</i> search organisation
-        </a>
-    </div>
     <div id="searchOrganisationbtn" class="modal" style="margin-top: -150px">
         <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
             <a href="#close" id="close-modal" title="Close" class="close">X</a>
@@ -114,51 +115,9 @@
 
 
 <section id="myplaylists">
-    <div class="title">
-            <h1>My playlists</h1>
-        <div id="playlistCount" style="display: inline">@ViewBag.MyPlaylists.Count</div>
-        <a href="#playlistModal" class="btn btn-right btn-portal" style="font-size: 0.6em">
-            <i class="material-icons">playlist_add</i> add playlist
-        </a>
-    </div>
-    
-    <div class="container row more-margin-top">
-        @foreach (Playlist playlist in ViewBag.MyPlaylists)
-        {
-                <div class="col-md-4 col-xs-12 organisation-wrapper">
                     @{
-                        var playlistSource = "/Content/img/playlistavatar.png";
-                        if (playlist.ImageUrl != null)
-                        {
-                            playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
-                        }
-                    }
-                    <a href="@Url.Action("View", "Playlist", new {id = playlist.Id})">
-                        <img src="@playlistSource" alt="playlist image" class="playlist-image" />
-
-
-                        <h3>@playlist.Name</h3>
-                    </a>
-                        <div>@playlist.PlaylistTracks.ToList().FindAll(p => p.PlayedAt == null).Count tracks in queue</div>
-                        <ul class="menu pull-right">
-                            <li>
-                                <a href="#"><i class="material-icons" style="color: black">settings</i></a>
-                                <ul>
-                                    <li style="cursor: pointer"><a onclick="updatePlaylist(@playlist.Id)">Edit</a></li>
-                                    <li style="cursor: pointer"><a onclick="deletePlaylist(@playlist.Id)">Delete</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <div class="clear-playlist">&nbsp;</div>
-</div>
+            Html.RenderPartial("MyPlaylists");
         }
-        @if (ViewBag.MyPlaylists.Count == 0)
-        {
-            <p style="padding-left: 15px">You do not have any playlists yet...</p>
-        }
-    </div>
-    
-    <div class="clearfix">&nbsp;</div>
 </section>
 
 <section>
@@ -204,9 +163,7 @@
             data: { id: platlistId }
         }).done(function () {
             notie.alert(1, 'Playlist successfull deleted', 2.5);
-            $("#myplaylists").load(location.href + " #myplaylists");
-            $("#playlistCount").load(location.href + " #playlistCount");
-
+            location.reload();
         }).fail(function() {
             notie.alert(3, 'Failed to delete playlist', 2.5);
         });
