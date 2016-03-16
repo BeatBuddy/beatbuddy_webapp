@@ -89,7 +89,6 @@
             $("#keyField").keypress(function (e) {
                 if (e.which == 13) {
                     var key = $('#keyField').val();
-                    alert(key)
                     $.ajax({
                         url: '@Url.Action("Keycode","Playlist")',
                         method: 'POST',
