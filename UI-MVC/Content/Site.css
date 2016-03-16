@@ -32,6 +32,10 @@
     display: flex;
     flex-flow: column;
     height: 100%; }
+    #chatContainer #chatContent .thumbnail {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%; }
     #chatContainer #chatContent .row {
       flex: 0 1 30px; }
     #chatContainer #chatContent .top {

@@ -303,7 +303,6 @@
         }
 
         play.client.modifyListeners = function(data, users) {
-            console.log(users.length);
             var src = document.getElementById('listenerImg');
             var i;
             var unknownUserCounter = 0;
@@ -312,7 +311,6 @@
             }
             var img;
             for (i = 0; i < users.length; i++) {
-                console.log(users[i]);
                 img = document.createElement("img");
                 if (users[i].User != null) {
                     if (users[i].User.ImageUrl != null) {
@@ -368,6 +366,12 @@
             }
             updatePlaylist();
         }
+
+        play.client.scoreUpdated = function(id, playlistTrack) {
+            $(".trackvotes[data-id='" + id + "']").html(playlistTrack.Score);
+            updatePlaylist();
+        }
+
         $('#tuneinbutton').click(function() {
             if (listening) {
                 listening = false;
@@ -635,7 +639,7 @@
                 icon.innerHTML = 'pause';
             }
 
-            if (event.data === YT.PayerState.PAUSED) {
+            if (event.data === YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
                     player.playVideo();

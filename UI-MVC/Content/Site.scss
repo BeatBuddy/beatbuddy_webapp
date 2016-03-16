@@ -43,6 +43,12 @@ body {
         flex-flow: column;
         height: 100%;
 
+        .thumbnail{
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+
         .row {
             flex: 0 1 30px;
         }
