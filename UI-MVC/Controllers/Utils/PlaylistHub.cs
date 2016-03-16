@@ -99,7 +99,14 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             return base.OnDisconnected(stopCalled);
         }
 
-       
+        public void StopPlaying(string groupName)
+        {
+            if (playlistMasters.Values.Any(p => p.Equals(Context.ConnectionId)))
+            {
+                Clients.OthersInGroup(groupName).stopMusicPlaying();
+                playlistMasters.Remove(groupName);
+            }
+        }
 
         public void StartPlaying(CurrentPlayingViewModel track, string groupName)
         {

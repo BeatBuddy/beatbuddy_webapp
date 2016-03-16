@@ -65,6 +65,8 @@ header {
         color: black; }
         header ul.nav li a:hover {
           border-bottom: 2px solid black; }
+        header ul.nav li a:active {
+          border-bottom: 2px solid black; }
 
 #banner {
   width: 100%;
@@ -142,6 +144,14 @@ header {
   @media screen and (max-width: 600px) {
     #banner {
       min-height: 270px; } }
+
+.darkoverlaygrid {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45); }
 
 #playlistbanner {
   width: 100%;
@@ -338,6 +348,7 @@ header {
     clear: both; }
     #playlist-tracks .track .albumart {
       height: 48px;
+      width: 48px;
       display: inline-block;
       float: left;
       margin-right: .7em; }
@@ -676,13 +687,13 @@ footer {
   position: relative; }
   #footerSlideContent #fullscreenbutton {
     color: white;
-    right: -10px;
+    right: 0px;
     top: 1.2em;
     position: absolute;
     cursor: pointer; }
   #footerSlideContent #tuneinbutton {
     color: white;
-    right: 15px;
+    right: 27.5px;
     top: 1.2em;
     position: absolute;
     cursor: pointer; }

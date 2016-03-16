@@ -1,0 +1,156 @@
+.ib-container{
+    align-content: center;
+	width: 100%;
+    padding: 15px;
+    right: 0;
+    left: 0;
+	
+}
+.ib-container:before,
+.ib-container:after {
+    content:"";
+    display:table;
+}
+.ib-container:after {
+    clear:both;
+}
+.ib-container article{
+	display: block;
+	width: 237px;
+	height: 237px;
+	
+	cursor: pointer;
+	float: left;
+    text-align: center;
+	
+    padding: 0;
+
+	text-align: left;
+	text-transform: none;
+	margin: 10px;
+	z-index: 1;
+	-webkit-backface-visibility: hidden;
+	box-shadow: 
+		0px 0px 0px 3px rgba(255,255,255,1), 
+		1px 1px 3px 5px rgba(0,0,0,0.2);
+	-webkit-transition: 
+		opacity 0.4s linear, 
+		-webkit-transform 0.4s ease-in-out, 
+		box-shadow 0.4s ease-in-out;
+	-moz-transition: 
+		opacity 0.4s linear, 
+		-moz-transform 0.4s ease-in-out, 
+		box-shadow 0.4s ease-in-out;
+	-o-transition: 
+		opacity 0.4s linear, 
+		-o-transform 0.4s ease-in-out, 
+		box-shadow 0.4s ease-in-out;
+	-ms-transition: 
+		opacity 0.4s linear, 
+		-ms-transform 0.4s ease-in-out, 
+		box-shadow 0.4s ease-in-out;
+	transition: 
+		opacity 0.4s linear, 
+		transform 0.4s ease-in-out, 
+		box-shadow 0.4s ease-in-out;
+
+}
+.ib-container h3 a{
+	font-size: 16px;
+	font-weight: 400;
+	color: #000;
+	color: rgba(0, 0, 0, 1);
+	text-shadow: 0px 0px 0px rgba(0, 0, 0, 1);
+	opacity: 0.4;
+}
+.ib-container article header span{
+    width: 100%;
+}
+.ib-container article p{
+	font-size: 18px;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    color: white;
+	text-shadow: 0px 0px 0px rgba(51, 51, 51, 1);
+    
+}
+.ib-container h3 a,
+.ib-container article header span,
+.ib-container article p{
+	-webkit-transition: 
+		opacity 0.2s linear, 
+		text-shadow 0.5s ease-in-out, 
+		color 0.5s ease-in-out;
+	-moz-transition: 
+		opacity 0.2s linear, 
+		text-shadow 0.5s ease-in-out, 
+		color 0.5s ease-in-out;
+	-o-transition: 
+		opacity 0.2s linear, 
+		text-shadow 0.5s ease-in-out, 
+		color 0.5s ease-in-out;
+	-ms-transition: 
+		opacity 0.2s linear, 
+		text-shadow 0.5s ease-in-out, 
+		color 0.5s ease-in-out;
+	transition: 
+		opacity 0.2s linear, 
+		text-shadow 0.5s ease-in-out, 
+		color 0.5s ease-in-out;
+}
+/* Hover Style for all the items: blur, scale down*/
+.ib-container article.blur{
+	box-shadow: 0px 0px 2px 2px rgba(255,255,255,1);
+	-webkit-transform: scale(0.9);
+	-moz-transform: scale(0.9);
+	-o-transform: scale(0.9);
+	-ms-transform: scale(0.9);
+	transform: scale(0.9);
+	opacity: 0.5;
+}
+.ib-container article.blur h3 a{
+	text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.9);
+	color: rgba(0, 0, 0, 0);
+	opacity: 0.2;
+}
+.ib-container article.blur header span img{
+	text-shadow: 0px 0px 5px rgba(255, 210, 82, 0.9);
+	color: rgba(255, 210, 82, 0);
+	opacity: 0.2;
+}
+.ib-container article.blur  p{
+	text-shadow: 0px 0px 5px rgba(51, 51, 51, 0.9);
+	color: rgba(51, 51, 51, 0);
+	opacity: 0.2;
+}
+
+/* Hover Style for single item: scale up */
+.ib-container article.active{
+	-webkit-transform: scale(1.05);
+	-moz-transform: scale(1.05);
+	-o-transform: scale(1.05);
+	-ms-transform: scale(1.05);
+	transform: scale(1.05);
+	box-shadow: 
+		0px 0px 0px 3px rgba(255,255,255,1), 
+		1px 5px 5px 5px rgba(0,0,0,0.4);
+	z-index: 100;	
+	opacity: 1;
+}
+.ib-container article.active div {
+    transition: background-color 0.5s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.0); 
+}
+}
+.ib-container article.active h3 a,
+.ib-container article.active header span,
+.ib-container article.active p{
+	opacity: 1;
+}
+

@@ -122,7 +122,6 @@
     <div class="container row more-margin-top">
         @foreach (Playlist playlist in ViewBag.MyPlaylists)
         {
-            
                 <div class="col-md-4 col-xs-12 organisation-wrapper">
                     @{
                         var playlistSource = "/Content/img/playlistavatar.png";
@@ -290,17 +289,17 @@
             debouncedFetchOrganisation();
         });
 
-        document.getElementById('avatar_click2').onclick = function () {
-            document.getElementById('avatarImage2').click();
-        };
-        document.getElementById("avatarImage2").onchange = function () {
-            var filename = document.getElementById("avatarImage2").value;
-            var lastIndex = filename.lastIndexOf("\\");
-            if (lastIndex >= 0) {
-                filename = filename.substring(lastIndex + 1);
-            }
-            document.getElementById("avatarLabel2").innerText = filename;
-        };
+        //document.getElementById('avatar_click2').onclick = function () {
+        //    document.getElementById('avatarImage2').click();
+        //};
+        //document.getElementById("avatarImage2").onchange = function () {
+        //    var filename = document.getElementById("avatarImage2").value;
+        //    var lastIndex = filename.lastIndexOf("\\");
+        //    if (lastIndex >= 0) {
+        //        filename = filename.substring(lastIndex + 1);
+        //    }
+        //    document.getElementById("avatarLabel2").innerText = filename;
+        //};
 
 
     </script>    
