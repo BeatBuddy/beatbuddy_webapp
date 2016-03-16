@@ -52,6 +52,9 @@ namespace BB.DAL.EFUser
 
             context.UserRole.RemoveRange(userRoles);
 
+            var votes = context.Votes.Where(v => v.User.Id == user.Id);
+            context.Votes.RemoveRange(votes);
+
             context.User.Remove(user);
           
             context.SaveChanges();

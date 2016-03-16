@@ -242,12 +242,21 @@
             $.connection.hub.start().done(
                 function () {
                     chat.server.joinGroup("@Model.Id");
-                    $('#sendmessage').click(function () {
-                        chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
-                        $('#message').val('').focus();
+                    $('#sendmessage').click(sendChatMessage);
+                    $('#message').keyup(function (e) {
+                        if (e.which === 13) {
+                            sendChatMessage();
+                        }
                     });
                 });
         });
+
+        function sendChatMessage() {
+            if ($('#message').val() == null || $('#message').val() === "") return;
+           
+            chat.server.send($('#displayname').val(), $('#message').val(),$('#image').val(),(@Model.Id));
+            $('#message').val('').focus();
+        }
 
         function updateScroll(){
             var element = document.getElementById("discussion");
