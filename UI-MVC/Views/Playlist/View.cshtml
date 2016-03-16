@@ -635,7 +635,7 @@
                 icon.innerHTML = 'pause';
             }
 
-            if (event.data === YT.PayerState.PAUSED) {
+            if (event.data === YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
                     player.playVideo();
