@@ -43,10 +43,9 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             Assert.IsNotNull(tracks);
             Assert.IsTrue(tracks.Any(t => t.Title.ToString().ToLower().Contains("bazaar")));
 
-            var addTrackResult = controller.AddTrack(playlistje.Id, tracks.First().TrackSource.TrackId) as HttpStatusCodeResult;
+            var addTrackResult = controller.AddTrack(playlistje.Id, tracks.First().TrackSource.TrackId);
 
-            Assert.IsNotNull(addTrackResult);
-            Assert.AreEqual(200, addTrackResult.StatusCode);
+            Assert.IsNotNull(addTrackResult as JsonResult); // if the result is a JsonResult, the track is added successfully
 
             var playlistResult = controller.View(playlistje.Key) as ViewResult;
 
