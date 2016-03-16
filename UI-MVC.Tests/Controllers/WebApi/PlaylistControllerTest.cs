@@ -208,7 +208,9 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 
 
         [TestCleanup]
-        public void Cleanup() {
+        public void Cleanup()
+        {
+            playlistManager.DeletePlaylist(playlist.Id);
             userManager.DeleteUser(user.Id);
         }
         

@@ -18,7 +18,8 @@ namespace BB.BL
         IEnumerable<Organisation> SearchOrganisations(string prefix);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
         double ReadTotalTimeOfPlaylistsInMinutes(long organisationId);
+        double ReadTotalVotesForOrganisation(long organisationId);
         //DashboardBlock
-        
+
     }
 }

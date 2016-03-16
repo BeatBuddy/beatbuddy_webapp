@@ -151,7 +151,7 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist ReadPlaylist(string name)
         {
-            return context.Playlists.Single(p => p.Name.Equals(name));
+            return context.Playlists.SingleOrDefault(p => p.Name.Equals(name));
         }
 
         public Playlist ReadPlaylist(long playlistId)

@@ -83,6 +83,12 @@ namespace BB.BL
             double sum = playlistTracks.Sum(playlistTrack => playlistTrack.Track.Duration);
             return Math.Round(sum/60,0);
         }
+
+        public double ReadTotalVotesForOrganisation(long organisationId)
+        {
+            throw new NotImplementedException();
+        }
+
         /*
 public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
 {

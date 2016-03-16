@@ -103,9 +103,9 @@
             <tr class="track">
             <td></td>
                 <td>
-                    @if (Model.ImageUrl != null)
+                    @if (playlist.ImageUrl != null)
                     {
-                        <img class="playlistart" src="~/Content/img/Playlists/@Model.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
+                        <img class="playlistart" src="~/Content/img/Playlists/@playlist.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
                     }
                     else
                     {
@@ -117,7 +117,7 @@
                     @playlist.Name
                 </td>
                 <td>
-                    @if (playlist.Active == true)
+                    @if (playlist.Active)
                     {
                         <p>Yes</p>
                     }
@@ -187,7 +187,7 @@ else
             <div class="material-icons" style="font-size:5em;padding-top:35%;left:-125%">playlist</div>
 
         <div class="chart-text">
-            <span>@Model.Playlists.Count</span>playlists</div></div>
+            <span>@Model.Playlists.Count</span>Playlists</div></div>
     </div>
     <div class="card">
         <div class="chart" data-percent="@Model.CoOrganiser.Count()">
@@ -200,9 +200,20 @@ else
     <div class="card">
         <div>
             <div class="chart" data-percent="@ViewBag.TotalMinutesOfPlaytime">
-                <div class="material-icons" style="font-size:5em;padding-top:35%;left:5%;">query_builder</div>
+                <div class="material-icons" style="font-size: 5em; padding-top: 35%; left: 5%;">query_builder</div>
 
-                <div class="chart-text"><span>@ViewBag.TotalMinutesOfPlaytime</span>Minutes
+                <div class="chart-text"><span>@ViewBag.TotalMinutesOfPlaytime</span>Minutes of playtime
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div>
+            <div class="chart" data-percent="@ViewBag.TotalMinutesOfPlaytime">
+                <div class="material-icons" style="font-size:5em;padding-top:35%;left:5%;">import_export</div>
+
+                <div class="chart-text">
+                    <span>@ViewBag.TotalMinutesOfPlaytime</span>Total votes
                 </div>
             </div>
         </div>
