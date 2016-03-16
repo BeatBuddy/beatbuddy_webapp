@@ -33,6 +33,10 @@ namespace BB.BL
 
         public Playlist CreatePlaylistForUser(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy)
         {
+            if (maxVotesPerUser.Equals(null))
+            {
+                maxVotesPerUser = -1;
+            }
             var playlist = new Playlist
             {
                 Name = name,
@@ -51,6 +55,9 @@ namespace BB.BL
 
         public Playlist CreatePlaylistForOrganisation(string name, string description, string key, int maxVotesPerUser, bool active, string imageUrl, User createdBy, long organisationId)
         {
+            if (maxVotesPerUser.Equals(null)){
+                maxVotesPerUser = -1;
+            }
             Playlist playlist = new Playlist()
             {
                 Name = name,
@@ -85,7 +92,8 @@ namespace BB.BL
         public Vote CreateVote(int score, long userId, long trackId)
         {
             Vote vote;
-            if (repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null) {
+            var playlist = repo.ReadPlaylists().FirstOrDefault(p => p.PlaylistTracks.Any(t=>t.Id == trackId));
+            if (repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null || playlist.MaximumVotesPerUser == -1) {
                 var existingVote = repo.ReadVoteOfUserFromPlaylistTrack(userId, trackId);
                 if (existingVote.Score == score)
                 {

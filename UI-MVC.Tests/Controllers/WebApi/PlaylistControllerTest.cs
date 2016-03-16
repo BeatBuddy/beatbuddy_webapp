@@ -212,6 +212,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         {
             playlistManager.DeletePlaylist(playlist.Id);
             userManager.DeleteUser(user.Id);
+            
         }
         
         
