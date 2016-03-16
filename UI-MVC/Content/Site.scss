@@ -8,6 +8,65 @@ body {
     padding: 0;
 }
 
+.body {
+    overflow: hidden;
+}
+
+#chatContainer {
+    background-color: #262626;
+    color: white;
+    margin-bottom: 20px;
+    height: 100%;
+    width: 28px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1;
+
+    #chatIcon {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        left: 4px;
+        color: white;
+    }
+
+    #chatContent {
+        padding: 1em 1em 20px 15px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 400px;
+        height: 100%;
+        margin-left: 28px;
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+
+        .row {
+            flex: 0 1 30px;
+        }
+
+        .top {
+            flex: 0 1 auto;
+        }
+
+        .content {
+            flex: 1 1 auto;
+            overflow-y: scroll;
+        }
+
+        .bottom {
+            flex: 0 1 40px;
+        }
+
+        #discussion{
+            list-style: none;
+            padding-left: 0
+        }
+    }
+}
+
 * {
     font-family: 'Roboto', sans-serif;
 }
@@ -189,9 +248,10 @@ header {
     }
 }
 
+
 #playlistbanner {
     width: 100%;
-    min-height: 220px;
+    height: 220px;
     z-index: 0;
     position: relative;
     overflow: hidden;
@@ -495,6 +555,7 @@ header {
     height: 100%;
     color: white;
     background-color: black;
+    z-index: 2;
 
     #backgroundcover {
         position: fixed;
@@ -517,7 +578,7 @@ header {
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.55);
+        background-color: rgba(0, 0, 0, 0.3);
 
         #nowPlayingLogo {
             position: absolute;

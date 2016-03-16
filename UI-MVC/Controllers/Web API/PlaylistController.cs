@@ -132,10 +132,10 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         [HttpGet]
         [Route("{id}/history")]
-        [ResponseType(typeof(LivePlaylistViewModel))]
-        public HttpResponseMessage getHistory(long playlistId)
+        [ResponseType(typeof(IEnumerable<PlaylistTrack>))]
+        public HttpResponseMessage getHistory(long id)
         {
-            var playlist = playlistManager.ReadPlaylist(playlistId);
+            var playlist = playlistManager.ReadPlaylist(id);
             if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
             return Request.CreateResponse(
