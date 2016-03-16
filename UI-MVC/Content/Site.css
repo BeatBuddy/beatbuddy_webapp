@@ -105,6 +105,8 @@ header {
           float: none;
           width: 100%;
           margin-left: 0; } }
+      header ul.nav li .active {
+        border-bottom: 2px solid black; }
       header ul.nav li a {
         transition: border .2s;
         -webkit-transition: border .2s;
@@ -114,8 +116,6 @@ header {
         text-transform: lowercase;
         color: black; }
         header ul.nav li a:hover {
-          border-bottom: 2px solid black; }
-        header ul.nav li a:active {
           border-bottom: 2px solid black; }
 
 #banner {

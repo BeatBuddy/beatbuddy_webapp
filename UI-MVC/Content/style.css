@@ -19,7 +19,7 @@
 	width: 237px;
 	height: 237px;
 	
-	cursor: pointer;
+
 	float: left;
     text-align: center;
 	
@@ -67,8 +67,8 @@
     width: 100%;
 }
 .ib-container article p{
-	font-size: 17px;
-    height: 30%;
+	font-size: 18px;
+    height: 20%;
     margin-left: auto;
     margin-right: auto;
     padding-left: 12px;

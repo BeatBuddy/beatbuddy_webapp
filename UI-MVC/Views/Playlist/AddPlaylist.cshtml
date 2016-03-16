@@ -49,7 +49,7 @@
                 method: 'POST',
                 data: { playlistId: @ViewBag.PlaylistId, id: id}
             }).done(function () {
-                window.location.href = '@Url.Action("Details", new { id = ViewBag.Id })';
+                
             })
             .fail(function (data) {
                 alert(data);

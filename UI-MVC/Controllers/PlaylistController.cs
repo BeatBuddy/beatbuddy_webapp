@@ -42,15 +42,15 @@ namespace BB.UI.Web.MVC.Controllers
         }
         
 
-        public ActionResult View(long id)
+        public ActionResult View(string key)
         {
             if (User != null)
             {
                 user = userManager.ReadUser(User.Identity.Name);
             }
-            var playlist = playlistManager.ReadPlaylist(id);
+            var playlist = playlistManager.ReadPlaylistByKey(key);
             var votesUser = playlistManager.ReadVotesForUser(user);
-            var organisation = organisationManager.ReadOrganisationForPlaylist(id);
+            var organisation = organisationManager.ReadOrganisationForPlaylist(playlist.Id);
 
             var playlistOwners = new List<User>();
             if (organisation != null)
@@ -65,11 +65,12 @@ namespace BB.UI.Web.MVC.Controllers
                     playlistOwners.Add(userManager.ReadUser((long)playlist.CreatedById));
                 }
             }
-            ViewBag.Organisation = organisationManager.ReadOrganisationForPlaylist(id);
+            ViewBag.Organisation = organisationManager.ReadOrganisationForPlaylist(playlist.Id);
             ViewBag.CurrentUser = user;
             ViewBag.Organisers = playlistOwners;
             ViewBag.VotesUser = votesUser;
-            ViewBag.PlaylistId = id;
+            ViewBag.PlaylistId = playlist.Id;
+            ViewBag.PlaylistKey = playlist.Key;
 //            ViewBag.CreatedBy = userManager.ReadUser((long)playlist.CreatedById);
             
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
@@ -143,9 +144,9 @@ namespace BB.UI.Web.MVC.Controllers
             );
 
             if (track == null) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list");
-            
+            var trackCount = playlistManager.ReadPlaylist(playlistId).PlaylistTracks.Where(p=>p.PlayedAt == null).ToList().Count;
 
-            return new HttpStatusCodeResult(200);
+            return Json(trackCount, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult SearchTrack(string q)
@@ -203,7 +204,7 @@ namespace BB.UI.Web.MVC.Controllers
                 TrackId = track.Track.TrackSource.TrackId,
                 Title = track.Track.Title,
                 Artist = track.Track.Artist,
-                NextTracks = playlistTracks.Count(),
+                NextTracks = playlistTracks.Where(p=>p.PlayedAt==null).ToList().Count(),
                 CoverArtUrl = track.Track.CoverArtUrl
             };
              return Json(playingViewModel, JsonRequestBehavior.AllowGet);
@@ -218,6 +219,13 @@ namespace BB.UI.Web.MVC.Controllers
             return PartialView("PlaylistTable", playlist);
         }
 
+        public ActionResult GetPlaylistGrid(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
+
+            return PartialView("PlaylistGrid", playlist);
+        }
         [HttpPost]
         public ActionResult MoveTrackToHistory(long id)
         {
@@ -313,6 +321,7 @@ namespace BB.UI.Web.MVC.Controllers
             Organisation org = null;
             Playlist playlist;
             string path = null;
+
             if(viewModel.Name == null || viewModel.Name == "" || viewModel.Name == " ")
             {
                 ModelState.AddModelError("Name", "You need to fill in a name for your playlist");
@@ -338,9 +347,9 @@ namespace BB.UI.Web.MVC.Controllers
                 {
                     playlist = playlistManager.CreatePlaylistForUser(viewModel.Name, viewModel.Description, viewModel.Key, viewModel.MaximumVotesPerUser, true, path, user);
                 }
-                return RedirectToAction("View/" + playlist.Id);
+                return RedirectToAction("View", new { key = playlist.Key });
             }
-            catch
+            catch (System.Exception e)
             {
                 ModelState.AddModelError("Key", "The key value is already in use");
                 return View(viewModel);

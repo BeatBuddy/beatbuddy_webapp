@@ -2,36 +2,50 @@
 @model BB.BL.Domain.Playlists.Playlist
 
 <link rel="stylesheet" type="text/css" href="../../Content/style.css" />
-
+<div class="title">
+    <h1>Queue</h1>
+    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
+    {
+        <text>@Model.PlaylistTracks.Count tracks in queue</text>
+    }
+    else
+    {
+        <text>1 track in queue</text>
+    }
+</div>
     <section class="ib-container" id="ib-container" >
         @foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(p => p.Votes.Sum(v => v.Score)))
         {
             <article style="background-image: url(@track.Track.CoverArtUrl); background-size: cover; background-position: center center; overflow: hidden;">
                 <div class="darkoverlaygrid">
-                    <p>@track.Track.Artist - @track.Track.Title</p>
+                    <p style="height: 35%">@track.Track.Artist - @track.Track.Title</p>
                     <p>@TimeSpan.FromSeconds(track.Track.Duration).ToString().Replace("00:", "")</p>
-                    @{
-                        var thumbUpId = track.Id + "thumbUp";
-                        var thumbDownId = track.Id + "thumbDown";
-                        Vote vote = track.Votes.FirstOrDefault(v => v.User.Email == User.Identity.Name);
-                        if (vote == null)
-                        {
-                            <a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a>
-                            <a onclick="vote('@thumbDownId', '-1', '@track.Id')" style="cursor: pointer"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a>
-                        }
-                        else
-                        {
-                            if (vote.Score == 1)
+                    <div style="width: 100%; height: 18%;  text-align: center; padding: 12px; bottom: 0; position: absolute;background-color: rgba(255,255,255,0.2)">
+                        @{
+                            var thumbUpId = track.Id + "thumbUp";
+                            var thumbDownId = track.Id + "thumbDown";
+                            Vote vote = track.Votes.FirstOrDefault(v => v.User.Email == User.Identity.Name);
+
+                            if (@vote == null)
                             {
-                                <a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" data-voted="true" class="material-icons">thumb_up</i></a>
-                                <a style="cursor: pointer; margin:0; padding:0;"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a>
+                                <a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin-right: 10px; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a>
+                                <a onclick="vote('@thumbDownId', '-1', '@track.Id')" style="cursor: pointer;margin-left: 10px;" ><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a>
                             }
-                            else {
-                                <a style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a>
-                                <a onclick="vote('@thumbDownId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbDownId" data-voted="true" class="material-icons">thumb_down</i></a>
+                            else
+                            {
+                                if (@vote.Score == 1)
+                                {
+                                    <a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer;  margin-right: 10px; padding:0;"><i id="@thumbUpId" data-voted="true" class="material-icons">thumb_up</i></a>
+                                    <a style="cursor: pointer; margin-left: 10px; padding:0;"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a>
+                                }
+                                else {
+                                    <a style="cursor: pointer;  margin-right: 10px; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a>
+                                    <a onclick="vote('@thumbDownId', '1', '@track.Id')" style="cursor: pointer; margin-left: 10px; padding:0;"><i id="@thumbDownId" data-voted="true" class="material-icons">thumb_down</i></a>
+                                }
                             }
+
                         }
-                    }
+                    </div>
                 </div>
                 
             </article>
@@ -44,29 +58,29 @@
 @section Scripts{
     <script src="../../Scripts/modernizr.js"></script>
     <script>
-        $(function () {
+        $(function() {
 
             var $container = $('#ib-container'),
                 $articles = $container.children('article'),
                 timeout;
 
-            $articles.on('mouseenter', function (event) {
+            $articles.on('mouseenter', function(event) {
 
                 var $article = $(this);
                 clearTimeout(timeout);
-                timeout = setTimeout(function () {
+                timeout = setTimeout(function() {
 
                     if ($article.hasClass('active')) return false;
 
                     $articles.not($article.removeClass('blur').addClass('active'))
-                             .removeClass('active')
-                             .addClass('blur');
+                        .removeClass('active')
+                        .addClass('blur');
 
                 }, 65);
 
             });
 
-            $container.on('mouseleave', function (event) {
+            $container.on('mouseleave', function(event) {
 
                 clearTimeout(timeout);
                 $articles.removeClass('active blur');
@@ -74,5 +88,7 @@
             });
 
         });
+
     </script>
+
 }
