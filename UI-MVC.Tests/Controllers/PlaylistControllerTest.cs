@@ -111,7 +111,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             PlaylistViewModel playlistViewModel = new PlaylistViewModel()
             {
                 MaximumVotesPerUser = 4,
-                Name = "Awesome party"
+                Name = "Awesome party",
+                Key = "123ABC"
             };
 
             RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);
