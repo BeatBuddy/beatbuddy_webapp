@@ -115,7 +115,7 @@
 
 
 <section id="myplaylists">
-        @{
+                    @{
             Html.RenderPartial("MyPlaylists");
         }
 </section>
@@ -249,17 +249,17 @@
             debouncedFetchOrganisation();
         });
 
-        document.getElementById('avatar_click2').onclick = function () {
-            document.getElementById('avatarImage2').click();
-        };
-        document.getElementById("avatarImage2").onchange = function () {
-            var filename = document.getElementById("avatarImage2").value;
-            var lastIndex = filename.lastIndexOf("\\");
-            if (lastIndex >= 0) {
-                filename = filename.substring(lastIndex + 1);
-            }
-            document.getElementById("avatarLabel2").innerText = filename;
-        };
+        //document.getElementById('avatar_click2').onclick = function () {
+        //    document.getElementById('avatarImage2').click();
+        //};
+        //document.getElementById("avatarImage2").onchange = function () {
+        //    var filename = document.getElementById("avatarImage2").value;
+        //    var lastIndex = filename.lastIndexOf("\\");
+        //    if (lastIndex >= 0) {
+        //        filename = filename.substring(lastIndex + 1);
+        //    }
+        //    document.getElementById("avatarLabel2").innerText = filename;
+        //};
 
 
     </script>    

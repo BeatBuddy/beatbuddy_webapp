@@ -18,9 +18,16 @@
 
             <div class="fill">
                 <div class="title">
-                    @{
-                        Organisation organisation = ViewBag.Organisation;
-                        <p><h1>Playlist</h1>@Model.Name by @if(organisation != null) { @Html.ActionLink("#" + organisation.Name, "Details", "Organisations" , new { id = organisation.Id}, null)} else { @ViewBag.CreatedBy.FirstName @ViewBag.CreatedBy.LastName}</p>
+                    @if (ViewBag.Organisation != null)
+                    {
+                        <h1>Playlist</h1>
+                        @Model.Name<text> by </text>
+                        <a href="@Url.Action("Details", "Organisations", new {id = @ViewBag.Organisation.Id})" style="color: white">#@ViewBag.Organisation.Name</a>
+                    }
+                    else
+                    {
+                        <h1>Playlist</h1>
+                        @Model.Name
                     }
                 </div>
 
@@ -44,9 +51,9 @@
     </div>
 }
 
-<div id="playlistTable">
-    <div id="playlist-view" style="margin-top: 1em;">
-        @Html.Partial("PlaylistTable", @Model)
+<div  id="playlistTable">
+<div id="playlist-view" style="margin-top: 0.2em">
+    @Html.Partial("PlaylistTable", @Model)
     </div>
 
     <div id="nowPlayingRow" style="margin-top: 1em">
@@ -146,7 +153,7 @@
                     <img src="~/Content/img/default_cover.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em" />
                 </td>
                 <td style="width: 95%">
-                    <div class="title" style="margin-top: 0.5em">
+                    <div class="title" style="margin-top: 0.5em; margin-right: 1.5em">
                         <h1>Now Playing </h1> <span id="nowPlaying"></span>
                     </div>
                     <span id="time"></span>
@@ -220,6 +227,7 @@
     <script>
         var playing = false;
         var listening = false;
+        var intervalId = 0;
         var currentTrack = null;
         var play = $.connection.playlistHub;
         var chat = $.connection.chatHub;
@@ -240,7 +248,7 @@
             $('#message').focus();
 
             $.connection.hub.start().done(
-                function () {
+                function() {
                     chat.server.joinGroup("@Model.Id");
                     $('#sendmessage').click(sendChatMessage);
                     $('#message').keyup(function (e) {
@@ -328,7 +336,7 @@
                 img.title = unknownUserCounter + " sneaky listener(s)";
                 src.appendChild(img);
             }
-            document.getElementById('listenerCount').innerHTML = data+"";
+            document.getElementById('listenerCount').innerHTML = data + "";
         }
 
         play.client.syncLive = function() {
@@ -342,9 +350,12 @@
                     cue_and_play(data, startSeconds + 1);
                 }
             } else {
+                player.stopVideo();
                 document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
                 document.getElementById("tuneinbutton").style.display = "inline";
+                clearInterval(intervalId);
 
+                $('#time').empty();
                 if (data.CoverArtUrl != null) {
                     $('#thumbnail').attr("src", data.CoverArtUrl);
                     $('#nowPlayingAlbumArt').css('background-image', "url(" + data.CoverArtUrl + ")");
@@ -357,17 +368,21 @@
             }
             updatePlaylist();
         }
-
-        $('#tuneinbutton').click(function () {
+        $('#tuneinbutton').click(function() {
+            if (listening) {
+                listening = false;
+            } else {
             listening = true;
+            }
+            toggle(document.getElementById('tuneinbutton'));
             play.server.playLive("@Model.Id");
         });
 
-        function cue_and_play(data, seconds){
+        function cue_and_play(data, seconds) {
             player.cueVideoById(data.TrackId, seconds, "small");
             document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
             $(function() {
-                setInterval(updateTime, 50);
+                intervalId = setInterval(updateTime, 50);
             });
             openFooter();
 
@@ -413,8 +428,8 @@
         }
 
         jQuery(function($) {
-            $('#footertop').click(function () {
-                if(footerOpen === false) {
+            $('#footertop').click(function() {
+                if (footerOpen === false) {
                     openFooter();
                 } else {
                     closeFooter();
@@ -542,10 +557,11 @@
 
         function onPlayerReady(event) {
             var playButton = document.getElementById("playBtn");
-            if(playButton != null) playButton.addEventListener("click", getNextTrack);
+            if (playButton != null) playButton.addEventListener("click", getNextTrack);
 
             var nextButton = document.getElementById("nextBtn");
-            if(nextButton != null) nextButton.addEventListener("click", function() {
+            if (nextButton != null)
+                nextButton.addEventListener("click", function() {
                 getNextTrack();
             });
             $.connection.hub.start().done(function() {
@@ -557,7 +573,7 @@
             $.ajax('/Playlist/AssignPlaylistMaster/', {
                 type: 'POST',
                 async: false,
-                data: { id: @ViewBag.PlaylistId, userEmail: userData}
+                data: { id: @ViewBag.PlaylistId, userEmail: userData }
             }).done(function() {
                 updatePlaylist();
             }).fail(function() {
@@ -565,11 +581,19 @@
             });
         }
 
+        function toggle(button) {
+            if (listening) {
+                button.innerHTML = "volume_off";
+            } else {
+                button.innerHTML = "volume_up";
+            }
+        }
+
         function updateTime() {
             var time = document.getElementById("time");
             var currentTime = secondsToTime(player.getCurrentTime());
             var duration = secondsToTime(player.getDuration());
-            time.innerHTML = currentTime +' | ' + duration;
+            time.innerHTML = currentTime + ' | ' + duration;
             var percentageTime = (player.getCurrentTime() / player.getDuration()) * 100;
 
             var bar = document.getElementById("myBar");
@@ -582,14 +606,14 @@
         var counter = 0;
 
 
-        function secondsToTime(secs)
-        {
+        function secondsToTime(secs) {
             d = Number(secs);
             var h = Math.floor(d / 3600);
             var m = Math.floor(d % 3600 / 60);
             var s = Math.floor(d % 3600 % 60);
             return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
         }
+
         var startedPlaying = false;
 
         function onPlayerStateChange(event) {
@@ -615,7 +639,7 @@
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
                     player.playVideo();
-                    play.server.resumePlaying(player.getCurrentTime(),"@Model.Id");
+                    play.server.resumePlaying(player.getCurrentTime(), "@Model.Id");
                 });
             }
 
@@ -629,10 +653,10 @@
             $.ajax('/Playlist/GetNextTrack/', {
                 type: 'GET',
                 data: { id: @ViewBag.PlaylistId },
-                contentType : "application/json",
-                dataType : "json"
+                contentType: "application/json",
+                dataType: "json"
             }).done(function(data) {
-                if (data!=null) {
+                if (data != null) {
                     if (!startedPlaying) startedPlaying = true;
                     player.cueVideoById(data.TrackId);
                     document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
@@ -680,6 +704,7 @@
                 var time = document.getElementById("time");
                 time.innerHTML = '';
                 currentTrack = null;
+                play.server.stopPlaying("@Model.Id");
             });
         }
 
@@ -701,7 +726,7 @@
         }
 
         function updatePlaylist() {
-            $('#playlist-view').load('/Playlist/GetPlaylist/',{id: @ViewBag.PlaylistId});
+            $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId });
             var rowCount = $('#playlist-tracks tr').length;
             if (rowCount >= 1 && playing) {
                 var nextButton = document.getElementById("nextBtn");
@@ -710,6 +735,7 @@
         }
 
         var fullscreenEnabled = false;
+
         function fullscreenToggle() {
             $('#fullscreenplayer').fadeToggle(200);
             fullscreenEnabled = !fullscreenEnabled;
@@ -757,12 +783,12 @@
                 position: { my: "center top", at: "center bottom" },
                 content: content,
                 hide: { effect: "" },
-                close: function(event, ui){
+                close: function(event, ui) {
                     ui.tooltip.hover(
-                        function () {
+                        function() {
                             $(this).stop(true).fadeTo(400, 1);
                         },
-                        function () {
+                        function() {
                             $(this).fadeOut("400", function() {
                                 $(this).remove();
                             });
@@ -779,10 +805,10 @@
         $.template("playlistTemplate", markupPlaylist);
 
         $.ajaxSetup({
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#loadingPlaylist").show();
             },
-            complete: function () {
+            complete: function() {
                 $("#loadingPlaylist").hide();
             }
         });
@@ -790,14 +816,14 @@
 
         function fetchQueryResultsPlaylist() {
             $.ajax('@Url.Action("SearchPlaylist")/?q=' + $('#playlistAdd').val())
-                .done(function (result) {
+                .done(function(result) {
                     $("#resultsPlaylist").empty();
                     $.tmpl("playlistTemplate", result).appendTo("#resultsPlaylist");
-                    $("#resultsPlaylist li").on("click", function () {
+                    $("#resultsPlaylist li").on("click", function() {
                         addPlaylist($(this).attr('data-id'));
                     });
                 })
-                .fail(function () {
+                .fail(function() {
                     alert("error");
                 });
         }
@@ -824,9 +850,9 @@
 
         function debouncePlaylist(func, wait, immediate) {
             var timeout;
-            return function () {
+            return function() {
                 var context = this, args = arguments;
-                var later = function () {
+                var later = function() {
                     timeout = null;
                     if (!immediate) func.apply(context, args);
                 };
@@ -837,12 +863,46 @@
             };
         };
 
-        var debouncedFetchPlaylist = debouncePlaylist(function () {
+        var debouncedFetchPlaylist = debouncePlaylist(function() {
             fetchQueryResultsPlaylist();
         }, 500);
 
-        $("#playlistAdd").on('keydown', function () {
+        $("#playlistAdd").on('keydown', function() {
             debouncedFetchPlaylist();
         });
     </script>
+<script src="../../Scripts/modernizr.js"></script>
+<script>
+        $(function () {
+
+            var $container = $('#ib-container'),
+                $articles = $container.children('article'),
+                timeout;
+
+            $articles.on('mouseenter', function (event) {
+
+                var $article = $(this);
+                clearTimeout(timeout);
+                timeout = setTimeout(function () {
+
+                    if ($article.hasClass('active')) return false;
+
+                    $articles.not($article.removeClass('blur').addClass('active'))
+                             .removeClass('active')
+                             .addClass('blur');
+
+                }, 65);
+
+            });
+
+            $container.on('mouseleave', function (event) {
+
+                clearTimeout(timeout);
+                $articles.removeClass('active blur');
+
+            });
+
+        });
+</script>
+
 }
