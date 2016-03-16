@@ -17,7 +17,7 @@ namespace BB.BL
         Organisation ReadOrganisationForPlaylist(long playlistId);
         IEnumerable<Organisation> SearchOrganisations(string prefix);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
-        int ReadTotalTimeOfPlaylistsInMinutes(long organisationId);
+        double ReadTotalTimeOfPlaylistsInMinutes(long organisationId);
         //DashboardBlock
         
     }
