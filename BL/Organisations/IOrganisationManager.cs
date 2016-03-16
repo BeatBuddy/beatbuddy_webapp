@@ -7,7 +7,7 @@ namespace BB.BL
     public interface IOrganisationManager
     {
         //Organisation
-        Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator);
+        Organisation CreateOrganisation(string name, string bannerUrl, User organisator);
         Organisation UpdateOrganisation(Organisation organisation);
         IEnumerable<Organisation> ReadOrganisations();
         
@@ -17,7 +17,7 @@ namespace BB.BL
         Organisation ReadOrganisationForPlaylist(long playlistId);
         IEnumerable<Organisation> SearchOrganisations(string prefix);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
-
+        int ReadTotalTimeOfPlaylistsInMinutes(long organisationId);
         //DashboardBlock
         
     }

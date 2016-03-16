@@ -8,6 +8,7 @@ using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers.Web_API;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyTested.WebApi;
+using MyTested.WebApi.Builders.Contracts.Controllers;
 using System.Collections.Generic;
 
 namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
@@ -15,10 +16,18 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
     [TestClass]
     public class PlaylistControllerTest
     {
-        PlaylistManager playlistManager;
-        UserManager userManager;
+        IPlaylistManager playlistManager;
+        IUserManager userManager;
+        ITrackProvider trackProvider;
+        IAlbumArtProvider albumArtProvider;
+
         User user;
         Playlist playlist;
+        Track addedtrack;
+        
+
+        IAndControllerBuilder<PlaylistController> playlistControllerWithAuthenticatedUser;
+
 
         [TestInitialize]
         public void Initialize() {
@@ -27,6 +36,20 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
             user = userManager.CreateUser("testemail@gmail.com", "matthias", "test", "acidshards", "");
             playlist = playlistManager.CreatePlaylistForUser("testplaylist", "gekke playlist om te testen", "125", 5, true, "", user);
 
+            trackProvider = new YouTubeTrackProvider();
+            albumArtProvider = new BingAlbumArtProvider();
+
+            playlistControllerWithAuthenticatedUser = MyWebApi.Controller<PlaylistController>()
+               .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
+               .WithResolvedDependencyFor<IUserManager>(userManager)
+               .WithResolvedDependencyFor<ITrackProvider>(trackProvider)
+               .WithResolvedDependencyFor<IAlbumArtProvider>(albumArtProvider)
+               .WithAuthenticatedUser(
+                u => u.WithIdentifier("NewId")
+                      .WithUsername(user.Email)
+                      .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email))
+                      .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
+               );
             Track track = new Track()
             {
                 Artist = "Metallica",
@@ -36,17 +59,19 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 TrackSource = new TrackSource
                 {
                     SourceType = SourceType.YouTube,
-                    Url = "https://www.youtube.com/watch?v=kV-2Q8QtCY4"
+                    Url = "https://www.youtube.com/watch?v=kV-2Q8QtCY4",
+                    TrackId = "kV-2Q8QtCY4"
                 }
             };
-            Track addedtrack = playlistManager.AddTrackToPlaylist(playlist.Id, track);
+
+            addedtrack = playlistManager.AddTrackToPlaylist(playlist.Id, track);
         }
 
         [TestMethod]
         public void GetPlaylistTest()
         {
             MyWebApi.Controller<PlaylistController>()
-                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
+                .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
                 .Calling(c => c.getPlaylist(playlist.Id))
                 .ShouldReturn()
                 .Ok()
@@ -70,7 +95,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         public void GetWrongPlaylistTest()
         {
             MyWebApi.Controller<PlaylistController>()
-                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
+                .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
                 .Calling(c => c.getPlaylist(-1))
                 .ShouldReturn()
                 .NotFound();
@@ -124,8 +149,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .Ok()
                 .WithResponseModelOfType<Track>();
         }*/
-        
-        
+
+
 
         /*
         [TestMethod]
@@ -151,10 +176,42 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                     p => p.Id == 1
                 );
         }*/
+        [TestMethod]
+        public void UpvoteTest() {
+           playlistControllerWithAuthenticatedUser
+                .Calling(c => c.Upvote(playlist.Id, addedtrack.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Vote>();
+        }
+
+        [TestMethod]
+        public void DownvoteTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                 .Calling(c => c.Downvote(playlist.Id, addedtrack.Id))
+                 .ShouldReturn()
+                 .Ok()
+                 .WithResponseModelOfType<Vote>();
+        }
+
+        [TestMethod]
+        public void AddTrackTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                 .Calling(c => c.AddTrack(playlist.Id, addedtrack.TrackSource.TrackId))
+                 .ShouldReturn()
+                 .Ok()
+                 .WithResponseModelOfType<Track>();
+        }
+
+
 
         [TestCleanup]
         public void Cleanup() {
+            playlistManager.DeletePlaylist(playlist.Id);
             userManager.DeleteUser(user.Id);
+            
         }
         
         

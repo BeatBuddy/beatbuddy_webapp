@@ -30,13 +30,12 @@ namespace BB.BL
             return organisationsRepository.ReadOrganisationsForUser(userId);
         }
 
-        public Organisation CreateOrganisation(string name, string bannerUrl, string colorScheme, User organisator)
+        public Organisation CreateOrganisation(string name, string bannerUrl, User organisator)
         {
             Organisation organisation = new Organisation
             {
                 Name = name,
                 BannerUrl = bannerUrl,
-                ColorScheme = colorScheme,
                 DashboardBlocks = new List<DashboardBlock>(),
                 Playlists = new List<Playlist>(),
             };
@@ -72,5 +71,18 @@ namespace BB.BL
         {
             return organisationsRepository.SearchOrganisations(prefix);
         }
+
+        public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
+        {
+            throw new NotImplementedException();
+        }
+        /*
+public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
+{
+   var playlists = ReadOrganisation(organisationId).Playlists;
+   var playlistTracks = playlists.Any(p => p.);
+   var totalDuration = playlistTracks.Any(pt => pt.)
+   //return ;
+}*/
     }
 }

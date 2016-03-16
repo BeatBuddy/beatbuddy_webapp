@@ -50,7 +50,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             {
                 connectedGroupUsers.Remove(Context.ConnectionId);
             }
-            connectedGroupUsers.Add(Context.ConnectionId, model);
+                connectedGroupUsers.Add(Context.ConnectionId, model);
 
             Clients.Caller.modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
@@ -84,14 +84,23 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             var key = connectedGroupUsers.Keys.Single(p => p.Equals(Context.ConnectionId));
             var model = connectedGroupUsers.FirstOrDefault(f => f.Key.Equals(Context.ConnectionId)).Value;
             if (playlistMasters.Values.Any(p => p.Equals(Context.ConnectionId)))
-            {
-                Clients.OthersInGroup(model.GroupName).stopMusicPlaying();
-                playlistMasters.Remove(model.GroupName);
-            }
-
+                {
+                    Clients.OthersInGroup(model.GroupName).stopMusicPlaying();
+                    playlistMasters.Remove(model.GroupName);
+                }
+            
             connectedGroupUsers.Remove(key);
             Clients.Group(model.GroupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             return base.OnDisconnected(stopCalled);
+        }
+
+        public void StopPlaying(string groupName)
+        {
+            if (playlistMasters.Values.Any(p => p.Equals(Context.ConnectionId)))
+            {
+                Clients.OthersInGroup(groupName).stopMusicPlaying();
+                playlistMasters.Remove(groupName);
+            }
         }
 
         public void StartPlaying(CurrentPlayingViewModel track, string groupName)

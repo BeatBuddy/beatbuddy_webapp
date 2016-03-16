@@ -49,19 +49,7 @@
                  <i class="material-icons form-img-icon"  id="banner_click" >image</i>
              </div>
         </div>
-
-        
-            <div style="margin-top: 14px">
-                @Html.LabelFor(model => model.ColorScheme, htmlAttributes: new {@class = "control-label"})
-                <br />
-                @Html.ValidationMessageFor(model => model.ColorScheme, "", new {@class = "custom-validation"})
-            </div>
-            <div>
-                @Html.EditorFor(model => model.ColorScheme, new {htmlAttributes = new {@class = "custom-input-organisations"}})
-            </div>
-            
-
-        
+                
             <div>
                 <input type="submit" value="Create my organisation" class="btn btn-default create" />
             </div>

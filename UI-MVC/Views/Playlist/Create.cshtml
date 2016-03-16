@@ -24,9 +24,9 @@
 
         <select id="OrganisationId" name="OrganisationId" class="custom-dropdown">
             <option value="0">Me</option>
-            @if (ViewBag.UserOrganisations != null)
+            @if (ViewBag.MyOrganisations != null)
             {
-                foreach (Organisation organisation in ViewBag.UserOrganisations)
+                foreach (Organisation organisation in ViewBag.MyOrganisations)
                 {
                     <option value="@organisation.Id">@organisation.Name</option>
                 }

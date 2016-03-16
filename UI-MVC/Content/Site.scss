@@ -145,9 +145,12 @@ header {
                 &:hover {
                     border-bottom: 2px solid black;
                 }
+                &:active {
+                    border-bottom: 2px solid black; 
             }
         }
     }
+}
 }
 
 #banner {
@@ -217,17 +220,17 @@ header {
         }
 
         .btn-chat {
-            display: inline-block;
-            border: 2px solid #fff;
-            background: transparent;
-            color: #fff;
-            cursor: pointer;
-            font-size: 1.8em;
-            padding: .2em 1em;
-            text-transform: lowercase;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 100;
+                display: inline-block;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.8em;
+    padding: .2em 1em;
+    text-transform: lowercase;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 100;
         }
 
         @media screen and (max-width: $mobile-breakpoint) {
@@ -247,8 +250,13 @@ header {
         min-height: 270px;
     }
 }
-
-
+.darkoverlaygrid {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55); }
 #playlistbanner {
     width: 100%;
     height: 220px;
@@ -563,8 +571,8 @@ header {
         top: 0;
         width: 100%;
         height: 100%;
-        background-size: cover;
-        background-position: center center;
+    background-size: cover;
+    background-position: center center;
         filter: blur(15px);
         -webkit-filter: blur(15px);
         -moz-filter: blur(15px);
@@ -659,7 +667,7 @@ header {
             font-weight: 500;
             margin-bottom: 0;
             margin-top: 0;
-        }
+}
 
         ul {
             padding: 0;
@@ -1038,7 +1046,7 @@ footer {
 
     #fullscreenbutton {
         color: white;
-        right: 2px;
+        right: -10px;
         top: 1.2em;
         position: absolute;
         cursor: pointer;
@@ -1046,7 +1054,7 @@ footer {
 
     #tuneinbutton {
         color: white;
-        right: 15px;
+        right: 27.5px;
         top: 1.2em;
         position: absolute;
         cursor: pointer;
@@ -1089,25 +1097,25 @@ footer {
 }
 
 .chart {
-    width: 200px;
-    height: 200px;
-    margin: 10px;
-    position: relative;
-    //box-sizing:border-box;
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+  position: relative;
+  //box-sizing:border-box;
     text-align: center;
 
     span {
         display: block;
-        font-size: 2em;
-        font-weight: normal;
+    font-size: 2em;
+    font-weight: normal;
         vertical-align: middle;
-    }
+}
 
     canvas {
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 
 .flex-container {
@@ -1131,4 +1139,4 @@ footer {
     -ms-flex-align: center;
     align-items: center;
     padding: 20px;
-}
+    }

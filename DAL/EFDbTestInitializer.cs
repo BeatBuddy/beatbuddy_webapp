@@ -42,7 +42,9 @@ namespace BB.DAL
             var playlist = new Playlist
             {
                 Active = true,
-                Name = "Liquid drum & bass"
+                Name = "Liquid drum & bass",
+                CreatedById = user.Id,
+                Key = "ABC123456"
             };
 
             var playlistTrack = new PlaylistTrack

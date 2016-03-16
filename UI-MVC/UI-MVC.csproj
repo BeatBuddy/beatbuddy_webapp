@@ -364,6 +364,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\demo.css" />
     <Content Include="Content\dropit.css" />
     <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\default-avatar.png" />
@@ -412,6 +413,7 @@
     <Content Include="Content\socialButtons.min.css">
       <DependentUpon>socialButtons.css</DependentUpon>
     </Content>
+    <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -454,6 +456,7 @@
     <Content Include="Scripts\modal.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\mwheelIntent.js" />
+    <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\notie.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
@@ -511,7 +514,8 @@
     <Content Include="Views\Comment\_CommentsPartial.cshtml" />
     <Content Include="Views\Playlist\AddPlaylist.cshtml" />
     <Content Include="Views\Home\SearchOrganisation.cshtml" />
-    <Content Include="Views\Account\_ExternalRegisterListPartial.cshtml" />
+    <Content Include="Views\Playlist\PlaylistGrid.cshtml" />
+    <Content Include="Views\Home\MyPlaylists.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />

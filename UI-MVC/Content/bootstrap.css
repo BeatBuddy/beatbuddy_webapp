@@ -4009,6 +4009,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: #eee;
   border-color: #337ab7;
 }
+ .nav > li > a:active{
+     text-decoration:underline;
+     color:black;
+ }
 .nav .nav-divider {
   height: 1px;
   margin: 9px 0;
