@@ -45,9 +45,9 @@ namespace BB.UI.Web.MVC.Tests.Controllers
 
             var addTrackResult = controller.AddTrack(playlistje.Id, tracks.First().TrackSource.TrackId) as HttpStatusCodeResult;
 
-            Assert.IsNotNull(addTrackResult);
-            Assert.AreEqual(200, addTrackResult.StatusCode);
-
+            //Assert.IsNotNull(addTrackResult);
+            //Assert.AreEqual(200, addTrackResult.StatusCode);
+             
             var playlistResult = controller.View(playlistje.Key) as ViewResult;
 
             Assert.IsNotNull(playlistResult);
