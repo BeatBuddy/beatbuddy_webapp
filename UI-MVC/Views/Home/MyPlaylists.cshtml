@@ -60,9 +60,7 @@
             data: { id: platlistId }
             }).done(function () {
             notie.alert(1, 'Playlist successfull deleted', 2.5);
-            $("#myplaylists").load(location.href + " #myplaylists");
-            $("#playlistCount").load(location.href + " #playlistCount");
-
+            location.reload();
             }).fail(function() {
             notie.alert(3, 'Failed to delete playlist', 2.5);
             });

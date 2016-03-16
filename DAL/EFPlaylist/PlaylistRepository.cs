@@ -61,6 +61,7 @@ namespace BB.DAL.EFPlaylist
         public Playlist DeletePlaylist(long playlistId)
         {
             var playlist = ReadPlaylist(playlistId);
+
             playlist = context.Playlists.Remove(playlist);
             context.SaveChanges();
             return playlist ;

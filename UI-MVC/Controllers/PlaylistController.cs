@@ -246,7 +246,7 @@ namespace BB.UI.Web.MVC.Controllers
         public ActionResult Create()
         {
             var user = userManager.ReadUser(User.Identity.Name);
-            ViewBag.UserOrganisations = organisationManager.ReadOrganisationsForUser(user.Id);
+            ViewBag.MyOrganisations = organisationManager.ReadOrganisationsForUser(user.Id);
             return View();
         }
 
