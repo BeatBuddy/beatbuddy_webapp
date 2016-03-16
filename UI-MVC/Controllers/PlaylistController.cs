@@ -266,6 +266,7 @@ namespace BB.UI.Web.MVC.Controllers
             Organisation org = null;
             Playlist playlist;
             string path = null;
+
             if(viewModel.Name == null || viewModel.Name == "" || viewModel.Name == " ")
             {
                 ModelState.AddModelError("Name", "You need to fill in a name for your playlist");
