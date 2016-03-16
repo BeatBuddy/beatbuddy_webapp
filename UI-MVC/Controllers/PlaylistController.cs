@@ -11,6 +11,7 @@ using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
 using System.Net;
+using Microsoft.AspNet.SignalR;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -74,7 +75,6 @@ namespace BB.UI.Web.MVC.Controllers
             
             return View(playlist);
         }
-        
 
         [HttpPost]
         public ActionResult AddVote(int vote, long id)
@@ -82,6 +82,19 @@ namespace BB.UI.Web.MVC.Controllers
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
             var createdVote = playlistManager.CreateVote(vote, user.Id, id);
             if (createdVote == null) return new HttpStatusCodeResult(400, "You have reached your vote limit for this playlist");
+
+            var playlistTrack = playlistManager.ReadPlaylistTrack(id);
+            var playlistId = playlistTrack.Playlist.Id;
+
+            var viewmodel = new LivePlaylistTrackViewModel
+            {
+                Score = playlistTrack.Votes.Sum(v => v.Score),
+                Track = playlistTrack.Track
+            };
+
+            var context = GlobalHost.ConnectionManager.GetHubContext<PlaylistHub>();
+            context.Clients.Group(playlistId.ToString()).scoreUpdated(id, viewmodel);
+
             return new HttpStatusCodeResult(200);
         }
 
@@ -90,6 +103,19 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var user = userManager.ReadUser(User != null ? User.Identity.Name : testName);
             playlistManager.DeleteVote(id, user.Id);
+
+            var playlistTrack = playlistManager.ReadPlaylistTrack(id);
+            var playlistId = playlistTrack.Playlist.Id;
+
+            var viewmodel = new LivePlaylistTrackViewModel
+            {
+                Score = playlistTrack.Votes.Sum(v => v.Score),
+                Track = playlistTrack.Track
+            };
+
+            var context = GlobalHost.ConnectionManager.GetHubContext<PlaylistHub>();
+            context.Clients.Group(playlistId.ToString()).scoreUpdated(id, viewmodel);
+
             return new HttpStatusCodeResult(200);
         }
 
@@ -250,7 +276,7 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         // GET: Playlists/Create
-        [Authorize(Roles = "User, Admin")]
+        [System.Web.Mvc.Authorize(Roles = "User, Admin")]
         public ActionResult Create()
         {
             var user = userManager.ReadUser(User.Identity.Name);
@@ -260,7 +286,7 @@ namespace BB.UI.Web.MVC.Controllers
 
         // POST: Playlists/Create
         [HttpPost]
-        [Authorize(Roles = "User, Admin")]
+        [System.Web.Mvc.Authorize(Roles = "User, Admin")]
         public ActionResult Create(PlaylistViewModel viewModel, HttpPostedFileBase avatarImage)
         {
             Organisation org = null;
@@ -319,7 +345,7 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "User, Admin")]
+        [System.Web.Mvc.Authorize(Roles = "User, Admin")]
         public ActionResult Delete(long id)
         {
             var playlist = playlistManager.DeletePlaylist(id);

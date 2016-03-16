@@ -12,7 +12,7 @@
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         <li>
-            @Html.ActionLink("My portal", "Portal", "Home", routeValues: null, htmlAttributes: new { title = "My portal" })
+            @Html.ActionLink("My portal", "Portal", "Home", routeValues: null, htmlAttributes: new { title = "My portal", @class= @ViewContext.RouteData.Values["Action"].ToString() == "Portal" ? "active" : "" })
         </li>
     </ul>
     }
@@ -37,4 +37,16 @@ else
 }
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        
+        $(document).ready(function () {
+            var url = window.location.pathname;
+            $('.navbar .nav').find('.active').removeClass('active');
+            $('li a').each(function () {
+                if (this.href == url) {
+                    $(this).parent().addClass('active');
+                }
+            });
+        });
+    </script>
 }

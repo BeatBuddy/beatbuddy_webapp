@@ -23,10 +23,11 @@ using BB.DAL.EFPlaylist;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Models;
 using System.Text.RegularExpressions;
+using Microsoft.AspNet.SignalR;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
 {
-    [Authorize]
+    [System.Web.Http.Authorize]
     [RoutePrefix("api/playlist")]
     public class PlaylistController : ApiController
     {
@@ -402,6 +403,17 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
             var user = getUser(userIdentity);
             var createVote = playlistManager.CreateVote(1, user.Id, trackId);
+
+            var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
+            var viewmodel = new LivePlaylistTrackViewModel
+            {
+                Score = playlistTrack.Votes.Sum(v => v.Score),
+                Track = playlistTrack.Track
+            };
+
+            var context = GlobalHost.ConnectionManager.GetHubContext<PlaylistHub>();
+            context.Clients.Group(id.ToString()).scoreUpdated(trackId, viewmodel);
+
             return Ok(createVote);
         }
 
@@ -412,6 +424,17 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
             var user = getUser(userIdentity);
             var createVote = playlistManager.CreateVote(-1, user.Id, trackId);
+
+            var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
+            var viewmodel = new LivePlaylistTrackViewModel
+            {
+                Score = playlistTrack.Votes.Sum(v => v.Score),
+                Track = playlistTrack.Track
+            };
+
+            var context = GlobalHost.ConnectionManager.GetHubContext<PlaylistHub>();
+            context.Clients.Group(id.ToString()).scoreUpdated(trackId, viewmodel);
+
             return Ok(createVote);
         }
 

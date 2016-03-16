@@ -16,7 +16,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
     {
         private static readonly Dictionary<string, CurrentListenerModel> connectedGroupUsers = new Dictionary<string, CurrentListenerModel>();
         private static readonly Dictionary<string, string> playlistMasters = new Dictionary<string, string>();
-        private static readonly Dictionary<string, string> lastJoiner = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> lastListener = new Dictionary<string, string>();
         private static readonly UserManager userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
 
         public void AddTrack(string groupName)
@@ -27,11 +27,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void JoinGroup(string groupName)
         {
-            if (lastJoiner.ContainsKey(groupName))
-            {
-                lastJoiner.Remove(groupName);
-            }
-            lastJoiner.Add(groupName, Context.ConnectionId);
+            
             Groups.Add(Context.ConnectionId, groupName);
             var model = new CurrentListenerModel { GroupName = groupName };
             if (Context.User != null)
@@ -62,21 +58,32 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
         {
-            Clients.Client(lastJoiner.Single(p => p.Key == groupName).Value).playLive(track, (int)duration);
+            List<string> keys = new List<string>();
+            foreach (var key in lastListener.Where(p=>p.Value == groupName).Select(p=>p.Key))
+            {
+                Clients.Client(key).playLive(track, (int) duration);
+                keys.Add(key);
+            }
+
+            //Sending YouTube links after .playLive because it can take some time
+            var youTube = YouTube.Default;
+            var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId);
+            var youtubeLink = video.Uri;
+            foreach (var key in keys)
+            {
+                Clients.Client(key).onPlaylinkGeneratedSync(youtubeLink, (int) duration);
+
+                lastListener.Remove(key);
+            }
         }
 
         public void PlayLive(string groupName)
         {
             if (playlistMasters.ContainsKey(groupName))
             {
+                lastListener.Add(Context.ConnectionId, groupName);
                 Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
             }
-        }
-
-        public override Task OnConnected()
-        {
-            //Clients.Caller.joinGroup();
-            return base.OnConnected();
         }
 
         public override Task OnDisconnected(bool stopCalled)

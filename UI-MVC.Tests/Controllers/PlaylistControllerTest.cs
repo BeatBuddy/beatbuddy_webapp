@@ -115,7 +115,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers
                 Key = "123ABC"
             };
 
-            RedirectToRouteResult viewResult = (RedirectToRouteResult)controller.Create(playlistViewModel, null);
+            controller.Create(playlistViewModel, null);
             Playlist playlist = DbInitializer.CreatePlaylistManager().ReadPlaylist("Awesome party");
             Assert.AreEqual(playlist.Active, true);
 

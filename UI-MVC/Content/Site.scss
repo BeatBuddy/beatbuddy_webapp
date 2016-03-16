@@ -43,6 +43,12 @@ body {
         flex-flow: column;
         height: 100%;
 
+        .thumbnail{
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+
         .row {
             flex: 0 1 30px;
         }
@@ -133,6 +139,10 @@ header {
                 margin-left: 0;
             }
 
+               .active {
+                    border-bottom: 2px solid black; 
+            }
+
             a {
                 transition: border .2s;
                 -webkit-transition: border .2s;
@@ -145,9 +155,8 @@ header {
                 &:hover {
                     border-bottom: 2px solid black;
                 }
-                &:active {
-                    border-bottom: 2px solid black; 
-            }
+
+              
         }
     }
 }
@@ -1103,6 +1112,10 @@ footer {
   position: relative;
   //box-sizing:border-box;
     text-align: center;
+    .chart-text{
+        padding-top:40%;
+
+    }
 
     span {
         display: block;
