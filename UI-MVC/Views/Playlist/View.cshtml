@@ -532,7 +532,7 @@
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
                 play.server.addTrack("@Model.Id");
-                if (data > 1 || (data ===1 && currentTrack != null)) {
+                if (data > 1 || (data === 1 && currentTrack != null)) {
                     var nxtBtn = document.getElementById('nextBtn');
                     nxtBtn.className = 'btn';
                     nxtBtn.style.display = "inline-block";
@@ -719,6 +719,7 @@
                 $('#nowPlayingTitle').html(data.Title);
                 $('#nowPlayingArtist').html(data.Artist);
                 $('#thumbnail').attr("src", data.CoverArtUrl);
+                updateUpcomingTracks();
 
                 player.playVideo();
                 currentTrack = data;
@@ -760,7 +761,6 @@
                 $("#playlist-view").animate({opacity: 0},50, function() {
                     $('#playlist-view').load('/Playlist/GetPlaylistGrid/', { id: @ViewBag.PlaylistId }, function() {
                         $("#playlist-view").animate({opacity: 1},50);
-                        
                     });
                 });
             } else {
@@ -769,8 +769,8 @@
                         $("#playlist-view").animate({opacity: 1},50);        
                     });
                 });
-
             }
+            updateUpcomingTracks();
         }
 
         var fullscreenEnabled = false;
