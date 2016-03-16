@@ -93,8 +93,18 @@ namespace BB.BL
         {
             Vote vote;
             var playlist = repo.ReadPlaylists().FirstOrDefault(p => p.PlaylistTracks.Any(t=>t.Id == trackId));
-            if (repo.ReadVoteOfUserFromPlaylistTrack(userId,trackId) != null || playlist.MaximumVotesPerUser == -1) {
-                var existingVote = repo.ReadVoteOfUserFromPlaylistTrack(userId, trackId);
+            var existingVote = repo.ReadVoteOfUserFromPlaylistTrack(userId, trackId);
+
+            if (existingVote == null)
+            {
+                vote = new Vote()
+                {
+                    Score = score
+                };
+                return repo.CreateVote(vote, userId, trackId);
+            }
+            else
+            {
                 if (existingVote.Score == score)
                 {
                     DeleteVote(existingVote);
@@ -107,11 +117,6 @@ namespace BB.BL
                     return repo.UpdateVote(vote);
                 }
             }
-            vote = new Vote()
-            {
-                Score = score
-            };
-            return repo.CreateVote(vote, userId, trackId);
         }
 
         public void DeleteVote(long voteId)

@@ -12,6 +12,7 @@ using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
 using System.Net;
 using Microsoft.AspNet.SignalR;
+using Newtonsoft.Json;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -168,6 +169,26 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+        }
+
+        public JsonResult GetUpcoming(long id)
+        {
+            var resultArray = new List<object>();
+
+            var playlistTracks = playlistManager.ReadPlaylist(id)
+                .PlaylistTracks
+                .OrderByDescending(p => p.Votes.Sum(v => v.Score))
+                .Where(t => t.PlayedAt == null)
+                .Take(3)
+                .ToList();
+
+            resultArray.AddRange(playlistTracks);
+            resultArray.Add(playlistTracks.Select(p => p.Votes.Sum(v => v.Score)).ToList());
+
+            var jss = new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+            var result = JsonConvert.SerializeObject(resultArray, Formatting.Indented, jss);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetNextTrack(long id)
