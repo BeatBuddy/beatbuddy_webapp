@@ -93,18 +93,11 @@ namespace BB.DAL.EFPlaylist
 
             var playlistTrack = new PlaylistTrack {Track = track};
             if(playlist.PlaylistTracks == null) playlist.PlaylistTracks = new Collection<PlaylistTrack>();
-            else
-            {
-                //WHY OH WHY?
-                //if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
-            }
+            
             playlist.PlaylistTracks.Add(playlistTrack);
-            try {
-                context.SaveChanges();
-            }
-            catch
-            {
-            }
+           
+            context.SaveChanges();
+            
             return playlistTrack.Track;
         }
 

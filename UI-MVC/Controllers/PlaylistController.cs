@@ -142,9 +142,9 @@ namespace BB.UI.Web.MVC.Controllers
             );
 
             if (track == null) return new HttpStatusCodeResult(400, "You can not add a song that is already in the list");
-            
+            var trackCount = playlistManager.ReadPlaylist(playlistId).PlaylistTracks.Where(p=>p.PlayedAt == null).ToList().Count;
 
-            return new HttpStatusCodeResult(200);
+            return Json(trackCount, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult SearchTrack(string q)
@@ -182,7 +182,7 @@ namespace BB.UI.Web.MVC.Controllers
                 TrackId = track.Track.TrackSource.TrackId,
                 Title = track.Track.Title,
                 Artist = track.Track.Artist,
-                NextTracks = playlistTracks.Count(),
+                NextTracks = playlistTracks.Where(p=>p.PlayedAt==null).ToList().Count(),
                 CoverArtUrl = track.Track.CoverArtUrl
             };
              return Json(playingViewModel, JsonRequestBehavior.AllowGet);
@@ -197,6 +197,13 @@ namespace BB.UI.Web.MVC.Controllers
             return PartialView("PlaylistTable", playlist);
         }
 
+        public ActionResult GetPlaylistGrid(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
+
+            return PartialView("PlaylistGrid", playlist);
+        }
         [HttpPost]
         public ActionResult MoveTrackToHistory(long id)
         {

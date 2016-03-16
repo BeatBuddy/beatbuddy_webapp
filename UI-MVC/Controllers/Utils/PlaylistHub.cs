@@ -17,6 +17,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
         private static readonly Dictionary<string, CurrentListenerModel> connectedGroupUsers = new Dictionary<string, CurrentListenerModel>();
         private static readonly Dictionary<string, string> playlistMasters = new Dictionary<string, string>();
         private static readonly Dictionary<string, string> lastListener = new Dictionary<string, string>();
+        
         private static readonly UserManager userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
 
         public void AddTrack(string groupName)
@@ -27,7 +28,6 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void JoinGroup(string groupName)
         {
-            
             Groups.Add(Context.ConnectionId, groupName);
             var model = new CurrentListenerModel { GroupName = groupName };
             if (Context.User != null)
@@ -54,6 +54,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             {
                 Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
             }
+            
         }
 
         public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
@@ -101,6 +102,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
                 Clients.OthersInGroup(groupName).stopMusicPlaying();
                 playlistMasters.Remove(groupName);
             }
+         
         }
 
         public void StartPlaying(CurrentPlayingViewModel track, string groupName)
@@ -109,9 +111,8 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             {
                 playlistMasters.Remove(groupName);
             }
-
             playlistMasters.Add(groupName, Context.ConnectionId);
-
+            
             Clients.OthersInGroup(groupName).playLive(track, 0);
             var youTube = YouTube.Default; // starting point for YouTube actions
             var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId); // gets a Video object with info about the video
