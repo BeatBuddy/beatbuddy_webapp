@@ -105,6 +105,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 var score = playlistTrack.Votes.FirstOrDefault(v => v.User.Email == email)?.Score;
                 livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
                 {
+                    Id = playlistTrack.Id,
                     Track = playlistTrack.Track,
                     Score = playlistTrack.Votes.Sum(v => v.Score),
                     PersonalScore = score ?? 0
@@ -373,7 +374,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Ok(track);
         }
 
-        //TODO: check why .Take(3) ??
         [AllowAnonymous]
         [HttpGet]
         [Route("recommendations")]
@@ -382,7 +382,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         {
             return Request.CreateResponse(HttpStatusCode.OK, playlistManager.ReadPlaylists()
                 .Reverse()
-                .Take(3)
+                .Take(count)
                 .Select(p => new
                 {
                     p.Id,
@@ -407,6 +407,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
             var viewmodel = new LivePlaylistTrackViewModel
             {
+                Id = playlistTrack.Id,
                 Score = playlistTrack.Votes.Sum(v => v.Score),
                 Track = playlistTrack.Track
             };
@@ -428,6 +429,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
             var viewmodel = new LivePlaylistTrackViewModel
             {
+                Id = playlistTrack.Id,
                 Score = playlistTrack.Votes.Sum(v => v.Score),
                 Track = playlistTrack.Track
             };

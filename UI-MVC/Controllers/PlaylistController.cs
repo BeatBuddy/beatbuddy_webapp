@@ -90,6 +90,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             var viewmodel = new LivePlaylistTrackViewModel
             {
+                Id = playlistTrack.Id,
                 Score = playlistTrack.Votes.Sum(v => v.Score),
                 Track = playlistTrack.Track
             };
@@ -111,6 +112,7 @@ namespace BB.UI.Web.MVC.Controllers
 
             var viewmodel = new LivePlaylistTrackViewModel
             {
+                Id = playlistTrack.Id,
                 Score = playlistTrack.Votes.Sum(v => v.Score),
                 Track = playlistTrack.Track
             };
