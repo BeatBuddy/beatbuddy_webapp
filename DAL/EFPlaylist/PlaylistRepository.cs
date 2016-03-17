@@ -170,7 +170,7 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Playlist> ReadPlaylists()
         {
-            return context.Playlists.ToList();
+            return context.Playlists;
         }
 
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
