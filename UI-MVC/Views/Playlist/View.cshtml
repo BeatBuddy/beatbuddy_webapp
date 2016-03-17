@@ -291,8 +291,11 @@
                 if (image == "/Content/img/Users/") {
                     image = "/Content/img/default-avatar.png";
                 }
-                $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" class="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" class="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
-                    + '</strong><br />' + encodedMsg + '</div></li>');
+                $('#discussion').append('<li class="chatMessage">' + 
+	                                        '<img src="' + image + '" class="round" />' +
+	                                        '<span class="chatUser">' + encodedName + '</span>' +
+	                                        '<span class="chatText">' + encodedMsg + '</span>' +
+                                        '</li>');
 
                 updateScroll();
             };

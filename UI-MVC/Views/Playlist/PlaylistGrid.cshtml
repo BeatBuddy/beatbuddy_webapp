@@ -1,18 +1,8 @@
 ﻿@using BB.BL.Domain.Playlists
-@model BB.BL.Domain.Playlists.Playlist
+@model Playlist
 
 <link rel="stylesheet" type="text/css" href="../../Content/style.css" />
-<div class="title">
-    <h1>Queue</h1>
-    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
-    {
-        <text>@Model.PlaylistTracks.Count tracks in queue</text>
-    }
-    else
-    {
-        <text>1 track in queue</text>
-    }
-</div>
+
     <section class="ib-container" id="ib-container" >
         @foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(p => p.Votes.Sum(v => v.Score)))
         {
@@ -53,10 +43,8 @@
     </section>
 
 
-
-
 @section Scripts{
-    <script src="../../Scripts/modernizr.js"></script>
+    <script src="~/Scripts/modernizr.js"></script>
     <script>
         $(function() {
 
