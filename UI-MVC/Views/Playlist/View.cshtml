@@ -411,6 +411,9 @@
                 document.getElementById("tuneinbutton").style.display = "inline";
                 clearInterval(intervalId);
 
+                $('#nowPlayingTitle').html(data.Title);
+                $('#nowPlayingArtist').html(data.Artist);
+
                 $('#time').empty();
                 if (data.CoverArtUrl != null) {
                     $('#thumbnail').attr("src", data.CoverArtUrl);
@@ -456,6 +459,9 @@
                 intervalId = setInterval(updateTime, 50);
             });
             openFooter();
+
+            $('#nowPlayingTitle').html(data.Title);
+            $('#nowPlayingArtist').html(data.Artist);
 
             if (data.CoverArtUrl != null) {
                 $('#thumbnail').attr("src", data.CoverArtUrl);
@@ -854,7 +860,6 @@
                 url: '@Url.Action("GetUpcoming")',
                 method: 'GET',
                 data: { id: @ViewBag.PlaylistId },
-                async: false
             }).done(function(data) {
 
                 $('#fullscreenComingUp > ul').empty();
