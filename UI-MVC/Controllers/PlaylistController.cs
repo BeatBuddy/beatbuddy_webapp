@@ -303,7 +303,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var playlists = playlistManager.ReadPlaylists();
             Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
-            return Json(playlist.Id);
+            return Json(playlist.Key);
         }
 
         // GET: Playlists/Create
@@ -358,21 +358,6 @@ namespace BB.UI.Web.MVC.Controllers
             }
             
 
-        }
-
-        public ActionResult Dashboard(long playlistId)
-        {
-            if (User != null)
-            {
-                user = userManager.ReadUser(User.Identity.Name);
-            }
-            var playlist = playlistManager.ReadPlaylist(playlistId);
-            
-            /*
-            ViewBag.Organisers = playlistOwners;
-            ViewBag.VotesUser = votesUser;
-          */
-            return View(playlist);
         }
 
         [HttpPost]
