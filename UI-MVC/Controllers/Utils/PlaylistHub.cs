@@ -50,8 +50,8 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             }
             connectedGroupUsers.Add(Context.ConnectionId, model);
 
-            Clients.Caller.modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
-            Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
+            Clients.Caller.modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName));
+            Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName));
             if (playlistMasters.ContainsKey(groupName))
             {
                 Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLiveWhenPlaying();
