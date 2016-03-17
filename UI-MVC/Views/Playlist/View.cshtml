@@ -189,7 +189,8 @@
         <ul>
             @{
                 var counter = 1;
-                foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(pt => pt.Votes.Sum(v => v.Score)).Take(3))
+                var tracks = Model.PlaylistTracks.OrderByDescending(pt => pt.Votes.Sum(v => v.Score)).Take(3);
+                foreach (PlaylistTrack track in tracks)
                 {
                     var cls = "first";
                     if (counter == 2)
@@ -217,6 +218,10 @@
                         <span class="trackvotes">@track.Votes.Sum(v => v.Score)</span>
                     </li>
                     counter++;
+                }
+                if (tracks.Count() == 0)
+                {
+                    <li><span class="tracktitle">No tracks coming up next... Add some yourself!</span></li>
                 }
             }
         </ul>
@@ -819,9 +824,15 @@
                 $('#fullscreenComingUp > ul').empty();
 
                 var tracks = JSON.parse(data);
-                var scores = tracks[3];
 
-                for(var i=0; i<3; i++) {
+                if (tracks.length === 1) {
+                    $('#fullscreenComingUp > ul').append('<li><span class="tracktitle">No tracks coming up next... Add some yourself!</span></li>');
+                    return;
+                }
+
+                var scores = tracks[tracks.length - 1];
+
+                for(var i=0; i<tracks.length - 1; i++) {
                     var playlistTrack = tracks[i];
 
                     console.log(playlistTrack);
