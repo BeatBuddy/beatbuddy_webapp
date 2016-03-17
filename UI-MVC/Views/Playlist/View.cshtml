@@ -802,17 +802,9 @@
 
         function updatePlaylist() {
             if (gridView) {
-                $("#playlist-view").animate({opacity: 0},50, function() {
-                    $('#playlist-view').load('/Playlist/GetPlaylistGrid/', { id: @ViewBag.PlaylistId }, function() {
-                        $("#playlist-view").animate({opacity: 1},50);
-                    });
-                });
+                $('#playlist-view').load('/Playlist/GetPlaylistGrid/', { id: @ViewBag.PlaylistId });
             } else {
-                $("#playlist-view").animate({opacity: 0},50, function() {
-                    $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId }, function() {
-                        $("#playlist-view").animate({opacity: 1},50);
-                    });
-                });
+                $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId });
             }
             updateUpcomingTracks();
         }
