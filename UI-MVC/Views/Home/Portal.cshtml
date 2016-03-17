@@ -22,24 +22,24 @@
     </div>
 }
 
-<div id="myModal" class="modal" style="margin-top: -90px">
-    <div class="modal-content" style="width: 620px; height: 530px; overflow: hidden">
+<div id="myModal" class="modal">
+    <div class="modal-content" style="width: 620px; height: 530px;">
         <a href="#close" title="Close" class="close">X</a>
         <div class="modal-body" style="margin-left: 60px; width: 100%">
             @Html.Partial("~/Views/Organisations/Create.cshtml", new OrganisationViewModel())
         </div>
     </div>
 </div>
-<div id="playlistModal" class="modal" style="margin-top: -90px">
-    <div class="modal-content" style="width: 850px; height: 625px; overflow: hidden">
+<div id="playlistModal" class="modal">
+    <div class="modal-content" style="width: 850px; height: 625px;">
         <a href="#close" title="Close" class="close">X</a>
         <div class="modal-body" style="margin-left: 60px; width: 100%">
             @Html.Partial("~/Views/Playlist/Create.cshtml", new PlaylistViewModel())
         </div>
     </div>
 </div>
-<div id="editPlaylistModal" class="modal" style="margin-top: -90px">
-    <div class="modal-content" style="width: 850px; height: 530px; overflow: hidden">
+<div id="editPlaylistModal" class="modal">
+    <div class="modal-content" style="width: 850px; height: 530px;">
         <a href="#close" title="Close" class="close">X</a>
         <div class="modal-body" id="editPlaylistModal-body" style="margin-left: 60px; width: 100%">
             
@@ -101,8 +101,8 @@
         
     </div>
     <div class="clearfix">&nbsp;</div>
-    <div id="searchOrganisationbtn" class="modal" style="margin-top: -150px">
-        <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+    <div id="searchOrganisationbtn" class="modal">
+        <div class="modal-content">
             <a href="#close" id="close-modal" title="Close" class="close">X</a>
             <div class="modal-body" style="height: 100%; width: 100%">
                 @{
@@ -115,7 +115,7 @@
 
 
 <section id="myplaylists">
-                    @{
+        @{
             Html.RenderPartial("MyPlaylists");
         }
 </section>
