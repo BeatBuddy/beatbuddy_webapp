@@ -96,7 +96,7 @@
                     })
                 .done(
                 function (data) {
-                    window.location.href ='@Url.Action("View","Playlist" )/' + data
+                    window.location.href = '@Url.Action("View","Playlist")' + '?key=' + data;
                 }
                 )
                 .fail(function () {
