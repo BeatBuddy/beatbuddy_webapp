@@ -1,16 +1,5 @@
 ﻿@using BB.BL.Domain.Playlists
 @model Playlist
-<div class="title">
-    <h1>Queue</h1>
-    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
-    {
-        <text>@Model.PlaylistTracks.Count tracks in queue</text>
-    }
-    else
-    {
-        <text>1 track in queue</text>
-    }
-</div>
 
 <table id="playlist-tracks">
     <tr>
