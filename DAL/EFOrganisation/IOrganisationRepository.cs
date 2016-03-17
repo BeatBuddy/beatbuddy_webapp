@@ -12,6 +12,8 @@ namespace BB.DAL.EFOrganisation
         IEnumerable<Organisation> ReadOrganisations();
         Organisation ReadOrganisation(long organisationId);
         Organisation ReadOrganisation(string organisationName);
+        Organisation ReadOrganisationWithPlaylistsAndTracks(long organisationId);
+        Organisation ReadOrganisationWithPlaylistsAndVotes(long organisationId);
         IEnumerable<Organisation> ReadOrganisationsForUser(long userId);
         IEnumerable<Organisation> SearchOrganisations(string prefix);
         Organisation DeleteOrganisation(long organisationId);

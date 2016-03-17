@@ -74,28 +74,21 @@ namespace BB.BL
 
         public double ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
         {
-            var playlists = ReadOrganisation(organisationId).Playlists;
-            List<PlaylistTrack> playlistTracks = new List<PlaylistTrack>();
-            foreach (var playlist in playlists)
-            {
-                playlistTracks.AddRange(playlist.PlaylistTracks);
-            }
-            double sum = playlistTracks.Sum(playlistTrack => playlistTrack.Track.Duration);
-            return Math.Round(sum/60,0);
+            var playlists = organisationsRepository.ReadOrganisationWithPlaylistsAndTracks(organisationId).Playlists;
+            var allTracks = playlists.SelectMany(p => p.PlaylistTracks.Select(pt => pt.Track));
+            var sum = allTracks.Sum(t => t.Duration);
+            
+            return Math.Round(sum/60.0,1);
         }
 
         public double ReadTotalVotesForOrganisation(long organisationId)
         {
-            throw new NotImplementedException();
+            var playlists = organisationsRepository.ReadOrganisationWithPlaylistsAndTracks(organisationId).Playlists;
+            var allPlaylistTracks = playlists.SelectMany(p => p.PlaylistTracks);
+            var sum = allPlaylistTracks.Sum(pt => pt.Votes.Count);
+
+            return sum;
         }
 
-        /*
-public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
-{
-   var playlists = ReadOrganisation(organisationId).Playlists;
-   var playlistTracks = playlists.Any(p => p.);
-   var totalDuration = playlistTracks.Any(pt => pt.)
-   //return ;
-}*/
     }
 }

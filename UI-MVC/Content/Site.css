@@ -851,6 +851,10 @@ footer {
     position: absolute;
     left: 0;
     top: 0; }
+  .chart .fit-in-circle {
+    font-size: 5em;
+    padding-top: 35%;
+    left: 5%; }
 
 .flex-container {
   display: -ms-flexbox;

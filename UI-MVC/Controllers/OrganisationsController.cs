@@ -96,6 +96,7 @@ namespace BB.UI.Web.MVC.Controllers
 
                 ViewBag.Id = id;
                 ViewBag.TotalMinutesOfPlaytime = organisationManager.ReadTotalTimeOfPlaylistsInMinutes(id);
+                ViewBag.TotalVotesOnPlaylists = organisationManager.ReadTotalVotesForOrganisation(id);
 
                 return View("Details", organisationView);
 
