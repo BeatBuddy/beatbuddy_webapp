@@ -8,12 +8,22 @@
     ViewBag.NoFooter = true;
 }
 
+
 @section escape_padding {
+<div id="sharedialog" class="modal">
+    <div class="modal-content" >
+        <a href="#close" title="Close" class="close">X</a>
+        <div class="modal-body">
+            @{ Html.RenderPartial("Share", Model); }
+        </div>
+    </div>
+</div>
     <div id="playlistbanner">
         <div class="content">
             @{
                 var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
                 <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
+
             }
 
             <div class="fill">

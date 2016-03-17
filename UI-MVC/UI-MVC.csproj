@@ -516,6 +516,7 @@
     <Content Include="Views\Home\SearchOrganisation.cshtml" />
     <Content Include="Views\Playlist\PlaylistGrid.cshtml" />
     <Content Include="Views\Home\MyPlaylists.cshtml" />
+    <Content Include="Views\Playlist\Share.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
