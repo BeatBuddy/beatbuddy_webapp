@@ -114,7 +114,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
                 }
             
             connectedGroupUsers.Remove(key);
-            Clients.Group(model.GroupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
+            Clients.Group(model.GroupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName));
             return base.OnDisconnected(stopCalled);
         }
 
