@@ -31,9 +31,6 @@
                     }
                 </div>
 
-                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
-                    <i class="material-icons">history</i> History
-                </a>
                 <a class="btn btn-right" href="#sharedialog">
                     <i class="material-icons">link</i> Share
                 </a>
@@ -47,6 +44,35 @@
                 <div id="listenerImg" class="co-organiser" style="float: left;">
                 </div>
             </div>
+
+            <div class="menu">
+                <div class="item selected">
+                    <a class="title" href="#">
+                        <h1>Queue</h1>
+                        @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
+                        {
+                            <text>@Model.PlaylistTracks.Count tracks in queue</text>
+                        }
+                        else
+                        {
+                            <text>1 track in queue</text>
+                        }
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="title" href="@Url.Action("View", "History", new {id = Model.Id})">
+                        <h1>History</h1>
+                        @if (ViewBag.HistoryCount > 1 | ViewBag.HistoryCount == 0)
+                        {
+                            <text>@ViewBag.HistoryCount tracks in history</text>
+                        }
+                        else
+                        {
+                            <text>1 track in history</text>
+                        }
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 }
@@ -54,8 +80,8 @@
 <a id="viewList" style="cursor: pointer"><i class="material-icons btn-right" style="font-size: 2em; margin-right: 10px; margin-top: -5px">view_headline</i></a>
 <div id="playlistTable">
 
-    <div id="playlist-view" style="margin-top: 0.8em">
-    @Html.Partial("PlaylistTable", @Model)
+    <div id="playlist-view">
+        @Html.Partial("PlaylistTable", @Model)
     </div>
 
     <div id="nowPlayingRow" style="margin-top: 1em">

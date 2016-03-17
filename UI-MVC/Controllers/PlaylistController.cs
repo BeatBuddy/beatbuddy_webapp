@@ -71,7 +71,7 @@ namespace BB.UI.Web.MVC.Controllers
             ViewBag.VotesUser = votesUser;
             ViewBag.PlaylistId = playlist.Id;
             ViewBag.PlaylistKey = playlist.Key;
-//            ViewBag.CreatedBy = userManager.ReadUser((long)playlist.CreatedById);
+            ViewBag.HistoryCount = playlist.PlaylistTracks.Count(t => t.PlayedAt != null);
             
             playlist.PlaylistTracks = playlist.PlaylistTracks.Where(t => t.PlayedAt == null).ToList();
             
