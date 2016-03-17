@@ -542,7 +542,7 @@ header {
         .albumart {
             width: 48px;
             height: 48px;
-            background-image: url(img/img/default_cover.png);
+            background-image: url('/Content/img/default_cover.png');
             display: inline-block;
             float: left;
             margin-right: .7em;
@@ -615,7 +615,7 @@ header {
         left: 10%;
         bottom: 10%;
         background-size: contain;
-        background-image: url(img/default_cover.png);
+        background-image: url('/Content/img/default_cover.png');
     }
 
     #nowPlayingArtist {
@@ -698,7 +698,7 @@ header {
                 .albumart {
                     width: 64px;
                     height: 64px;
-                    background-image: url(img/img/default_cover.png);
+                    background-image: url(img/default_cover.png);
                     vertical-align: middle;
                 }
 
@@ -1070,6 +1070,14 @@ footer {
         top: 1.2em;
         position: absolute;
         cursor: pointer;
+    }
+
+    #thumbnail{
+        height: 75px;
+        width: 75px;
+        margin-top: 1em;
+        background-size: contain;
+        background-image: url('/Content/img/default_cover.png');
     }
 }
 
