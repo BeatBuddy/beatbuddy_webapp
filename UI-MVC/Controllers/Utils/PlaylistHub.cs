@@ -17,7 +17,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
         private static readonly Dictionary<string, CurrentListenerModel> connectedGroupUsers = new Dictionary<string, CurrentListenerModel>();
         private static readonly Dictionary<string, string> playlistMasters = new Dictionary<string, string>();
         private static readonly Dictionary<string, string> lastListener = new Dictionary<string, string>();
-        
+        //private static readonly Dictionary<string, string> lastJoiners = new Dictionary<string, string>(); 
         private static readonly UserManager userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
 
         public void AddTrack(string groupName)
@@ -28,15 +28,17 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void JoinGroup(string groupName)
         {
+            //if (lastJoiners.ContainsKey(Context.ConnectionId))
+            //{
+            //    lastJoiners.Remove(Context.ConnectionId);
+            //}
+            //lastJoiners.Add(Context.ConnectionId, groupName);
             Groups.Add(Context.ConnectionId, groupName);
             var model = new CurrentListenerModel { GroupName = groupName };
             if (Context.User != null)
             {
                 var user = userManager.ReadUser(Context.User.Identity.Name);
-                if (connectedGroupUsers.Values.All(f => f.User != user))
-                {
-                    model.User = user;
-                }
+                model.User = user;
             }
             else
             {
@@ -46,7 +48,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             {
                 connectedGroupUsers.Remove(Context.ConnectionId);
             }
-                connectedGroupUsers.Add(Context.ConnectionId, model);
+            connectedGroupUsers.Add(Context.ConnectionId, model);
 
             Clients.Caller.modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
@@ -54,11 +56,21 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             {
                 Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
             }
-            
         }
 
         public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
         {
+            //var removeKeys = new List<string>();
+            //foreach (var key in lastJoiners.Where(p => p.Value == groupName).Select(p => p.Key))
+            //{
+            //    Clients.Client(key).playLive(track, (int)duration);
+            //    removeKeys.Add(key);
+            //}
+            //foreach (var removeKey in removeKeys)
+            //{
+            //    lastJoiners.Remove(removeKey);
+            //}
+            
             List<string> keys = new List<string>();
             foreach (var key in lastListener.Where(p=>p.Value == groupName).Select(p=>p.Key))
             {
@@ -73,7 +85,6 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             foreach (var key in keys)
             {
                 Clients.Client(key).onPlaylinkGeneratedSync(youtubeLink, (int) duration);
-
                 lastListener.Remove(key);
             }
         }
