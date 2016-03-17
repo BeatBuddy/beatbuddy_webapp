@@ -182,26 +182,26 @@ else
 
 <div class="flex-container" >
     <div class="card">
-
+        @{
+            var percentage = ViewBag.TotalMinutesOfPlaytime / 60;
+        }
         <div class="chart" data-percent="@Model.Playlists.Count">
-            <div class="material-icons" style="font-size:5em;padding-top:35%;left:-125%">playlist</div>
+            <div class="material-icons fit-in-circle" style="left: -125%;">playlist</div>
 
         <div class="chart-text">
             <span>@Model.Playlists.Count</span>Playlists</div></div>
     </div>
     <div class="card">
         <div class="chart" data-percent="@Model.CoOrganiser.Count()">
-            <div class="material-icons" style="font-size:5em;padding-top:35%;left:5%;">people</div>
-
+            <div class="material-icons fit-in-circle" >people</div>
             <div class="chart-text">
                 <span>@Model.CoOrganiser.Count()</span>Co organisers
             </div></div>
     </div>
     <div class="card">
         <div>
-            <div class="chart" data-percent="@ViewBag.TotalMinutesOfPlaytime">
-                <div class="material-icons" style="font-size: 5em; padding-top: 35%; left: 5%;">query_builder</div>
-
+            <div class="chart" data-percent="@percentage">
+                <div class="material-icons fit-in-circle">query_builder</div>
                 <div class="chart-text"><span>@ViewBag.TotalMinutesOfPlaytime</span>Minutes of playtime
                 </div>
             </div>
@@ -209,11 +209,10 @@ else
     </div>
     <div class="card">
         <div>
-            <div class="chart" data-percent="@ViewBag.TotalMinutesOfPlaytime">
-                <div class="material-icons" style="font-size:5em;padding-top:35%;left:5%;">import_export</div>
-
+            <div class="chart" data-percent="@ViewBag.TotalVotesOnPlaylists">
+                <div class="material-icons fit-in-circle">import_export</div>
                 <div class="chart-text">
-                    <span>@ViewBag.TotalMinutesOfPlaytime</span>Total votes
+                    <span>@ViewBag.TotalVotesOnPlaylists</span>votes on all playlists
                 </div>
             </div>
         </div>

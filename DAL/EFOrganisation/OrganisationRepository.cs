@@ -38,6 +38,20 @@ namespace BB.DAL.EFOrganisation
             return organisation;
         }
 
+        public Organisation ReadOrganisationWithPlaylistsAndTracks(long organisationId)
+        {
+            return context.Organisations
+                .Include(o => o.Playlists.Select(p => p.PlaylistTracks.Select(pt => pt.Track)))
+                .FirstOrDefault(o => o.Id == organisationId);
+        }
+
+        public Organisation ReadOrganisationWithPlaylistsAndVotes(long organisationId)
+        {
+            return context.Organisations
+                .Include(o => o.Playlists.Select(p => p.PlaylistTracks.Select(pt => pt.Votes)))
+                .FirstOrDefault(o => o.Id == organisationId);
+        }
+
         public IEnumerable<Organisation> ReadOrganisationsForUser(long userId)
         {
             var userRoles = context.UserRole.Include("Organisation").Include("User").Where(ur => ur.User.Id == userId);

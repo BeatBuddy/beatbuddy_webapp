@@ -91,7 +91,6 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .Ok()
                 .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>();
             ;
-            //TODO Move back to cleanup
         }
 
         /*
