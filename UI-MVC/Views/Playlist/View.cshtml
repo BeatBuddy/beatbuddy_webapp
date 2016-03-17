@@ -189,7 +189,8 @@
         <ul>
             @{
                 var counter = 1;
-                foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(pt => pt.Votes.Sum(v => v.Score)).Take(3))
+                var tracks = Model.PlaylistTracks.OrderByDescending(pt => pt.Votes.Sum(v => v.Score)).Take(3);
+                foreach (PlaylistTrack track in tracks)
                 {
                     var cls = "first";
                     if (counter == 2)
@@ -218,6 +219,10 @@
                     </li>
                     counter++;
                 }
+                if (tracks.Count() == 0)
+                {
+                    <li><span class="tracktitle">No tracks coming up next... Add some yourself!</span></li>
+            }
             }
         </ul>
 
@@ -350,6 +355,9 @@
 
         play.client.syncLive = function() {
             play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
+        }
+        play.client.syncLiveWhenPlaying = function() {
+            play.server.syncLiveWhenPlaying("@Model.Id", currentTrack, player.getCurrentTime());
         }
 
         play.client.playLive = function(data, startSeconds) {
@@ -525,14 +533,14 @@
                 method: 'POST',
                 data: { playlistId: @ViewBag.PlaylistId, id: id },
                 async: false
-            }).done(function() {
+            }).done(function(data) {
                 window.location.href = '/Playlist/View?key=' + '@ViewBag.PlaylistKey' + '#close';
                 updatePlaylist();
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
                 play.server.addTrack("@Model.Id");
-                if (data > 1 || (data === 1 && currentTrack != null)) {
+                if (data > 1 || (data >0 && currentTrack != null)) {
                     var nxtBtn = document.getElementById('nextBtn');
                     nxtBtn.className = 'btn';
                     nxtBtn.style.display = "inline-block";
@@ -693,7 +701,7 @@
                         setInterval(updateTime, 50);
                     });
                     var nextButton = document.getElementById("nextBtn");
-                    
+
                     if (nextButton != null) {
                         if (data.NextTracks === 1) {
                             nextButton.className = 'btn disabled';
@@ -766,7 +774,7 @@
             } else {
                 $("#playlist-view").animate({opacity: 0},50, function() {
                     $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId }, function() {
-                        $("#playlist-view").animate({opacity: 1},50);        
+                        $("#playlist-view").animate({opacity: 1},50);
                     });
                 });
             }
@@ -809,48 +817,51 @@
         });
 
         function updateUpcomingTracks() {
-            @*$.ajax({
+            $.ajax({
                 url: '@Url.Action("GetUpcoming")',
                 method: 'GET',
                 data: { id: @ViewBag.PlaylistId },
                 async: false
             }).done(function(data) {
-                if (data != null) {
-                    $('#fullscreenComingUp > ul').empty();
 
-                    var tracks = JSON.parse(data);
-                    console.log(tracks.length);
-                    var scores = tracks[3];
+                $('#fullscreenComingUp > ul').empty();
 
-                    for(var i=0; i<3; i++) {
-                        var playlistTrack = tracks[i];
+                var tracks = JSON.parse(data);
 
-                        console.log(playlistTrack);
-
-                        var itemcls = "";
-                        if (i === 0) itemcls = "first";
-                        if (i === 1) itemcls = "second";
-                        if (i === 2) itemcls = "third";
-                    
-                        var itemHtml = '<li class="' + itemcls +  '">' + 
-                                            '<span class="counter">' + (i + 1) + '</span>' + 
-                                            '<img class="albumart" src="' + playlistTrack.Track.CoverArtUrl + '" alt="album art" />' + 
-                                            '<span class="trackartist">' + playlistTrack.Track.Artist + '</span>' + 
-                                            '<span class="tracktitle"> - ' + playlistTrack.Track.Title + '</span>' + 
-                                            '<i class="material-icons">thumb_up</i>' + 
-                                            '<span class="trackvotes">' + scores[i] + '</span>' + 
-                                        '</li>';
-
-                        $('#fullscreenComingUp > ul').append(itemHtml);
-                    }
-
-                    console.log(data);    
+                if (tracks.length === 1) {
+                    $('#fullscreenComingUp > ul').append('<li><span class="tracktitle">No tracks coming up next... Add some yourself!</span></li>');
+                    return;
                 }
-                
+
+                var scores = tracks[tracks.length - 1];
+
+                for(var i=0; i<tracks.length - 1; i++) {
+                    var playlistTrack = tracks[i];
+
+                    console.log(playlistTrack);
+
+                    var itemcls = "";
+                    if (i === 0) itemcls = "first";
+                    if (i === 1) itemcls = "second";
+                    if (i === 2) itemcls = "third";
+
+                    var itemHtml = '<li class="' + itemcls +  '">' +
+	                                    '<span class="counter">' + (i + 1) + '</span>' +
+	                                    '<img class="albumart" src="' + playlistTrack.Track.CoverArtUrl + '" alt="album art" />' +
+	                                    '<span class="trackartist">' + playlistTrack.Track.Artist + '</span>' +
+	                                    '<span class="tracktitle"> - ' + playlistTrack.Track.Title + '</span>' +
+	                                    '<i class="material-icons">thumb_up</i>' +
+	                                    '<span class="trackvotes">' + scores[i] + '</span>' +
+                                    '</li>';
+
+                    $('#fullscreenComingUp > ul').append(itemHtml);
+                }
+
+                console.log(data);
 
             }).fail(function() {
                 notie.alert(3, 'Error refreshing upcoming tracks', 2.5);
-            });*@
+            });
         }
 
         $(document).keyup(function(e) {

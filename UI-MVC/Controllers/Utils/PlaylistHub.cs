@@ -17,7 +17,7 @@ namespace BB.UI.Web.MVC.Controllers.Utils
         private static readonly Dictionary<string, CurrentListenerModel> connectedGroupUsers = new Dictionary<string, CurrentListenerModel>();
         private static readonly Dictionary<string, string> playlistMasters = new Dictionary<string, string>();
         private static readonly Dictionary<string, string> lastListener = new Dictionary<string, string>();
-        //private static readonly Dictionary<string, string> lastJoiners = new Dictionary<string, string>(); 
+        private static readonly Dictionary<string, string> lastJoiners = new Dictionary<string, string>(); 
         private static readonly UserManager userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
 
         public void AddTrack(string groupName)
@@ -28,11 +28,11 @@ namespace BB.UI.Web.MVC.Controllers.Utils
 
         public void JoinGroup(string groupName)
         {
-            //if (lastJoiners.ContainsKey(Context.ConnectionId))
-            //{
-            //    lastJoiners.Remove(Context.ConnectionId);
-            //}
-            //lastJoiners.Add(Context.ConnectionId, groupName);
+            if (lastJoiners.ContainsKey(Context.ConnectionId))
+            {
+                lastJoiners.Remove(Context.ConnectionId);
+            }
+            lastJoiners.Add(Context.ConnectionId, groupName);
             Groups.Add(Context.ConnectionId, groupName);
             var model = new CurrentListenerModel { GroupName = groupName };
             if (Context.User != null)
@@ -54,22 +54,13 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             Clients.OthersInGroup(groupName).modifyListeners(connectedGroupUsers.Values.ToList().FindAll(p => p.GroupName == model.GroupName).Count + " party people attending", connectedGroupUsers.Values);
             if (playlistMasters.ContainsKey(groupName))
             {
-                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLive();
+                Clients.Client(playlistMasters.Single(p => p.Key == groupName).Value).syncLiveWhenPlaying();
             }
         }
 
         public void SyncLive(string groupName, CurrentPlayingViewModel track, float duration)
         {
-            //var removeKeys = new List<string>();
-            //foreach (var key in lastJoiners.Where(p => p.Value == groupName).Select(p => p.Key))
-            //{
-            //    Clients.Client(key).playLive(track, (int)duration);
-            //    removeKeys.Add(key);
-            //}
-            //foreach (var removeKey in removeKeys)
-            //{
-            //    lastJoiners.Remove(removeKey);
-            //}
+            
             
             List<string> keys = new List<string>();
             foreach (var key in lastListener.Where(p=>p.Value == groupName).Select(p=>p.Key))
@@ -86,6 +77,20 @@ namespace BB.UI.Web.MVC.Controllers.Utils
             {
                 Clients.Client(key).onPlaylinkGeneratedSync(youtubeLink, (int) duration);
                 lastListener.Remove(key);
+            }
+        }
+
+        public void SyncLiveWhenPlaying(string groupName, CurrentPlayingViewModel track, float duration)
+        {
+            var removeKeys = new List<string>();
+            foreach (var key in lastJoiners.Where(p => p.Value == groupName).Select(p => p.Key))
+            {
+                Clients.Client(key).playLive(track, (int)duration);
+                removeKeys.Add(key);
+            }
+            foreach (var removeKey in removeKeys)
+            {
+                lastJoiners.Remove(removeKey);
             }
         }
 
@@ -130,7 +135,10 @@ namespace BB.UI.Web.MVC.Controllers.Utils
                 playlistMasters.Remove(groupName);
             }
             playlistMasters.Add(groupName, Context.ConnectionId);
-            
+            if (lastJoiners.ContainsKey(Context.ConnectionId))
+            {
+                lastJoiners.Remove(Context.ConnectionId);
+            }
             Clients.OthersInGroup(groupName).playLive(track, 0);
             var youTube = YouTube.Default; // starting point for YouTube actions
             var video = youTube.GetVideo("https://www.youtube.com/watch?v=" + track.TrackId); // gets a Video object with info about the video
