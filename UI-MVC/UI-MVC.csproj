@@ -518,6 +518,7 @@
     <Content Include="Views\Playlist\PlaylistGrid.cshtml" />
     <Content Include="Views\Home\MyPlaylists.cshtml" />
     <Content Include="Views\Playlist\Share.cshtml" />
+    <Content Include="Views\Account\_ExternalRegisterListPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Img\Organisations\" />
