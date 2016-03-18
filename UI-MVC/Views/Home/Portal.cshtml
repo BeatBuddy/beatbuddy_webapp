@@ -5,7 +5,6 @@
 
 @{
     ViewBag.Title = "Portal";
-    int plId = 0;
 }
 
 @section PortalPageStyle{
@@ -17,7 +16,9 @@
 @section escape_padding {
     <div class="loggedin-banner">
         <div class="banner-content">
-            <h2>Welcome, @ViewBag.Name</h2>
+            <h1 style="color:black">Welcome, @ViewBag.Name</h1>
+            <h2 style="margin-bottom:15px">Want to join a playlist?</h2>
+            <input type="text" id="keyField" class="custom-input" style="width:247px;" value="Enter playlist key" />  
         </div>
     </div>
 }
