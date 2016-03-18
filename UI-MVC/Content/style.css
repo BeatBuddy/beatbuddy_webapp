@@ -19,7 +19,7 @@
 	width: 237px;
 	height: 237px;
 	
-	cursor: pointer;
+
 	float: left;
     text-align: center;
 	
@@ -34,27 +34,27 @@
 		0px 0px 0px 3px rgba(255,255,255,1), 
 		1px 1px 3px 5px rgba(0,0,0,0.2);
 	-webkit-transition: 
-		opacity 0.4s linear, 
-		-webkit-transform 0.4s ease-in-out, 
-		box-shadow 0.4s ease-in-out;
+		opacity 0.15s linear, 
+		-webkit-transform 0.15s ease-in-out, 
+		box-shadow 0.15s ease-in-out;
 	-moz-transition: 
-		opacity 0.4s linear, 
-		-moz-transform 0.4s ease-in-out, 
-		box-shadow 0.4s ease-in-out;
+		opacity 0.15s linear, 
+		-moz-transform 0.15s ease-in-out, 
+		box-shadow 0.15s ease-in-out;
 	-o-transition: 
-		opacity 0.4s linear, 
-		-o-transform 0.4s ease-in-out, 
-		box-shadow 0.4s ease-in-out;
+		opacity 0.15s linear, 
+		-o-transform 0.15s ease-in-out, 
+		box-shadow 0.15s ease-in-out;
 	-ms-transition: 
-		opacity 0.4s linear, 
-		-ms-transform 0.4s ease-in-out, 
-		box-shadow 0.4s ease-in-out;
+		opacity 0.15s linear, 
+		-ms-transform 0.15s ease-in-out, 
+		box-shadow 0.15s ease-in-out;
 	transition: 
-		opacity 0.4s linear, 
-		transform 0.4s ease-in-out, 
-		box-shadow 0.4s ease-in-out;
-
+		opacity 0.15s linear, 
+		transform 0.15s ease-in-out, 
+		box-shadow 0.15s ease-in-out;
 }
+
 .ib-container h3 a{
 	font-size: 16px;
 	font-weight: 400;
@@ -63,12 +63,14 @@
 	text-shadow: 0px 0px 0px rgba(0, 0, 0, 1);
 	opacity: 0.4;
 }
+
 .ib-container article header span{
     width: 100%;
 }
+
 .ib-container article p{
-	font-size: 17px;
-    height: 30%;
+	font-size: 18px;
+    height: 20%;
     margin-left: auto;
     margin-right: auto;
     padding-left: 12px;
@@ -85,24 +87,24 @@
 .ib-container article p{
 	-webkit-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	-moz-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	-o-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	-ms-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 }
 /* Hover Style for all the items: blur, scale down*/
 .ib-container article.blur{
@@ -144,7 +146,7 @@
 	opacity: 1;
 }
 .ib-container article.active div {
-    transition: background-color 0.5s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
     background-color: rgba(0, 0, 0, 0.0); 
 }
 }

@@ -1,16 +1,5 @@
 ﻿@using BB.BL.Domain.Playlists
 @model Playlist
-<div class="title">
-    <h1>History</h1>
-    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
-    {
-        <text>@Model.PlaylistTracks.Count tracks played</text>
-    }
-    else
-    {
-        <text>1 track played</text>
-    }
-</div>
 
 <table id="playlist-tracks">
     <tr>
@@ -21,27 +10,31 @@
         <th>Duration</th>
         <th>Artist</th>
     </tr>
-    @foreach (PlaylistTrack track in Model.PlaylistTracks)
-    {
-        <tr class="track" data-id="@track.Track.TrackSource.TrackId" data-artist="@track.Track.Artist" data-title="@track.Track.Title" data-thumbnail="@track.Track.CoverArtUrl">
-            <td>
-                @track.Id
-            </td>
-            <td>
-                <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
-            </td>
-            <td class="tracktitle">
-                @track.Track.Title
-            </td>
-            <td>
-                thumbs
-            </td>
-            <td>
-                @TimeSpan.FromSeconds(track.Track.Duration).ToString().Replace("00:", "")
-            </td>
-            <td class="artist">
-                @track.Track.Artist
-            </td>
-        </tr>
+    @{
+        var counter = 1;
+        foreach (PlaylistTrack track in Model.PlaylistTracks)
+        {
+            <tr class="track" data-id="@track.Track.TrackSource.TrackId" data-artist="@track.Track.Artist" data-title="@track.Track.Title" data-thumbnail="@track.Track.CoverArtUrl">
+                <td>
+                    @counter
+                </td>
+                <td>
+                    <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
+                </td>
+                <td class="tracktitle">
+                    @track.Track.Title
+                </td>
+                <td>
+                    thumbs
+                </td>
+                <td>
+                    @TimeSpan.FromSeconds(track.Track.Duration).ToString().Replace("00:", "")
+                </td>
+                <td class="artist">
+                    @track.Track.Artist
+                </td>
+            </tr>
+            counter++;
+        }
     }
 </table>

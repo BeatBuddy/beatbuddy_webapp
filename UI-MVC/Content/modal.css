@@ -11,7 +11,8 @@
 	-moz-transition: opacity 400ms ease-in;
 	transition: opacity 400ms ease-in;
 	pointer-events: none;
-
+    margin-top: -7%;
+    overflow: hidden;
 }
 
 .modal:target {
@@ -20,10 +21,29 @@
 }
 
 .modal > div {
-	width: 400px;
+    max-width: 100%;
+    width: 600px;
 	position: relative;
 	margin: 15% auto;
 	border-radius: 4px;
+}
+
+@media (max-width: 560px) {
+    .modal > div {
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+    }
+}
+
+@media (max-width: 560px) {
+   .modal {
+        margin: 0 !important;
+    }
+
+   .close {
+       padding: .9em 2.3em .9em 1.5em;
+   }
 }
 
 .modal-content {
@@ -50,11 +70,8 @@
     to {top:0; opacity:1}
 }
 
-
-
 .modal-body {
-    padding: 50px 16px;
-             
+    padding: 50px 16px;     
 }
 
 .close {
@@ -62,7 +79,7 @@
 	color: #FFFFFF;
 	line-height: 25px;
 	position: absolute;
-	right: -1px;
+	right: 0;
 	text-align: center;
 	top: -1px;
 	width: 32px;

@@ -8,12 +8,22 @@
     ViewBag.NoFooter = true;
 }
 
+
 @section escape_padding {
+<div id="sharedialog" class="modal">
+    <div class="modal-content" >
+        <a href="#close" title="Close" class="close">X</a>
+        <div class="modal-body">
+            @{ Html.RenderPartial("Share", Model); }
+        </div>
+    </div>
+</div>
     <div id="playlistbanner">
         <div class="content">
             @{
                 var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
                 <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
+
             }
 
             <div class="fill">
@@ -31,9 +41,6 @@
                     }
                 </div>
 
-                <a class="btn btn-right" style="margin-left: .5em" href="@Url.Action("View", "History", new {id = Model.Id})">
-                    <i class="material-icons">history</i> History
-                </a>
                 <a class="btn btn-right" href="#sharedialog">
                     <i class="material-icons">link</i> Share
                 </a>
@@ -47,33 +54,72 @@
                 <div id="listenerImg" class="co-organiser" style="float: left;">
                 </div>
             </div>
+
+            <div class="menu">
+                <div class="item selected">
+                    <a class="title" href="#">
+                        <h1>Queue</h1>
+                        @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
+                        {
+                            <text>@Model.PlaylistTracks.Count tracks in queue</text>
+                        }
+                        else
+                        {
+                            <text>1 track in queue</text>
+                        }
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="title" href="@Url.Action("View", "History", new {id = Model.Id})">
+                        <h1>History</h1>
+                        @if (ViewBag.HistoryCount > 1 | ViewBag.HistoryCount == 0)
+                        {
+                            <text>@ViewBag.HistoryCount tracks in history</text>
+                        }
+                        else
+                        {
+                            <text>1 track in history</text>
+                        }
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 }
+<a id="viewGrid" style="cursor: pointer"><i class="material-icons btn-right" style="font-size: 2em; margin-right: 10px; margin-top: -5px">view_module</i></a>
+<a id="viewList" style="cursor: pointer"><i class="material-icons btn-right" style="font-size: 2em; margin-right: 10px; margin-top: -5px">view_headline</i></a>
+<div id="playlistTable">
 
-<div  id="playlistTable">
-<div id="playlist-view" style="margin-top: 0.2em">
-    @Html.Partial("PlaylistTable", @Model)
+    <div id="playlist-view">
+        @Html.Partial("PlaylistTable", @Model)
     </div>
 
     <div id="nowPlayingRow" style="margin-top: 1em">
-        @if (((List<User>)ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
+        @if (((List<User>) ViewBag.Organisers).Any(p => p.Email == User.Identity.Name))
         {
             if (Model.PlaylistTracks.Count != 0)
             {
                 <a class="btn" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
-                <a class="btn disabled" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
             }
             else
             {
                 <a class="btn disabled" id="playBtn"><i id="icon" class="material-icons">play_arrow</i> </a>
             }
+            if (Model.PlaylistTracks.Count > 1)
+            {
+                <a class="btn" id="nextBtn"><i class="material-icons">skip_next</i> </a>
         }
         else
         {
-            <a class="btn" id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
-            <a class="btn disabled" style="display: none" id="nextBtn"><i id="icon" class="material-icons">skip_next</i> </a>
+                <a class="btn disabled" style="display: none" id="nextBtn"><i class="material-icons">skip_next</i> </a>
         }
+        }
+        else
+        {
+            <a class="btn " id="playBtn" style="display: none"><i id="icon" class="material-icons">play_arrow</i> </a>
+            <a class="btn disabled" style="display: none" id="nextBtn"><i class="material-icons">skip_next</i> </a>
+        }
+
 
         @if (Request.IsAuthenticated)
         {
@@ -87,8 +133,8 @@
         }
     </div>
 
-    <div id="addTrackModal" class="modal" style="margin-top: -150px">
-        <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+    <div id="addTrackModal" class="modal">
+        <div class="modal-content">
             <a href="#close" id="close-modal" title="Close" class="close">X</a>
             <div class="modal-body" style="height: 100%; width: 100%;">
                 @{
@@ -98,8 +144,8 @@
         </div>
     </div>
 
-    <div id="addPlaylistModal" class="modal" style="margin-top: -150px">
-        <div class="modal-content" style="width: 30%; height: 60%; min-width: 340px; overflow: hidden">
+    <div id="addPlaylistModal" class="modal">
+        <div class="modal-content">
             <a href="#closePlaylist" id="close-modal-playlist" title="Close" class="close">X</a>
             <div class="modal-body" style="height: 100%; width: 100%;">
                 @{
@@ -150,7 +196,7 @@
         <table style="width: 100%; margin-top: -15px">
             <tr>
                 <td style="width: 5%">
-                    <img src="~/Content/img/default_cover.png" id="thumbnail" class="round" style="height: 75px; width: 75px; margin-top: 1em" />
+                    <img src="~/Content/img/default_cover.png" id="thumbnail" class="round" />
                 </td>
                 <td style="width: 95%">
                     <div class="title" style="margin-top: 0.5em; margin-right: 1.5em">
@@ -179,7 +225,8 @@
         <ul>
             @{
                 var counter = 1;
-                foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(pt => pt.Votes.Sum(v => v.Score)).Take(3))
+                var tracks = Model.PlaylistTracks.OrderByDescending(pt => pt.Votes.Sum(v => v.Score)).Take(3);
+                foreach (PlaylistTrack track in tracks)
                 {
                     var cls = "first";
                     if (counter == 2)
@@ -208,6 +255,10 @@
                     </li>
                     counter++;
                 }
+                if (tracks.Count() == 0)
+                {
+                    <li><span class="tracktitle">No tracks coming up next... Add some yourself!</span></li>
+            }
             }
         </ul>
 
@@ -225,6 +276,7 @@
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
     <script>
+        var gridView = false;
         var playing = false;
         var listening = false;
         var intervalId = 0;
@@ -239,8 +291,11 @@
                 if (image == "/Content/img/Users/") {
                     image = "/Content/img/default-avatar.png";
                 }
-                $('#discussion').append('<li style="min-height:60px;"><div class="col-md-2" class="imagesChat" style="padding-left:0px; padding-right:0px"> <img src="' + image + '" class="thumbnail" class="round" style="height:50px; width:50px;"/></div><div class="col-md-10" id="textChat"><strong>' + encodedName
-                    + '</strong><br />' + encodedMsg + '</div></li>');
+                $('#discussion').append('<li class="chatMessage">' + 
+	                                        '<img src="' + image + '" class="round" />' +
+	                                        '<span class="chatUser">' + encodedName + '</span>' +
+	                                        '<span class="chatText">' + encodedMsg + '</span>' +
+                                        '</li>');
 
                 updateScroll();
             };
@@ -303,7 +358,6 @@
         }
 
         play.client.modifyListeners = function(data, users) {
-            console.log(users.length);
             var src = document.getElementById('listenerImg');
             var i;
             var unknownUserCounter = 0;
@@ -312,7 +366,6 @@
             }
             var img;
             for (i = 0; i < users.length; i++) {
-                console.log(users[i]);
                 img = document.createElement("img");
                 if (users[i].User != null) {
                     if (users[i].User.ImageUrl != null) {
@@ -342,6 +395,9 @@
         play.client.syncLive = function() {
             play.server.syncLive("@Model.Id", currentTrack, player.getCurrentTime());
         }
+        play.client.syncLiveWhenPlaying = function() {
+            play.server.syncLiveWhenPlaying("@Model.Id", currentTrack, player.getCurrentTime());
+        }
 
         play.client.playLive = function(data, startSeconds) {
             openFooter();
@@ -354,6 +410,9 @@
                 document.getElementById("nowPlaying").innerHTML = data.Title + ' - ' + data.Artist;
                 document.getElementById("tuneinbutton").style.display = "inline";
                 clearInterval(intervalId);
+
+                $('#nowPlayingTitle').html(data.Title);
+                $('#nowPlayingArtist').html(data.Artist);
 
                 $('#time').empty();
                 if (data.CoverArtUrl != null) {
@@ -368,6 +427,13 @@
             }
             updatePlaylist();
         }
+
+        play.client.scoreUpdated = function(id, playlistTrack) {
+            $(".trackvotes[data-id='" + id + "']").html(playlistTrack.Score);
+            updatePlaylist();
+            updateUpcomingTracks();
+        }
+
         $('#tuneinbutton').click(function() {
             if (listening) {
                 listening = false;
@@ -377,6 +443,14 @@
             toggle(document.getElementById('tuneinbutton'));
             play.server.playLive("@Model.Id");
         });
+        $('#viewList').click(function() {
+            gridView = false;
+            updatePlaylist();
+        });
+        $('#viewGrid').click(function() {
+            gridView = true;
+            updatePlaylist();
+        });
 
         function cue_and_play(data, seconds) {
             player.cueVideoById(data.TrackId, seconds, "small");
@@ -385,6 +459,9 @@
                 intervalId = setInterval(updateTime, 50);
             });
             openFooter();
+
+            $('#nowPlayingTitle').html(data.Title);
+            $('#nowPlayingArtist').html(data.Artist);
 
             if (data.CoverArtUrl != null) {
                 $('#thumbnail').attr("src", data.CoverArtUrl);
@@ -501,13 +578,18 @@
                 method: 'POST',
                 data: { playlistId: @ViewBag.PlaylistId, id: id },
                 async: false
-            }).done(function() {
-                window.location.href = @ViewBag.PlaylistId + '#close';
+            }).done(function(data) {
+                window.location.href = '/Playlist/View?key=' + '@ViewBag.PlaylistKey' + '#close';
                 updatePlaylist();
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
                 playBtn.addEventListener("click", getNextTrack);
                 play.server.addTrack("@Model.Id");
+                if (data > 1 || (data >0 && currentTrack != null)) {
+                    var nxtBtn = document.getElementById('nextBtn');
+                    nxtBtn.className = 'btn';
+                    nxtBtn.style.display = "inline-block";
+                }
             }).fail(function() {
                 notie.alert(3, 'You cannot add a song that is already in the list or is already played', 2.5);
             });
@@ -635,7 +717,7 @@
                 icon.innerHTML = 'pause';
             }
 
-            if (event.data === YT.PayerState.PAUSED) {
+            if (event.data === YT.PlayerState.PAUSED) {
                 icon.innerHTML = 'play_arrow';
                 playButton.addEventListener("click", function() {
                     player.playVideo();
@@ -664,8 +746,9 @@
                         setInterval(updateTime, 50);
                     });
                     var nextButton = document.getElementById("nextBtn");
+
                     if (nextButton != null) {
-                        if (data.nextTracks === 1) {
+                        if (data.NextTracks === 1) {
                             nextButton.className = 'btn disabled';
                         } else {
                             nextButton.className = 'btn';
@@ -689,6 +772,7 @@
                 $('#nowPlayingTitle').html(data.Title);
                 $('#nowPlayingArtist').html(data.Artist);
                 $('#thumbnail').attr("src", data.CoverArtUrl);
+                updateUpcomingTracks();
 
                 player.playVideo();
                 currentTrack = data;
@@ -726,12 +810,14 @@
         }
 
         function updatePlaylist() {
-            $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId });
-            var rowCount = $('#playlist-tracks tr').length;
-            if (rowCount >= 1 && playing) {
-                var nextButton = document.getElementById("nextBtn");
-                nextButton.className = 'btn';
+            if (gridView) {
+                $('#playlist-view').load('/Playlist/GetPlaylistGrid/', { id: @ViewBag.PlaylistId }, function() {
+                    $.getScript("../../Scripts/gridview.js");
+                });
+            } else {
+                $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId });
             }
+            updateUpcomingTracks();
         }
 
         var fullscreenEnabled = false;
@@ -768,6 +854,49 @@
         $('#fullscreenexitbutton').on('click', function() {
             fullscreenToggle();
         });
+
+        function updateUpcomingTracks() {
+            $.ajax({
+                url: '@Url.Action("GetUpcoming")',
+                method: 'GET',
+                data: { id: @ViewBag.PlaylistId },
+            }).done(function(data) {
+
+                $('#fullscreenComingUp > ul').empty();
+
+                var tracks = JSON.parse(data);
+
+                if (tracks.length === 1) {
+                    $('#fullscreenComingUp > ul').append('<li><span class="tracktitle">No tracks coming up next... Add some yourself!</span></li>');
+                    return;
+                }
+
+                var scores = tracks[tracks.length - 1];
+
+                for(var i=0; i<tracks.length - 1; i++) {
+                    var playlistTrack = tracks[i];
+
+                    var itemcls = "";
+                    if (i === 0) itemcls = "first";
+                    if (i === 1) itemcls = "second";
+                    if (i === 2) itemcls = "third";
+
+                    var itemHtml = '<li class="' + itemcls +  '">' +
+	                                    '<span class="counter">' + (i + 1) + '</span>' +
+	                                    '<img class="albumart" src="' + playlistTrack.Track.CoverArtUrl + '" alt="album art" />' +
+	                                    '<span class="trackartist">' + playlistTrack.Track.Artist + '</span>' +
+	                                    '<span class="tracktitle"> - ' + playlistTrack.Track.Title + '</span>' +
+	                                    '<i class="material-icons">thumb_up</i>' +
+	                                    '<span class="trackvotes">' + scores[i] + '</span>' +
+                                    '</li>';
+
+                    $('#fullscreenComingUp > ul').append(itemHtml);
+                }
+
+            }).fail(function() {
+                notie.alert(3, 'Error refreshing upcoming tracks', 2.5);
+            });
+        }
 
         $(document).keyup(function(e) {
             if (e.which === 27) {
@@ -839,7 +968,7 @@
             }).done(function() {
                 $("#loadingPlaylist").hide();
                 $("waitPlaylist").hide();
-                window.location.href = @ViewBag.PlaylistId + '#closePlaylist';
+                window.location.href = '/Playlist/View?key=' + '@ViewBag.PlaylistKey' + '#closePlaylist';
                 updatePlaylist();
                 var playBtn = document.getElementById('playBtn');
                 playBtn.className = 'btn';
@@ -873,36 +1002,50 @@
     </script>
 <script src="../../Scripts/modernizr.js"></script>
 <script>
-        $(function () {
+       
+    function changeColor(element, color) {
+        document.getElementById(element).style.color = color;
+    }
 
-            var $container = $('#ib-container'),
-                $articles = $container.children('article'),
-                timeout;
+    function vote(element, vote, id) {
+        if ("@Request.IsAuthenticated" === "False") {
+            notie.alert(3, "You need to login to vote", 2.5)
+            return
+        }
+        if ($('#'+element).attr("data-voted")!= null) {
+            unVote(element, id)
+            return
+        }
+        $.ajax({
+            url: '@Url.Action("AddVote")',
+            method: 'POST',
+            data: {vote: vote, id: id},
+        }).done(function () {
+            changeColor(element, "black")
+            //updatePlaylist()
+            notie.alert(1,"Got it!", 2.5)
+        }).fail(
+            function (xhr, status, error) {
+                if (xhr.status == 400) { notie.alert(3,"You have reached your vote limit for this playlist", 2.5); }
+                else
+                { notie.alert(3,"Error creating vote", 2.5); }
+            })
+    }
 
-            $articles.on('mouseenter', function (event) {
-
-                var $article = $(this);
-                clearTimeout(timeout);
-                timeout = setTimeout(function () {
-
-                    if ($article.hasClass('active')) return false;
-
-                    $articles.not($article.removeClass('blur').addClass('active'))
-                             .removeClass('active')
-                             .addClass('blur');
-
-                }, 65);
-
-            });
-
-            $container.on('mouseleave', function (event) {
-
-                clearTimeout(timeout);
-                $articles.removeClass('active blur');
-
-            });
-
-        });
+    function unVote(element, id) {
+        $.ajax({
+            url: '@Url.Action("UnVote")',
+            method: 'POST',
+            data: { id: id },
+        }).done(function() {
+            changeColor(element, "#BDBDBD")
+            //updatePlaylist()
+            notie.alert(1, "Got it!", 2.5)
+        }).fail(function() {
+                notie.alert(3, "Error deleting vote", 2.5)
+            }
+        );
+    }
 </script>
 
 }

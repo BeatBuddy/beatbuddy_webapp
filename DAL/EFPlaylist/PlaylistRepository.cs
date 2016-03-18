@@ -21,7 +21,9 @@ namespace BB.DAL.EFPlaylist
         {
             var playlist = context.Playlists
                 .Include(p => p.Comments)
-                .First(p => p.Id == playlistId);
+                .Include(p => p.PlaylistTracks)
+                .Include(p => p.PlaylistTracks.Select(pt => pt.Track))
+                .Single(p => p.Id == playlistId);
 
             var user = context.User.Single(u => u.Id == comment.User.Id);
             comment.User = user;
@@ -93,18 +95,11 @@ namespace BB.DAL.EFPlaylist
 
             var playlistTrack = new PlaylistTrack {Track = track};
             if(playlist.PlaylistTracks == null) playlist.PlaylistTracks = new Collection<PlaylistTrack>();
-            else
-            {
-                //WHY OH WHY?
-                //if (playlist.PlaylistTracks.Any(f => f.Track.TrackSource.TrackId == track.TrackSource.TrackId)) return null;
-            }
+            
             playlist.PlaylistTracks.Add(playlistTrack);
-            try {
-                context.SaveChanges();
-            }
-            catch
-            {
-            }
+           
+            context.SaveChanges();
+            
             return playlistTrack.Track;
         }
 
@@ -151,7 +146,7 @@ namespace BB.DAL.EFPlaylist
 
         public Playlist ReadPlaylist(string name)
         {
-            return context.Playlists.Single(p => p.Name.Equals(name));
+            return context.Playlists.SingleOrDefault(p => p.Name.Equals(name));
         }
 
         public Playlist ReadPlaylist(long playlistId)
@@ -175,7 +170,7 @@ namespace BB.DAL.EFPlaylist
 
         public IEnumerable<Playlist> ReadPlaylists()
         {
-            return context.Playlists.ToList();
+            return context.Playlists;
         }
 
         public PlaylistTrack ReadPlaylistTrack(long playlistTrackId)
@@ -277,6 +272,12 @@ namespace BB.DAL.EFPlaylist
             context.Entry(vote).State = EntityState.Modified;
             context.SaveChanges();
             return vote;
+        }
+
+        public Playlist ReadPlaylistByKey(string key)
+        {
+            var playlist = context.Playlists.FirstOrDefault(a => a.Key.Equals(key));
+            return ReadPlaylist(playlist.Id);
         }
     }
 }

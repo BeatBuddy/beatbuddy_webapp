@@ -25,7 +25,7 @@
                     playlistSource = FileHelper.GetImagePath("PlaylistImgPath", playlist.ImageUrl);
                 }
             }
-            <a href="@Url.Action("View", "Playlist", new {id = playlist.Id})">
+            <a href="@Url.Action("View", "Playlist", new {key = playlist.Key})">
                 <img src="@playlistSource" alt="playlist image" class="playlist-image" />
 
 

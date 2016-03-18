@@ -26,6 +26,9 @@ body {
     #chatIcon {
         cursor: pointer;
         position: absolute;
+        padding-top: 5em;
+        padding-bottom: 5em;
+        margin-top: -5em;
         top: 50%;
         left: 4px;
         color: white;
@@ -42,6 +45,12 @@ body {
         display: flex;
         flex-flow: column;
         height: 100%;
+
+        .thumbnail{
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
 
         .row {
             flex: 0 1 30px;
@@ -62,8 +71,38 @@ body {
 
         #discussion{
             list-style: none;
-            padding-left: 0
+            padding-left: 0;
+            padding-right: 2em;
+
+            .chatMessage{
+                display: block;
+                clear: both;
+                overflow: hidden;
+                margin-bottom: .8em;
+
+                img{
+                    width: 50px;
+                    height: 50px;
+                    float: left;
+                    margin-right: 1em;
+                }
+
+                .chatUser{
+                    margin-left: 1em;
+                    font-weight: 500;
+                    display: block;
+                }
+
+                .chatText{
+                    margin-left: 1em;
+                    display: block;
+                    font-weight: 300;
+                    display: table;
+                }
+            }
         }
+
+        
     }
 }
 
@@ -133,6 +172,10 @@ header {
                 margin-left: 0;
             }
 
+               .active {
+                    border-bottom: 2px solid black; 
+            }
+
             a {
                 transition: border .2s;
                 -webkit-transition: border .2s;
@@ -145,9 +188,8 @@ header {
                 &:hover {
                     border-bottom: 2px solid black;
                 }
-                &:active {
-                    border-bottom: 2px solid black; 
-            }
+
+              
         }
     }
 }
@@ -256,22 +298,23 @@ header {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.55); }
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
 #playlistbanner {
     width: 100%;
-    height: 220px;
+    min-height: 220px;
     z-index: 0;
     position: relative;
     overflow: hidden;
     margin-bottom: 1em;
-    /*height: 220px;*/
     background-image: url('/Content/img/playlistheader.jpg');
     background-repeat: no-repeat;
     background-position-y: 25%;
     background-size: cover;
 
     .content {
-        padding: 2.2% $sidemargin 3em $sidemargin;
+        padding: 2.2% $sidemargin 0 $sidemargin;
         margin: 0 auto;
         max-width: $maxpagewidth;
         color: white;
@@ -310,6 +353,10 @@ header {
             float: left;
             margin-right: 30px;
             background-color: rgba(0,0,0,0.6);
+        }
+
+        .borderround{
+            margin-bottom: 1em;
         }
 
         h2 {
@@ -530,7 +577,7 @@ header {
         .albumart {
             width: 48px;
             height: 48px;
-            background-image: url(img/img/default_cover.png);
+            background-image: url('/Content/img/default_cover.png');
             display: inline-block;
             float: left;
             margin-right: .7em;
@@ -603,7 +650,7 @@ header {
         left: 10%;
         bottom: 10%;
         background-size: contain;
-        background-image: url(img/default_cover.png);
+        background-image: url('/Content/img/default_cover.png');
     }
 
     #nowPlayingArtist {
@@ -686,7 +733,7 @@ header {
                 .albumart {
                     width: 64px;
                     height: 64px;
-                    background-image: url(img/img/default_cover.png);
+                    background-image: url(img/default_cover.png);
                     vertical-align: middle;
                 }
 
@@ -1046,7 +1093,7 @@ footer {
 
     #fullscreenbutton {
         color: white;
-        right: -10px;
+        right: 4px;
         top: 1.2em;
         position: absolute;
         cursor: pointer;
@@ -1058,6 +1105,46 @@ footer {
         top: 1.2em;
         position: absolute;
         cursor: pointer;
+    }
+
+    #thumbnail{
+        height: 75px;
+        width: 75px;
+        margin-top: 1em;
+        background-size: contain;
+        background-image: url('/Content/img/default_cover.png');
+    }
+}
+
+.menu{
+    clear: both;
+    font-size: .65em;
+    margin-top: .5em;
+    margin-bottom: -4px;
+    
+
+    .item{
+        display: inline-block;
+        padding: .9em 2em .5em 2em;
+
+        a{
+            text-decoration: none;
+            color: white;
+        }
+    }
+
+    .item.selected{
+        background: white;
+
+        & > a{
+            color: black;
+            text-shadow: none !important;
+        }
+
+        & > a > h1{
+            color: black !important;
+            text-shadow: none !important;
+        }
     }
 }
 
@@ -1103,6 +1190,10 @@ footer {
   position: relative;
   //box-sizing:border-box;
     text-align: center;
+    .chart-text{
+        padding-top:40%;
+
+    }
 
     span {
         display: block;
@@ -1116,6 +1207,12 @@ footer {
     left: 0;
     top: 0;
   }
+
+    .fit-in-circle{
+        font-size:5em;
+        padding-top:35%;
+        left:5%;
+    }
 }
 
 .flex-container {
@@ -1140,3 +1237,5 @@ footer {
     align-items: center;
     padding: 20px;
     }
+
+.twitter-share-button[style] { vertical-align: text-bottom !important; }

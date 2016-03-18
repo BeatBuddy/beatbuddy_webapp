@@ -18,6 +18,9 @@
   #chatContainer #chatIcon {
     cursor: pointer;
     position: absolute;
+    padding-top: 5em;
+    padding-bottom: 5em;
+    margin-top: -5em;
     top: 50%;
     left: 4px;
     color: white; }
@@ -32,6 +35,10 @@
     display: flex;
     flex-flow: column;
     height: 100%; }
+    #chatContainer #chatContent .thumbnail {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%; }
     #chatContainer #chatContent .row {
       flex: 0 1 30px; }
     #chatContainer #chatContent .top {
@@ -43,7 +50,27 @@
       flex: 0 1 40px; }
     #chatContainer #chatContent #discussion {
       list-style: none;
-      padding-left: 0; }
+      padding-left: 0;
+      padding-right: 2em; }
+      #chatContainer #chatContent #discussion .chatMessage {
+        display: block;
+        clear: both;
+        overflow: hidden;
+        margin-bottom: .8em; }
+        #chatContainer #chatContent #discussion .chatMessage img {
+          width: 50px;
+          height: 50px;
+          float: left;
+          margin-right: 1em; }
+        #chatContainer #chatContent #discussion .chatMessage .chatUser {
+          margin-left: 1em;
+          font-weight: 500;
+          display: block; }
+        #chatContainer #chatContent #discussion .chatMessage .chatText {
+          margin-left: 1em;
+          display: block;
+          font-weight: 300;
+          display: table; }
 
 * {
   font-family: 'Roboto', sans-serif; }
@@ -98,6 +125,8 @@ header {
           float: none;
           width: 100%;
           margin-left: 0; } }
+      header ul.nav li .active {
+        border-bottom: 2px solid black; }
       header ul.nav li a {
         transition: border .2s;
         -webkit-transition: border .2s;
@@ -107,8 +136,6 @@ header {
         text-transform: lowercase;
         color: black; }
         header ul.nav li a:hover {
-          border-bottom: 2px solid black; }
-        header ul.nav li a:active {
           border-bottom: 2px solid black; }
 
 #banner {
@@ -198,18 +225,17 @@ header {
 
 #playlistbanner {
   width: 100%;
-  height: 220px;
+  min-height: 220px;
   z-index: 0;
   position: relative;
   overflow: hidden;
   margin-bottom: 1em;
-  /*height: 220px;*/
   background-image: url("/Content/img/playlistheader.jpg");
   background-repeat: no-repeat;
   background-position-y: 25%;
   background-size: cover; }
   #playlistbanner .content {
-    padding: 2.2% 5em 3em 5em;
+    padding: 2.2% 5em 0 5em;
     margin: 0 auto;
     max-width: 1500px;
     color: white;
@@ -237,6 +263,8 @@ header {
       float: left;
       margin-right: 30px;
       background-color: rgba(0, 0, 0, 0.6); }
+    #playlistbanner .content .borderround {
+      margin-bottom: 1em; }
     #playlistbanner .content h2 {
       margin-top: 0;
       margin-bottom: 0.4em;
@@ -392,7 +420,7 @@ header {
     #playlist-tracks .track .albumart {
       width: 48px;
       height: 48px;
-      background-image: url(img/img/default_cover.png);
+      background-image: url("/Content/img/default_cover.png");
       display: inline-block;
       float: left;
       margin-right: .7em; }
@@ -449,7 +477,7 @@ header {
     left: 10%;
     bottom: 10%;
     background-size: contain;
-    background-image: url(img/default_cover.png); }
+    background-image: url("/Content/img/default_cover.png"); }
   #fullscreenplayer #nowPlayingArtist {
     position: absolute;
     left: 10%;
@@ -513,7 +541,7 @@ header {
         #fullscreenplayer #fullscreenComingUp ul li .albumart {
           width: 64px;
           height: 64px;
-          background-image: url(img/img/default_cover.png);
+          background-image: url(img/default_cover.png);
           vertical-align: middle; }
         #fullscreenplayer #fullscreenComingUp ul li .trackartist {
           margin-left: .8em;
@@ -786,7 +814,7 @@ footer {
   position: relative; }
   #footerSlideContent #fullscreenbutton {
     color: white;
-    right: -10px;
+    right: 4px;
     top: 1.2em;
     position: absolute;
     cursor: pointer; }
@@ -796,6 +824,32 @@ footer {
     top: 1.2em;
     position: absolute;
     cursor: pointer; }
+  #footerSlideContent #thumbnail {
+    height: 75px;
+    width: 75px;
+    margin-top: 1em;
+    background-size: contain;
+    background-image: url("/Content/img/default_cover.png"); }
+
+.menu {
+  clear: both;
+  font-size: .65em;
+  margin-top: .5em;
+  margin-bottom: -4px; }
+  .menu .item {
+    display: inline-block;
+    padding: .9em 2em .5em 2em; }
+    .menu .item a {
+      text-decoration: none;
+      color: white; }
+  .menu .item.selected {
+    background: white; }
+    .menu .item.selected > a {
+      color: black;
+      text-shadow: none !important; }
+    .menu .item.selected > a > h1 {
+      color: black !important;
+      text-shadow: none !important; }
 
 #comments ul {
   padding-left: 0; }
@@ -827,6 +881,8 @@ footer {
   margin: 10px;
   position: relative;
   text-align: center; }
+  .chart .chart-text {
+    padding-top: 40%; }
   .chart span {
     display: block;
     font-size: 2em;
@@ -836,6 +892,10 @@ footer {
     position: absolute;
     left: 0;
     top: 0; }
+  .chart .fit-in-circle {
+    font-size: 5em;
+    padding-top: 35%;
+    left: 5%; }
 
 .flex-container {
   display: -ms-flexbox;
@@ -857,4 +917,7 @@ footer {
   -ms-flex-align: center;
   align-items: center;
   padding: 20px; }
+
+.twitter-share-button[style] {
+  vertical-align: text-bottom !important; }
 

@@ -1,25 +1,76 @@
-﻿@using System.Web.Http
-@using BB.BL.Domain.Playlists
-@model BB.BL.Domain.Playlists.Playlist
+﻿@using BB.BL.Domain.Playlists
+@model Playlist
 @{
     ViewBag.Title = "History";
     ViewBag.NoFooter = true;
 }
 @section escape_padding {
-    <div id="playlistbanner">
-        <div class="content">
-            @if (Model.ImageUrl != null)
-            {
-                <img class="borderround" src="~/Content/img/Playlists/@Model.ImageUrl" style="width: 170px; height: 170px" />
-            }
-            else
-            {
-                <img class="borderround" src="~/Content/img/playlistavatar.png" style="width: 170px; height: 170px" />
-            }
-            <h1>@Model.Name</h1>
-            <h2>History</h2>
+<div id="playlistbanner">
+    <div class="content">
+        @{
+            var imageUrl = Model?.ImageUrl ?? "playlist_default.png";
+            <img class="borderround" src="~/Content/img/Playlists/@imageUrl" style="width: 150px; height: 150px" alt="Playlist image" />
+        }
+
+        <div class="fill">
+            <div class="title">
+                @if (ViewBag.Organisation != null)
+                {
+                    <h1>Playlist</h1>
+                        @Model.Name<text> by </text>
+                        <a href="@Url.Action("Details", "Organisations", new {id = @ViewBag.Organisation.Id})" style="color: white">#@ViewBag.Organisation.Name</a>
+                }
+                else
+                {
+                    <h1>Playlist</h1>
+                        @Model.Name
+                }
+            </div>
+
+            <a class="btn btn-right" href="#sharedialog">
+                <i class="material-icons">link</i> Share
+            </a>
+
+        </div>
+
+        <p class="nomargintop textshadow">@Model.Description</p>
+
+        <div>
+            <h3 id="listenerCount"></h3>
+            <div id="listenerImg" class="co-organiser" style="float: left;">
+            </div>
+        </div>
+
+        <div class="menu">
+            <div class="item">
+                <a class="title" href="@Url.Action("View", "Playlist", new {key = Model.Key})">
+                    <h1>Queue</h1>
+                    @if (ViewBag.TrackCount > 1 | ViewBag.TrackCount == 0)
+                    {
+                        <text>@ViewBag.TrackCount tracks in queue</text>
+                    }
+                    else
+                    {
+                        <text>1 track in queue</text>
+                    }
+                </a>
+            </div>
+            <div class="item selected">
+                <a class="title" href="#">
+                    <h1>History</h1>
+                    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
+                    {
+                        <text>@Model.PlaylistTracks.Count tracks in history</text>
+                    }
+                    else
+                    {
+                        <text>1 track in history</text>
+                    }
+                </a>
+            </div>
         </div>
     </div>
+</div>
 }
 
 <div id="playlist-view" style="margin-top: 1em">

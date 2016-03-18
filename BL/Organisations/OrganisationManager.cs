@@ -72,17 +72,23 @@ namespace BB.BL
             return organisationsRepository.SearchOrganisations(prefix);
         }
 
-        public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
+        public double ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
         {
-            throw new NotImplementedException();
+            var playlists = organisationsRepository.ReadOrganisationWithPlaylistsAndTracks(organisationId).Playlists;
+            var allTracks = playlists.SelectMany(p => p.PlaylistTracks.Select(pt => pt.Track));
+            var sum = allTracks.Sum(t => t.Duration);
+            
+            return Math.Round(sum/60.0,1);
         }
-        /*
-public int ReadTotalTimeOfPlaylistsInMinutes(long organisationId)
-{
-   var playlists = ReadOrganisation(organisationId).Playlists;
-   var playlistTracks = playlists.Any(p => p.);
-   var totalDuration = playlistTracks.Any(pt => pt.)
-   //return ;
-}*/
+
+        public double ReadTotalVotesForOrganisation(long organisationId)
+        {
+            var playlists = organisationsRepository.ReadOrganisationWithPlaylistsAndTracks(organisationId).Playlists;
+            var allPlaylistTracks = playlists.SelectMany(p => p.PlaylistTracks);
+            var sum = allPlaylistTracks.Sum(pt => pt.Votes.Count);
+
+            return sum;
+        }
+
     }
 }

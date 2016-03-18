@@ -1,16 +1,5 @@
 ﻿@using BB.BL.Domain.Playlists
 @model Playlist
-<div class="title">
-    <h1>Queue</h1>
-    @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
-    {
-        <text>@Model.PlaylistTracks.Count tracks in queue</text>
-    }
-    else
-    {
-        <text>1 track in queue</text>
-    }
-</div>
 
 <table id="playlist-tracks">
     <tr>
@@ -21,16 +10,17 @@
         <th>Duration</th>
         <th>Artist</th>
     </tr>
-    @foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(p=>p.Votes.Sum(v=>v.Score)))
+    <tbody>
+    @foreach (PlaylistTrack track in Model.PlaylistTracks.OrderByDescending(p => p.Votes.Sum(v => v.Score)))
     {
         <tr class="track">
-            <td>
+            <td class="trackvotes" data-id="@track.Id">
                 @track.Votes.Sum(s => s.Score)
             </td>
             <td>
                 @if (track.Track.CoverArtUrl != null)
                 {
-                <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art"/>
+                    <img class="albumart" src="@track.Track.CoverArtUrl" alt="album art" />
                 }
                 else
                 {
@@ -40,11 +30,11 @@
             <td class="tracktitle">
                 @track.Track.Title
             </td>
-            @{ 
+            @{
                 var thumbUpId = track.Id + "thumbUp";
                 var thumbDownId = track.Id + "thumbDown";
                 Vote vote = track.Votes.FirstOrDefault(v => v.User.Email == User.Identity.Name);
-                if(vote == null)
+                if (vote == null)
                 {
                     <td style="width:60px"><a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" class="material-icons grey400">thumb_up</i></a></td>
                     <td style="width:60px"><a onclick="vote('@thumbDownId', '-1', '@track.Id')" style="cursor: pointer"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a></td>
@@ -53,7 +43,7 @@
                 {
                     if (vote.Score == 1)
                     {
-                        <td style="width:10px"><a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" data-voted ="true" class="material-icons">thumb_up</i></a></td>
+                        <td style="width:10px"><a onclick="vote('@thumbUpId', '1', '@track.Id')" style="cursor: pointer; margin:0; padding:0;"><i id="@thumbUpId" data-voted="true" class="material-icons">thumb_up</i></a></td>
                         <td style="width:10px"><a style="cursor: pointer; margin:0; padding:0;"><i id="@thumbDownId" class="material-icons grey400">thumb_down</i></a></td>
                     }
                     else {
@@ -69,13 +59,13 @@
                 @track.Track.Artist
             </td>
         </tr>
-    }
+                }
+    </tbody>
 </table>
 <script>
     function changeColor(element, color) {
         document.getElementById(element).style.color = color;
     }
-
 
     function vote(element, vote, id) {
         if ("@Request.IsAuthenticated" === "False") {
@@ -92,7 +82,7 @@
             data: {vote: vote, id: id},
         }).done(function () {
             changeColor(element, "black")
-            updatePlaylist()
+            //updatePlaylist()
             notie.alert(1,"Got it!", 2.5)
         }).fail(
         function (xhr, status, error) {
@@ -109,7 +99,7 @@
             data: {id: id },
         }).done(function () {
             changeColor(element, "#BDBDBD")
-            updatePlaylist()
+            //updatePlaylist()
             notie.alert(1, "Got it!", 2.5)
         }).fail(function () {
             notie.alert(3, "Error deleting vote", 2.5)

@@ -17,6 +17,7 @@ namespace BB.DAL.EFPlaylist
         Playlist UpdatePlaylist(Playlist playlist);
         Playlist ReadPlaylist(long playlistId);
         Playlist ReadPlaylist(string name);
+        Playlist ReadPlaylistByKey(string key);
         IEnumerable<Playlist> ReadPlaylists();
         IEnumerable<Playlist> ReadPlaylists(long userId);
         Playlist DeletePlaylist(long playlistId);

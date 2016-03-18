@@ -103,9 +103,9 @@
             <tr class="track">
             <td></td>
                 <td>
-                    @if (Model.ImageUrl != null)
+                    @if (playlist.ImageUrl != null)
                     {
-                        <img class="playlistart" src="~/Content/img/Playlists/@Model.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
+                        <img class="playlistart" src="~/Content/img/Playlists/@playlist.ImageUrl" alt="playlist art" style="width: 50px; height: 50px;" />
                     }
                     else
                     {
@@ -117,7 +117,7 @@
                     @playlist.Name
                 </td>
                 <td>
-                    @if (playlist.Active == true)
+                    @if (playlist.Active)
                     {
                         <p>Yes</p>
                     }
@@ -134,7 +134,7 @@
                     @playlist.PlaylistTracks.Count()
                 </td>
                 <td>
-                @Html.ActionLink("View Playlist", "View", "Playlist", new { id = playlist.Id }, null)
+                @Html.ActionLink("View Playlist", "View", "Playlist", new { key = playlist.Key }, null)
                 </td>
                 
             </tr>
@@ -174,31 +174,47 @@ else
         }
     }
 }
-
-<h1>
-    Dashboard
-</h1>
+<div class="title">
+    <h1>
+        Dashboard
+    </h1>
+</div>
 
 <div class="flex-container" >
     <div class="card">
-
+        @{
+            var percentage = ViewBag.TotalMinutesOfPlaytime / 60;
+        }
         <div class="chart" data-percent="@Model.Playlists.Count">
-            <div class="material-icons" style="font-size:5em;padding-top:30%;left:-125%">playlist</div>
+            <div class="material-icons fit-in-circle" style="left: -125%;">playlist</div>
 
         <div class="chart-text">
-            <span>@Model.Playlists.Count</span>playlists</div></div>
+            <span>@Model.Playlists.Count</span>Playlists</div></div>
     </div>
     <div class="card">
         <div class="chart" data-percent="@Model.CoOrganiser.Count()">
-            <div class="material-icons" style="font-size:5em;padding-top:30%;left:5%;">people</div>
-
+            <div class="material-icons fit-in-circle" >people</div>
             <div class="chart-text">
                 <span>@Model.CoOrganiser.Count()</span>Co organisers
             </div></div>
     </div>
     <div class="card">
         <div>
-            <div class="chart" data-percent="83"><div class="chart-text"><span>50</span>Minutes</div></div>
+            <div class="chart" data-percent="@percentage">
+                <div class="material-icons fit-in-circle">query_builder</div>
+                <div class="chart-text"><span>@ViewBag.TotalMinutesOfPlaytime</span>Minutes of playtime
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div>
+            <div class="chart" data-percent="@ViewBag.TotalVotesOnPlaylists">
+                <div class="material-icons fit-in-circle">import_export</div>
+                <div class="chart-text">
+                    <span>@ViewBag.TotalVotesOnPlaylists</span>votes on all playlists
+                </div>
+            </div>
         </div>
     </div>
 </div>
