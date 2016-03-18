@@ -401,7 +401,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult Upvote(long id, long trackId)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
-            var user = getUser(userIdentity);
+            var user = GetUser(userIdentity);
             var createVote = playlistManager.CreateVote(1, user.Id, trackId);
 
             var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
@@ -423,7 +423,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult Downvote(long id, long trackId)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
-            var user = getUser(userIdentity);
+            var user = GetUser(userIdentity);
             var createVote = playlistManager.CreateVote(-1, user.Id, trackId);
 
             var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
@@ -440,7 +440,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Ok(createVote);
         }
 
-        private User getUser(ClaimsIdentity claimsIdentity)
+        private User GetUser(ClaimsIdentity claimsIdentity)
         {
             if (claimsIdentity == null) return null;
 
