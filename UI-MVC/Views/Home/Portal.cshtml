@@ -14,11 +14,12 @@
 
 
 @section escape_padding {
-    <div class="loggedin-banner">
+    <div class="loggedin-banner" >
         <div class="banner-content">
             <h1 style="color:black">Welcome, @ViewBag.Name</h1>
             <h2 style="margin-bottom:15px">Want to join a playlist?</h2>
-            <input type="text" id="keyFieldPortal" class="custom-input" style="width:247px;" value="Enter playlist key" />  
+            <input type="text" id="keyFieldPortal" class="custom-input" style="width:247px;" value="Enter playlist key" />
+            <input type="submit" value="join" class="btn btn-join" id="join"/>
         </div>
     </div>
 }
@@ -153,22 +154,23 @@
 </section>
 @section Scripts{
     <script>
-    $(document).ready(function () {
-        $('.menu').dropit();
-    });
-
-    function deletePlaylist(platlistId) {
-        $.ajax({
-            url: '@Url.Action("Delete","Playlist")',
-            method: 'POST',
-            data: { id: platlistId }
-        }).done(function () {
-            notie.alert(1, 'Playlist successfull deleted', 2.5);
-            location.reload();
-        }).fail(function() {
-            notie.alert(3, 'Failed to delete playlist', 2.5);
+        $(document).ready(function() {
+            $('.menu').dropit();
         });
-    }
+
+        function deletePlaylist(platlistId) {
+            $.ajax({
+                url: '@Url.Action("Delete", "Playlist")',
+                method: 'POST',
+                data: { id: platlistId }
+            }).done(function() {
+                notie.alert(1, 'Playlist successfull deleted', 2.5);
+                location.reload();
+            }).fail(function() {
+                notie.alert(3, 'Failed to delete playlist', 2.5);
+            });
+        }
+
         function updatePlaylist(playlistId) {
             $('#editPlaylistModal-body').load("/Playlist/Edit/" + playlistId);
             window.location.href = '#editPlaylistModal';
@@ -176,10 +178,10 @@
 
         function deleteOrganisation(organisationId) {
             $.ajax({
-                url: '@Url.Action("Delete","Organisations")',
+                url: '@Url.Action("Delete", "Organisations")',
                 method: 'POST',
                 data: { id: organisationId }
-            }).done(function () {
+            }).done(function() {
                 notie.alert(1, 'Organisation successfull deleted', 2.5);
                 $("#myOrganisations").load(location.href + " #myOrganisations");
                 $("#organisationCount").load(location.href + " #organisationCount");
@@ -188,6 +190,7 @@
                 notie.alert(3, 'Failed to delete organisation', 2.5);
             });
         }
+
         function updateOrganisation(organisationId) {
             $('#editPlaylistModal-body').load("/Playlist/Edit/" + playlistId);
             window.location.href = '#editPlaylistModal';
@@ -199,10 +202,10 @@
         $.template("organisationTemplate", markupOrganisation);
 
         $.ajaxSetup({
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#loadingOrganisation").show();
             },
-            complete: function () {
+            complete: function() {
                 $("#loadingOrganisation").hide();
             }
         });
@@ -210,28 +213,28 @@
 
         function fetchQueryResultsOrganisation() {
             $.ajax('@Url.Action("SearchOrganisation")/?q=' + $('#searchOrganisation').val())
-                .done(function (result) {
+                .done(function(result) {
                     $("#resultsOrganisation").empty();
                     $.tmpl("organisationTemplate", result).appendTo("#resultsOrganisation");
-                    $("#resultsOrganisation li").on("click", function () {
+                    $("#resultsOrganisation li").on("click", function() {
                         lookUpOrganisation($(this).attr('data-id'));
                     });
                 })
-                .fail(function (data) {
+                .fail(function(data) {
                     alert(data);
                 });
         }
 
 
-            function lookUpOrganisation(id) {
-                window.location.href = '/Organisations/Details/' + id;
-            }
-        
+        function lookUpOrganisation(id) {
+            window.location.href = '/Organisations/Details/' + id;
+        }
+
         function debounce(func, wait, immediate) {
             var timeout;
-            return function () {
+            return function() {
                 var context = this, args = arguments;
-                var later = function () {
+                var later = function() {
                     timeout = null;
                     if (!immediate) func.apply(context, args);
                 };
@@ -242,51 +245,59 @@
             };
         };
 
-        var debouncedFetchOrganisation = debounce(function () {
+        var debouncedFetchOrganisation = debounce(function() {
             fetchQueryResultsOrganisation();
         }, 500);
 
-        $("#searchOrganisation").on('keydown', function () {
+        $("#searchOrganisation").on('keydown', function() {
             debouncedFetchOrganisation();
         });
 
-        $('#keyFieldPortal').click(function () {
+        $('#keyFieldPortal').click(function() {
             $('#keyFieldPortal').val('');
-        })
-        
-           
+        });
 
-        $("#keyFieldPortal").keypress(function (e) {
+        var goToPlaylist = function() {
+
+        }
+
+
+        $("#keyFieldPortal").keypress(function(e) {
             if (e.which == 13) {
                 var key = $('#keyFieldPortal').val();
                 $.ajax({
-                    url: '@Url.Action("Keycode","Playlist")',
-                    method: 'POST',
-                    data: { key: key }
-                })
-            .done(
-            function (data) {
-                window.location.href = '@Url.Action("View","Playlist")' + '?key=' + data;
-            }
-            )
-            .fail(function () {
-                notie.alert(3, "Key does not exist!", 2.5);
-            });
+                        url: '@Url.Action("Keycode", "Playlist")',
+                        method: 'POST',
+                        data: { key: key }
+                    })
+                    .done(
+                        function(data) {
+                            window.location.href = '@Url.Action("View", "Playlist")' + '?key=' + data;
+                        }
+                    )
+                    .fail(function() {
+                        notie.alert(3, "Key does not exist!", 2.5);
+                    });
             }
         });
 
-        //document.getElementById('avatar_click2').onclick = function () {
-        //    document.getElementById('avatarImage2').click();
-        //};
-        //document.getElementById("avatarImage2").onchange = function () {
-        //    var filename = document.getElementById("avatarImage2").value;
-        //    var lastIndex = filename.lastIndexOf("\\");
-        //    if (lastIndex >= 0) {
-        //        filename = filename.substring(lastIndex + 1);
-        //    }
-        //    document.getElementById("avatarLabel2").innerText = filename;
-        //};
+        $('#join').click(function(e) {
+            var key = $('#keyFieldPortal').val();
+            $.ajax({
+                url: '@Url.Action("Keycode", "Playlist")',
+                method: 'POST',
+                data: { key: key }
+            })
+                .done(
+                    function (data) {
+                        window.location.href = '@Url.Action("View", "Playlist")' + '?key=' + data;
+                    }
+                )
+                .fail(function () {
+                    notie.alert(3, "Key does not exist!", 2.5);
+                });
 
+        });
 
-    </script>    
+    </script>
 }

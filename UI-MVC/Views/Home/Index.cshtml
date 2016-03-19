@@ -79,32 +79,47 @@
 
 @section scripts{
     <script>
-        
-        $('#findPlaylist').click(function () {
+
+        $('#findPlaylist').click(function() {
             $('#indexBannerContent').hide();
             $('#banner').addClass('content');
-            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the key</h1></br><input type="text" id="keyField" class="custom-input" style="width:247px"></div>');
-            $("#keyField").keypress(function (e) {
+            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the key</h1></br><input type="text" id="keyField" class="custom-input" style="width:247px"><input type="submit" value="join" class="btn btn-join" id="join"/></div>');
+            $("#keyField").keypress(function(e) {
                 if (e.which == 13) {
                     var key = $('#keyField').val();
                     $.ajax({
-                        url: '@Url.Action("Keycode","Playlist")',
+                            url: '@Url.Action("Keycode", "Playlist")',
+                            method: 'POST',
+                            data: { key: key }
+                        })
+                        .done(
+                            function(data) {
+                                window.location.href = '@Url.Action("View", "Playlist")' + '?key=' + data;
+                            }
+                        )
+                        .fail(function() {
+                            notie.alert(3, "Key does not exist!", 2.5);
+                        });
+                }
+            });
+            $('#join').click(function(e) {
+                var key = $('#keyField').val();
+                $.ajax({
+                        url: '@Url.Action("Keycode", "Playlist")',
                         method: 'POST',
                         data: { key: key }
                     })
-                .done(
-                function (data) {
-                    window.location.href = '@Url.Action("View","Playlist")' + '?key=' + data;
-                }
-                )
-                .fail(function () {
-                    notie.alert(3, "Key does not exist!", 2.5);
-                });
-                }
+                    .done(
+                        function(data) {
+                            window.location.href = '@Url.Action("View", "Playlist")' + '?key=' + data;
+                        }
+                    )
+                    .fail(function() {
+                        notie.alert(3, "Key does not exist!", 2.5);
+                    });
             });
-
         });
-        
+
 
     </script>
 }
