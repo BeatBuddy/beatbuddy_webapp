@@ -11,6 +11,7 @@ using BB.UI.Web.MVC.Controllers.Web_API;
 using MyTested.WebApi;
 using BB.DAL.EFOrganisation;
 using System.Collections.Generic;
+using System.Linq;
 using BB.UI.Web.MVC.Models;
 using MyTested.WebApi.Builders.Contracts.Controllers;
 
@@ -23,11 +24,13 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         PlaylistManager playlistManager;
         UserManager userManager;
         OrganisationManager organisationManager;
-        User user;
+        User _userWithOrganisation;
+        private User _userWithoutOrganisation;
         Playlist playlist;
         Organisation organisation;
 
-        IAndControllerBuilder<UserController> userControllerWithAuthenticatedUser;
+        private IAndControllerBuilder<UserController> _userControllerWithAuthenticatedUserWithOrganisation;
+        private IAndControllerBuilder<UserController> _userControllerWithAuthenticatedUserWithoutOrganisation;
 
         [TestInitialize]
         public void Initialize()
@@ -36,18 +39,30 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
             playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddyTest)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
             userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
             organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddyTest)));
-            user = userManager.CreateUser("werknu@gmail.com", "matthias", "test", "acidshards", "");
-           
-            playlist = playlistManager.CreatePlaylistForUser("testplaylist", "gekke playlist om te testen", "125", 5, true, "", user);
-            userControllerWithAuthenticatedUser = MyWebApi.Controller<UserController>()
+            _userWithOrganisation = userManager.CreateUser("werknu@gmail.com", "matthias", "test", "acidshards", "");
+            _userWithoutOrganisation = userManager.CreateUser("testje@gmail.com", "heylen", "jos", "acidshards", "");
+
+            playlist = playlistManager.CreatePlaylistForUser("testplaylist", "gekke playlist om te testen", "125", 5, true, "", _userWithOrganisation);
+            _userControllerWithAuthenticatedUserWithOrganisation = MyWebApi.Controller<UserController>()
                 .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
                 .WithResolvedDependencyFor<UserManager>(userManager)
                 .WithResolvedDependencyFor<OrganisationManager>(organisationManager)
                 .WithAuthenticatedUser(
                  u => u.WithIdentifier("NewId")
-                       .WithUsername(user.Email)
-                       .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email))
-                       .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
+                       .WithUsername(_userWithOrganisation.Email)
+                       .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, _userWithOrganisation.Email))
+                       .WithClaim(new System.Security.Claims.Claim("sub", _userWithOrganisation.Email))
+                );
+
+            _userControllerWithAuthenticatedUserWithoutOrganisation = MyWebApi.Controller<UserController>()
+                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
+                .WithResolvedDependencyFor<UserManager>(userManager)
+                .WithResolvedDependencyFor<OrganisationManager>(organisationManager)
+                .WithAuthenticatedUser(
+                 u => u.WithIdentifier("NewId")
+                       .WithUsername(_userWithOrganisation.Email)
+                       .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, _userWithoutOrganisation.Email))
+                       .WithClaim(new System.Security.Claims.Claim("sub", _userWithoutOrganisation.Email))
                 );
 
             Track track = new Track()
@@ -65,74 +80,46 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
             Track addedtrack = playlistManager.AddTrackToPlaylist(playlist.Id, track);
 
 
-            organisation = organisationManager.CreateOrganisation("gek organisatie test","",user);
+            organisation = organisationManager.CreateOrganisation("gek organisatie test","",_userWithOrganisation);
         }
-
-        /*
-        [TestMethod]
-        public void RegisterTest() {
-            MyWebApi.Controller<UserController>()
-                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
-                .WithResolvedDependencyFor<UserManager>(userManager)
-                .WithResolvedDependencyFor<OrganisationManager>(organisationManager)
-                .CallingAsync(c => c.Register("testvoornaam", "testachternaam", "testnicknaam", "testemailuniek@gmail.com", "Password1",
-                "http://www.froot.nl/wp-content/uploads/2012/10/these_funny_animals_1023_640_37.jpeg"
-                ))
-                
-                .Ok()
-                .WithResponseModelOfType<User>();
-        }*/
 
         [TestMethod]
         public void GetUserOrganisationsTest() {
-            userControllerWithAuthenticatedUser
+            _userControllerWithAuthenticatedUserWithOrganisation
                 .Calling(c => c.GetUserOrganisations())
                 .ShouldReturn()
                 .Ok()
-                .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>();
+                .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>()
+                .Passing(o => o.First().Id == organisation.Id 
+                && o.First().BannerUrl == organisation.BannerUrl
+                && o.First().Name == organisation.Name);
         }
 
-        /*
         [TestMethod]
-        public void GetNullUserOrganisationTest() {
-            var userWrongEmail = "doesntexist@gmail.com";
-            MyWebApi.Controller<UserController>()
-                .WithResolvedDependencyFor<UserManager>(userManager)
-                .WithAuthenticatedUser(
-                u => u.WithIdentifier("NewId")
-                    .WithUsername(userWrongEmail)
-                    .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, userWrongEmail))
-                    .WithClaim(new System.Security.Claims.Claim("sub", userWrongEmail))
-                )
+        public void GetUserWithoutOrganisationOrganisationsTest()
+        {
+            _userControllerWithAuthenticatedUserWithoutOrganisation
                 .Calling(c => c.GetUserOrganisations())
                 .ShouldReturn()
-                .NotFound();
-        }*/
-
-            /*
-        [TestMethod]
-        public void GetUnauthorizedOrganisationTest() {
-            MyWebApi.Controller<UserController>()
-                .Calling(c => c.GetUserOrganisations())
-                .ShouldReturn()
-                .Unauthorized();
+                .Ok()
+                .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>()
+                .Passing(o => o.FirstOrDefault() == null);
         }
-        */
 
         [TestMethod]
-        public void GetUserPlaylistsTest() {
-            userControllerWithAuthenticatedUser
-                 .Calling(c => c.GetUserPlaylists())
-                 .ShouldReturn()
-                 .Ok();
-            //TODO add playlistviewmodel
+        public void GetUserPlaylistsTest()
+        {
+            _userControllerWithAuthenticatedUserWithOrganisation
+                .Calling(c => c.GetUserPlaylists())
+                .ShouldReturn()
+                .Ok();
         }
 
         [TestMethod]
         public void GetUserTest()
         {
-            userControllerWithAuthenticatedUser
-                 .Calling(c => c.GetUser (user.Email))
+            _userControllerWithAuthenticatedUserWithOrganisation
+                 .Calling(c => c.GetUser (_userWithOrganisation.Email))
                  .ShouldReturn()
                  .Ok()
                  .WithResponseModelOfType<User>();
@@ -142,7 +129,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         public void Cleanup() {
             playlistManager.DeletePlaylist(playlist.Id);
             organisationManager.DeleteOrganisation(organisation.Id);
-            userManager.DeleteUser(user.Email);
+            userManager.DeleteUser(_userWithOrganisation.Email);
+            userManager.DeleteUser(_userWithoutOrganisation.Email);
         }
     }
 }

@@ -15,7 +15,6 @@ using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Playlists;
 using BB.UI.Web.MVC.Controllers.Utils;
-using YoutubeExtractor;
 using VideoLibrary;
 using BB.DAL.EFUser;
 using BB.DAL;
@@ -23,6 +22,7 @@ using BB.DAL.EFPlaylist;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Models;
 using System.Text.RegularExpressions;
+using Google.GData.Client;
 using Microsoft.AspNet.SignalR;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
@@ -100,16 +100,16 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpGet]
         [Route("{id}/live")]
         [ResponseType(typeof(LivePlaylistViewModel))]
-        public HttpResponseMessage getLivePlaylist(long id)
+        public IHttpActionResult getLivePlaylist(long id)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
-            if (userIdentity == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+            if (userIdentity == null) return NotFound();
 
             var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
-            if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+            if (email == null) return NotFound();
 
             var playlist = playlistManager.ReadPlaylist(id);
-            if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if (playlist == null) return NotFound();
 
             List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
             foreach (var playlistTrack in playlist.PlaylistTracks.Where(t => t.PlayedAt == null))
@@ -141,7 +141,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 Name = playlist.Name
             };
 
-            return Request.CreateResponse(HttpStatusCode.OK, livePlaylist);
+            return Ok(livePlaylist);
         }
 
         [HttpGet]
@@ -352,7 +352,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (organisation != null)
             {
                 if (userManager.ReadOrganiserFromOrganisation(organisation).Id == userId ||
-                    userManager.ReadCoOrganiserFromOrganisation(organisation).Select(u => u.Id == userId) != null)
+                    userManager.ReadCoOrganiserFromOrganisation(organisation).FirstOrDefault(u => u.Id == userId) != null)
                 {
                     var playlist = playlistManager.ReadPlaylist(playlistId);
                     playlist.PlaylistMasterId = userId;

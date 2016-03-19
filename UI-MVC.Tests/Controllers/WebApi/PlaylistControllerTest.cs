@@ -10,6 +10,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyTested.WebApi;
 using MyTested.WebApi.Builders.Contracts.Controllers;
 using System.Collections.Generic;
+using System.Linq;
+using BB.UI.Web.MVC.Models;
+using MyTested.WebApi.Common.Extensions;
 
 namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 {
@@ -24,7 +27,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         User user;
         Playlist playlist;
         
-        Track addedtrack;
+        private Track _addedMetallicaTrack;
+        private Track _addedNickelbackTrack;
         
 
         IAndControllerBuilder<PlaylistController> playlistControllerWithAuthenticatedUser;
@@ -51,7 +55,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                       .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email))
                       .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
                );
-            Track track = new Track()
+            Track metallicaTrack = new Track()
             {
                 Artist = "Metallica",
                 Title = "Master of Puppets (live)",
@@ -64,8 +68,23 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                     TrackId = "kV-2Q8QtCY4"
                 }
             };
+            Track nickelbackTrack = new Track()
+            {
+                Artist = "Nickelback",
+                Title = "How You Remind Me",
+                CoverArtUrl = "",
+                Duration = 400,
+                TrackSource = new TrackSource
+                {
+                    SourceType = SourceType.YouTube,
+                    Url = "https://www.youtube.com/watch?v=1cQh1ccqu8M",
+                    TrackId = "1cQh1ccqu8M"
+                }
+            };
 
-            addedtrack = playlistManager.AddTrackToPlaylist(playlist.Id, track);
+            _addedMetallicaTrack = playlistManager.AddTrackToPlaylist(playlist.Id, metallicaTrack);
+            _addedNickelbackTrack = playlistManager.AddTrackToPlaylist(playlist.Id, nickelbackTrack);
+            
         }
 
         [TestMethod]
@@ -79,17 +98,27 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .WithResponseModelOfType<Playlist>()
                 .Passing(
                     p => p.Id == playlist.Id
-                    && p.Description == playlist.Description
-                    && p.Active == playlist.Active
-                    && p.ChatComments == playlist.ChatComments
-                    && p.Comments == playlist.Comments
-                    && p.ImageUrl == playlist.ImageUrl
-                    && p.Key == playlist.Key
-                    && p.MaximumVotesPerUser == playlist.MaximumVotesPerUser
-                    && p.Name == playlist.Name
-                    && p.PlaylistMasterId == playlist.PlaylistMasterId
-                    && p.PlaylistTracks == playlist.PlaylistTracks
+                         && p.Description == playlist.Description
+                         && p.Active == playlist.Active
+                         && p.ChatComments.Equals(playlist.ChatComments)
+                         && p.Comments.Equals(playlist.Comments)
+                         && p.ImageUrl == playlist.ImageUrl
+                         && p.Key == playlist.Key
+                         && p.MaximumVotesPerUser == playlist.MaximumVotesPerUser
+                         && p.Name == playlist.Name
+                         && p.PlaylistMasterId == playlist.PlaylistMasterId
+                         && p.PlaylistTracks.Equals(playlist.PlaylistTracks)
                 );
+        }
+
+        [TestMethod]
+        public void GetWrongPlaylistTest()
+        {
+            MyWebApi.Controller<PlaylistController>()
+                .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
+                .Calling(c => c.getPlaylist(-1))
+                .ShouldReturn()
+                .NotFound();
         }
 
         [TestMethod]
@@ -105,25 +134,179 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                     p => p.Id == playlist.Id
                     && p.Description == playlist.Description
                     && p.Active == playlist.Active
-                    && p.ChatComments == playlist.ChatComments
-                    && p.Comments == playlist.Comments
+                    && p.ChatComments.Equals(playlist.ChatComments)
+                    && p.Comments.Equals(playlist.Comments)
                     && p.ImageUrl == playlist.ImageUrl
                     && p.Key == playlist.Key
                     && p.MaximumVotesPerUser == playlist.MaximumVotesPerUser
                     && p.Name == playlist.Name
                     && p.PlaylistMasterId == playlist.PlaylistMasterId
-                    && p.PlaylistTracks == playlist.PlaylistTracks
+                    && p.PlaylistTracks.Equals(playlist.PlaylistTracks)
                 );
         }
 
         [TestMethod]
-        public void GetWrongPlaylistTest()
+        public void LookupPlaylistByWrongKeyTest()
         {
             MyWebApi.Controller<PlaylistController>()
                 .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
-                .Calling(c => c.getPlaylist(-1))
+                .Calling(c => c.getPlaylistByKey("doesnotexist"))
                 .ShouldReturn()
                 .NotFound();
+        }
+
+        [TestMethod]
+        public void GetLivePlaylistWithNoTracksPlayedOrVoted()
+        {
+            List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
+            foreach (var playlistTrack in playlist.PlaylistTracks)
+            {
+                playlistTrack.Votes = new List<Vote>();
+                livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
+                {
+                    Id = playlistTrack.Id,
+                    Track = playlistTrack.Track,
+                    Score = 0,
+                    PersonalScore = 0
+                });
+            }
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getLivePlaylist(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModel(new LivePlaylistViewModel()
+            {
+                Id = playlist.Id,
+                PlaylistTracks = livePlaylistTracks,
+                Active = playlist.Active,
+                ChatComments = playlist.ChatComments,
+                Comments = playlist.Comments,
+                CreatedById = playlist.CreatedById,
+                Description = playlist.Description,
+                ImageUrl = playlist.ImageUrl,
+                Key = playlist.Key,
+                MaximumVotesPerUser = playlist.MaximumVotesPerUser,
+                PlaylistMasterId = playlist.PlaylistMasterId,
+                Name = playlist.Name
+            });
+        }
+
+        [TestMethod]
+        public void GetLivePlaylistWithOneTrackPlayed()
+        {
+            var playedTrack = playlist.PlaylistTracks.First();
+            playlistManager.MarkTrackAsPlayed(playedTrack.Id, playlist.Id);
+            var notPlayedTrack = playlist.PlaylistTracks.Last();
+       
+            List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
+            livePlaylistTracks.Add(
+                new LivePlaylistTrackViewModel()
+                {
+                Id = notPlayedTrack.Id,
+                    Track = notPlayedTrack.Track,
+                    Score = 0,
+                    PersonalScore = 0
+                });
+            
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getLivePlaylist(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModel(new LivePlaylistViewModel()
+                {
+                    Id = playlist.Id,
+                    PlaylistTracks = livePlaylistTracks,
+                    Active = playlist.Active,
+                    ChatComments = playlist.ChatComments,
+                    Comments = playlist.Comments,
+                    CreatedById = playlist.CreatedById,
+                    Description = playlist.Description,
+                    ImageUrl = playlist.ImageUrl,
+                    Key = playlist.Key,
+                    MaximumVotesPerUser = playlist.MaximumVotesPerUser,
+                    PlaylistMasterId = playlist.PlaylistMasterId,
+                    Name = playlist.Name
+                });
+        }
+
+        [TestMethod]
+        public void GetLivePlaylistWithAllTracksPlayed()
+        {
+            playlist.PlaylistTracks.ForEach(x => playlistManager.MarkTrackAsPlayed(x.Id,playlist.Id));
+            List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
+
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getLivePlaylist(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModel(new LivePlaylistViewModel()
+                {
+                    Id = playlist.Id,
+                    PlaylistTracks = livePlaylistTracks,
+                    Active = playlist.Active,
+                    ChatComments = playlist.ChatComments,
+                    Comments = playlist.Comments,
+                    CreatedById = playlist.CreatedById,
+                    Description = playlist.Description,
+                    ImageUrl = playlist.ImageUrl,
+                    Key = playlist.Key,
+                    MaximumVotesPerUser = playlist.MaximumVotesPerUser,
+                    PlaylistMasterId = playlist.PlaylistMasterId,
+                    Name = playlist.Name
+                });
+        }
+
+        [TestMethod]
+        public void GetLivePlaylistWithNullPlaylist()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getLivePlaylist(-1))
+                .ShouldReturn()
+                .NotFound();
+        }
+
+        [TestMethod]
+        public void GetLivePlaylistWithNoTracksPlayedButOneVoted()
+        {
+            var votedTrack = playlist.PlaylistTracks.First();
+            var notVotedTrack = playlist.PlaylistTracks.Last();
+            playlistManager.CreateVote(1, user.Id, votedTrack.Id);
+            
+            List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
+            livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
+            {
+                Id = votedTrack.Id,
+                Track = votedTrack.Track,
+                Score = 1,
+                PersonalScore = 1
+            });
+            livePlaylistTracks.Add(new LivePlaylistTrackViewModel()
+            {
+                Id = notVotedTrack.Id,
+                Track = notVotedTrack.Track,
+                Score = 0,
+                PersonalScore = 0
+            });
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getLivePlaylist(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModel(new LivePlaylistViewModel()
+                {
+                    Id = playlist.Id,
+                    PlaylistTracks = livePlaylistTracks,
+                    Active = playlist.Active,
+                    ChatComments = playlist.ChatComments,
+                    Comments = playlist.Comments,
+                    CreatedById = playlist.CreatedById,
+                    Description = playlist.Description,
+                    ImageUrl = playlist.ImageUrl,
+                    Key = playlist.Key,
+                    MaximumVotesPerUser = playlist.MaximumVotesPerUser,
+                    PlaylistMasterId = playlist.PlaylistMasterId,
+                    Name = playlist.Name
+                })
+                .Passing( lp => lp.PlaylistTracks.First().Id == votedTrack.Id);
         }
 
         [TestMethod]
@@ -175,18 +358,6 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .WithResponseModelOfType<Track>();
         }*/
 
-
-
-        /*
-        [TestMethod]
-        public void AssignPlaylistMasterTest() {
-            MyWebApi.Controller<PlaylistController>()
-                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
-                .WithResolvedDependencyFor<UserManager>(userManager)
-                .Calling(c => c.AssignPlaylistMaster(playlist.Id, user.Id)) 
-        }
-        */
-
         /*
         [TestMethod]
         public void NextTrackTest()
@@ -204,7 +375,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         [TestMethod]
         public void UpvoteTest() {
            playlistControllerWithAuthenticatedUser
-                .Calling(c => c.Upvote(playlist.Id, addedtrack.Id))
+                .Calling(c => c.Upvote(playlist.Id, _addedMetallicaTrack.Id))
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<Vote>();
@@ -214,7 +385,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         public void DownvoteTest()
         {
             playlistControllerWithAuthenticatedUser
-                 .Calling(c => c.Downvote(playlist.Id, addedtrack.Id))
+                 .Calling(c => c.Downvote(playlist.Id, _addedMetallicaTrack.Id))
                  .ShouldReturn()
                  .Ok()
                  .WithResponseModelOfType<Vote>();
@@ -224,7 +395,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         public void AddTrackTest()
         {
             playlistControllerWithAuthenticatedUser
-                 .Calling(c => c.AddTrack(playlist.Id, addedtrack.TrackSource.TrackId))
+                 .Calling(c => c.AddTrack(playlist.Id, _addedMetallicaTrack.TrackSource.TrackId))
                  .ShouldReturn()
                  .Ok()
                  .WithResponseModelOfType<Track>();
@@ -243,7 +414,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         public void AddTrackWithNonExistingPlaylistTest()
         {
             playlistControllerWithAuthenticatedUser
-                .Calling(c => c.AddTrack(-1, addedtrack.TrackSource.TrackId))
+                .Calling(c => c.AddTrack(-1, _addedMetallicaTrack.TrackSource.TrackId))
                 .ShouldReturn()
                 .NotFound();
         }
