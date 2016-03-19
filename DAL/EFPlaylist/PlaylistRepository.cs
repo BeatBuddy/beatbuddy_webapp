@@ -159,7 +159,6 @@ namespace BB.DAL.EFPlaylist
                 .Include(p => p.PlaylistTracks.Select(pt => pt.Track.TrackSource))
                 .Include(p => p.PlaylistTracks.Select(pt => pt.Votes))
                 .Include(p => p.PlaylistTracks.Select(pt => pt.Votes.Select(v => v.User)))
-                .ToList()
                 .SingleOrDefault(p => p.Id == playlistId);
 
             if (playlist == null) return null;
