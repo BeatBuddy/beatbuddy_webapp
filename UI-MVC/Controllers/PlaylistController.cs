@@ -299,11 +299,15 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         [HttpPost]
-        public JsonResult Keycode(string key)
+        public ActionResult Keycode(string key)
         {
-            var playlists = playlistManager.ReadPlaylists();
-            Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
-            return Json(playlist.Key);
+            try {
+                var playlists = playlistManager.ReadPlaylists();
+                Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
+                return Json(playlist.Key);
+            }catch{
+                 return new HttpStatusCodeResult(400);
+            }
         }
 
         // GET: Playlists/Create
@@ -340,6 +344,15 @@ namespace BB.UI.Web.MVC.Controllers
                 path = Path.GetFileName(path);
             }
 
+            var keyAlreadyInUser = playlistManager.ReadPlaylistByKey(viewModel.Key);
+
+            if(keyAlreadyInUser != null || viewModel.Key == null)
+            {
+                ModelState.AddModelError("Key", "The key value is already in use");
+                return View(viewModel);
+            }
+
+
             try {
                 if (viewModel.OrganisationId != 0)
                 {
@@ -353,7 +366,7 @@ namespace BB.UI.Web.MVC.Controllers
             }
             catch (System.Exception e)
             {
-                ModelState.AddModelError("Key", "The key value is already in use");
+                ModelState.AddModelError("","Something went wrong");
                 return View(viewModel);
             }
             
