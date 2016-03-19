@@ -85,7 +85,7 @@
         $('#findPlaylist').click(function () {
             $('#indexBannerContent').hide();
             $('#banner').addClass('content');
-            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the keycode</h1></br><input type="text" id="keyField" class="custom-input" style="width:247px"/></div>');
+            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the key</h1></br><input type="text" id="keyField" class="custom-input" style="width:247px"></div>');
             $("#keyField").keypress(function (e) {
                 if (e.which == 13) {
                     var key = $('#keyField').val();
@@ -100,7 +100,7 @@
                 }
                 )
                 .fail(function () {
-                    alert("error");
+                    notie.alert(3, "Key does not exist!", 2.5);
                 });
                 }
             });

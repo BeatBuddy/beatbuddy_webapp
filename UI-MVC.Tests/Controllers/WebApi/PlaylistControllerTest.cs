@@ -23,6 +23,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 
         User user;
         Playlist playlist;
+        
         Track addedtrack;
         
 
@@ -205,7 +206,23 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                  .WithResponseModelOfType<Track>();
         }
 
+        [TestMethod]
+        public void AddNotFoundTrackTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.AddTrack(playlist.Id, "willnotfoundthistrackId"))
+                .ShouldReturn()
+                .NotFound();
+        }
 
+        [TestMethod]
+        public void AddTrackWithNonExistingPlaylistTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.AddTrack(-1, addedtrack.TrackSource.TrackId))
+                .ShouldReturn()
+                .NotFound();
+        }
 
         [TestCleanup]
         public void Cleanup()
