@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Net.Http.Formatting;
 using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
@@ -55,7 +56,34 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
             _organisationControllerWithAuthenticatedUser
                 .Calling(o => o.Get(organisation.Id))
                 .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Organisation>()
+                .Passing(o => o.Id == organisation.Id
+                && o.BannerUrl == organisation.BannerUrl
+                && o.Name == organisation.Name);
+        }
+
+        [TestMethod]
+        public void GetFailOrganisationTest()
+        {
+            _organisationControllerWithAuthenticatedUser
+                .Calling(o => o.Get(-1))
+                .ShouldReturn()
+                .NotFound();
+        }
+
+        [TestMethod]
+        public void PostOrganisationTest()
+        {
+            _organisationControllerWithAuthenticatedUser
+                .Calling(o => o.Post("testorganisatiepost", "gewoon een description",
+                    "color", new FormDataCollection(new List<KeyValuePair<string,string>>()
+                    {
+                        new KeyValuePair<string, string>("banner","")
+                    }  )))
+                .ShouldReturn()
                 .Ok();
+
         }
 
         [TestCleanup]

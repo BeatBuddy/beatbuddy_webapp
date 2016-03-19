@@ -921,3 +921,8 @@ footer {
 .twitter-share-button[style] {
   vertical-align: text-bottom !important; }
 
+.image-form {
+  width: 150px;
+  height: 150px;
+  cursor: pointer; }
+
