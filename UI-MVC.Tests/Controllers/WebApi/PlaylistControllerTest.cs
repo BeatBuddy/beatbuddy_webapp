@@ -73,7 +73,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         {
             MyWebApi.Controller<PlaylistController>()
                 .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
-                .Calling(c => c.getPlaylist(playlist.Id))
+                .Calling(c => c.getPlaylist(playlist.Key))
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<Playlist>()
@@ -97,7 +97,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         {
             MyWebApi.Controller<PlaylistController>()
                 .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
-                .Calling(c => c.getPlaylist(-1))
+                .Calling(c => c.getPlaylist("dsfljsdflksdjlfkjdslkfjsdlkjfsdlkjflsdjfjsdlkfdsjfklsdjfkldsfjdslkfjsdlkfjsdlkfjsdklfjsdlkfjdslkfjsdlkfjkj"))
                 .ShouldReturn()
                 .NotFound();
         }

@@ -91,7 +91,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [ResponseType(typeof(Playlist))]
         public IHttpActionResult getPlaylist(string key)
         {
-            var playlist = playlistManager.ReadPlaylist(key);
+            var playlist = playlistManager.ReadPlaylistByKey(key);
             if (playlist == null) return NotFound();
             
             return Ok(playlist);
@@ -108,7 +108,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
             if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
 
-            var playlist = playlistManager.ReadPlaylist(key);
+            var playlist = playlistManager.ReadPlaylistByKey(key);
             if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
             List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
