@@ -73,7 +73,31 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         {
             MyWebApi.Controller<PlaylistController>()
                 .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
-                .Calling(c => c.getPlaylist(playlist.Key))
+                .Calling(c => c.getPlaylist(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Playlist>()
+                .Passing(
+                    p => p.Id == playlist.Id
+                    && p.Description == playlist.Description
+                    && p.Active == playlist.Active
+                    && p.ChatComments == playlist.ChatComments
+                    && p.Comments == playlist.Comments
+                    && p.ImageUrl == playlist.ImageUrl
+                    && p.Key == playlist.Key
+                    && p.MaximumVotesPerUser == playlist.MaximumVotesPerUser
+                    && p.Name == playlist.Name
+                    && p.PlaylistMasterId == playlist.PlaylistMasterId
+                    && p.PlaylistTracks == playlist.PlaylistTracks
+                );
+        }
+
+        [TestMethod]
+        public void LookupPlaylistByKeyTest()
+        {
+            MyWebApi.Controller<PlaylistController>()
+                .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
+                .Calling(c => c.getPlaylistByKey(playlist.Key))
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<Playlist>()
@@ -97,7 +121,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         {
             MyWebApi.Controller<PlaylistController>()
                 .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
-                .Calling(c => c.getPlaylist("dsfljsdflksdjlfkjdslkfjsdlkjfsdlkjflsdjfjsdlkfdsjfklsdjfkldsfjdslkfjsdlkfjsdlkfjsdklfjsdlkfjdslkfjsdlkfjkj"))
+                .Calling(c => c.getPlaylist(-1))
                 .ShouldReturn()
                 .NotFound();
         }

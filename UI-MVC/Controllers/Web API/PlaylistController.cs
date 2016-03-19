@@ -73,34 +73,34 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.albumArtProvider = albumArtProvider;
         }
 
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("{id}")]
-        //[ResponseType(typeof(Playlist))]
-        //public IHttpActionResult getPlaylist(long id)
-        //{
-        //    var playlist = playlistManager.ReadPlaylist(id);
-        //    if (playlist == null) return NotFound();
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("{id}")]
+        [ResponseType(typeof(Playlist))]
+        public IHttpActionResult getPlaylist(long id)
+        {
+            var playlist = playlistManager.ReadPlaylist(id);
+            if (playlist == null) return NotFound();
 
-        //    return Ok(playlist);
-        //}
+            return Ok(playlist);
+        }
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("{key}")]
+        [Route("lookup/{key}")]
         [ResponseType(typeof(Playlist))]
-        public IHttpActionResult getPlaylist(string key)
+        public IHttpActionResult getPlaylistByKey(string key)
         {
             var playlist = playlistManager.ReadPlaylistByKey(key);
             if (playlist == null) return NotFound();
-            
+
             return Ok(playlist);
         }
 
         [HttpGet]
-        [Route("{key}/live")]
+        [Route("{id}/live")]
         [ResponseType(typeof(LivePlaylistViewModel))]
-        public HttpResponseMessage getLivePlaylist(string key)
+        public HttpResponseMessage getLivePlaylist(long id)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
             if (userIdentity == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
@@ -108,7 +108,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
             if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
 
-            var playlist = playlistManager.ReadPlaylistByKey(key);
+            var playlist = playlistManager.ReadPlaylist(id);
             if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
             List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
