@@ -64,6 +64,8 @@ namespace BB.DAL.EFPlaylist
         {
             var playlist = ReadPlaylist(playlistId);
 
+            var comments = ReadComments(playlist);
+            context.Comments.RemoveRange(comments);
             playlist = context.Playlists.Remove(playlist);
             context.SaveChanges();
             return playlist ;

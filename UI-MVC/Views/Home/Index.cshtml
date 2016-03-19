@@ -79,9 +79,7 @@
 
 @section scripts{
     <script>
-        $('#explore').click(function() {
-            $('html, body').animate({ scrollTop: $('#intro').offset().top - 50 }, 'slow');
-        });
+        
         $('#findPlaylist').click(function () {
             $('#indexBannerContent').hide();
             $('#banner').addClass('content');
@@ -92,7 +90,7 @@
                     $.ajax({
                         url: '@Url.Action("Keycode","Playlist")',
                         method: 'POST',
-                        data: {key:key}
+                        data: { key: key }
                     })
                 .done(
                 function (data) {

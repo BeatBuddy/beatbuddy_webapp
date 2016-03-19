@@ -377,9 +377,16 @@ namespace BB.UI.Web.MVC.Controllers
         [System.Web.Mvc.Authorize(Roles = "User, Admin")]
         public ActionResult Delete(long id)
         {
-            var playlist = playlistManager.DeletePlaylist(id);
-            if (playlist == null) return new HttpStatusCodeResult(400);
-            return new HttpStatusCodeResult(200);
+            var playlist = playlistManager.ReadPlaylist(id);
+            var user = userManager.ReadUser(User.Identity.Name);
+            if (playlist.CreatedById == user.Id)
+            {
+                var deletedPlaylist = playlistManager.DeletePlaylist(id);
+                if (deletedPlaylist == null) return new HttpStatusCodeResult(400);
+
+                return new HttpStatusCodeResult(200);
+            }
+            return new HttpStatusCodeResult(403);
         }
 
         public ActionResult AddPlaylist(long playlistId, string id)

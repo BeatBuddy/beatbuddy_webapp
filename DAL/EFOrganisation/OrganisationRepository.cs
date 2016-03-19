@@ -61,8 +61,16 @@ namespace BB.DAL.EFOrganisation
         public Organisation DeleteOrganisation(long organisationId)
         {
             var org = ReadOrganisation(organisationId);
+
+
+            var comments = org.Playlists.SelectMany(p => p.Comments);
+            context.Comments.RemoveRange(comments);
+
+            context.Playlists.RemoveRange(org.Playlists);
+
             var userRoles = context.UserRole.ToList().FindAll(p => p.Organisation == org);
             context.UserRole.RemoveRange(userRoles);
+
             org = context.Organisations.Remove(org);
             context.Entry(org).State = EntityState.Deleted;
             context.SaveChanges();

@@ -459,6 +459,7 @@
     <Content Include="Scripts\mwheelIntent.js" />
     <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\notie.js" />
+    <Content Include="Scripts\profilepicture.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -515,9 +516,7 @@
     <Content Include="Views\Account\_ExternalRegisterListPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Img\Organisations\" />
-    <Folder Include="App_Data\Img\Playlists\" />
-    <Folder Include="App_Data\Img\Users\" />
+    <Folder Include="App_Data\" />
     <Folder Include="Content\img\Organisations\" />
     <Folder Include="Content\img\Users\" />
   </ItemGroup>
