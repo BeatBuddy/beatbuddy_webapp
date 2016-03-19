@@ -130,7 +130,7 @@
     <div class="container row">
         @foreach (Playlist playlist in ViewBag.RecommendedPlaylists)
         {
-            <a href="@Url.Action("View", "Playlist", new {id = playlist.Id})">
+            <a href="@Url.Action("View", "Playlist", new {key = playlist.Key})">
                 <div class="col-md-4 col-xs-12 organisation-wrapper">
                     @{
                         var playlistSource = "/Content/img/playlistavatar.png";
