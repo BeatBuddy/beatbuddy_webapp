@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
@@ -324,11 +325,10 @@ namespace BB.UI.Web.MVC.Controllers
         [System.Web.Mvc.Authorize(Roles = "User, Admin")]
         public ActionResult Create(PlaylistViewModel viewModel, HttpPostedFileBase avatarImage)
         {
-            Organisation org = null;
             Playlist playlist;
             string path = null;
 
-            if(viewModel.Name == null || viewModel.Name == "" || viewModel.Name == " ")
+            if(String.IsNullOrEmpty(viewModel.Name) || viewModel.Name == " ")
             {
                 ModelState.AddModelError("Name", "You need to fill in a name for your playlist");
                 return View(viewModel);

@@ -90,7 +90,6 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>();
-            ;
         }
 
         /*

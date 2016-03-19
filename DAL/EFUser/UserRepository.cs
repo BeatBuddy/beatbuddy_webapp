@@ -70,11 +70,7 @@ namespace BB.DAL.EFUser
         {
             IEnumerable<UserRole> userRoles = context.UserRole.Include("Organisation").Include("User").Where(o => o.Organisation.Id == organisation.Id).Where(a => a.Role == Role.Co_Organiser);
 
-            List<User> users = new List<User>();
-            foreach(UserRole userRole in userRoles)
-            {
-                users.Add(userRole.User);
-            }
+            List<User> users = userRoles.Select(userRole => userRole.User).ToList();
             return users.AsEnumerable();
         }
 

@@ -4,7 +4,7 @@
 }
 @{
     var url = "https://teamd.azurewebsites.net/Playlist/View?key=" + Model.Key;
-    var tweetText = String.Format("Check out this BeatBuddy playlist called {0}!", Model.Name);
+    var tweetText = $"Check out this BeatBuddy playlist called {Model.Name}!";
 }
 
 <div class="center-block">

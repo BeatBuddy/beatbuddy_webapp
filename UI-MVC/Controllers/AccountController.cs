@@ -28,7 +28,7 @@ namespace BB.UI.Web.MVC.Controllers
         
         public AccountController(IUserManager userManager)
         {
-            this.userMgr = userManager;
+            userMgr = userManager;
         }
 
 

@@ -25,7 +25,6 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IOrganisationManager organisationManager;
         private readonly IUserManager userManager;
         private readonly IPlaylistManager playlistManager;
-        private readonly YouTubeTrackProvider youtube = new YouTubeTrackProvider();
 
         User user = new User()
         {

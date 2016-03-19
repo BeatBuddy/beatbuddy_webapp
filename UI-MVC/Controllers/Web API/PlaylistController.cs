@@ -39,10 +39,10 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         public PlaylistController()
         {
-            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.trackProvider = new YouTubeTrackProvider();
-            this.albumArtProvider = new BingAlbumArtProvider();
+            playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            trackProvider = new YouTubeTrackProvider();
+            albumArtProvider = new BingAlbumArtProvider();
         }
 
         public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, IOrganisationManager organisationManager, ITrackProvider iTrackProvider, IAlbumArtProvider albumArtProvider)
@@ -291,13 +291,12 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             foreach (Track track in tracks)
             {
-                //var timestamp = Regex.Replace(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)", ; 
                 if (track.Url != null)
                 {
                     Match match = Regex.Match(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)");
-                    string timestamp;
                     if (match.Success)
                     {
+                        string timestamp;
                         timestamp = match.Groups[1].Value;
                         timestamp.Replace("lmt=", "");
                         DateTime datetime = new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(timestamp));
@@ -460,7 +459,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (email == null) return null;
 
             var user = userManager.ReadUser(email);
-            if (user == null) return null;
 
             return user;
         }

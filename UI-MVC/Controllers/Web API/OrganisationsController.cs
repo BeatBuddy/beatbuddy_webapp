@@ -35,8 +35,8 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         public OrganisationsController()
         {
-            this.organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            organisationManager = new OrganisationManager(new OrganisationRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
         }
 
 

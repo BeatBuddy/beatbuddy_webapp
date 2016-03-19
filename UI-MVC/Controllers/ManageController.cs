@@ -11,7 +11,6 @@ using BB.BL;
 using System.IO;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System.Configuration;
-using BB.BL.Domain.Users;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -143,8 +142,6 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
 #region Helpers
-        // Used for XSRF protection when adding external logins
-        private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager
         {
@@ -165,11 +162,7 @@ namespace BB.UI.Web.MVC.Controllers
         private bool HasPassword()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
-            if (user != null)
-            {
-                return user.PasswordHash != null;
-            }
-            return false;
+            return user?.PasswordHash != null;
         }
 
         public enum ManageMessageId

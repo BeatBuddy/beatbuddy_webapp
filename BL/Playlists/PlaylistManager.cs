@@ -16,7 +16,7 @@ namespace BB.BL
 
         public PlaylistManager(IPlaylistRepository playlistRepository, IUserRepository userRepo)
         {
-            this.repo = playlistRepository;
+            repo = playlistRepository;
             this.userRepo = userRepo; 
         }
 

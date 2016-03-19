@@ -15,7 +15,7 @@ namespace BB.BL
 
         public UserManager(IUserRepository userRepository)
         {
-            this.repo = userRepository;
+            repo = userRepository;
         }
 
         public User CreateUser(string email, string lastname, string firstname, string nickname, string imageUrl)

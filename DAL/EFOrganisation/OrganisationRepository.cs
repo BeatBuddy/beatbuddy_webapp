@@ -55,7 +55,7 @@ namespace BB.DAL.EFOrganisation
         public IEnumerable<Organisation> ReadOrganisationsForUser(long userId)
         {
             var userRoles = context.UserRole.Include("Organisation").Include("User").Where(ur => ur.User.Id == userId);
-            return userRoles.Count() > 0 ? userRoles.Select(userRole => userRole.Organisation).ToList() : new List<Organisation>();
+            return userRoles.Any() ? userRoles.Select(userRole => userRole.Organisation).ToList() : new List<Organisation>();
         }
 
         public Organisation DeleteOrganisation(long organisationId)
