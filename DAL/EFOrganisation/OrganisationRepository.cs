@@ -55,14 +55,22 @@ namespace BB.DAL.EFOrganisation
         public IEnumerable<Organisation> ReadOrganisationsForUser(long userId)
         {
             var userRoles = context.UserRole.Include("Organisation").Include("User").Where(ur => ur.User.Id == userId);
-            return userRoles.Count() > 0 ? userRoles.Select(userRole => userRole.Organisation).ToList() : new List<Organisation>();
+            return userRoles.Any() ? userRoles.Select(userRole => userRole.Organisation).ToList() : new List<Organisation>();
         }
 
         public Organisation DeleteOrganisation(long organisationId)
         {
             var org = ReadOrganisation(organisationId);
+
+
+            var comments = org.Playlists.SelectMany(p => p.Comments);
+            context.Comments.RemoveRange(comments);
+
+            context.Playlists.RemoveRange(org.Playlists);
+
             var userRoles = context.UserRole.ToList().FindAll(p => p.Organisation == org);
             context.UserRole.RemoveRange(userRoles);
+
             org = context.Organisations.Remove(org);
             context.Entry(org).State = EntityState.Deleted;
             context.SaveChanges();

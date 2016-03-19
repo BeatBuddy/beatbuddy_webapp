@@ -23,6 +23,7 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 
         User user;
         Playlist playlist;
+        
         Track addedtrack;
         
 
@@ -73,6 +74,30 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
             MyWebApi.Controller<PlaylistController>()
                 .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
                 .Calling(c => c.getPlaylist(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Playlist>()
+                .Passing(
+                    p => p.Id == playlist.Id
+                    && p.Description == playlist.Description
+                    && p.Active == playlist.Active
+                    && p.ChatComments == playlist.ChatComments
+                    && p.Comments == playlist.Comments
+                    && p.ImageUrl == playlist.ImageUrl
+                    && p.Key == playlist.Key
+                    && p.MaximumVotesPerUser == playlist.MaximumVotesPerUser
+                    && p.Name == playlist.Name
+                    && p.PlaylistMasterId == playlist.PlaylistMasterId
+                    && p.PlaylistTracks == playlist.PlaylistTracks
+                );
+        }
+
+        [TestMethod]
+        public void LookupPlaylistByKeyTest()
+        {
+            MyWebApi.Controller<PlaylistController>()
+                .WithResolvedDependencyFor<IPlaylistManager>(playlistManager)
+                .Calling(c => c.getPlaylistByKey(playlist.Key))
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<Playlist>()
@@ -205,7 +230,23 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                  .WithResponseModelOfType<Track>();
         }
 
+        [TestMethod]
+        public void AddNotFoundTrackTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.AddTrack(playlist.Id, "willnotfoundthistrackId"))
+                .ShouldReturn()
+                .NotFound();
+        }
 
+        [TestMethod]
+        public void AddTrackWithNonExistingPlaylistTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.AddTrack(-1, addedtrack.TrackSource.TrackId))
+                .ShouldReturn()
+                .NotFound();
+        }
 
         [TestCleanup]
         public void Cleanup()

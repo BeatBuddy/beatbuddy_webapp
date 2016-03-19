@@ -5,7 +5,7 @@
 <h4 style="margin-bottom: 0.05em">Social Login.</h4>
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
-    if (loginProviders.Count() == 0) {
+    if (loginProviders.Any()) {
         <div>
             <p>
                 There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>

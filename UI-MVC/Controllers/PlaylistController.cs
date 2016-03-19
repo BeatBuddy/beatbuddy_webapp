@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
@@ -299,11 +300,15 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         [HttpPost]
-        public JsonResult Keycode(string key)
+        public ActionResult Keycode(string key)
         {
-            var playlists = playlistManager.ReadPlaylists();
-            Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
-            return Json(playlist.Key);
+            try {
+                var playlists = playlistManager.ReadPlaylists();
+                Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
+                return Json(playlist.Key);
+            }catch{
+                 return new HttpStatusCodeResult(400);
+            }
         }
 
         // GET: Playlists/Create
@@ -320,11 +325,10 @@ namespace BB.UI.Web.MVC.Controllers
         [System.Web.Mvc.Authorize(Roles = "User, Admin")]
         public ActionResult Create(PlaylistViewModel viewModel, HttpPostedFileBase avatarImage)
         {
-            Organisation org = null;
             Playlist playlist;
             string path = null;
 
-            if(viewModel.Name == null || viewModel.Name == "" || viewModel.Name == " ")
+            if(String.IsNullOrEmpty(viewModel.Name) || viewModel.Name == " ")
             {
                 ModelState.AddModelError("Name", "You need to fill in a name for your playlist");
                 return View(viewModel);
@@ -340,6 +344,15 @@ namespace BB.UI.Web.MVC.Controllers
                 path = Path.GetFileName(path);
             }
 
+            var keyAlreadyInUser = playlistManager.ReadPlaylistByKey(viewModel.Key);
+
+            if(keyAlreadyInUser != null || viewModel.Key == null)
+            {
+                ModelState.AddModelError("Key", "The key value is already in use");
+                return View(viewModel);
+            }
+
+
             try {
                 if (viewModel.OrganisationId != 0)
                 {
@@ -353,7 +366,7 @@ namespace BB.UI.Web.MVC.Controllers
             }
             catch (System.Exception e)
             {
-                ModelState.AddModelError("Key", "The key value is already in use");
+                ModelState.AddModelError("","Something went wrong");
                 return View(viewModel);
             }
             
@@ -364,9 +377,16 @@ namespace BB.UI.Web.MVC.Controllers
         [System.Web.Mvc.Authorize(Roles = "User, Admin")]
         public ActionResult Delete(long id)
         {
-            var playlist = playlistManager.DeletePlaylist(id);
-            if (playlist == null) return new HttpStatusCodeResult(400);
-            return new HttpStatusCodeResult(200);
+            var playlist = playlistManager.ReadPlaylist(id);
+            var user = userManager.ReadUser(User.Identity.Name);
+            if (playlist.CreatedById == user.Id)
+            {
+                var deletedPlaylist = playlistManager.DeletePlaylist(id);
+                if (deletedPlaylist == null) return new HttpStatusCodeResult(400);
+
+                return new HttpStatusCodeResult(200);
+            }
+            return new HttpStatusCodeResult(403);
         }
 
         public ActionResult AddPlaylist(long playlistId, string id)
@@ -389,6 +409,15 @@ namespace BB.UI.Web.MVC.Controllers
             var searchResult = youtubeProvider.SearchPlaylist(q);
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult TrackCount(long playlistId)
+        {
+            var playlist = playlistManager.ReadPlaylist(playlistId);
+            var count = playlist.PlaylistTracks.Count(p => p.PlayedAt == null);
+            var HistoryCount = playlist.PlaylistTracks.Count(p => p.PlayedAt != null);
+
+            return Json(new { Count = count,  HistoryCount = HistoryCount}, JsonRequestBehavior.AllowGet);
         }
     }
 }

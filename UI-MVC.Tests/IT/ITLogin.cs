@@ -106,9 +106,11 @@ namespace BB.UI.Web.MVC.Tests.IT
 
 
         [TestCleanup]
-        public void TestCleanup() {
-            if (chromeDriver != null) chromeDriver.Quit();
+        public void TestCleanup()
+        {
+            chromeDriver?.Quit();
         }
+
         /*
         [TestMethod]
         public void RegisterTest() {

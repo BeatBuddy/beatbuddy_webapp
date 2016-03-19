@@ -39,10 +39,10 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
         public PlaylistController()
         {
-            this.playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
-            this.trackProvider = new YouTubeTrackProvider();
-            this.albumArtProvider = new BingAlbumArtProvider();
+            playlistManager = new PlaylistManager(new PlaylistRepository(new EFDbContext(ContextEnum.BeatBuddy)), new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            userManager = new UserManager(new UserRepository(new EFDbContext(ContextEnum.BeatBuddy)));
+            trackProvider = new YouTubeTrackProvider();
+            albumArtProvider = new BingAlbumArtProvider();
         }
 
         public PlaylistController(IPlaylistManager playlistManager, IUserManager userManager, IOrganisationManager organisationManager, ITrackProvider iTrackProvider, IAlbumArtProvider albumArtProvider)
@@ -80,6 +80,18 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult getPlaylist(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
+            if (playlist == null) return NotFound();
+
+            return Ok(playlist);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("lookup/{key}")]
+        [ResponseType(typeof(Playlist))]
+        public IHttpActionResult getPlaylistByKey(string key)
+        {
+            var playlist = playlistManager.ReadPlaylistByKey(key);
             if (playlist == null) return NotFound();
 
             return Ok(playlist);
@@ -279,13 +291,12 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             foreach (Track track in tracks)
             {
-                //var timestamp = Regex.Replace(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)", ; 
                 if (track.Url != null)
                 {
                     Match match = Regex.Match(track.Url, @"lmt(\=[^&]*)?(?=&|$)|^lmt(\=[^&]*)?(&|$)");
-                    string timestamp;
                     if (match.Success)
                     {
+                        string timestamp;
                         timestamp = match.Groups[1].Value;
                         timestamp.Replace("lmt=", "");
                         DateTime datetime = new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(timestamp));
@@ -401,7 +412,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult Upvote(long id, long trackId)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
-            var user = getUser(userIdentity);
+            var user = GetUser(userIdentity);
             var createVote = playlistManager.CreateVote(1, user.Id, trackId);
 
             var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
@@ -423,7 +434,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult Downvote(long id, long trackId)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
-            var user = getUser(userIdentity);
+            var user = GetUser(userIdentity);
             var createVote = playlistManager.CreateVote(-1, user.Id, trackId);
 
             var playlistTrack = playlistManager.ReadPlaylistTrack(trackId);
@@ -440,7 +451,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Ok(createVote);
         }
 
-        private User getUser(ClaimsIdentity claimsIdentity)
+        private User GetUser(ClaimsIdentity claimsIdentity)
         {
             if (claimsIdentity == null) return null;
 
@@ -448,7 +459,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             if (email == null) return null;
 
             var user = userManager.ReadUser(email);
-            if (user == null) return null;
 
             return user;
         }

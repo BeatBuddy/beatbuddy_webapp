@@ -25,7 +25,6 @@ namespace BB.UI.Web.MVC.Controllers
         private readonly IOrganisationManager organisationManager;
         private readonly IUserManager userManager;
         private readonly IPlaylistManager playlistManager;
-        private readonly YouTubeTrackProvider youtube = new YouTubeTrackProvider();
 
         User user = new User()
         {
@@ -224,9 +223,16 @@ namespace BB.UI.Web.MVC.Controllers
         [Authorize(Roles = "User, Admin")]
         public ActionResult Delete(long id)
         {
-            var organisation = organisationManager.DeleteOrganisation(id);
-            if (organisation == null) return new HttpStatusCodeResult(400);
-            return new HttpStatusCodeResult(200);
+            var user = userManager.ReadUser(User.Identity.Name);
+            var organisation = organisationManager.ReadOrganisation(id);
+            if (userManager.ReadCoOrganiserFromOrganisation(organisation).Contains(user) || 
+                userManager.ReadOrganiserFromOrganisation(organisation).Equals(user))
+            {
+                var deletedOrganisation = organisationManager.DeleteOrganisation(id);
+                if (deletedOrganisation == null) return new HttpStatusCodeResult(400);
+                return new HttpStatusCodeResult(200);
+            }
+            return new HttpStatusCodeResult(403);
         }
 
 
@@ -235,11 +241,6 @@ namespace BB.UI.Web.MVC.Controllers
             var youtubeProvider = new YouTubeTrackProvider();
 
             var tracks = youtubeProvider.LookUpPlaylist(id);
-
-            /*var user = userManager.ReadUser("lennart.boeckx@gmail.com");
-            var organisation = organisationManager.ReadOrganisation("lenni's party");
-
-            var playlist = playlistManager.CreatePlaylistForOrganisation("party", "party", "4567", 4, true, null, user, organisation.Id);*/
 
             foreach(Track track in tracks)
             {

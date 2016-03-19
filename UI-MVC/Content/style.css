@@ -87,24 +87,24 @@
 .ib-container article p{
 	-webkit-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	-moz-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	-o-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	-ms-transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 	transition: 
 		opacity 0.2s linear, 
-		text-shadow 0.5s ease-in-out, 
-		color 0.5s ease-in-out;
+		text-shadow 0.15s ease-in-out, 
+		color 0.15s ease-in-out;
 }
 /* Hover Style for all the items: blur, scale down*/
 .ib-container article.blur{
@@ -146,7 +146,7 @@
 	opacity: 1;
 }
 .ib-container article.active div {
-    transition: background-color 0.5s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
     background-color: rgba(0, 0, 0, 0.0); 
 }
 }

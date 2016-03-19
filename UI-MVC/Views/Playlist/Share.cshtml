@@ -4,7 +4,7 @@
 }
 @{
     var url = "https://teamd.azurewebsites.net/Playlist/View?key=" + Model.Key;
-    var tweetText = String.Format("Check out this BeatBuddy playlist called {0}!", Model.Name);
+    var tweetText = $"Check out this BeatBuddy playlist called {Model.Name}!";
 }
 
 <div class="center-block">
@@ -18,7 +18,7 @@
 
 <div class="center-block">
     <div class="fb-share-button" data-href="@url" data-type="button_count"></div>
-        <a href="https://twitter.com/share" class="twitter-share-button" style="padding: 5px;" data-text="@tweetText" data-url="@url" data-hashtags="beatbuddy">Tweet</a>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-text="@tweetText" data-url="@url" data-hashtags="beatbuddy">Tweet</a>
 </div>
 
 <script>

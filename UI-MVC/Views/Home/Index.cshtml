@@ -27,7 +27,7 @@
     </div>
 }
 
-<p id="intro" class="more-margin-bottom">Beatbuddy is a collaborative music platform, that will allow you to create playlists with your friends family and more!</p>
+<p id="intro" class="more-margin-bottom">Beatbuddy is a collaborative music platform, that will allow you to create playlists with your friends, family and more!</p>
 
 <div class="row">
     <div class="col-md-4 intro-item">
@@ -79,20 +79,18 @@
 
 @section scripts{
     <script>
-        $('#explore').click(function() {
-            $('html, body').animate({ scrollTop: $('#intro').offset().top - 50 }, 'slow');
-        });
+        
         $('#findPlaylist').click(function () {
             $('#indexBannerContent').hide();
             $('#banner').addClass('content');
-            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the keycode</h1></br><input type="text" id="keyField" class="custom-input" style="width:247px"/></div>');
+            $('#banner').append('<div class="content" style="text-align:center"><h1>Enter the key</h1></br><input type="text" id="keyField" class="custom-input" style="width:247px"></div>');
             $("#keyField").keypress(function (e) {
                 if (e.which == 13) {
                     var key = $('#keyField').val();
                     $.ajax({
                         url: '@Url.Action("Keycode","Playlist")',
                         method: 'POST',
-                        data: {key:key}
+                        data: { key: key }
                     })
                 .done(
                 function (data) {
@@ -100,7 +98,7 @@
                 }
                 )
                 .fail(function () {
-                    alert("error");
+                    notie.alert(3, "Key does not exist!", 2.5);
                 });
                 }
             });

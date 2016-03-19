@@ -8,62 +8,50 @@
 @using (Html.BeginForm("Save", "Manage", new { userId = ViewBag.user.Id }, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
 {
 <p class="text-success">@ViewBag.StatusMessage</p>
-<div>
     <div class="title more-margin-top">
-        <h1>Manage </h1> your account 
+        <h1>Manage </h1> your account
     </div>
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create", "SetPassword")
-            }
-            
-        </dd>
-
-        <dt>Change avatar:</dt>
-        <dd>
-            <input type="file" id="profileImage" name="profileImage" style="display: none" />
+    <div>
+        <div class="col-md-6">
+            <h3>Change your avatar</h3>
+            <input type="file" id="profileImage" name="profileImage" style="display: none"/>
             <div>
-                <div class="div-image-form" style="">
+                <div class="div-image-form">
+                  
                     @if (ViewBag.user.ImageUrl != null)
                     {
-                        <img class="borderround" id="profile_click" src="~/Content/img/Users/@ViewBag.user.ImageUrl" style="width: 150px;" />
+                        <img class="borderround image-form" id="profile_click" src="~/Content/img/Users/@ViewBag.user.ImageUrl"/>
                     }
                     else
                     {
-                        <img class="borderround" id="profile_click" src="~/Content/img/avatar.png" style="width: 150px;"/>
+                        <img class="borderround image-form" id="profile_click" src="~/Content/img/avatar.png"/>
                     }
                 </div>
             </div>
-        </dd>
-    </dl>
-    <div>
-        <input type="submit" value="Save changes" class="btn btn-default create" />
+            <div class="more-margin-top">
+                <input type="submit" value="Save changes" class="btn btn-default create"/>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>Password</h3>
+            <div class="button btn-default create">
+                @if (Model.HasPassword)
+                {
+                    <a href="@Url.Action("ChangePassword")">
+                        <input type="button" class="btn btn-default create" value="Change your password"/>
+                    </a>
+                }
+                else
+                {
+                    @Html.ActionLink("Create", "SetPassword")
+                }
+
+            </div>
+        </div>
     </div>
-</div>
+    <div class="row"></div>
+
 }
 @section scripts{
-    <script>
-    document.getElementById('profile_click').onclick = function () {
-        document.getElementById('profileImage').click();
-    };
-    document.getElementById("profileImage").onchange = function () {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-            document.getElementById("profile_click").src = e.target.result;
-        };
-
-        reader.readAsDataURL(this.files[0]);
-
-    };
-
-</script>
-    }
+@Scripts.Render("~/Scripts/profilepicture.js")
+}

@@ -62,6 +62,8 @@ namespace BB.DAL.EFPlaylist
         {
             var playlist = ReadPlaylist(playlistId);
 
+            var comments = ReadComments(playlist);
+            context.Comments.RemoveRange(comments);
             playlist = context.Playlists.Remove(playlist);
             context.SaveChanges();
             return playlist ;
@@ -275,7 +277,10 @@ namespace BB.DAL.EFPlaylist
         public Playlist ReadPlaylistByKey(string key)
         {
             var playlist = context.Playlists.FirstOrDefault(a => a.Key.Equals(key));
-            return ReadPlaylist(playlist.Id);
+            if(playlist != null) 
+                return ReadPlaylist(playlist.Id);
+
+            return null;
         }
     }
 }
