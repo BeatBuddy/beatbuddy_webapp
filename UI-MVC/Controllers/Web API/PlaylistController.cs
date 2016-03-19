@@ -73,15 +73,27 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             this.albumArtProvider = albumArtProvider;
         }
 
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("{id}")]
+        //[ResponseType(typeof(Playlist))]
+        //public IHttpActionResult getPlaylist(long id)
+        //{
+        //    var playlist = playlistManager.ReadPlaylist(id);
+        //    if (playlist == null) return NotFound();
+
+        //    return Ok(playlist);
+        //}
+
         [AllowAnonymous]
         [HttpGet]
-        [Route("{id}")]
+        [Route("{key}")]
         [ResponseType(typeof(Playlist))]
-        public IHttpActionResult getPlaylist(long id)
+        public IHttpActionResult getPlaylist(string key)
         {
-            var playlist = playlistManager.ReadPlaylist(id);
+            var playlist = playlistManager.ReadPlaylist(key);
             if (playlist == null) return NotFound();
-
+            
             return Ok(playlist);
         }
 
