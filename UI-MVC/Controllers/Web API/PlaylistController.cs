@@ -85,6 +85,18 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             return Ok(playlist);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("lookup/{key}")]
+        [ResponseType(typeof(Playlist))]
+        public IHttpActionResult getPlaylistByKey(string key)
+        {
+            var playlist = playlistManager.ReadPlaylistByKey(key);
+            if (playlist == null) return NotFound();
+
+            return Ok(playlist);
+        }
+
         [HttpGet]
         [Route("{id}/live")]
         [ResponseType(typeof(LivePlaylistViewModel))]

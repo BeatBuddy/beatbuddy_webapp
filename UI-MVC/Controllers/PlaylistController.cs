@@ -410,5 +410,14 @@ namespace BB.UI.Web.MVC.Controllers
 
             return Json(searchResult, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult TrackCount(long playlistId)
+        {
+            var playlist = playlistManager.ReadPlaylist(playlistId);
+            var count = playlist.PlaylistTracks.Count(p => p.PlayedAt == null);
+            var HistoryCount = playlist.PlaylistTracks.Count(p => p.PlayedAt != null);
+
+            return Json(new { Count = count,  HistoryCount = HistoryCount}, JsonRequestBehavior.AllowGet);
+        }
     }
 }

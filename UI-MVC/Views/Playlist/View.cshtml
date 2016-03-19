@@ -57,7 +57,7 @@
 
             <div class="menu">
                 <div class="item selected">
-                    <a class="title" href="#">
+                    <a class="title" href="#" id="trackcount">
                         <h1>Queue</h1>
                         @if (Model.PlaylistTracks.Count > 1 | Model.PlaylistTracks.Count == 0)
                         {
@@ -813,11 +813,24 @@
             if (gridView) {
                 $('#playlist-view').load('/Playlist/GetPlaylistGrid/', { id: @ViewBag.PlaylistId }, function() {
                     $.getScript("../../Scripts/gridview.js");
+                    updateTrackCounts();
                 });
             } else {
-                $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId });
+                $('#playlist-view').load('/Playlist/GetPlaylist/', { id: @ViewBag.PlaylistId }, function() {
+                    updateTrackCounts();
+                });
             }
             updateUpcomingTracks();
+        }
+
+        function updateTrackCounts() {
+            $.ajax('/Playlist/TrackCount/', {
+                type: 'GET',
+                data: { playlistId: @Model.Id }
+            }).done(function(data) {
+                $('#trackcount').html(data.Count + ' tracks in queue');
+                $('#historycount').html(data.HistoryCount + ' tracks in history');
+            });
         }
 
         var fullscreenEnabled = false;
@@ -894,7 +907,7 @@
                 }
 
             }).fail(function() {
-                notie.alert(3, 'Error refreshing upcoming tracks', 2.5);
+                console.log('Error refreshing upcoming tracks');
             });
         }
 
