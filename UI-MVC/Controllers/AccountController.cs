@@ -12,7 +12,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BB.BL;
-using BB.BL.Domain;
 using BB.UI.Web.MVC.Controllers.Utils;
 using Facebook;
 
