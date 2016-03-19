@@ -21,8 +21,6 @@ namespace BB.DAL.EFPlaylist
         {
             var playlist = context.Playlists
                 .Include(p => p.Comments)
-                .Include(p => p.PlaylistTracks)
-                .Include(p => p.PlaylistTracks.Select(pt => pt.Track))
                 .Single(p => p.Id == playlistId);
 
             var user = context.User.Single(u => u.Id == comment.User.Id);
