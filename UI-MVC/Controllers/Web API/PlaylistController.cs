@@ -98,9 +98,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         }
 
         [HttpGet]
-        [Route("{id}/live")]
+        [Route("{key}/live")]
         [ResponseType(typeof(LivePlaylistViewModel))]
-        public HttpResponseMessage getLivePlaylist(long id)
+        public HttpResponseMessage getLivePlaylist(string key)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
             if (userIdentity == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
@@ -108,7 +108,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
             if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
 
-            var playlist = playlistManager.ReadPlaylist(id);
+            var playlist = playlistManager.ReadPlaylist(key);
             if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
 
             List<LivePlaylistTrackViewModel> livePlaylistTracks = new List<LivePlaylistTrackViewModel>();
