@@ -18,7 +18,7 @@
         <div class="banner-content">
             <h1 style="color:black">Welcome, @ViewBag.Name</h1>
             <h2 style="margin-bottom:15px">Want to join a playlist?</h2>
-            <input type="text" id="keyField" class="custom-input" style="width:247px;" value="Enter playlist key" />  
+            <input type="text" id="keyFieldPortal" class="custom-input" style="width:247px;" value="Enter playlist key" />  
         </div>
     </div>
 }
@@ -248,6 +248,31 @@
 
         $("#searchOrganisation").on('keydown', function () {
             debouncedFetchOrganisation();
+        });
+
+        $('#keyFieldPortal').click(function () {
+            $('#keyFieldPortal').val('');
+        })
+        
+           
+
+        $("#keyFieldPortal").keypress(function (e) {
+            if (e.which == 13) {
+                var key = $('#keyFieldPortal').val();
+                $.ajax({
+                    url: '@Url.Action("Keycode","Playlist")',
+                    method: 'POST',
+                    data: { key: key }
+                })
+            .done(
+            function (data) {
+                window.location.href = '@Url.Action("View","Playlist")' + '?key=' + data;
+            }
+            )
+            .fail(function () {
+                notie.alert(3, "Key does not exist!", 2.5);
+            });
+            }
         });
 
         //document.getElementById('avatar_click2').onclick = function () {

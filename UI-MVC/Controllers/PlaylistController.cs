@@ -299,11 +299,15 @@ namespace BB.UI.Web.MVC.Controllers
         }
 
         [HttpPost]
-        public JsonResult Keycode(string key)
+        public ActionResult Keycode(string key)
         {
-            var playlists = playlistManager.ReadPlaylists();
-            Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
-            return Json(playlist.Key);
+            try {
+                var playlists = playlistManager.ReadPlaylists();
+                Playlist playlist = playlists.FirstOrDefault(p => p.Key == key);
+                return Json(playlist.Key);
+            }catch{
+                 return new HttpStatusCodeResult(400);
+            }
         }
 
         // GET: Playlists/Create
