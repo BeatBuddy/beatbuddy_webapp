@@ -41,17 +41,7 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult SearchOrganisation(string q)
         {
-            List<Organisation> searchResult = organisationManager.SearchOrganisations(q).ToList();
-            for(int i=0; i<searchResult.Count; i++)
-            {
-                if (searchResult[i].BannerUrl == null)
-                {
-                    searchResult[i].BannerUrl = "login-banner.jpg";
-                }
-                else {
-                    searchResult[i].BannerUrl = "/Content/img/Organisations/" + searchResult[i].BannerUrl;
-                }
-            }
+            var searchResult = organisationManager.SearchOrganisations(q).ToList();
             string json =  JsonConvert.SerializeObject(searchResult, Formatting.Indented,
                             new JsonSerializerSettings
                             {
