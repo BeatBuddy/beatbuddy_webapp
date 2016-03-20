@@ -90,7 +90,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<IEnumerable<SmallOrganisationViewModel>>()
-                .Passing(o => o.First().Id == organisation.Id 
+                .Passing(o => o.Count() == 1 
+                && o.First().Id == organisation.Id 
                 && o.First().BannerUrl == organisation.BannerUrl
                 && o.First().Name == organisation.Name);
         }
@@ -122,7 +123,22 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                  .Calling(c => c.GetUser (_userWithOrganisation.Email))
                  .ShouldReturn()
                  .Ok()
-                 .WithResponseModelOfType<User>();
+                 .WithResponseModelOfType<User>()
+                 .Passing(p => p.Id == _userWithOrganisation.Id
+                 && p.Email == _userWithOrganisation.Email
+                 && p.FirstName == _userWithOrganisation.FirstName
+                 && p.ImageUrl == _userWithOrganisation.ImageUrl
+                 && p.LastName == _userWithOrganisation.LastName
+                 && p.Nickname == _userWithOrganisation.Nickname);
+        }
+
+        [TestMethod]
+        public void GetNullUserTest()
+        {
+            _userControllerWithAuthenticatedUserWithOrganisation
+                .Calling(c => c.GetUser(""))
+                .ShouldReturn()
+                .NotFound();
         }
 
         [TestCleanup]

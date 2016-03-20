@@ -22,7 +22,6 @@ using BB.DAL.EFPlaylist;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Models;
 using System.Text.RegularExpressions;
-using Google.GData.Client;
 using Microsoft.AspNet.SignalR;
 
 namespace BB.UI.Web.MVC.Controllers.Web_API
@@ -147,30 +146,27 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpGet]
         [Route("{id}/history")]
         [ResponseType(typeof(IEnumerable<PlaylistTrack>))]
-        public HttpResponseMessage getHistory(long id)
+        public IHttpActionResult getHistory(long id)
         {
             var playlist = playlistManager.ReadPlaylist(id);
-            if (playlist == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+            if (playlist == null) return NotFound();
 
-            return Request.CreateResponse(
-                HttpStatusCode.OK,
-                playlist.PlaylistTracks.Where(p => p.PlayedAt != null)
-            );
+            return Ok(playlist.PlaylistTracks.Where(p => p.PlayedAt != null));
         }
 
         [HttpPost]
         [Route("createPlaylist")]
         [ResponseType(typeof(Playlist))]
-        public HttpResponseMessage createPlaylist(FormDataCollection formData)
+        public IHttpActionResult createPlaylist(FormDataCollection formData)
         {
             var userIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
-            if (userIdentity == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+            if (userIdentity == null) return NotFound();
 
             var email = userIdentity.Claims.First(c => c.Type == "sub").Value;
-            if (email == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+            if (email == null) return NotFound();
 
             var user = userManager.ReadUser(email);
-            if (user == null) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+            if (user == null) return NotFound();
 
             string imagePath = "";
             if (formData["image"] != null && formData["image"].Length > 0)
@@ -185,7 +181,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                     if (bitmap.RawFormat.Equals(ImageFormat.Bmp)) extension = ".bmp";
                     if (bitmap.RawFormat.Equals(ImageFormat.Gif)) extension = ".gif";
 
-                    if (string.IsNullOrEmpty(extension)) return Request.CreateResponse(HttpStatusCode.BadRequest, "The supplied image is not a valid image");
+                    if (string.IsNullOrEmpty(extension)) return BadRequest("The supplied image is not a valid image");
 
                     imagePath = FileHelper.NextAvailableFilename(Path.Combine(HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["PlaylistImgPath"]), "playlist" + extension));
                     bitmap.Save(imagePath);
@@ -194,7 +190,7 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
                 }
                 catch (Exception ex)
                 {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, ex);
+                    return BadRequest(ex.Message);
                 }
             }
 
@@ -202,16 +198,16 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             {
                 var playlist = playlistManager.CreatePlaylistForOrganisation(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user, long.Parse(formData["organisationId"]));
                 if (playlist != null)
-                    return Request.CreateResponse(HttpStatusCode.OK, playlist);
+                    return Ok(playlist);
             }
             else
             {
                 var playlist = playlistManager.CreatePlaylistForUser(formData["name"], formData["description"], formData["key"], 1, false, imagePath, user);
                 if (playlist != null)
-                    return Request.CreateResponse(HttpStatusCode.OK, playlist);
+                    return Ok(playlist);
             }
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest);
+            return BadRequest();
         }
 
         [AllowAnonymous]
@@ -221,7 +217,6 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         public IHttpActionResult searchTrack(string query)
         {
             if (query == null) return NotFound();
-            //TODO move instantation of new YouTubeTrackProvider here!
             var youtubeProvider = new YouTubeTrackProvider();
             var searchResult = youtubeProvider.Search(query);
 
@@ -270,15 +265,12 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpGet]
         [Route("getYoutubePlaybackUrl/{id}")]
         [ResponseType(typeof(LivePlaylistViewModel))]
-        public HttpResponseMessage getYoutubePlaybackTrack(long id)
+        public IHttpActionResult getYoutubePlaybackTrack(long id)
         {
             var track = playlistManager.ReadTrack(id);
             var playbackTrack = GetTrackWithFreshYoutubeUrl(track);
 
-            return Request.CreateResponse(
-                HttpStatusCode.OK,
-                playbackTrack
-            );
+            return Ok(playbackTrack);
         }
 
         private Track GetTrackWithFreshYoutubeUrl(Track originalTrack)
@@ -389,9 +381,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
         [HttpGet]
         [Route("recommendations")]
         [ResponseType(typeof(IEnumerable<Track>))]
-        public HttpResponseMessage GetRecommendations(int count)
+        public IHttpActionResult GetRecommendations(int count)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, playlistManager.ReadPlaylists()
+            return Ok(playlistManager.ReadPlaylists()
                 .Reverse()
                 .Take(count)
                 .Select(p => new

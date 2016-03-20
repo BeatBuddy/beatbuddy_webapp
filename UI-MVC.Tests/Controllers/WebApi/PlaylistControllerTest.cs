@@ -11,8 +11,12 @@ using MyTested.WebApi;
 using MyTested.WebApi.Builders.Contracts.Controllers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
+using System.Web.Http.Description;
+using System.Web.UI.WebControls.Expressions;
 using BB.UI.Web.MVC.Models;
 using MyTested.WebApi.Common.Extensions;
+using System.Collections;
 
 namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
 {
@@ -310,6 +314,65 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         }
 
         [TestMethod]
+        public void GetHistoryTestWithOneTrackInHistory()
+        {
+            var playedTrack = playlist.PlaylistTracks.First();
+            playlistManager.MarkTrackAsPlayed(playedTrack.Id, playlist.Id);
+
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getHistory(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<IEnumerable<PlaylistTrack>>()
+                .Passing(pt => pt.Count() == 1
+                               && pt.First().Id == playedTrack.Id
+                               && pt.First().PlayedAt == playedTrack.PlayedAt
+                               && pt.First().Playlist.Equals(playedTrack.Playlist)
+                               && pt.First().PlaylistId == playedTrack.PlaylistId
+                               && pt.First().Track.Equals(playedTrack.Track)
+                               && pt.First().Votes.Equals(playedTrack.Votes));
+        }
+
+        [TestMethod]
+        public void GetHistoryTestWithNoTracksInHistory()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getHistory(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<IEnumerable<PlaylistTrack>>()
+                .Passing(pt => !pt.Any());
+        }
+
+        [TestMethod]
+        public void GetHistoryTestWithTwoTracksInHistory()
+        {
+            playlist.PlaylistTracks.ForEach(x => playlistManager.MarkTrackAsPlayed(x.Id, playlist.Id));
+
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getHistory(playlist.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<IEnumerable<PlaylistTrack>>()
+                .Passing(pt => pt.Count() == 2);
+        }
+
+        [TestMethod]
+        public void CreatePlaylistForUserTest()
+        {
+            FormDataCollection formData = new FormDataCollection(new List<KeyValuePair<string,string>>()
+            {
+                new KeyValuePair<string, string>("name","testplaylist"),
+                new KeyValuePair<string, string>("description","andom description"),
+                new KeyValuePair<string, string>("key","012345678")
+            } );
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.createPlaylist(formData))
+                .ShouldReturn()
+                .Ok();
+        }
+
+        [TestMethod]
         public void SearchTrackTest() {
             var query = "Metallica - Master Of Puppets";
             MyWebApi.Controller<PlaylistController>()
@@ -328,67 +391,49 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .NotFound();
         }
 
-        /*
         [TestMethod]
-        public void getHistoryTest() {
-            Track trackForHistory = playlistManager.AddTrackToPlaylist(playlist.Id, new Track {
-                Artist = "Matthias Heylen",
-                CoverArtUrl = "",
-                Duration = 312,
-                Title = "Toplied",
-                TrackSource = new TrackSource {
-                    SourceType = SourceType.YouTube,
-                    TrackId = "oyEuk8j8imI",playlist.Id))
-                .ShouldReturn()
-                    Url = "https://www.youtube.com/watch?v=oyEuk8j8imI"
-                }
-            });
-            MyWebApi.Controller<PlaylistController>()
-                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
-                .WithResolvedDependencyFor<UserManager>(userManager)
-                .WithAuthenticatedUser(
-                 u => u.WithIdentifier("NewId")
-                       .WithUsername(user.Email)
-                       .WithClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email))
-                       .WithClaim(new System.Security.Claims.Claim("sub", user.Email))
-                       .InRoles("Admin", "User")
-                )
-                .Calling(c => c.getNextTrack(
-                .Ok()
-                .WithResponseModelOfType<Track>();
-        }*/
-
-        /*
-        [TestMethod]
-        public void NextTrackTest()
+        public void GetNextTrackTest()
         {
-            MyWebApi.Controller<PlaylistController>()
-                .WithResolvedDependencyFor<PlaylistManager>(playlistManager)
-                .Calling(c => c.getNextTrack(playlist.Id))
+            var track = playlist.PlaylistTracks.First().Track;
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getNextTrack(playlist.Id))
                 .ShouldReturn()
                 .Ok()
                 .WithResponseModelOfType<Track>()
-                .Passing(
-                    p => p.Id == 1
-                );
-        }*/
-        [TestMethod]
-        public void UpvoteTest() {
-           playlistControllerWithAuthenticatedUser
-                .Calling(c => c.Upvote(playlist.Id, _addedMetallicaTrack.Id))
-                .ShouldReturn()
-                .Ok()
-                .WithResponseModelOfType<Vote>();
+                .Passing(t => t.Id == track.Id
+                              && t.Artist == track.Artist
+                              && t.CoverArtUrl == track.CoverArtUrl
+                              && t.Duration == track.Duration
+                              && t.Title == track.Title
+                              );
         }
 
         [TestMethod]
-        public void DownvoteTest()
+        public void GetNextTrackWithAllTrackPlayed()
         {
+            playlist.PlaylistTracks.ForEach(x => playlistManager.MarkTrackAsPlayed(x.Id, playlist.Id));
+
             playlistControllerWithAuthenticatedUser
-                 .Calling(c => c.Downvote(playlist.Id, _addedMetallicaTrack.Id))
-                 .ShouldReturn()
-                 .Ok()
-                 .WithResponseModelOfType<Vote>();
+                .Calling(p => p.getNextTrack(playlist.Id))
+                .ShouldReturn()
+                .NotFound();
+        }
+
+        [TestMethod]
+        public void GetYoutubePlaybackTrack()
+        {
+            var track = playlist.PlaylistTracks.First().Track;
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.getYoutubePlaybackTrack(track.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Track>()
+                .Passing(t => t.Id == track.Id
+                              && t.Artist == track.Artist
+                              && t.CoverArtUrl == track.CoverArtUrl
+                              && t.Duration == track.Duration
+                              && t.Title == track.Title
+                              );
         }
 
         [TestMethod]
@@ -419,14 +464,95 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .NotFound();
         }
 
+        [TestMethod]
+        public void Get2RecommendationsTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(p => p.GetRecommendations(1))
+                .ShouldReturn()
+                .Ok();
+        }
+
+        [TestMethod]
+        public void UpvoteTest() {
+           playlistControllerWithAuthenticatedUser
+                .Calling(c => c.Upvote(playlist.Id, _addedMetallicaTrack.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Vote>()
+                .Passing(p => p.Score == 1);
+        }
+
+        [TestMethod]
+        public void UpvoteDoubleTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.Upvote(playlist.Id, _addedMetallicaTrack.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Vote>()
+                .Passing(p => p.Score == 1);
+
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.Upvote(playlist.Id, _addedMetallicaTrack.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Vote>()
+                .Passing(p => p.Score == 0);
+        }
+
+        [TestMethod]
+        public void UpvoteThanDownvoteTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.Upvote(playlist.Id, _addedMetallicaTrack.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Vote>()
+                .Passing(p => p.Score == 1);
+
+            playlistControllerWithAuthenticatedUser
+                .Calling(c => c.Downvote(playlist.Id, _addedMetallicaTrack.Id))
+                .ShouldReturn()
+                .Ok()
+                .WithResponseModelOfType<Vote>()
+                .Passing(p => p.Score == -1);
+        }
+
+        [TestMethod]
+        public void DownvoteTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                 .Calling(c => c.Downvote(playlist.Id, _addedMetallicaTrack.Id))
+                 .ShouldReturn()
+                 .Ok()
+                 .WithResponseModelOfType<Vote>()
+                 .Passing(p => p.Score == -1);
+        }
+
+        [TestMethod]
+        public void DownvoteDoubleTest()
+        {
+            playlistControllerWithAuthenticatedUser
+                 .Calling(c => c.Downvote(playlist.Id, _addedMetallicaTrack.Id))
+                 .ShouldReturn()
+                 .Ok()
+                 .WithResponseModelOfType<Vote>()
+                 .Passing(p => p.Score == -1);
+
+            playlistControllerWithAuthenticatedUser
+                 .Calling(c => c.Downvote(playlist.Id, _addedMetallicaTrack.Id))
+                 .ShouldReturn()
+                 .Ok()
+                 .WithResponseModelOfType<Vote>()
+                 .Passing(p => p.Score == 0);
+        }
+
         [TestCleanup]
         public void Cleanup()
         {
             playlistManager.DeletePlaylist(playlist.Id);
             userManager.DeleteUser(user.Id);
-            
         }
-        
-        
     }
 }
