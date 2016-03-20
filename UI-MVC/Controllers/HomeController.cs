@@ -46,7 +46,7 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 if (searchResult[i].BannerUrl == null)
                 {
-                    searchResult[i].BannerUrl = "/Content/img/login-banner.jpg";
+                    searchResult[i].BannerUrl = "login-banner.jpg";
                 }
                 else {
                     searchResult[i].BannerUrl = "/Content/img/Organisations/" + searchResult[i].BannerUrl;
