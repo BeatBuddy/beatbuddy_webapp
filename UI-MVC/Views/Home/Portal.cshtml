@@ -76,7 +76,7 @@
                     }
                 }
                 <a href="@Url.Action("Details", "Organisations", new {id = organisation.Id})">
-                    <div style="background-image: url('@organisationSource')" class="organisation-banner">&nbsp;</div>
+                    <div style="background-image: url('@organisationSource')" class="organisation-banner"></div>
 
                     <h3>@organisation.Name</h3>
                 </a>
@@ -85,8 +85,7 @@
                             <li>
                                 <a href="#"><i class="material-icons" style="color: black">settings</i></a>
                                 <ul>
-                                    <li style="cursor: pointer"><a onclick="updateOrganisation(@organisation.Id)">Edit</a></li>
-                                    <li style="cursor: pointer"><a onclick="deleteOrganisation(@organisation.Id)">Delete</a></li>
+                                    <li style="cursor:pointer"><a onclick="deleteOrganisation(@organisation.Id)">Delete</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -189,11 +188,6 @@
             }).fail(function() {
                 notie.alert(3, 'Failed to delete organisation', 2.5);
             });
-        }
-
-        function updateOrganisation(organisationId) {
-            $('#editPlaylistModal-body').load("/Playlist/Edit/" + playlistId);
-            window.location.href = '#editPlaylistModal';
         }
 
         var markupOrganisation = '<li class="organisation" data-id="${Id}">' +

@@ -267,6 +267,19 @@ namespace BB.UI.Web.MVC.Controllers
             try
             {
                 var playlist = playlistManager.ReadPlaylist(id);
+
+                if (String.IsNullOrEmpty(model.Name) || model.Name == " ")
+                {
+                    ModelState.AddModelError("Name", "You need to fill in a name for your playlist");
+                    return View(model);
+                }
+                var keyAlreadyInUse = playlistManager.ReadPlaylistByKey(model.Key);
+
+                if (keyAlreadyInUse != null || String.IsNullOrEmpty(model.Key))
+                {
+                    ModelState.AddModelError("Key", "The key value is already in use");
+                    return View(model);
+                }
                 playlist.Name = model.Name;
                 playlist.Description = model.Description;
                 playlist.Key = model.Key;

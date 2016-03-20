@@ -5,17 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BB.BL;
-using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Controllers.Utils;
 using BB.UI.Web.MVC.Models;
 using System;
 using PagedList;
-using Google.GData.Client;
-using Google.GData.Extensions;
-using Google.GData.YouTube;
-using System.Net;
 using BB.BL.Domain.Playlists;
 
 namespace BB.UI.Web.MVC.Controllers
@@ -179,7 +174,19 @@ namespace BB.UI.Web.MVC.Controllers
                 {
                     user = userManager.ReadUser(User.Identity.Name);
                 }
-                if(bannerImage != null && bannerImage.ContentLength > 0)
+                var organisationNameAlreadyInUse = organisationManager.ReadOrganisation(organisation.Name);
+
+                if (organisationNameAlreadyInUse != null)
+                {
+                    ModelState.AddModelError("Name", "The name value is already in use");
+                    return View(organisation);
+                }
+                if (String.IsNullOrWhiteSpace(organisation.Name))
+                {
+                    ModelState.AddModelError("Name", "The name value can not be empty");
+                    return View(organisation);
+                }
+                if (bannerImage != null && bannerImage.ContentLength > 0)
                 {
                     var bannerFileName = Path.GetFileName(bannerImage.FileName);
                     bannerPath = FileHelper.NextAvailableFilename(Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["OrganisationsImgPath"]), bannerFileName));
@@ -193,31 +200,7 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 return RedirectToAction("Create");
             }
-        }
-
-        // GET: Organisations/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Organisations/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-      
+        }    
 
         [HttpPost]
         [Authorize(Roles = "User, Admin")]

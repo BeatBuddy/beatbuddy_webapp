@@ -4,15 +4,16 @@
     ViewBag.Title = "CreatePlaylist";
 }
 
+
 @if (!ViewData.ModelState.IsValid)
-{
+{/*
     var validationErrors = string.Join(",",
                     ViewData.ModelState.Values.Where(E => E.Errors.Count > 0)
                     .SelectMany(E => E.Errors)
                     .Select(E => E.ErrorMessage)
                     .ToArray());
     
-    <p class="field-validation-error">@validationErrors</p>
+    <p class="field-validation-error">@validationErrors</p>*/
 }
 
 @using (Html.BeginForm("Create", "Playlist", null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
