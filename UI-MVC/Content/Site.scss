@@ -620,11 +620,11 @@ header {
         height: 100%;
     background-size: cover;
     background-position: center center;
-        filter: blur(15px);
-        -webkit-filter: blur(15px);
-        -moz-filter: blur(15px);
-        -o-filter: blur(15px);
-        -ms-filter: blur(15px);
+        filter: blur(10px);
+        -webkit-filter: blur(10px);
+        -moz-filter: blur(10px);
+        -o-filter: blur(10px);
+        -ms-filter: blur(10px);
     }
 
     #darkoverlay {
@@ -649,7 +649,8 @@ header {
         position: absolute;
         left: 10%;
         bottom: 10%;
-        background-size: contain;
+        background-size: cover;
+        background-position: center;
         background-image: url('/Content/img/default_cover.png');
     }
 
