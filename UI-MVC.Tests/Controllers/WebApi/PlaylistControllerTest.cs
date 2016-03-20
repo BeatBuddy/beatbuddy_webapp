@@ -392,23 +392,6 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         }
 
         [TestMethod]
-        public void GetNextTrackTest()
-        {
-            var track = playlist.PlaylistTracks.First().Track;
-            playlistControllerWithAuthenticatedUser
-                .Calling(p => p.getNextTrack(playlist.Id))
-                .ShouldReturn()
-                .Ok()
-                .WithResponseModelOfType<Track>()
-                .Passing(t => t.Id == track.Id
-                              && t.Artist == track.Artist
-                              && t.CoverArtUrl == track.CoverArtUrl
-                              && t.Duration == track.Duration
-                              && t.Title == track.Title
-                              );
-        }
-
-        [TestMethod]
         public void GetNextTrackWithAllTrackPlayed()
         {
             playlist.PlaylistTracks.ForEach(x => playlistManager.MarkTrackAsPlayed(x.Id, playlist.Id));
@@ -417,23 +400,6 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .Calling(p => p.getNextTrack(playlist.Id))
                 .ShouldReturn()
                 .NotFound();
-        }
-
-        [TestMethod]
-        public void GetYoutubePlaybackTrack()
-        {
-            var track = playlist.PlaylistTracks.First().Track;
-            playlistControllerWithAuthenticatedUser
-                .Calling(p => p.getYoutubePlaybackTrack(track.Id))
-                .ShouldReturn()
-                .Ok()
-                .WithResponseModelOfType<Track>()
-                .Passing(t => t.Id == track.Id
-                              && t.Artist == track.Artist
-                              && t.CoverArtUrl == track.CoverArtUrl
-                              && t.Duration == track.Duration
-                              && t.Title == track.Title
-                              );
         }
 
         [TestMethod]
