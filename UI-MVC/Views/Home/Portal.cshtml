@@ -197,8 +197,10 @@
         }
 
         var markupOrganisation = '<li class="organisation" data-id="${Id}">' +
-            '<span class="artist">${Name}</span>' +
-            '</li>';
+         '<img class="thumbnail" src="${BannerUrl}"/>' +
+         '<span class="name">${Name}</span>' +
+         '</li>';
+ 
         $.template("organisationTemplate", markupOrganisation);
 
         $.ajaxSetup({
@@ -213,7 +215,7 @@
 
         function fetchQueryResultsOrganisation() {
             $.ajax('@Url.Action("SearchOrganisation")/?q=' + $('#searchOrganisation').val())
-                .done(function(result) {
+                .done(function (result) {
                     $("#resultsOrganisation").empty();
                     $.tmpl("organisationTemplate", result).appendTo("#resultsOrganisation");
                     $("#resultsOrganisation li").on("click", function() {

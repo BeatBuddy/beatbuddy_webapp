@@ -2,7 +2,9 @@
 using System.Web.Mvc;
 using BB.BL;
 using BB.BL.Domain;
+using BB.BL.Domain.Organisations;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace BB.UI.Web.MVC.Controllers
 {
@@ -39,7 +41,17 @@ namespace BB.UI.Web.MVC.Controllers
 
         public ActionResult SearchOrganisation(string q)
         {
-           var searchResult = organisationManager.SearchOrganisations(q);
+            List<Organisation> searchResult = organisationManager.SearchOrganisations(q).ToList();
+            for(int i=0; i<searchResult.Count; i++)
+            {
+                if (searchResult[i].BannerUrl == null)
+                {
+                    searchResult[i].BannerUrl = "/Content/img/login-banner.jpg";
+                }
+                else {
+                    searchResult[i].BannerUrl = "/Content/img/Organisations/" + searchResult[i].BannerUrl;
+                }
+            }
             string json =  JsonConvert.SerializeObject(searchResult, Formatting.Indented,
                             new JsonSerializerSettings
                             {

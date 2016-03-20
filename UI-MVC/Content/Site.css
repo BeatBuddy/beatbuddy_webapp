@@ -680,23 +680,23 @@ header {
 .text-danger {
   color: red; }
 
-#results {
+#results, #resultsOrganisation {
   padding: 0; }
-  #results li.track {
+  #results li.track, #results li.organisation, #resultsOrganisation li.track, #resultsOrganisation li.organisation {
     margin: 1em;
     display: block;
     min-height: 128px;
     clear: both; }
-    #results li.track img {
+    #results li.track img, #results li.organisation img, #resultsOrganisation li.track img, #resultsOrganisation li.organisation img {
       height: 128px;
       display: inline-block;
       float: left;
       margin-right: .7em; }
-    #results li.track .artist {
+    #results li.track .artist, #results li.track .name, #results li.organisation .artist, #results li.organisation .name, #resultsOrganisation li.track .artist, #resultsOrganisation li.track .name, #resultsOrganisation li.organisation .artist, #resultsOrganisation li.organisation .name {
       padding-top: .4em;
       display: block;
       font-weight: 700; }
-    #results li.track .tracktitle {
+    #results li.track .tracktitle, #results li.organisation .tracktitle, #resultsOrganisation li.track .tracktitle, #resultsOrganisation li.organisation .tracktitle {
       display: block; }
 
 #resultsPlaylist {

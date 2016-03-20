@@ -922,10 +922,10 @@ header {
     color: red;
 }
 
-#results {
+#results, #resultsOrganisation {
     padding: 0;
 
-    li.track {
+    li.track, li.organisation {
         margin: 1em;
         display: block;
         min-height: 128px;
@@ -938,7 +938,7 @@ header {
             margin-right: .7em;
         }
 
-        .artist {
+        .artist, .name {
             padding-top: .4em;
             display: block;
             font-weight: 700;
