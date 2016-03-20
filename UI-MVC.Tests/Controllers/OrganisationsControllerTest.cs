@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using BB.BL;
+using BB.BL.Domain.Organisations;
 using BB.BL.Domain.Users;
 using BB.UI.Web.MVC.Controllers;
 using BB.UI.Web.MVC.Models;
@@ -16,14 +17,14 @@ namespace BB.UI.Web.MVC.Tests.Controllers
         private OrganisationsController _organisationsController;
         private IUserManager userManager;
         private IPlaylistManager playlistManager;
-        
+        private IOrganisationManager _organisationManager;
 
         [TestInitialize]
         public void TestInitialize()
         {
             userManager = DbInitializer.CreateUserManager();
             playlistManager = DbInitializer.CreatePlaylistManager();
-
+            _organisationManager = DbInitializer.CreateOrganisationManager();
             _organisationsController = new OrganisationsController(DbInitializer.CreateOrganisationManager(), userManager, playlistManager);
             DbInitializer.Initialize();
         }
@@ -63,8 +64,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers
             };
             
             RedirectToRouteResult viewResult = (RedirectToRouteResult) _organisationsController.Create(organisation, null);
-
-            Assert.AreEqual("Details/2", viewResult.RouteValues["action"]);
+            Organisation createdOrganisation = _organisationManager.ReadOrganisation("Maarten's Songs");
+            Assert.AreEqual("Details/" + createdOrganisation.Id, viewResult.RouteValues["action"]);
         }
 
         [TestMethod]

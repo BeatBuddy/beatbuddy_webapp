@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Net.Http.Formatting;
 using BB.BL;
 using BB.BL.Domain;
 using BB.BL.Domain.Organisations;
-using BB.BL.Domain.Playlists;
 using BB.BL.Domain.Users;
 using BB.DAL;
 using BB.DAL.EFOrganisation;
@@ -83,6 +81,8 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
                 .Ok()
                 .WithResponseModelOfType<Organisation>()
                 .Passing(o => o.Name == "testorganisatiepost");
+            Organisation createdOrganisation = organisationManager.ReadOrganisation("testorganisatiepost");
+            organisationManager.DeleteOrganisation(createdOrganisation.Id);
         }
 
         [TestMethod]
