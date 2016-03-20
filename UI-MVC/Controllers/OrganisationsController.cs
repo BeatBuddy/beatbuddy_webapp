@@ -49,9 +49,8 @@ namespace BB.UI.Web.MVC.Controllers
             }
             return View(organisationViewModels);
         }
-        
-        // GET: Organisations/Details/5
 
+        // GET: Organisations/Details/5
         public ActionResult Details(long id, int? page)
         {
             Organisation organisation = organisationManager.ReadOrganisation(id);
@@ -60,7 +59,7 @@ namespace BB.UI.Web.MVC.Controllers
 
                 User organiser = userManager.ReadOrganiserFromOrganisation(organisation);
                 IEnumerable<User> coOrganisers = userManager.ReadCoOrganiserFromOrganisation(organisation);
-                
+
                 OrganisationViewWithPlaylist organisationView = new OrganisationViewWithPlaylist()
                 {
                     Id = id,
@@ -83,8 +82,8 @@ namespace BB.UI.Web.MVC.Controllers
                     ViewBag.Following = "Co-Organiser";
                 else if (userRole.Role == Role.Organiser)
                     ViewBag.Following = "Organiser";
-                
-                
+
+
                 int pageNumber = (page ?? 1);
                 organisationView.Playlists = playlists.ToPagedList(pageNumber, pageSize);
 
@@ -94,7 +93,8 @@ namespace BB.UI.Web.MVC.Controllers
 
                 return View("Details", organisationView);
 
-            }else
+            }
+            else
                 return View("Error");
         }
 
@@ -103,7 +103,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
 
             User user = userManager.ReadUser(mail);
-            if(user == null)
+            if (user == null)
             {
                 return new HttpStatusCodeResult(400);
             }
@@ -120,7 +120,6 @@ namespace BB.UI.Web.MVC.Controllers
             userManager.CreateUserRole(user.Id, organisation, Role.Co_Organiser);
 
             return new HttpStatusCodeResult(200);
-            
         }
 
         public ActionResult FollowOrganisation(long organisationId, string email)
@@ -147,7 +146,7 @@ namespace BB.UI.Web.MVC.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-        
+
 
         public ActionResult IsNameAvailable(string name)
         {
@@ -200,7 +199,7 @@ namespace BB.UI.Web.MVC.Controllers
             {
                 return RedirectToAction("Create");
             }
-        }    
+        }
 
         [HttpPost]
         [Authorize(Roles = "User, Admin")]
@@ -208,7 +207,7 @@ namespace BB.UI.Web.MVC.Controllers
         {
             var user = userManager.ReadUser(User.Identity.Name);
             var organisation = organisationManager.ReadOrganisation(id);
-            if (userManager.ReadCoOrganiserFromOrganisation(organisation).Contains(user) || 
+            if (userManager.ReadCoOrganiserFromOrganisation(organisation).Contains(user) ||
                 userManager.ReadOrganiserFromOrganisation(organisation).Equals(user))
             {
                 var deletedOrganisation = organisationManager.DeleteOrganisation(id);
@@ -218,14 +217,13 @@ namespace BB.UI.Web.MVC.Controllers
             return new HttpStatusCodeResult(403);
         }
 
-
         public ActionResult AddPlaylist(long playlistId, string id)
         {
             var youtubeProvider = new YouTubeTrackProvider();
 
             var tracks = youtubeProvider.LookUpPlaylist(id);
 
-            foreach(Track track in tracks)
+            foreach (Track track in tracks)
             {
                 playlistManager.AddTrackToPlaylist(playlistId, track);
             }

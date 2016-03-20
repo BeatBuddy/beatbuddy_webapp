@@ -6,13 +6,11 @@ using BB.DAL.EFOrganisation;
 using BB.DAL.EFUser;
 using BB.UI.Web.MVC.Controllers.Utils;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Security.Claims;
 using System.Web;
@@ -80,8 +78,9 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
             var user = userManager.ReadUser(email);
             if (user == null) return InternalServerError();
 
-            if (organisationManager.ReadOrganisation(name) != null) {
-                return Content(HttpStatusCode.InternalServerError,"Organisation name already exists");
+            if (organisationManager.ReadOrganisation(name) != null)
+            {
+                return InternalServerError(new Exception("Organisation name already exists"));
             }
 
             Organisation organisation = organisationManager.CreateOrganisation(name, imagePath, user);

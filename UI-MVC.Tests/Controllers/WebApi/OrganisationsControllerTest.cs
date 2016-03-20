@@ -73,17 +73,28 @@ namespace BB.UI.Web.MVC.Tests.Controllers.WebApi
         }
 
         [TestMethod]
-        public void PostOrganisationTest()
+        public void PostOrganisationWithNoImageTest()
         {
             _organisationControllerWithAuthenticatedUser
                 .Calling(o => o.Post("testorganisatiepost", "gewoon een description",
                     "color", new FormDataCollection(new List<KeyValuePair<string,string>>()
-                    {
-                        new KeyValuePair<string, string>("banner","")
-                    }  )))
+                   )))
                 .ShouldReturn()
-                .Ok();
+                .Ok()
+                .WithResponseModelOfType<Organisation>()
+                .Passing(o => o.Name == "testorganisatiepost");
+        }
 
+        [TestMethod]
+        public void PostOrganisationWithExistingOrganisationNameTest()
+        {
+            _organisationControllerWithAuthenticatedUser
+                .Calling(o => o.Post(organisation.Name, "gewoon een description",
+                    "color", new FormDataCollection(new List<KeyValuePair<string, string>>()
+                        )))
+                .ShouldReturn()
+                .InternalServerError()
+                .WithException(new Exception("Organisation name already exists"));
         }
 
         [TestCleanup]
