@@ -244,7 +244,11 @@ namespace BB.UI.Web.MVC.Controllers.Web_API
 
             if (!playlistTracks.Any()) return NotFound();
 
-                var originalPlayListTrack = playlistTracks.First(t => t.PlayedAt == null);
+            var sortedByVotesPlaylistTracks = playlistTracks.ToList();
+            sortedByVotesPlaylistTracks.Sort((t1, t2) => t2.Votes.Sum(v => v.Score) - t1.Votes.Sum(v => v.Score));
+                
+
+                var originalPlayListTrack = sortedByVotesPlaylistTracks.First(t => t.PlayedAt == null);
                 var newTrack = GetTrackWithFreshYoutubeUrl(originalPlayListTrack.Track);
                 
                 var success = playlistManager.MarkTrackAsPlayed(originalPlayListTrack.Id, playlistId);
