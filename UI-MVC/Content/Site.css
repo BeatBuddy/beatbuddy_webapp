@@ -421,6 +421,8 @@ header {
       width: 48px;
       height: 48px;
       background-image: url("/Content/img/default_cover.png");
+      background-size: cover;
+      background-position: center center;
       display: inline-block;
       float: left;
       margin-right: .7em; }

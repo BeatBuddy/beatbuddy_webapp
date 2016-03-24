@@ -331,7 +331,6 @@
     <Compile Include="Controllers\Web API\UserController.cs" />
     <Compile Include="Controllers\Web API\OrganisationsController.cs" />
     <Compile Include="Controllers\Web API\SimpleAuthorizationServerProvider.cs" />
-    <Compile Include="Controllers\Web API\Utils\Base64Helper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

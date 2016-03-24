@@ -14,7 +14,7 @@ namespace BB.UI.Web.MVC
     {
         public virtual void Configuration(IAppBuilder app)
         {
-            
+
             ConfigureAuth(app);
             app.Map("/signalr", map =>
             {
@@ -27,14 +27,14 @@ namespace BB.UI.Web.MVC
 
             });
             app.Map("/api", inner =>
-        {
-            HttpConfiguration config = new HttpConfiguration();
-            WebApiConfig.Register(config);
-            
-            ConfigureOAuth(inner);
-            inner.UseWebApi(config);
-        });
+            {
+                HttpConfiguration config = new HttpConfiguration();
+                WebApiConfig.Register(config);
+
+                ConfigureOAuth(inner);
+                inner.UseWebApi(config);
+            });
         }
-         
+
     }
 }
